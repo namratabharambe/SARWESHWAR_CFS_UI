@@ -1,0 +1,445 @@
+<app-page-header
+  [breadcrumbs]="breadcrumbs"
+  [title]="'USERS.TITLE' | translate"
+  [subtitle]="'USERS.SUBTITLE' | translate"
+  [actionLabel]="'USERS.NEW_USER' | translate"
+  actionIcon="+"
+  (action)="openModal()" />
+
+<div class="management-card">
+  <!-- Top Filter & Search Bar -->
+  <div class="filters-row">
+    <div class="filter-group search-filter">
+      <label for="user-search-input" class="filter-label">{{ 'COMMON.SEARCH' | translate }}</label>
+      <div class="search-input-wrapper">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+            clip-rule="evenodd" />
+        </svg>
+        <input
+          id="user-search-input"
+          type="text"
+          class="filter-input"
+          [placeholder]="'USERS.SEARCH_PLACEHOLDER' | translate"
+          [value]="searchQuery()"
+          (input)="searchQuery.set($any($event.target).value)" />
+        @if (searchQuery()) {
+          <button type="button" class="btn-clear-search" (click)="searchQuery.set('')" title="Clear search">✕</button>
+        }
+      </div>
+    </div>
+
+    <div class="filter-group status-filter">
+      <label for="user-status-select" class="filter-label">{{ 'COMMON.STATUS' | translate }}</label>
+      <div class="select-wrapper">
+        <select
+          id="user-status-select"
+          class="filter-select"
+          [value]="statusFilter()"
+          (change)="statusFilter.set($any($event.target).value)">
+          <option value="ALL">{{ 'COMMON.ALL' | translate }}</option>
+          <option value="Active">{{ 'COMMON.ACTIVE' | translate }}</option>
+          <option value="Inactive">{{ 'COMMON.INACTIVE' | translate }}</option>
+        </select>
+        <span class="select-chevron">⌄</span>
+      </div>
+    </div>
+
+    <div class="filter-actions-right">
+      <button type="button" class="btn-refresh" (click)="refresh()" title="Refresh users from server">
+        <svg class="refresh-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.047a1 1 0 011.885-.666A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.608-1.286z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+      <span class="users-count-badge">{{ filteredUsers().length }} {{ 'NAV.USERS' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="th-user">{{ 'NAV.USERS' | translate }}</th>
+          <th class="th-client">{{ 'NAV.CLIENTS' | translate }}</th>
+          <th class="th-sites">{{ 'NAV.SITES' | translate }}</th>
+          <th class="th-roles">{{ 'NAV.ROLES' | translate }}</th>
+          <th class="th-status">{{ 'COMMON.STATUS' | translate }}</th>
+          <th class="th-actions">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of filteredUsers(); track user.id) {
+          <tr class="table-row">
+            <td class="cell-user">
+              <div class="user-identity flex items-center gap-2.5">
+                <app-avatar [name]="user.firstName + ' ' + user.lastName" size="sm" />
+                <div class="user-text-block">
+                  <strong
+                    class="user-full-name"
+                    [appHighlightText]="user.firstName + ' ' + user.lastName"
+                    [highlightTerm]="searchQuery()"
+                    >{{ user.firstName }} {{ user.lastName }}</strong
+                  >
+                  <small class="user-email" [appHighlightText]="user.email" [highlightTerm]="searchQuery()">{{
+                    user.email
+                  }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="cell-client">
+              <span class="client-badge" [class.is-global]="getUserClientName(user) === 'Global / Enterprise'">
+                {{ getUserClientName(user) }}
+              </span>
+            </td>
+            <td class="cell-sites">
+              <div class="tag-list">
+                @for (siteName of getUserSites(user); track siteName) {
+                  <span
+                    class="tag-pill"
+                    [class.tag-all-sites]="siteName === 'All Sites'"
+                    [class.tag-site]="siteName !== 'All Sites'">
+                    {{ siteName }}
+                  </span>
+                }
+              </div>
+            </td>
+            <td class="cell-roles">
+              <div class="tag-list">
+                @for (item of getUserSiteRoles(user); track item.siteName + item.role) {
+                  <span class="tag-pill tag-role">
+                    @if (item.siteCode) {
+                      <strong class="site-role-prefix">{{ item.siteCode }}:</strong>
+                    }
+                    {{ item.role }}
+                  </span>
+                } @empty {
+                  <span class="tag-pill tag-role">
+                    {{ user.role || 'Operator' }}
+                  </span>
+                }
+              </div>
+            </td>
+            <td class="cell-status">
+              <app-status-badge [status]="user.status || 'Active'" />
+            </td>
+            <td class="cell-actions">
+              <div class="action-buttons-group">
+                <button type="button" class="btn-action btn-edit" (click)="openModal(user)" title="Edit user">
+                  <svg class="action-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  <span>{{ 'COMMON.EDIT' | translate }}</span>
+                </button>
+
+                <button type="button" class="btn-action btn-delete" (click)="deleteUser(user)" title="Delete user">
+                  <svg class="action-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ 'COMMON.DELETE' | translate }}</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state-cell">
+              <div class="empty-state-container">
+                <div class="empty-icon-circle">👥</div>
+                <h3>{{ 'USERS.EMPTY_TITLE' | translate }}</h3>
+                <p>{{ 'USERS.EMPTY_DESC' | translate }}</p>
+                <button type="button" class="btn-empty-add" (click)="openModal()">
+                  + {{ 'USERS.NEW_USER' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add / Edit User Modal with 2-Column Wide Layout and Per-Site Role Assignment -->
+@if (editingUser() !== undefined) {
+  <app-modal
+    [title]="editingUser() ? ('USERS.MODAL_EDIT_TITLE' | translate) : ('USERS.MODAL_NEW_TITLE' | translate)"
+    [subtitle]="
+      editingUser()
+        ? 'Update user credentials, terminal site access, and designated roles'
+        : 'Create a new user account with dedicated roles per terminal site'
+    "
+    icon="👥"
+    size="xl"
+    (closed)="closeModal()">
+    <form [formGroup]="form" (ngSubmit)="saveUser()" class="user-modal-form">
+      <div class="user-modal-columns">
+        <!-- Left Panel: Profile & Credentials & Organization -->
+        <div class="user-form-panel user-panel-left">
+          <div class="panel-section-header">
+            <span class="panel-header-icon">👤</span>
+            <span class="panel-header-title">User Profile & Access</span>
+          </div>
+
+          <div class="panel-fields-grid">
+            <!-- Name Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                label="First Name"
+                [control]="form.controls.firstName"
+                placeholder="First name"
+                icon="👤"
+                autocomplete="off" />
+
+              <app-form-field
+                label="Last Name"
+                [control]="form.controls.lastName"
+                placeholder="Last name"
+                icon="👤"
+                autocomplete="off" />
+            </div>
+
+            <!-- Email & Mobile Number Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                label="Email"
+                type="email"
+                [control]="form.controls.email"
+                placeholder="Email address"
+                icon="✉"
+                autocomplete="off" />
+
+              <app-form-field
+                label="Mobile Number"
+                [control]="form.controls.mobileNumber"
+                placeholder="Mobile number"
+                icon="📞"
+                autocomplete="tel" />
+            </div>
+
+            <!-- Password Row with Show/Hide Toggle (Create Mode) -->
+            @if (!editingUser()) {
+              <div class="form-field-group">
+                <div class="label-row">
+                  <label class="field-label" for="user-password-input">
+                    Password
+                    <span class="required-star">*</span>
+                  </label>
+                </div>
+                <div
+                  class="input-container has-icon password-input-container"
+                  [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid">
+                  <span class="input-leading-icon">🔒</span>
+                  <input
+                    id="user-password-input"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    [formControl]="form.controls.password"
+                    placeholder="Min 6 chars (e.g. Prosper@123)"
+                    autocomplete="new-password"
+                    class="custom-input" />
+                  <button
+                    type="button"
+                    class="btn-toggle-pwd"
+                    (click)="togglePasswordVisibility()"
+                    title="Toggle password visibility">
+                    {{ showPassword() ? '👁‍🗨' : '👁' }}
+                  </button>
+                </div>
+                @if (form.controls.password.touched && form.controls.password.invalid) {
+                  <div class="field-error-message" role="alert">
+                    <svg class="error-bullet-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span>Password must be at least 6 characters.</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Client & Account Status Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                label="Client Organization"
+                type="select"
+                [control]="form.controls.clientId"
+                [options]="clientOptions()"
+                icon="🏢"
+                placeholder="Select client" />
+
+              <app-form-field
+                label="Account Status"
+                type="select"
+                [control]="form.controls.status"
+                [options]="statusOptions"
+                icon="⚡" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Terminal Sites & Role Permissions -->
+        <div class="user-form-panel user-panel-right">
+          <app-centered-divider label="Location Access & Roles" />
+          <div class="custom-selector-section">
+            <div class="selector-header">
+              <div class="selector-label-group">
+                <span class="field-icon">📍</span>
+                <span class="custom-field-label">Terminal Sites & Roles</span>
+                @if (siteRoles().length > 0) {
+                  <span class="count-badge-active"
+                    >{{ siteRoles().length }} site{{ siteRoles().length === 1 ? '' : 's' }}</span
+                  >
+                }
+              </div>
+              <div class="selector-quick-actions">
+                <button type="button" class="btn-quick-toggle" (click)="selectAllSites()">Select All</button>
+                <span class="dot-separator">•</span>
+                <button type="button" class="btn-quick-toggle" (click)="clearAllSites()">Clear</button>
+              </div>
+            </div>
+
+            <p class="custom-field-hint">Select terminal sites below to assign specific permissions per location.</p>
+
+            <!-- Available Sites Toggle Chips -->
+            <div class="chips-grid">
+              @for (site of availableSites(); track site.id) {
+                <button
+                  type="button"
+                  class="chip-button"
+                  [class.chip-selected]="isSiteSelected(site.id)"
+                  (click)="toggleSite(site.id)">
+                  <span class="chip-checkbox">
+                    @if (isSiteSelected(site.id)) {
+                      ✓
+                    }
+                  </span>
+                  <span class="chip-name">{{ site.name }}</span>
+                  @if (site.code) {
+                    <span class="chip-code">{{ site.code }}</span>
+                  }
+                </button>
+              } @empty {
+                <div class="empty-chips-note">No specific sites found for this client.</div>
+              }
+            </div>
+
+            <!-- Per-Site Role Assignment Card / Rows -->
+            @if (siteRoles().length > 0) {
+              <div class="site-roles-config-card">
+                <div class="site-roles-config-header">
+                  <div class="config-header-left">
+                    <span class="config-header-icon">🛡</span>
+                    <strong>Designated Roles</strong>
+                  </div>
+                  <div class="bulk-role-apply">
+                    <span class="bulk-label">Set all:</span>
+                    <select
+                      [value]="globalDefaultRole()"
+                      (change)="applyRoleToAllSelectedSites($any($event.target).value)"
+                      class="bulk-role-select">
+                      @for (role of availableRoles(); track role.id) {
+                        <option [value]="role.name">{{ role.name }}</option>
+                      }
+                    </select>
+                  </div>
+                </div>
+
+                <div class="site-role-rows-list">
+                  @for (sr of siteRoles(); track sr.siteId) {
+                    <div class="site-role-row">
+                      <div class="site-info-col">
+                        <span class="site-pin-icon">📍</span>
+                        <div class="site-text">
+                          <strong class="site-title">{{ getSiteObj(sr.siteId)?.name || sr.siteId }}</strong>
+                          @if (getSiteObj(sr.siteId)?.code) {
+                            <span class="site-code-pill">{{ getSiteObj(sr.siteId)?.code }}</span>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="site-role-select-col">
+                        <div class="select-role-wrapper">
+                          <select
+                            [value]="sr.role"
+                            (change)="updateSiteRole(sr.siteId, $any($event.target).value)"
+                            class="site-role-select">
+                            @for (role of availableRoles(); track role.id) {
+                              <option [value]="role.name">{{ role.name }}</option>
+                            }
+                          </select>
+                          <span class="role-select-chevron">⌄</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="btn-remove-site-role"
+                        (click)="removeSite(sr.siteId)"
+                        title="Remove site access">
+                        ✕
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              <!-- Global Default Role when no specific site is chosen -->
+              <div class="global-role-config-box">
+                <div class="global-role-info">
+                  <span class="global-role-icon">🌐</span>
+                  <div>
+                    <strong>Global Access Role</strong>
+                    <p>No terminal site selected. Access applies across all client sites.</p>
+                  </div>
+                </div>
+                <div class="global-role-dropdown-wrap">
+                  <select
+                    [value]="globalDefaultRole()"
+                    (change)="globalDefaultRole.set($any($event.target).value)"
+                    class="site-role-select">
+                    @for (role of availableRoles(); track role.id) {
+                      <option [value]="role.name">{{ role.name }}</option>
+                    }
+                  </select>
+                  <span class="role-select-chevron">⌄</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (modalError()) {
+        <div class="modal-alert-error" role="alert">
+          <span class="alert-icon">⚠️</span>
+          <span>{{ modalError() }}</span>
+        </div>
+      }
+
+      <div class="form-actions-footer">
+        <button type="button" class="btn-modal-cancel" (click)="closeModal()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn-modal-submit" [appFocusInvalidField]="form" [disabled]="isSaving()">
+          @if (isSaving()) {
+            <span class="btn-spinner"></span>
+            <span>{{ 'COMMON.LOADING' | translate }}</span>
+          } @else {
+            <span>{{ editingUser() ? ('COMMON.SAVE' | translate) : ('COMMON.SUBMIT' | translate) }}</span>
+          }
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}

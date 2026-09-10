@@ -1,0 +1,99 @@
+.confidence-pill-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--color-bg-alt, #f8fafc);
+  border: 1px solid var(--color-border-subtle, #e2e8f0);
+
+  :host-context(.dark) & {
+    background-color: var(--color-surface-dark-subtle, #1e293b);
+    border-color: var(--color-border-subtle-dark, #334155);
+  }
+
+  &.high {
+    background-color: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.25);
+    .confidence-percent {
+      color: #059669;
+      :host-context(.dark) & {
+        color: #34d399;
+      }
+    }
+  }
+
+  &.med {
+    background-color: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.25);
+    .confidence-percent {
+      color: #d97706;
+      :host-context(.dark) & {
+        color: #fbbf24;
+      }
+    }
+  }
+
+  &.low {
+    background-color: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.25);
+    .confidence-percent {
+      color: #dc2626;
+      :host-context(.dark) & {
+        color: #f87171;
+      }
+    }
+  }
+}
+
+.confidence-percent {
+  font-size: 0.775rem;
+  font-weight: 700;
+  font-family: var(--font-family-mono, monospace);
+  letter-spacing: -0.01em;
+}
+
+.signal-bars-icon {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 10px;
+
+  .bar {
+    width: 2.5px;
+    border-radius: 1px;
+    background-color: #cbd5e1;
+
+    :host-context(.dark) & {
+      background-color: #475569;
+    }
+  }
+
+  .bar-1 {
+    height: 4px;
+  }
+  .bar-2 {
+    height: 7px;
+  }
+  .bar-3 {
+    height: 10px;
+  }
+
+  &.high .bar {
+    background-color: #10b981;
+  }
+
+  &.med {
+    .bar-1,
+    .bar-2 {
+      background-color: #f59e0b;
+    }
+  }
+
+  &.low {
+    .bar-1 {
+      background-color: #ef4444;
+    }
+  }
+}
+
