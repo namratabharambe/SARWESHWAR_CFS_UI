@@ -1,0 +1,14 @@
+// Breakpoints corresponding to tailwind.config.js
+$breakpoint-mobile: 640px;
+$breakpoint-tablet: 800px;
+$breakpoint-desktop: 1370px;
+$breakpoint-slightly-larger-than-tablet: 1524px;
+
+$transition-duration: 0.2s;
+$font-family-base:
+  'Lexend',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  sans-serif;

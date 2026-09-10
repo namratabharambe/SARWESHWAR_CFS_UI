@@ -1,0 +1,200 @@
+<div class="app-shell" [class.sidebar-collapsed]="collapsed()">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.mobile-open]="mobileOpen()">
+    <div class="brand">
+      <div class="brand-square-logo">
+        <span class="logo-text-p">P</span>
+      </div>
+      <div class="brand-copy">
+        <strong class="brand-company-name">Prosper</strong>
+        <small class="brand-product-desc">CFS & Container<br />AI Automation</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main Navigation">
+      <!-- Dashboard -->
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">dashboard</span>
+        <span class="nav-label-text">{{ 'NAV.DASHBOARD' | translate }}</span>
+      </a>
+
+      <!-- Gate Events -->
+      <a routerLink="/gate-events" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">meeting_room</span>
+        <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
+      </a>
+
+      <!-- Admin (Parent) -->
+      <div class="nav-parent-group">
+        <button type="button" class="nav-item nav-parent-btn" [class.active]="isAdminRoute()" (click)="toggleAdmin()">
+          <div class="nav-left-part">
+            <span class="material-icons-outlined text-lg">admin_panel_settings</span>
+            <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
+          </div>
+          <span class="nav-chevron" [class.rotated]="adminExpanded()">▾</span>
+        </button>
+
+        <!-- Admin Submenu (Client, Site, User, Role) -->
+        @if (adminExpanded()) {
+          <div class="sub-nav-container">
+            <a routerLink="/clients" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.CLIENTS' | translate }}</span>
+            </a>
+
+            <a routerLink="/sites" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.SITES' | translate }}</span>
+            </a>
+
+            <a routerLink="/users" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.USERS' | translate }}</span>
+            </a>
+
+            <a routerLink="/roles" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.ROLES' | translate }}</span>
+            </a>
+          </div>
+        }
+      </div>
+    </nav>
+
+    <button class="collapse-button" type="button" (click)="collapsed.set(!collapsed())">
+      {{ collapsed() ? '›' : '‹' }}
+      <span>{{ 'COMMON.CLOSE' | translate }}</span>
+    </button>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="bg-gray-50 transition-colors duration-200 dark:bg-gray-900">
+    <header class="topbar border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <button
+        class="mobile-menu text-gray-700 dark:text-gray-200"
+        type="button"
+        aria-label="Open menu"
+        (click)="mobileOpen.set(!mobileOpen())">
+        ☰
+      </button>
+
+      <div class="topbar-left-controls">
+        <!-- Client Selector Dropdown -->
+        <div class="header-pill header-context-pill header-client-pill" [class.is-loading]="switchingContext()">
+          <span class="pill-spark">🏢</span>
+          <div class="pill-text-block">
+            <small>{{ 'NAV.CLIENT' | translate }}</small>
+            <div class="select-wrapper">
+              <select
+                class="header-context-select"
+                [value]="auth.selectedClientId()"
+                (change)="onClientSelect($event)"
+                aria-label="Select Client">
+                @if (availableClients().length === 0) {
+                  <option value="" disabled>{{ 'COMMON.NO_DATA' | translate }}</option>
+                }
+                @for (client of availableClients(); track client.id) {
+                  <option [value]="client.id">{{ client.name }}</option>
+                }
+              </select>
+              <span class="custom-select-chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Site / Location Selector Dropdown -->
+        <div
+          class="header-pill header-context-pill header-site-pill"
+          [class.is-loading]="loadingSites() || switchingContext()">
+          <span class="pill-spark">📍</span>
+          <div class="pill-text-block">
+            <small>{{ 'NAV.SITE' | translate }}</small>
+            <div class="select-wrapper">
+              <select
+                class="header-context-select"
+                [value]="auth.selectedSiteId()"
+                (change)="onSiteSelect($event)"
+                [disabled]="loadingSites() || sitesForSelectedClient().length === 0"
+                aria-label="Select Site">
+                @if (loadingSites()) {
+                  <option value="" disabled>{{ 'COMMON.LOADING' | translate }}</option>
+                } @else if (sitesForSelectedClient().length === 0) {
+                  <option value="" disabled>{{ 'COMMON.NO_DATA' | translate }}</option>
+                }
+                @for (site of sitesForSelectedClient(); track site.id) {
+                  <option [value]="site.id">{{ site.name }} ({{ site.code || 'SITE' }})</option>
+                }
+              </select>
+              <span class="custom-select-chevron">⌄</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Context Sync Indicator -->
+        @if (switchingContext() || auth.contextLoading()) {
+          <div class="context-sync-badge">
+            <span class="sync-spinner"></span>
+            <span>Switching Context & Token...</span>
+          </div>
+        } @else if (contextToast()) {
+          <div class="context-toast-badge">
+            <span>✓ {{ contextToast() }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="top-actions">
+        <!-- Language Selector -->
+        <div
+          class="lang-selector-wrapper flex items-center gap-1.5 rounded-xl border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-xs font-semibold text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+          <span class="material-icons-outlined text-base text-gray-500">translate</span>
+          <select
+            class="cursor-pointer border-none bg-transparent text-xs font-bold text-gray-700 outline-none dark:text-gray-200"
+            [value]="localization.currentLang()"
+            (change)="onLanguageSelect($event)"
+            [attr.aria-label]="'NAV.LANGUAGE' | translate">
+            @for (lang of localization.availableLangs(); track lang.code) {
+              <option [value]="lang.code" class="bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+                {{ lang.flag }} - {{ lang.label }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <!-- Theme Switcher (Dark / Light) -->
+        <button
+          type="button"
+          class="theme-toggle-btn cursor-pointer rounded-xl border border-gray-200 bg-gray-50 p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          (click)="theme.toggleTheme()"
+          [title]="theme.isDarkMode() ? ('NAV.LIGHT_MODE' | translate) : ('NAV.DARK_MODE' | translate)"
+          aria-label="Toggle theme mode">
+          @if (theme.isDarkMode()) {
+            <span class="material-icons-outlined text-lg text-amber-400">light_mode</span>
+          } @else {
+            <span class="material-icons-outlined text-lg text-slate-600">dark_mode</span>
+          }
+        </button>
+
+        @if (auth.isSystemAdmin()) {
+          <span class="sysadmin-tag" [title]="'NAV.SYSTEM_ADMIN' | translate"
+            >⚡ {{ 'NAV.SYSTEM_ADMIN' | translate }}</span
+          >
+        }
+
+        <button aria-label="Notifications" class="icon-button notification-btn">🔔</button>
+        <app-avatar [name]="auth.userName()" size="sm" />
+        <div class="user-info">
+          <strong class="text-gray-900 dark:text-gray-100">{{ auth.userName() }}</strong>
+          <small class="text-gray-500 dark:text-gray-400">{{ auth.userRoleDisplay() }}</small>
+        </div>
+        <button
+          class="icon-button logout-btn"
+          (click)="auth.logout()"
+          [attr.aria-label]="'NAV.LOGOUT' | translate"
+          [title]="'NAV.LOGOUT' | translate">
+          ↪
+        </button>
+      </div>
+    </header>
+
+    <section class="page">
+      <router-outlet />
+    </section>
+  </main>
+</div>
