@@ -209,17 +209,30 @@ provideHttpClient(withInterceptors([apiInterceptor, exceptionInterceptor]))
 
 ## 8. Internationalization (i18n) Engine
 
-The application features a custom, zero-dependency localization architecture:
+The application features a custom, zero-dependency localization architecture with 100% UI and input placeholder coverage:
 - **Service**: `LocalizationService` (`src/app/core/services/localization.service.ts`).
 - **Supported Languages**: `en` (English), `es` (Spanish), `fr` (French).
 - **Storage**: Translations located in `src/assets/i18n/{lang}.json`.
-- **In-Memory Fallback**: Built-in `DEFAULT_TRANSLATIONS` prevents blank UI during initial load.
-- **Pipe**: `TranslatePipe` (`src/app/shared/pipes/translate.pipe.ts`):
+- **In-Memory Fallback**: Built-in `DEFAULT_TRANSLATIONS` in `LocalizationService` matches `en.json` completely, ensuring zero unlocalized keys or flash of untranslated text during initial load or offline states.
+- **Pipe**: `TranslatePipe` (`src/app/shared/pipes/translate.pipe.ts`), standalone and impure (`pure: false`) to reactively update on runtime language change:
   ```html
+  <!-- Text interpolation -->
   <h1>{{ 'GATE_EVENTS.TITLE' | translate }}</h1>
   <p>{{ 'AUTH.LOGIN_SUBTITLE' | translate }}</p>
+
+  <!-- Input and textarea placeholders -->
+  <input [placeholder]="'GATE_EVENTS.MODAL.CONTAINER_NO_PLACEHOLDER' | translate" />
+  <input [placeholder]="'USERS.SEARCH_PLACEHOLDER' | translate" />
   ```
 - **Language Switcher**: Directly available in the top navbar and responsive drawer.
+- **Complete Module Coverage**:
+  - `Gate Events` (metrics, filters, table headers, damage flags, empty states, pagination).
+  - `Gate Event Detail` (breadcrumbs, status pills, confidence scores, dual-column specs, verification badges, 4-step timeline, bottom actions).
+  - `Manual Gate Entry Modal` (23 input labels, placeholders, select options, enterprise table headers, action buttons, legal footer).
+  - `Clients`, `Sites`, `Users`, `Roles` (page headers, search placeholders, filter tabs, action buttons, modals, form inputs, validation messages, confirmation dialogs).
+  - `Dashboard` (health monitors, system cards, module launchers).
+  - `Authentication` (brand subtitles, feature hero items, form inputs, placeholders, bypass and SSO buttons).
+  - `Shell` & `Maintenance` (synchronization badges, scheduled maintenance headers and messages).
 
 ---
 
@@ -299,6 +312,19 @@ Located in `src/app/shared/directives/`:
   - Toolbar row: Segmented pill tabs (`All (50)`, `Arrivals (28)`, `Departures (22)`) on the left; Action buttons (`Approve`, `Reprocess OCR`, `Export`) on the right. Note: "View Details" button removed from the toolbar.
   - Interactive table: Clicking any row navigates directly to the comprehensive detail screen. Monospace container & truck plates, live OCR text, 3-tier signal bars confidence rating, status & damage pills, and 4 container thumbnail previews.
   - Pagination footer: Event counter, active blue pill page numbers, next arrow, and 10/25/50 per page selector.
+- **Manual Gate Entry Action Button & Popup Modal (`features/gate-events/gate-in-modal`)**:
+  - Located in the top right corner of the page header: `Manual Gate Entry` button with royal blue gradient (`#2563eb` to `#1d4ed8`), delivery truck SVG, and hover lift animation.
+  - Standalone modal component (`GateInModalComponent`) styled to strictly harmonize with the project-wide design system and color palette.
+  - Header: Breadcrumbs (`Home > Import > Gate In`) with blue active crumb, gradient blue delivery truck icon badge (`#eff6ff` to `#dbeafe` with `#2563eb` icon) + `Import Gate In` title (`#0f172a` / dark `#f8fafc`), calendar datetime pill (`Thu, 22 May 2025 12:35 PM`), and `✕` close button.
+  - 5-row responsive form covering 23 fields:
+    - Row 1 (9 cols): Container No (uppercase), ISO Code, Size, Tare Weight, Type, Cargo Type, JO Type, FCL/LCL, Scan Type.
+    - Row 2 (5 cols): Offload Location, Vessel Name, Port Name, Shipping Line, IGM Seal.
+    - Row 3 (4 cols): Seal No 1, Seal No 2, Custom Seal No, Customer Name.
+    - Row 4 (5 cols): EIR No, EIR Weight, EIR Date & Time, Location, Condition.
+    - Row 5: Remarks with document paperclip attachment button, blue gradient `+` button (`#2563eb` to `#1d4ed8`) to add item into table, and Door To Door checkbox (`accent-color: #2563eb`).
+  - Full-width Enterprise Grid Table: Standardized `#f8fafc` header matching all other management tables in the application (`gate-events`, `clients`, `users`), clean uppercase column titles with border dividers, and dark mode support (`#162235`). Columns for `ACTION`, `SCAN STATUS`, `DOOR TO DOOR`, `ISO CODE`, `PORT NAME`, `WEIGHT`, `REMARKS`, `SCAN TYPE`, `SCAN DATE TIME`, `CARGO TYPE`, `UN NO.`, `CLASS`. Displays an inbox empty state when empty, and dynamic removable rows when populated.
+  - Action footer: Green save button (`#10b981`), slate reset button (`#ffffff` / `#f8fafc`), clean neutral back button (`#ffffff` with `#eff6ff` blue hover), and copyright/legal links (`LogiPort`) with blue hover effects.
+  - Inputs / Outputs: `isOpen = input<boolean>()`, `close = output<void>()`, `save = output<GateInFormData[]>()`.
 - **Standalone Detail Component (`features/gate-events/gate-event-detail`)**:
   - Extracted as a separate, highly responsive standalone component (`GateEventDetailComponent`).
   - Inputs: `event: GateEventItem` (required signal input).

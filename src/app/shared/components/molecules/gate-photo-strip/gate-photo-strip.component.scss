@@ -16,7 +16,10 @@
   align-items: flex-end;
   justify-content: flex-end;
   padding: 1px 2px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
 
   &.clickable {
     cursor: pointer;

@@ -91,4 +91,23 @@ describe('GateEventsComponent', () => {
     expect(events.length).toBeGreaterThan(0);
     expect(events.every((e) => e.photos.length === 4)).toBe(true);
   });
+
+  it('should open and close the Manual Gate Entry modal', () => {
+    expect(component.isGateInModalOpen()).toBe(false);
+
+    component.openGateInModal();
+    expect(component.isGateInModalOpen()).toBe(true);
+
+    component.closeGateInModal();
+    expect(component.isGateInModalOpen()).toBe(false);
+  });
+
+  it('should handle saving from the Manual Gate Entry modal and show toast', () => {
+    component.openGateInModal();
+    expect(component.isGateInModalOpen()).toBe(true);
+
+    component.handleGateInSave([]);
+    expect(component.isGateInModalOpen()).toBe(false);
+    expect(component.alertMessage()).toContain('Manual Gate Entry recorded');
+  });
 });

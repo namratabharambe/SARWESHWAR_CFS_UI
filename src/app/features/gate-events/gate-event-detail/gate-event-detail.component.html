@@ -1,19 +1,15 @@
 <div class="gate-detail-page">
   <!-- Top Breadcrumb Bar -->
   <nav class="detail-breadcrumbs-nav" aria-label="Breadcrumb">
-    <button type="button" class="crumb-link-btn" (click)="onBack()">Gate Events</button>
+    <button type="button" class="crumb-link-btn" (click)="onBack()">{{ 'NAV.GATE_EVENTS' | translate }}</button>
     <span class="crumb-separator">/</span>
-    <span class="crumb-active">Detail</span>
+    <span class="crumb-active">{{ 'GATE_EVENTS.DETAIL' | translate }}</span>
   </nav>
 
   <!-- Main Title Header Row -->
   <div class="detail-title-row">
     <div class="title-with-back">
-      <button
-        type="button"
-        class="btn-back-arrow"
-        (click)="onBack()"
-        title="Back to Gate Events table">
+      <button type="button" class="btn-back-arrow" (click)="onBack()" [title]="'COMMON.BACK' | translate">
         <svg viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
@@ -21,7 +17,7 @@
             clip-rule="evenodd" />
         </svg>
       </button>
-      <h1 class="detail-page-title">Gate Event Detail</h1>
+      <h1 class="detail-page-title">{{ 'GATE_EVENTS.DETAIL_TITLE' | translate }}</h1>
     </div>
   </div>
 
@@ -30,17 +26,16 @@
     <div class="meta-items-left">
       <!-- Event ID with Copy Button -->
       <div class="meta-item-badge">
-        <span class="meta-label">Event ID:</span>
+        <span class="meta-label">{{ 'GATE_EVENTS.EVENT_ID' | translate }}</span>
         <strong class="meta-id-text">{{ detail().eventId }}</strong>
         <button
           type="button"
           class="btn-copy-id"
           (click)="copyEventId(detail().eventId)"
-          [title]="copyFeedback() ? 'Copied!' : 'Copy Event ID'">
+          [title]="copyFeedback() ? ('COMMON.SUCCESS' | translate) : ('GATE_EVENTS.EVENT_ID' | translate)">
           <svg viewBox="0 0 20 20" fill="currentColor">
             <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-            <path
-              d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+            <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
           </svg>
         </button>
       </div>
@@ -54,24 +49,26 @@
           {{ event().direction }}
         </span>
         <span class="meta-dir-label">
-          {{ event().direction === 'IN' ? 'Arrival' : 'Departure' }}
+          {{ event().direction === 'IN' ? ('GATE_EVENTS.ARRIVAL' | translate) : ('GATE_EVENTS.DEPARTURE' | translate) }}
         </span>
       </div>
 
       <!-- Status Pill -->
       <div class="meta-status-pill-wrap">
-        <span class="meta-label">Status:</span>
+        <span class="meta-label">{{ 'GATE_EVENTS.STATUS' | translate }}</span>
         <span
           class="meta-status-pill"
           [class.pill-verified]="event().status === 'Verified'"
           [class.pill-review]="event().status === 'Review'">
-          {{ event().status }}
+          {{
+            event().status === 'Verified' ? ('GATE_EVENTS.VERIFIED' | translate) : ('GATE_EVENTS.REVIEW' | translate)
+          }}
         </span>
       </div>
 
       <!-- Event Time -->
       <div class="meta-time-wrap">
-        <span class="meta-label">Event Time:</span>
+        <span class="meta-label">{{ 'GATE_EVENTS.EVENT_TIME' | translate }}</span>
         <span class="meta-time-val">
           <svg class="calendar-icon" viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -98,20 +95,20 @@
             d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z"
             clip-rule="evenodd" />
         </svg>
-        <span>Print / Export</span>
+        <span>{{ 'GATE_EVENTS.PRINT_EXPORT' | translate }}</span>
         <span class="dropdown-caret">▼</span>
       </button>
 
       @if (exportDropdownOpen()) {
         <div class="export-dropdown-menu">
           <button type="button" class="dropdown-item" (click)="printEvent()">
-            <span>🖨️</span> Print Inspection Sheet
+            <span>🖨️</span> {{ 'GATE_EVENTS.PRINT_SUMMARY' | translate }}
           </button>
           <button type="button" class="dropdown-item" (click)="exportEventJson()">
-            <span>📄</span> Export Record (JSON)
+            <span>📄</span> {{ 'GATE_EVENTS.EXPORT_JSON' | translate }}
           </button>
           <button type="button" class="dropdown-item" (click)="exportEventCsv()">
-            <span>📊</span> Export Record (CSV)
+            <span>📊</span> {{ 'GATE_EVENTS.EXPORT_CSV' | translate }}
           </button>
         </div>
       }
@@ -123,7 +120,7 @@
     <!-- Left Column: Captured Images (2x2 Grid) -->
     <div class="detail-card captured-images-card">
       <div class="card-title-bar">
-        <h3 class="card-section-title">Captured Images</h3>
+        <h3 class="card-section-title">{{ 'GATE_EVENTS.CAPTURED_IMAGES' | translate }}</h3>
       </div>
 
       <div class="captured-images-2x2">
@@ -135,7 +132,7 @@
                 type="button"
                 class="btn-expand-image"
                 (click)="openLightbox(photo.title, photo.url, $event)"
-                title="Expand full resolution">
+                [title]="'GATE_EVENTS.EXPAND_IMAGE' | translate">
                 <svg viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fill-rule="evenodd"
@@ -145,14 +142,8 @@
               </button>
             </div>
             <p class="image-box-sub">{{ photo.timestamp }}</p>
-            <div
-              class="image-render-frame"
-              (click)="openLightbox(photo.title, photo.url)">
-              <img
-                [src]="photo.url"
-                [alt]="photo.title"
-                loading="lazy"
-                class="gate-feed-img" />
+            <div class="image-render-frame" (click)="openLightbox(photo.title, photo.url)">
+              <img [src]="photo.url" [alt]="photo.title" loading="lazy" class="gate-feed-img" />
             </div>
           </div>
         }
@@ -164,47 +155,47 @@
       <!-- OCR Extracted Details Card -->
       <div class="detail-card ocr-card">
         <div class="ocr-card-header">
-          <h3 class="card-section-title">OCR Extracted Details</h3>
+          <h3 class="card-section-title">{{ 'GATE_EVENTS.OCR_DETAILS_TITLE' | translate }}</h3>
           <div class="overall-confidence-pill">
-            <span>OCR Confidence (Overall)</span>
+            <span>{{ 'GATE_EVENTS.OVERALL_OCR_MATCH' | translate }}</span>
             <strong class="confidence-number">{{ detail().overallConfidence }}%</strong>
           </div>
         </div>
 
         <div class="ocr-fields-table">
           <div class="ocr-row">
-            <span class="ocr-label">Truck No.</span>
+            <span class="ocr-label">{{ 'GATE_EVENTS.TRUCK_LICENSE_PLATE' | translate }}</span>
             <strong class="ocr-value">{{ detail().truckNo }}</strong>
             <span class="ocr-pct">{{ detail().truckConfidence }}%</span>
-            <span class="badge-verified-pill">Verified</span>
+            <span class="badge-verified-pill">{{ 'GATE_EVENTS.VERIFIED' | translate }}</span>
           </div>
 
           <div class="ocr-row">
-            <span class="ocr-label">Container No.</span>
+            <span class="ocr-label">{{ 'GATE_EVENTS.CONTAINER_NUMBER' | translate }}</span>
             <strong class="ocr-value">{{ detail().containerNo }}</strong>
             <span class="ocr-pct">{{ detail().containerConfidence }}%</span>
-            <span class="badge-verified-pill">Verified</span>
+            <span class="badge-verified-pill">{{ 'GATE_EVENTS.VERIFIED' | translate }}</span>
           </div>
 
           <div class="ocr-row">
-            <span class="ocr-label">Container Size/Type</span>
+            <span class="ocr-label">{{ 'GATE_EVENTS.ISO_TYPE_CODE' | translate }}</span>
             <strong class="ocr-value">{{ detail().containerType }}</strong>
             <span class="ocr-pct">{{ detail().typeConfidence }}%</span>
-            <span class="badge-verified-pill">Verified</span>
+            <span class="badge-verified-pill">{{ 'GATE_EVENTS.VERIFIED' | translate }}</span>
           </div>
 
           <div class="ocr-row">
-            <span class="ocr-label">Full / Empty</span>
+            <span class="ocr-label">{{ 'GATE_EVENTS.FCL_LCL' | translate }}</span>
             <strong class="ocr-value">{{ detail().fullOrEmpty }}</strong>
             <span class="ocr-pct">{{ detail().fullEmptyConfidence }}%</span>
-            <span class="badge-verified-pill">Verified</span>
+            <span class="badge-verified-pill">{{ 'GATE_EVENTS.VERIFIED' | translate }}</span>
           </div>
 
           <div class="ocr-row">
-            <span class="ocr-label">Seal No.</span>
+            <span class="ocr-label">{{ 'GATE_EVENTS.SEAL_1' | translate }}</span>
             <strong class="ocr-value">{{ detail().sealNo }}</strong>
             <span class="ocr-pct">{{ detail().sealConfidence }}%</span>
-            <span class="badge-verified-pill">Verified</span>
+            <span class="badge-verified-pill">{{ 'GATE_EVENTS.VERIFIED' | translate }}</span>
           </div>
         </div>
       </div>
@@ -214,19 +205,19 @@
         <div class="dual-columns-wrap">
           <!-- Left Sub-column: Event Information -->
           <div class="info-subcolumn subcolumn-event-info">
-            <h4 class="subcolumn-heading">Event Information</h4>
+            <h4 class="subcolumn-heading">{{ 'GATE_EVENTS.EVENT_INFO_TITLE' | translate }}</h4>
 
             <div class="info-key-value-list">
               <div class="info-kv-row">
-                <span class="kv-key">Gate</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.GATE_LANE' | translate }}</span>
                 <span class="kv-val">{{ detail().gate }}</span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Terminal</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.TERMINAL_FACILITY' | translate }}</span>
                 <span class="kv-val">{{ detail().terminal }}</span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Driver</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.DRIVER_NAME' | translate }}</span>
                 <span class="kv-val driver-val">
                   <span class="driver-name">{{ detail().driver }}</span>
                   <a [href]="'tel:' + detail().driverPhone" class="driver-phone-link">
@@ -239,11 +230,11 @@
                 </span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Transporter</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.TRANSPORTER' | translate }}</span>
                 <span class="kv-val">{{ detail().transporter }}</span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Appointment Link</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.APPOINTMENT_ID' | translate }}</span>
                 <span class="kv-val">
                   <a href="javascript:void(0)" class="appointment-link">
                     {{ detail().appointmentId }}
@@ -252,11 +243,11 @@
                 </span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Operator Review Status</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.OPERATOR_REVIEW' | translate }}</span>
                 <span class="kv-val review-status-text">{{ detail().operatorReviewStatus }}</span>
               </div>
               <div class="info-kv-row">
-                <span class="kv-key">Remarks</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.SYSTEM_REMARKS' | translate }}</span>
                 <span class="kv-val">{{ detail().remarks }}</span>
               </div>
             </div>
@@ -264,11 +255,11 @@
 
           <!-- Right Sub-column: Additional Checks -->
           <div class="info-subcolumn subcolumn-additional-checks">
-            <h4 class="subcolumn-heading">Additional Checks</h4>
+            <h4 class="subcolumn-heading">{{ 'GATE_EVENTS.ADDITIONAL_CHECKS_TITLE' | translate }}</h4>
 
             <div class="info-key-value-list">
               <div class="info-kv-row">
-                <span class="kv-key">Damage Detected</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.STRUCTURAL_DAMAGE' | translate }}</span>
                 <span
                   class="kv-val status-val"
                   [class.val-good]="!detail().damageDetected"
@@ -279,12 +270,12 @@
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clip-rule="evenodd" />
                   </svg>
-                  {{ detail().damageDetected ? 'Yes' : 'No' }}
+                  {{ detail().damageDetected ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
                 </span>
               </div>
 
               <div class="info-kv-row">
-                <span class="kv-key">Seal Intact</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.BOLT_SEAL_INTACT' | translate }}</span>
                 <span class="kv-val status-val val-good">
                   <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path
@@ -292,12 +283,12 @@
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clip-rule="evenodd" />
                   </svg>
-                  Yes
+                  {{ 'COMMON.YES' | translate }}
                 </span>
               </div>
 
               <div class="info-kv-row">
-                <span class="kv-key">Container Clean</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.CONTAINER_CLEAN' | translate }}</span>
                 <span class="kv-val status-val val-good">
                   <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path
@@ -305,17 +296,17 @@
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                       clip-rule="evenodd" />
                   </svg>
-                  Yes
+                  {{ 'COMMON.YES' | translate }}
                 </span>
               </div>
 
               <div class="info-kv-row">
-                <span class="kv-key">Door Condition</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.DOOR_CONDITION' | translate }}</span>
                 <span class="kv-val font-semibold">{{ detail().doorCondition }}</span>
               </div>
 
               <div class="info-kv-row">
-                <span class="kv-key">Temperature (If Reefer)</span>
+                <span class="kv-key">{{ 'GATE_EVENTS.REEFER_TEMP' | translate }}</span>
                 <span class="kv-val">{{ detail().temperatureReefer }}</span>
               </div>
             </div>
@@ -330,16 +321,11 @@
     <!-- Event Timeline Card -->
     <div class="detail-card timeline-card">
       <div class="card-title-bar">
-        <h3 class="card-section-title">Event Timeline</h3>
+        <h3 class="card-section-title">{{ 'GATE_EVENTS.TIMELINE_TITLE' | translate }}</h3>
       </div>
 
       <div class="timeline-stepper">
-        @for (
-          step of detail().timelineSteps;
-          track step.label;
-          let idx = $index;
-          let isLast = $last
-        ) {
+        @for (step of detail().timelineSteps; track step.label; let idx = $index; let isLast = $last) {
           <div class="timeline-step">
             <div class="step-icon-wrap" [class]="'step-' + step.color">
               @if (step.icon === 'camera') {
@@ -395,7 +381,7 @@
       <div class="card-title-bar">
         <h3 class="card-section-title">
           <span class="notes-icon">📋</span>
-          System Notes
+          {{ 'GATE_EVENTS.SYSTEM_NOTES_TITLE' | translate }}
         </h3>
       </div>
 
@@ -415,56 +401,44 @@
 
   <!-- Bottom Action Bar (Aligned to Right matching Screenshot) -->
   <div class="detail-bottom-action-bar">
-    <button
-      type="button"
-      class="btn-detail-action btn-action-rerun"
-      (click)="onReRunOcr()">
+    <button type="button" class="btn-detail-action btn-action-rerun" (click)="onReRunOcr()">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.047a1 1 0 011.885-.666A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.608-1.286z"
           clip-rule="evenodd" />
       </svg>
-      <span>Re-run OCR</span>
+      <span>{{ 'GATE_EVENTS.RERUN_OCR' | translate }}</span>
     </button>
 
-    <button
-      type="button"
-      class="btn-detail-action btn-action-exception"
-      (click)="onMarkException()">
+    <button type="button" class="btn-detail-action btn-action-exception" (click)="onMarkException()">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
           clip-rule="evenodd" />
       </svg>
-      <span>Mark Exception</span>
+      <span>{{ 'GATE_EVENTS.MARK_EXCEPTION' | translate }}</span>
     </button>
 
-    <button
-      type="button"
-      class="btn-detail-action btn-action-create-task"
-      (click)="onCreateTask()">
+    <button type="button" class="btn-detail-action btn-action-create-task" (click)="onCreateTask()">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
           clip-rule="evenodd" />
       </svg>
-      <span>Create Task</span>
+      <span>{{ 'GATE_EVENTS.CREATE_TASK' | translate }}</span>
     </button>
 
-    <button
-      type="button"
-      class="btn-detail-action btn-action-approve-solid"
-      (click)="onApprove()">
+    <button type="button" class="btn-detail-action btn-action-approve-solid" (click)="onApprove()">
       <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
           clip-rule="evenodd" />
       </svg>
-      <span>Approve</span>
+      <span>{{ 'GATE_EVENTS.APPROVE' | translate }}</span>
     </button>
   </div>
 
@@ -474,7 +448,13 @@
       <div class="lightbox-dialog" (click)="$event.stopPropagation()">
         <div class="lightbox-header">
           <h3>{{ lightbox.title }}</h3>
-          <button type="button" class="btn-close-lightbox" (click)="closeLightbox()">✕</button>
+          <button
+            type="button"
+            class="btn-close-lightbox"
+            (click)="closeLightbox()"
+            [title]="'COMMON.CLOSE' | translate">
+            ✕
+          </button>
         </div>
         <div class="lightbox-body">
           <img [src]="lightbox.url" [alt]="lightbox.title" class="lightbox-img" />

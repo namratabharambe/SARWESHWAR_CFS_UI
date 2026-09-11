@@ -61,9 +61,9 @@
       </svg>
     </div>
     <div class="metric-info">
-      <span class="metric-label">System Health</span>
+      <span class="metric-label">{{ 'DASHBOARD.SYSTEM_HEALTH' | translate }}</span>
       <strong class="metric-value">99.9%</strong>
-      <span class="metric-trend positive">API Port 7190 Online</span>
+      <span class="metric-trend positive">{{ 'DASHBOARD.API_ONLINE' | translate }}</span>
     </div>
   </div>
 </div>
@@ -74,49 +74,49 @@
   <div class="dashboard-card">
     <div class="card-head">
       <div class="card-title-group">
-        <span class="card-pill-tag">ADMINISTRATION</span>
-        <h3>Management Modules</h3>
+        <span class="card-pill-tag">{{ 'DASHBOARD.SECTION_ADMIN' | translate }}</span>
+        <h3>{{ 'DASHBOARD.MODULES_TITLE' | translate }}</h3>
       </div>
-      <p class="card-head-desc">Quick configuration for organizations, terminals, and operators.</p>
+      <p class="card-head-desc">{{ 'DASHBOARD.MODULES_DESC' | translate }}</p>
     </div>
 
     <div class="modules-list">
       <div class="module-row">
         <div class="module-main">
-          <span class="module-badge badge-blue">Clients</span>
+          <span class="module-badge badge-blue">{{ 'NAV.CLIENTS' | translate }}</span>
           <div>
-            <strong>Client Organizations</strong>
-            <p>Manage operating client accounts and active contracts.</p>
+            <strong>{{ 'DASHBOARD.CLIENT_ORGS' | translate }}</strong>
+            <p>{{ 'DASHBOARD.CLIENT_ORGS_DESC' | translate }}</p>
           </div>
         </div>
         <div class="module-actions">
-          <a routerLink="/clients" class="btn-module-link">View Clients →</a>
+          <a routerLink="/clients" class="btn-module-link">{{ 'DASHBOARD.VIEW_CLIENTS' | translate }}</a>
         </div>
       </div>
 
       <div class="module-row">
         <div class="module-main">
-          <span class="module-badge badge-green">Sites</span>
+          <span class="module-badge badge-green">{{ 'NAV.SITES' | translate }}</span>
           <div>
-            <strong>Terminal Sites & Locations</strong>
-            <p>Configure operational CFS terminals, gates, and codes.</p>
+            <strong>{{ 'DASHBOARD.TERMINAL_SITES' | translate }}</strong>
+            <p>{{ 'DASHBOARD.TERMINAL_SITES_DESC' | translate }}</p>
           </div>
         </div>
         <div class="module-actions">
-          <a routerLink="/sites" class="btn-module-link">View Sites →</a>
+          <a routerLink="/sites" class="btn-module-link">{{ 'DASHBOARD.VIEW_SITES' | translate }}</a>
         </div>
       </div>
 
       <div class="module-row">
         <div class="module-main">
-          <span class="module-badge badge-indigo">Users</span>
+          <span class="module-badge badge-indigo">{{ 'NAV.USERS' | translate }}</span>
           <div>
-            <strong>User Access & Staff</strong>
-            <p>Manage system operators, assign client roles and terminal permissions.</p>
+            <strong>{{ 'DASHBOARD.USER_DIR' | translate }}</strong>
+            <p>{{ 'DASHBOARD.USER_DIR_DESC' | translate }}</p>
           </div>
         </div>
         <div class="module-actions">
-          <a routerLink="/users" class="btn-module-link">View Users →</a>
+          <a routerLink="/users" class="btn-module-link">{{ 'DASHBOARD.VIEW_USERS' | translate }}</a>
         </div>
       </div>
     </div>
@@ -126,10 +126,10 @@
   <div class="dashboard-card">
     <div class="card-head">
       <div class="card-title-group">
-        <span class="card-pill-tag tag-green">LIVE TERMINAL</span>
-        <h3>AI & Automation Status</h3>
+        <span class="card-pill-tag tag-green">{{ 'DASHBOARD.SECTION_AUTOMATION' | translate }}</span>
+        <h3>{{ 'GATE_EVENTS.TITLE' | translate }}</h3>
       </div>
-      <p class="card-head-desc">Status of OCR gates, yard sensors, and backend synchronization.</p>
+      <p class="card-head-desc">{{ 'GATE_EVENTS.SUBTITLE' | translate }}</p>
     </div>
 
     <div class="automation-items">
@@ -137,44 +137,48 @@
         <div class="status-left">
           <span class="live-dot dot-active"></span>
           <div>
-            <strong>GateVision OCR Engine</strong>
-            <small>Container number & ISO code optical recognition</small>
+            <strong>{{ 'DASHBOARD.GATEVISION_STATUS' | translate }}</strong>
+            <small>{{ 'DASHBOARD.GATEVISION_DESC' | translate }}</small>
           </div>
         </div>
-        <span class="status-tag tag-online">99.4% Accuracy</span>
+        <span class="status-tag tag-online">99.4%</span>
       </div>
 
       <div class="status-item">
         <div class="status-left">
           <span class="live-dot dot-active"></span>
           <div>
-            <strong>Prosper Live Yard Map</strong>
-            <small>RTK stacker tracking & 3D bay grid synchronization</small>
+            <strong>{{ 'DASHBOARD.YARD_SYNC_STATUS' | translate }}</strong>
+            <small>{{ 'DASHBOARD.YARD_SYNC_DESC' | translate }}</small>
           </div>
         </div>
-        <span class="status-tag tag-online">Synced</span>
+        <span class="status-tag tag-online">{{ 'DASHBOARD.SYNC_ACTIVE' | translate }}</span>
       </div>
 
       <div class="status-item">
         <div class="status-left">
           <span class="live-dot dot-active"></span>
           <div>
-            <strong>Backend API Gateway</strong>
-            <small>https://localhost:7190/api/auth/login</small>
+            <strong>{{ 'DASHBOARD.LIVE_CONTEXT' | translate }}</strong>
+            <small>{{ 'DASHBOARD.ACTIVE_SITE' | translate }}</small>
           </div>
         </div>
-        <span class="status-tag tag-online">Connected</span>
+        <span class="status-tag tag-online">{{ 'COMMON.ACTIVE' | translate }}</span>
       </div>
 
       <div class="status-item">
         <div class="status-left">
           <span class="live-dot dot-active"></span>
           <div>
-            <strong>Multi-Factor Security</strong>
-            <small>Enforced enterprise-wide for supervisor operations</small>
+            <strong>{{ 'NAV.GATE_EVENTS' | translate }}</strong>
+            <small>{{ 'GATE_EVENTS.SUBTITLE' | translate }}</small>
           </div>
         </div>
-        <span class="status-tag tag-online">Active</span>
+        <span class="status-tag tag-online"
+          ><a routerLink="/gate-events" class="text-blue-600 hover:underline">{{
+            'DASHBOARD.VIEW_GATE_EVENTS' | translate
+          }}</a></span
+        >
       </div>
     </div>
   </div>

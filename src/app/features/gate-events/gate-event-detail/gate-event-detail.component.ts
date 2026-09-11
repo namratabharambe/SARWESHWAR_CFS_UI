@@ -1,12 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-  signal,
-} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { TranslatePipe } from 'shared/pipes';
 import type { GateEventItem } from '../gate-events.component';
 
 export interface GateEventDetailData {
@@ -56,7 +50,7 @@ export interface GateEventDetailData {
 @Component({
   selector: 'app-gate-event-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './gate-event-detail.component.html',
   styleUrls: ['./gate-event-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -281,9 +275,7 @@ export class GateEventDetailComponent {
         { text: 'OCR accuracy high across all key fields.', time: '10:24 AM' },
         { text: 'Container number matched with appointment.', time: '10:24 AM' },
         {
-          text: event.damageFlag
-            ? 'Structural anomaly flagged by vision engine.'
-            : 'No exception detected.',
+          text: event.damageFlag ? 'Structural anomaly flagged by vision engine.' : 'No exception detected.',
           time: '10:24 AM',
         },
       ],

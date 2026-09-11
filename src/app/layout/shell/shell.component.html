@@ -69,7 +69,7 @@
       <button
         class="mobile-menu text-gray-700 dark:text-gray-200"
         type="button"
-        aria-label="Open menu"
+        [attr.aria-label]="'NAV.OPEN_MENU' | translate"
         (click)="mobileOpen.set(!mobileOpen())">
         ☰
       </button>
@@ -130,7 +130,7 @@
         @if (switchingContext() || auth.contextLoading()) {
           <div class="context-sync-badge">
             <span class="sync-spinner"></span>
-            <span>Switching Context & Token...</span>
+            <span>{{ 'NAV.SWITCHING_CONTEXT' | translate }}</span>
           </div>
         } @else if (contextToast()) {
           <div class="context-toast-badge">
@@ -177,7 +177,12 @@
           >
         }
 
-        <button aria-label="Notifications" class="icon-button notification-btn">🔔</button>
+        <button
+          [attr.aria-label]="'NAV.NOTIFICATIONS' | translate"
+          [title]="'NAV.NOTIFICATIONS' | translate"
+          class="icon-button notification-btn">
+          🔔
+        </button>
         <app-avatar [name]="auth.userName()" size="sm" />
         <div class="user-info">
           <strong class="text-gray-900 dark:text-gray-100">{{ auth.userName() }}</strong>

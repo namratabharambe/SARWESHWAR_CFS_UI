@@ -28,28 +28,36 @@
 
 @if (editing() !== undefined) {
   <app-modal
-    [title]="editing() ? 'Edit Role' : 'Add Role'"
-    [subtitle]="editing() ? 'Update role permissions and scope' : 'Define a new role and its access level'"
+    [title]="(editing() ? 'ROLES.MODAL_EDIT_TITLE' : 'ROLES.MODAL_NEW_TITLE') | translate"
+    [subtitle]="(editing() ? 'ROLES.MODAL_EDIT_SUBTITLE' : 'ROLES.MODAL_NEW_SUBTITLE') | translate"
     icon="security"
     (closed)="editing.set(undefined)">
     <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
-      <app-form-field label="Role name" name="name" [control]="form.controls.name" placeholder="e.g. Supervisor" />
       <app-form-field
-        label="Scope"
+        [label]="'ROLES.FIELD_NAME' | translate"
+        name="name"
+        [control]="form.controls.name"
+        [placeholder]="'ROLES.FIELD_NAME_PLACEHOLDER' | translate" />
+      <app-form-field
+        [label]="'ROLES.FIELD_SCOPE' | translate"
         name="level"
         type="select"
         [control]="form.controls.level"
         [options]="levelOptions" />
       <app-form-field
-        label="Description"
+        [label]="'ROLES.FIELD_DESCRIPTION' | translate"
         name="description"
         type="textarea"
         [control]="form.controls.description"
-        placeholder="Describe role responsibilities..." />
+        [placeholder]="'ROLES.FIELD_DESCRIPTION_PLACEHOLDER' | translate" />
 
       <div class="form-actions">
-        <app-button variant="secondary" (pressed)="editing.set(undefined)">Cancel</app-button>
-        <app-button type="submit" [appFocusInvalidField]="form" [disabled]="form.invalid">Save role</app-button>
+        <app-button variant="secondary" (pressed)="editing.set(undefined)">{{
+          'COMMON.CANCEL' | translate
+        }}</app-button>
+        <app-button type="submit" [appFocusInvalidField]="form" [disabled]="form.invalid">{{
+          'ROLES.SAVE_ROLE' | translate
+        }}</app-button>
       </div>
     </form>
   </app-modal>

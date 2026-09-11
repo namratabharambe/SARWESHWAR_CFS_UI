@@ -25,10 +25,25 @@
     <!-- ========================================================================= -->
     <!-- 2. GATE EVENTS TABLE VIEW (Matches Exact Reference UI Screenshot)         -->
     <!-- ========================================================================= -->
-    <!-- Page Header -->
+    <!-- Page Header with Manual Gate Entry Button in Top Right -->
     <header class="page-title-header">
-      <h1 class="page-title">{{ 'GATE_EVENTS.TITLE' | translate }}</h1>
-      <p class="page-subtitle">{{ 'GATE_EVENTS.SUBTITLE' | translate }}</p>
+      <div class="header-title-content">
+        <h1 class="page-title">{{ 'GATE_EVENTS.TITLE' | translate }}</h1>
+        <p class="page-subtitle">{{ 'GATE_EVENTS.SUBTITLE' | translate }}</p>
+      </div>
+      <div class="header-actions">
+        <button
+          type="button"
+          class="btn-manual-gate-entry"
+          (click)="openGateInModal()"
+          [title]="'GATE_EVENTS.MANUAL_GATE_ENTRY' | translate">
+          <svg class="btn-entry-svg" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
+          </svg>
+          <span>{{ 'GATE_EVENTS.MANUAL_GATE_ENTRY' | translate }}</span>
+        </button>
+      </div>
     </header>
 
     <!-- 5 KPI Metrics Cards Grid -->
@@ -98,8 +113,7 @@
       <div class="kpi-card card-damaged">
         <div class="kpi-icon-wrapper bg-red-icon">
           <svg class="kpi-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
             <line x1="12" y1="9" x2="12" y2="13" />
             <line x1="12" y1="17" x2="12.01" y2="17" />
           </svg>
@@ -121,13 +135,10 @@
           <div class="filter-item">
             <span class="filter-caption">{{ 'GATE_EVENTS.FILTER_DIRECTION' | translate }}</span>
             <div class="select-box-wrapper">
-              <select
-                class="custom-select"
-                [ngModel]="directionFilter()"
-                (ngModelChange)="directionFilter.set($event)">
-                <option value="All">All</option>
-                <option value="IN">IN</option>
-                <option value="OUT">OUT</option>
+              <select class="custom-select" [ngModel]="directionFilter()" (ngModelChange)="directionFilter.set($event)">
+                <option value="All">{{ 'GATE_EVENTS.DIRECTION_ALL' | translate }}</option>
+                <option value="IN">{{ 'GATE_EVENTS.DIRECTION_IN' | translate }}</option>
+                <option value="OUT">{{ 'GATE_EVENTS.DIRECTION_OUT' | translate }}</option>
               </select>
               <span class="select-arrow">⌵</span>
             </div>
@@ -137,11 +148,8 @@
           <div class="filter-item">
             <span class="filter-caption">{{ 'GATE_EVENTS.FILTER_GATE' | translate }}</span>
             <div class="select-box-wrapper">
-              <select
-                class="custom-select"
-                [ngModel]="gateFilter()"
-                (ngModelChange)="gateFilter.set($event)">
-                <option value="All">All Gates</option>
+              <select class="custom-select" [ngModel]="gateFilter()" (ngModelChange)="gateFilter.set($event)">
+                <option value="All">{{ 'GATE_EVENTS.ALL_GATES' | translate }}</option>
                 <option value="GATE-01">GATE-01</option>
                 <option value="GATE-02">GATE-02</option>
                 <option value="GATE-03">GATE-03</option>
@@ -177,10 +185,10 @@
                 class="custom-select"
                 [ngModel]="confidenceFilter()"
                 (ngModelChange)="confidenceFilter.set($event)">
-                <option value="All">All</option>
-                <option value="High">High (&ge; 95%)</option>
-                <option value="Medium">Medium (90% - 94%)</option>
-                <option value="Low">Low (&lt; 90%)</option>
+                <option value="All">{{ 'GATE_EVENTS.CONF_ALL' | translate }}</option>
+                <option value="High">{{ 'GATE_EVENTS.CONF_HIGH' | translate }}</option>
+                <option value="Medium">{{ 'GATE_EVENTS.CONF_MED' | translate }}</option>
+                <option value="Low">{{ 'GATE_EVENTS.CONF_LOW' | translate }}</option>
               </select>
               <span class="select-arrow">⌵</span>
             </div>
@@ -203,7 +211,13 @@
               [ngModel]="searchQuery()"
               (ngModelChange)="searchQuery.set($event)" />
             @if (searchQuery()) {
-              <button type="button" class="btn-clear-gate-search" (click)="searchQuery.set('')">✕</button>
+              <button
+                type="button"
+                class="btn-clear-gate-search"
+                (click)="searchQuery.set('')"
+                [title]="'COMMON.CLEAR' | translate">
+                ✕
+              </button>
             }
           </div>
 
@@ -215,7 +229,7 @@
                 d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
                 clip-rule="evenodd" />
             </svg>
-            <span>Filters</span>
+            <span>{{ 'COMMON.FILTERS' | translate }}</span>
           </button>
         </div>
       </div>
@@ -260,7 +274,7 @@
             type="button"
             class="btn-action-approve"
             (click)="approveSelected()"
-            title="Approve selected gate events">
+            [title]="'GATE_EVENTS.APPROVE' | translate">
             <svg class="action-btn-svg" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -275,7 +289,7 @@
             type="button"
             class="btn-action-reprocess"
             (click)="reprocessOcr()"
-            title="Trigger neural OCR rerun">
+            [title]="'GATE_EVENTS.REPROCESS_OCR' | translate">
             <svg class="action-btn-svg" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -290,7 +304,7 @@
             type="button"
             class="btn-action-neutral"
             (click)="exportData()"
-            title="Download gate events CSV">
+            [title]="'GATE_EVENTS.EXPORT' | translate">
             <svg class="action-btn-svg" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -313,7 +327,7 @@
                   class="gate-checkbox"
                   [checked]="isAllSelected()"
                   (change)="toggleSelectAll()"
-                  title="Select all" />
+                  [title]="'GATE_EVENTS.SELECT_ALL' | translate" />
               </th>
               <th class="col-time">
                 <span>{{ 'GATE_EVENTS.COL_TIME' | translate }}</span>
@@ -409,17 +423,18 @@
                     class="status-pill"
                     [class.status-verified]="event.status === 'Verified'"
                     [class.status-review]="event.status === 'Review'">
-                    {{ event.status }}
+                    {{
+                      event.status === 'Verified'
+                        ? ('GATE_EVENTS.VERIFIED' | translate)
+                        : ('GATE_EVENTS.REVIEW' | translate)
+                    }}
                   </span>
                 </td>
 
                 <!-- Damage Flag -->
                 <td class="col-damage">
-                  <span
-                    class="damage-tag"
-                    [class.damage-no]="!event.damageFlag"
-                    [class.damage-yes]="event.damageFlag">
-                    {{ event.damageFlag ? 'Yes' : 'No' }}
+                  <span class="damage-tag" [class.damage-no]="!event.damageFlag" [class.damage-yes]="event.damageFlag">
+                    {{ event.damageFlag ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
                   </span>
                 </td>
 
@@ -427,13 +442,8 @@
                 <td class="col-photos">
                   <div class="camera-thumbnails-row">
                     @for (photo of event.photos; track photo.label) {
-                      <div
-                        class="camera-photo-thumb"
-                        [style.background-color]="photo.color"
-                        [title]="photo.label">
-                        <div class="thumb-container-ribs">
-                          <span></span><span></span><span></span>
-                        </div>
+                      <div class="camera-photo-thumb" [style.background-color]="photo.color" [title]="photo.label">
+                        <div class="thumb-container-ribs"><span></span><span></span><span></span></div>
                         <span class="thumb-tag">{{ photo.tag }}</span>
                       </div>
                     }
@@ -445,8 +455,7 @@
                 <td colspan="12" class="empty-state-cell">
                   <div class="empty-message-box">
                     <span class="empty-icon">🔍</span>
-                    <strong>No gate events match your filter criteria</strong>
-                    <p>Try resetting direction or search term to see records.</p>
+                    <strong>{{ 'GATE_EVENTS.EMPTY_TITLE' | translate }}</strong>
                   </div>
                 </td>
               </tr>
@@ -458,7 +467,10 @@
       <!-- Pagination Footer Matching Screenshot -->
       <div class="table-pagination-footer">
         <div class="pagination-info">
-          <span>Showing 1 to {{ paginatedEvents().length }} of {{ tabCounts().all }} events</span>
+          <span
+            >{{ 'COMMON.SHOWING' | translate }} 1 {{ 'COMMON.TO' | translate }} {{ paginatedEvents().length }}
+            {{ 'COMMON.OF' | translate }} {{ tabCounts().all }} {{ 'COMMON.EVENTS' | translate }}</span
+          >
         </div>
 
         <div class="pagination-controls-group">
@@ -499,20 +511,21 @@
           </button>
           <span class="page-ellipsis">...</span>
           <button type="button" class="page-nav-btn" (click)="currentPage.set(7)">7</button>
-          <button type="button" class="page-arrow-btn" title="Next page">&gt;</button>
+          <button type="button" class="page-arrow-btn" [title]="'GATE_EVENTS.NEXT_PAGE' | translate">&gt;</button>
         </div>
 
         <div class="items-per-page-select-wrap">
-          <select
-            class="per-page-dropdown"
-            [value]="pageSize()"
-            (change)="pageSize.set(+$any($event.target).value)">
-            <option value="10">10 per page</option>
-            <option value="25">25 per page</option>
-            <option value="50">50 per page</option>
+          <select class="per-page-dropdown" [value]="pageSize()" (change)="pageSize.set(+$any($event.target).value)">
+            <option value="10">10 {{ 'COMMON.PER_PAGE' | translate }}</option>
+            <option value="25">25 {{ 'COMMON.PER_PAGE' | translate }}</option>
+            <option value="50">50 {{ 'COMMON.PER_PAGE' | translate }}</option>
           </select>
         </div>
       </div>
     </div>
   }
+
+  <!-- Import Gate In Popup Modal (Manual Gate Entry) -->
+  <app-gate-in-modal [isOpen]="isGateInModalOpen()" (close)="closeGateInModal()" (save)="handleGateInSave($event)">
+  </app-gate-in-modal>
 </div>

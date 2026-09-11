@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from 'shared/pipes';
-import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent } from 'shared/components';
+import type { GateCameraPhoto } from 'shared/components';
 import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.component';
+import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
@@ -242,14 +243,7 @@ const INITIAL_GATE_EVENTS: GateEventItem[] = [
 @Component({
   selector: 'app-gate-events',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TranslatePipe,
-    GatePhotoStripComponent,
-    ConfidenceBadgeComponent,
-    GateEventDetailComponent,
-  ],
+  imports: [CommonModule, FormsModule, TranslatePipe, GateEventDetailComponent, GateInModalComponent],
   templateUrl: './gate-events.component.html',
   styleUrls: ['./gate-events.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -263,6 +257,7 @@ export class GateEventsComponent {
   public readonly dateFilter = signal<string>('17 May 2025');
   public readonly searchQuery = signal<string>('');
 
+  public readonly isGateInModalOpen = signal<boolean>(false);
   public readonly selectedIds = signal<Set<string>>(new Set());
   public readonly selectedEventForDetails = signal<GateEventItem | null>(null);
   public readonly alertMessage = signal<string>('');
@@ -500,26 +495,26 @@ export class GateEventsComponent {
           title: '1. Front Gate Photo',
           time: '17 May 2025, 10:24:01 AM',
           url: 'assets/gate/front-gate.jpg',
-          tag: 'FRONT'
+          tag: 'FRONT',
         },
         {
           title: '2. Side / Container Number',
           time: '17 May 2025, 10:24:03 AM',
           url: 'assets/gate/container-stencil.jpg',
-          tag: 'SIDE'
+          tag: 'SIDE',
         },
         {
           title: '3. Truck Image',
           time: '17 May 2025, 10:24:05 AM',
           url: 'assets/gate/truck-side.jpg',
-          tag: 'TRUCK'
+          tag: 'TRUCK',
         },
         {
           title: '4. Overview Image',
           time: '17 May 2025, 10:24:07 AM',
           url: 'assets/gate/overview.jpg',
-          tag: 'OVERVIEW'
-        }
+          tag: 'OVERVIEW',
+        },
       ],
       timeline: [
         {
@@ -527,40 +522,38 @@ export class GateEventsComponent {
           time: '17 May 2025, 10:24:01 AM',
           actor: 'Camera System',
           icon: 'camera',
-          color: 'blue'
+          color: 'blue',
         },
         {
           label: 'OCR Processed',
           time: '17 May 2025, 10:24:08 AM',
           actor: 'AI Engine',
           icon: 'target',
-          color: 'purple'
+          color: 'purple',
         },
         {
           label: 'Verified',
           time: '17 May 2025, 10:24:18 AM',
           actor: 'Admin User',
           icon: 'shield',
-          color: 'green'
+          color: 'green',
         },
         {
           label: 'Task Created',
           time: '17 May 2025, 10:24:20 AM',
           actor: 'System',
           icon: 'task',
-          color: 'amber'
-        }
+          color: 'amber',
+        },
       ],
       systemNotes: [
         { text: 'OCR accuracy high across all key fields.', time: '10:24 AM' },
         { text: 'Container number matched with appointment.', time: '10:24 AM' },
         {
-          text: event.damageFlag
-            ? 'Structural anomaly flagged by vision engine.'
-            : 'No exception detected.',
-          time: '10:24 AM'
-        }
-      ]
+          text: event.damageFlag ? 'Structural anomaly flagged by vision engine.' : 'No exception detected.',
+          time: '10:24 AM',
+        },
+      ],
     };
   }
 
@@ -588,7 +581,7 @@ export class GateEventsComponent {
     this.exportDropdownOpen.set(false);
     const detail = this.getEventDetail(event);
     const blob = new Blob([JSON.stringify({ ...event, detail }, null, 2)], {
-      type: 'application/json'
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -611,6 +604,19 @@ export class GateEventsComponent {
 
   public createTaskForEvent(event: GateEventItem): void {
     this.showToast(`Reach-stacker movement task dispatch ticket created for container ${event.containerNo}.`);
+  }
+
+  public openGateInModal(): void {
+    this.isGateInModalOpen.set(true);
+  }
+
+  public closeGateInModal(): void {
+    this.isGateInModalOpen.set(false);
+  }
+
+  public handleGateInSave(data: any): void {
+    this.showToast('Manual Gate Entry recorded successfully.');
+    this.closeGateInModal();
   }
 
   public openLightbox(title: string, url: string, e?: MouseEvent): void {

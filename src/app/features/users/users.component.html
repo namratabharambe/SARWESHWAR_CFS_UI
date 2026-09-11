@@ -26,7 +26,13 @@
           [value]="searchQuery()"
           (input)="searchQuery.set($any($event.target).value)" />
         @if (searchQuery()) {
-          <button type="button" class="btn-clear-search" (click)="searchQuery.set('')" title="Clear search">✕</button>
+          <button
+            type="button"
+            class="btn-clear-search"
+            (click)="searchQuery.set('')"
+            [title]="'COMMON.CLEAR' | translate">
+            ✕
+          </button>
         }
       </div>
     </div>
@@ -48,7 +54,7 @@
     </div>
 
     <div class="filter-actions-right">
-      <button type="button" class="btn-refresh" (click)="refresh()" title="Refresh users from server">
+      <button type="button" class="btn-refresh" (click)="refresh()" [title]="'COMMON.REFRESH' | translate">
         <svg class="refresh-icon" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
@@ -130,7 +136,11 @@
             </td>
             <td class="cell-actions">
               <div class="action-buttons-group">
-                <button type="button" class="btn-action btn-edit" (click)="openModal(user)" title="Edit user">
+                <button
+                  type="button"
+                  class="btn-action btn-edit"
+                  (click)="openModal(user)"
+                  [title]="'COMMON.EDIT' | translate">
                   <svg class="action-icon-svg" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -138,7 +148,11 @@
                   <span>{{ 'COMMON.EDIT' | translate }}</span>
                 </button>
 
-                <button type="button" class="btn-action btn-delete" (click)="deleteUser(user)" title="Delete user">
+                <button
+                  type="button"
+                  class="btn-action btn-delete"
+                  (click)="deleteUser(user)"
+                  [title]="'COMMON.DELETE' | translate">
                   <svg class="action-icon-svg" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
@@ -173,11 +187,7 @@
 @if (editingUser() !== undefined) {
   <app-modal
     [title]="editingUser() ? ('USERS.MODAL_EDIT_TITLE' | translate) : ('USERS.MODAL_NEW_TITLE' | translate)"
-    [subtitle]="
-      editingUser()
-        ? 'Update user credentials, terminal site access, and designated roles'
-        : 'Create a new user account with dedicated roles per terminal site'
-    "
+    [subtitle]="(editingUser() ? 'USERS.MODAL_EDIT_SUBTITLE' : 'USERS.MODAL_NEW_SUBTITLE') | translate"
     icon="👥"
     size="xl"
     (closed)="closeModal()">
@@ -187,23 +197,23 @@
         <div class="user-form-panel user-panel-left">
           <div class="panel-section-header">
             <span class="panel-header-icon">👤</span>
-            <span class="panel-header-title">User Profile & Access</span>
+            <span class="panel-header-title">{{ 'USERS.TITLE' | translate }}</span>
           </div>
 
           <div class="panel-fields-grid">
             <!-- Name Row -->
             <div class="two-cols-grid">
               <app-form-field
-                label="First Name"
+                [label]="'USERS.FIELD_FIRST_NAME' | translate"
                 [control]="form.controls.firstName"
-                placeholder="First name"
+                [placeholder]="'USERS.FIELD_FIRST_NAME_PLACEHOLDER' | translate"
                 icon="👤"
                 autocomplete="off" />
 
               <app-form-field
-                label="Last Name"
+                [label]="'USERS.FIELD_LAST_NAME' | translate"
                 [control]="form.controls.lastName"
-                placeholder="Last name"
+                [placeholder]="'USERS.FIELD_LAST_NAME_PLACEHOLDER' | translate"
                 icon="👤"
                 autocomplete="off" />
             </div>
@@ -211,17 +221,17 @@
             <!-- Email & Mobile Number Row -->
             <div class="two-cols-grid">
               <app-form-field
-                label="Email"
+                [label]="'USERS.FIELD_EMAIL' | translate"
                 type="email"
                 [control]="form.controls.email"
-                placeholder="Email address"
+                [placeholder]="'USERS.FIELD_EMAIL_PLACEHOLDER' | translate"
                 icon="✉"
                 autocomplete="off" />
 
               <app-form-field
-                label="Mobile Number"
+                [label]="'USERS.FIELD_PHONE' | translate"
                 [control]="form.controls.mobileNumber"
-                placeholder="Mobile number"
+                [placeholder]="'USERS.FIELD_PHONE_PLACEHOLDER' | translate"
                 icon="📞"
                 autocomplete="tel" />
             </div>
@@ -231,7 +241,7 @@
               <div class="form-field-group">
                 <div class="label-row">
                   <label class="field-label" for="user-password-input">
-                    Password
+                    {{ 'USERS.FIELD_PASSWORD' | translate }}
                     <span class="required-star">*</span>
                   </label>
                 </div>
@@ -243,14 +253,14 @@
                     id="user-password-input"
                     [type]="showPassword() ? 'text' : 'password'"
                     [formControl]="form.controls.password"
-                    placeholder="Min 6 chars (e.g. Prosper@123)"
+                    [placeholder]="'USERS.FIELD_PASSWORD_PLACEHOLDER' | translate"
                     autocomplete="new-password"
                     class="custom-input" />
                   <button
                     type="button"
                     class="btn-toggle-pwd"
                     (click)="togglePasswordVisibility()"
-                    title="Toggle password visibility">
+                    [title]="showPassword() ? ('AUTH.HIDE_PASSWORD' | translate) : ('AUTH.SHOW_PASSWORD' | translate)">
                     {{ showPassword() ? '👁‍🗨' : '👁' }}
                   </button>
                 </div>
@@ -262,7 +272,7 @@
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                         clip-rule="evenodd" />
                     </svg>
-                    <span>Password must be at least 6 characters.</span>
+                    <span>{{ 'USERS.PASSWORD_MIN_LENGTH' | translate }}</span>
                   </div>
                 }
               </div>
@@ -271,15 +281,15 @@
             <!-- Client & Account Status Row -->
             <div class="two-cols-grid">
               <app-form-field
-                label="Client Organization"
+                [label]="'USERS.FIELD_CLIENT' | translate"
                 type="select"
                 [control]="form.controls.clientId"
                 [options]="clientOptions()"
                 icon="🏢"
-                placeholder="Select client" />
+                [placeholder]="'COMMON.SELECT_CLIENT' | translate" />
 
               <app-form-field
-                label="Account Status"
+                [label]="'COMMON.STATUS' | translate"
                 type="select"
                 [control]="form.controls.status"
                 [options]="statusOptions"
@@ -290,12 +300,12 @@
 
         <!-- Right Panel: Terminal Sites & Role Permissions -->
         <div class="user-form-panel user-panel-right">
-          <app-centered-divider label="Location Access & Roles" />
+          <app-centered-divider [label]="'NAV.ROLES' | translate" />
           <div class="custom-selector-section">
             <div class="selector-header">
               <div class="selector-label-group">
                 <span class="field-icon">📍</span>
-                <span class="custom-field-label">Terminal Sites & Roles</span>
+                <span class="custom-field-label">{{ 'NAV.SITES' | translate }} & {{ 'NAV.ROLES' | translate }}</span>
                 @if (siteRoles().length > 0) {
                   <span class="count-badge-active"
                     >{{ siteRoles().length }} site{{ siteRoles().length === 1 ? '' : 's' }}</span
@@ -303,13 +313,17 @@
                 }
               </div>
               <div class="selector-quick-actions">
-                <button type="button" class="btn-quick-toggle" (click)="selectAllSites()">Select All</button>
+                <button type="button" class="btn-quick-toggle" (click)="selectAllSites()">
+                  {{ 'COMMON.ALL' | translate }}
+                </button>
                 <span class="dot-separator">•</span>
-                <button type="button" class="btn-quick-toggle" (click)="clearAllSites()">Clear</button>
+                <button type="button" class="btn-quick-toggle" (click)="clearAllSites()">
+                  {{ 'COMMON.RESET' | translate }}
+                </button>
               </div>
             </div>
 
-            <p class="custom-field-hint">Select terminal sites below to assign specific permissions per location.</p>
+            <p class="custom-field-hint">{{ 'USERS.SITE_SELECT_HINT' | translate }}</p>
 
             <!-- Available Sites Toggle Chips -->
             <div class="chips-grid">
@@ -330,7 +344,7 @@
                   }
                 </button>
               } @empty {
-                <div class="empty-chips-note">No specific sites found for this client.</div>
+                <div class="empty-chips-note">{{ 'USERS.NO_SITES_FOUND' | translate }}</div>
               }
             </div>
 
@@ -340,10 +354,10 @@
                 <div class="site-roles-config-header">
                   <div class="config-header-left">
                     <span class="config-header-icon">🛡</span>
-                    <strong>Designated Roles</strong>
+                    <strong>{{ 'NAV.ROLES' | translate }}</strong>
                   </div>
                   <div class="bulk-role-apply">
-                    <span class="bulk-label">Set all:</span>
+                    <span class="bulk-label">{{ 'COMMON.ALL' | translate }}:</span>
                     <select
                       [value]="globalDefaultRole()"
                       (change)="applyRoleToAllSelectedSites($any($event.target).value)"
@@ -386,7 +400,7 @@
                         type="button"
                         class="btn-remove-site-role"
                         (click)="removeSite(sr.siteId)"
-                        title="Remove site access">
+                        [title]="'COMMON.DELETE' | translate">
                         ✕
                       </button>
                     </div>
@@ -399,8 +413,8 @@
                 <div class="global-role-info">
                   <span class="global-role-icon">🌐</span>
                   <div>
-                    <strong>Global Access Role</strong>
-                    <p>No terminal site selected. Access applies across all client sites.</p>
+                    <strong>{{ 'NAV.SYSTEM_ADMIN' | translate }}</strong>
+                    <p>{{ 'USERS.GLOBAL_ROLE_HINT' | translate }}</p>
                   </div>
                 </div>
                 <div class="global-role-dropdown-wrap">
@@ -434,9 +448,9 @@
         <button type="submit" class="btn-modal-submit" [appFocusInvalidField]="form" [disabled]="isSaving()">
           @if (isSaving()) {
             <span class="btn-spinner"></span>
-            <span>{{ 'COMMON.LOADING' | translate }}</span>
+            <span>{{ 'COMMON.SAVING' | translate }}</span>
           } @else {
-            <span>{{ editingUser() ? ('COMMON.SAVE' | translate) : ('COMMON.SUBMIT' | translate) }}</span>
+            <span>{{ (editingUser() ? 'USERS.UPDATE_USER' : 'USERS.SAVE_USER') | translate }}</span>
           }
         </button>
       </div>

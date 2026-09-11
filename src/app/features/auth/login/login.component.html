@@ -8,8 +8,8 @@
       <span>SL</span>
     </div>
     <div class="brand-titles">
-      <strong class="brand-name">SARWESHWAR CFS</strong>
-      <span class="brand-sub">Container Terminal Control Tower</span>
+      <strong class="brand-name">{{ 'AUTH.BRAND_NAME' | translate }}</strong>
+      <span class="brand-sub">{{ 'AUTH.BRAND_SUB' | translate }}</span>
     </div>
   </header>
 
@@ -17,17 +17,14 @@
     <!-- Left Hero Section -->
     <section class="hero-section">
       <div class="hero-content">
-        <p class="hero-eyebrow">CONTAINER TERMINAL AUTOMATION</p>
-        <h1 class="hero-headline">One control tower for every container movement.</h1>
-        <p class="hero-description">
-          Gate OCR, yard inventory, reach-stacker tasks, RTK location intelligence, damage evidence, ERP synchronization
-          and complete audit visibility.
-        </p>
+        <p class="hero-eyebrow">{{ 'AUTH.HERO_EYEBROW' | translate }}</p>
+        <h1 class="hero-headline">{{ 'AUTH.HERO_HEADLINE' | translate }}</h1>
+        <p class="hero-description">{{ 'AUTH.HERO_DESCRIPTION' | translate }}</p>
 
         <div class="hero-feature-pills">
-          <span class="feature-pill">GateVision OCR</span>
-          <span class="feature-pill">Live Yard Map</span>
-          <span class="feature-pill">Sensor Fusion</span>
+          <span class="feature-pill">{{ 'AUTH.FEATURE_OCR' | translate }}</span>
+          <span class="feature-pill">{{ 'AUTH.FEATURE_YARD' | translate }}</span>
+          <span class="feature-pill">{{ 'AUTH.FEATURE_SENSOR' | translate }}</span>
         </div>
       </div>
     </section>
@@ -60,7 +57,7 @@
               id="login-username"
               type="text"
               class="form-control"
-              placeholder="vijay.mahale@sarweshwar.com"
+              [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
               [formControl]="form.controls.userName"
               data-control-name="userName"
               autocomplete="username" />
@@ -74,7 +71,7 @@
                 id="login-password"
                 [type]="showPassword() ? 'text' : 'password'"
                 class="form-control password-control"
-                placeholder="••••••••••••"
+                [placeholder]="'AUTH.PASSWORD_PLACEHOLDER' | translate"
                 [formControl]="form.controls.password"
                 data-control-name="password"
                 autocomplete="current-password" />
@@ -82,7 +79,7 @@
                 type="button"
                 class="btn-toggle-password"
                 (click)="togglePasswordVisibility()"
-                [title]="showPassword() ? 'Hide password' : 'Show password'">
+                [title]="showPassword() ? ('AUTH.HIDE_PASSWORD' | translate) : ('AUTH.SHOW_PASSWORD' | translate)">
                 @if (showPassword()) {
                   <svg class="eye-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -109,9 +106,9 @@
           <div class="form-options-row">
             <label class="checkbox-container">
               <input type="checkbox" [formControl]="form.controls.rememberMe" />
-              <span class="checkbox-label">Remember this device</span>
+              <span class="checkbox-label">{{ 'AUTH.REMEMBER_DEVICE' | translate }}</span>
             </label>
-            <a href="javascript:void(0)" class="forgot-password-link">Forgot password?</a>
+            <a href="javascript:void(0)" class="forgot-password-link">{{ 'AUTH.FORGOT_PASSWORD' | translate }}</a>
           </div>
 
           <!-- Submit Button -->
@@ -129,22 +126,18 @@
           </button>
 
           <!-- Bypass Dev Login Button -->
-          <button
-            type="button"
-            class="btn-bypass-login"
-            (click)="bypassLogin()"
-            id="btn-bypass-login">
+          <button type="button" class="btn-bypass-login" (click)="bypassLogin()" id="btn-bypass-login">
             <svg class="bypass-icon" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
                 clip-rule="evenodd" />
             </svg>
-            <span>⚡ Bypass Login (Instant Dev Access)</span>
+            <span>{{ 'AUTH.BYPASS_LOGIN' | translate }}</span>
           </button>
 
           <!-- Divider -->
-          <app-centered-divider label="OR CONTINUE WITH" />
+          <app-centered-divider [label]="'AUTH.OR_DIVIDER' | translate" />
 
           <!-- Microsoft Entra SSO Button -->
           <button type="button" class="btn-sso" (click)="handleSso()">
@@ -154,13 +147,13 @@
               <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
               <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
             </svg>
-            <span>Microsoft Entra ID SSO</span>
+            <span>{{ 'AUTH.SSO_BUTTON' | translate }}</span>
           </button>
 
           <!-- Security Note Box -->
           <div class="mfa-security-box">
             <div class="mfa-bar"></div>
-            <p class="mfa-text">Multi-factor authentication is enforced for supervisors and administrators.</p>
+            <p class="mfa-text">{{ 'AUTH.MFA_SECURITY_NOTE' | translate }}</p>
           </div>
         </form>
       </div>

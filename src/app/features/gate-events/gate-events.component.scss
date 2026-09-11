@@ -52,6 +52,17 @@
 
 // Page Title Header
 .page-title-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .header-title-content {
+    display: flex;
+    flex-direction: column;
+  }
+
   .page-title {
     font-size: 24px;
     font-weight: 700;
@@ -71,6 +82,43 @@
 
     :host-context(.dark) & {
       color: #94a3b8;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-manual-gate-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .btn-entry-svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
@@ -1412,8 +1460,6 @@
   }
 }
 
-
-
 // Table Row Click Tip
 .hint-click-text {
   font-size: 12.5px;
@@ -1424,4 +1470,3 @@
     color: #94a3b8;
   }
 }
-
