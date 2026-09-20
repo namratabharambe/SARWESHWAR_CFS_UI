@@ -1,0 +1,17 @@
+<span
+  class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold tracking-wide transition-all duration-200"
+  [class.bg-emerald-50]="isActive()"
+  [class.text-emerald-700]="isActive()"
+  [class.border-emerald-200]="isActive()"
+  [class.dark:bg-emerald-950/40]="isActive()"
+  [class.dark:text-emerald-400]="isActive()"
+  [class.dark:border-emerald-800/60]="isActive()"
+  [class.bg-red-50]="!isActive()"
+  [class.text-red-700]="!isActive()"
+  [class.border-red-200]="!isActive()"
+  [class.dark:bg-red-950/40]="!isActive()"
+  [class.dark:text-red-400]="!isActive()"
+  [class.dark:border-red-800/60]="!isActive()">
+  <span class="h-1.5 w-1.5 rounded-full" [class.bg-emerald-500]="isActive()" [class.bg-red-500]="!isActive()"></span>
+  <span>{{ statusText() }}</span>
+</span>

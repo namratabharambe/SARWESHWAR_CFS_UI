@@ -1,0 +1,348 @@
+@if (task(); as currentTask) {
+  <div class="task-detail-card rounded-2xl border border-gray-200/80 bg-white p-5 shadow-sm transition-all duration-200 dark:border-gray-800 dark:bg-gray-850">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-800">
+      <div class="flex items-center gap-2">
+        <h3 class="text-base font-bold text-gray-900 dark:text-white">Task Details</h3>
+        <button
+          type="button"
+          (click)="toggleCollapse()"
+          class="inline-flex h-6 w-6 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+          [title]="isCollapsed() ? 'Expand details' : 'Collapse details'">
+          <span class="material-icons-outlined text-base transition-transform duration-200" [class.rotate-180]="isCollapsed()">
+            expand_less
+          </span>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Status Pill -->
+        <span
+          class="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold"
+          [ngClass]="{
+            'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800': currentTask.status === 'In Progress',
+            'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800': currentTask.status === 'Assigned' || currentTask.status === 'Awaiting Confirmation',
+            'bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200 dark:border-purple-800': currentTask.status === 'New',
+            'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800': currentTask.status === 'Completed',
+            'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800': currentTask.status === 'Exception'
+          }">
+          {{ currentTask.status }}
+        </span>
+
+        <button
+          type="button"
+          (click)="closePanel.emit()"
+          class="inline-flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800 dark:hover:text-gray-200">
+          <span class="material-icons-outlined text-base">close</span>
+        </button>
+      </div>
+    </div>
+
+    @if (!isCollapsed()) {
+      <!-- Details Content -->
+      <div class="mt-4 space-y-4 text-xs">
+        <!-- Task Type Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Task Type</span>
+          <div class="flex items-center gap-1.5 font-semibold text-gray-900 dark:text-white">
+            <span class="material-icons-outlined text-sm text-blue-600 dark:text-blue-400">
+              {{ currentTask.taskType === 'Import' ? 'input' : currentTask.taskType === 'Export' ? 'output' : currentTask.taskType === 'Yard Move' ? 'local_shipping' : currentTask.taskType === 'Stack' ? 'layers' : 'logout' }}
+            </span>
+            <span>{{ currentTask.taskType }}</span>
+          </div>
+        </div>
+
+        <!-- Task No Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Task No.</span>
+          <div class="flex items-center gap-1.5 font-mono font-medium text-blue-600 dark:text-blue-400">
+            <span>{{ currentTask.taskNo }}</span>
+            <button
+              type="button"
+              (click)="copyToClipboard(currentTask.taskNo, 'taskNo')"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              title="Copy Task No">
+              <span class="material-icons-outlined text-xs">
+                {{ copiedField() === 'taskNo' ? 'check' : 'content_copy' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Container No Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Container No.</span>
+          <div class="flex items-center gap-1.5 font-mono font-bold text-gray-900 dark:text-white">
+            <span>{{ currentTask.containerNo }}</span>
+            <button
+              type="button"
+              (click)="copyToClipboard(currentTask.containerNo, 'containerNo')"
+              class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              title="Copy Container No">
+              <span class="material-icons-outlined text-xs">
+                {{ copiedField() === 'containerNo' ? 'check' : 'content_copy' }}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Booking No Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Booking No.</span>
+          <span class="font-mono font-medium text-gray-800 dark:text-gray-200">{{ currentTask.bookingNo }}</span>
+        </div>
+
+        <!-- Operator Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Operator</span>
+          <div class="flex items-center gap-1.5 font-medium text-gray-900 dark:text-white">
+            <span class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-700 text-[10px] font-bold text-white">
+              {{ currentTask.operator.slice(0, 2).toUpperCase() }}
+            </span>
+            <span>{{ currentTask.operator }}</span>
+          </div>
+        </div>
+
+        <!-- Assigned Equipment Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Assigned Equipment</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ currentTask.equipmentName || currentTask.equipment }}</span>
+        </div>
+
+        <!-- Due Time Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Due Time</span>
+          <div class="flex items-center gap-1 text-gray-700 dark:text-gray-300">
+            <span class="material-icons-outlined text-xs text-gray-400">schedule</span>
+            <span>{{ currentTask.dueTime }}</span>
+          </div>
+        </div>
+
+        <!-- SLA Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">SLA</span>
+          <span
+            class="inline-flex items-center gap-1 rounded px-2 py-0.5 font-mono text-xs font-bold"
+            [ngClass]="{
+              'bg-rose-50 text-rose-600 border border-rose-200 dark:bg-rose-950/60 dark:text-rose-400 dark:border-rose-900': currentTask.isOverdue,
+              'bg-amber-50 text-amber-600 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-400 dark:border-amber-900': !currentTask.isOverdue && currentTask.slaMinutes <= 30,
+              'bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-400 dark:border-emerald-900': !currentTask.isOverdue && currentTask.slaMinutes > 30
+            }">
+            <span>{{ currentTask.slaDisplay }}</span>
+            @if (currentTask.isOverdue) {
+              <span>(Overdue)</span>
+            }
+          </span>
+        </div>
+
+        <!-- Priority Row -->
+        <div class="flex items-center justify-between">
+          <span class="text-gray-500 dark:text-gray-400">Priority</span>
+          <div class="flex items-center gap-1.5 font-semibold">
+            <span
+              class="h-2 w-2 rounded-full"
+              [ngClass]="{
+                'bg-rose-500 ring-2 ring-rose-200 dark:ring-rose-900': currentTask.priority === 'High' || currentTask.priority === 'Critical',
+                'bg-amber-500 ring-2 ring-amber-200 dark:ring-amber-900': currentTask.priority === 'Medium',
+                'bg-emerald-500 ring-2 ring-emerald-200 dark:ring-emerald-900': currentTask.priority === 'Low'
+              }"></span>
+            <span
+              [ngClass]="{
+                'text-rose-600 dark:text-rose-400': currentTask.priority === 'High' || currentTask.priority === 'Critical',
+                'text-amber-600 dark:text-amber-400': currentTask.priority === 'Medium',
+                'text-emerald-600 dark:text-emerald-400': currentTask.priority === 'Low'
+              }">
+              {{ currentTask.priority }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Route Summary Section -->
+        <div class="border-t border-gray-100 pt-4 dark:border-gray-800">
+          <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            Route Summary
+          </h4>
+
+          <div class="relative pl-6 space-y-5">
+            <!-- Vertical Line -->
+            <div class="absolute left-2.5 top-2.5 bottom-2.5 w-0.5 border-l-2 border-dashed border-gray-300 dark:border-gray-700"></div>
+
+            <!-- Origin Node -->
+            <div class="relative flex flex-col">
+              <span class="absolute -left-6 top-1 flex h-3 w-3 items-center justify-center rounded-full bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-950"></span>
+              <span class="text-[11px] font-semibold text-gray-400 dark:text-gray-500">From</span>
+              <span class="font-bold text-gray-900 dark:text-white">{{ currentTask.fromLocation }}</span>
+              <span class="text-[11px] text-gray-500 dark:text-gray-400">{{ currentTask.fromLocationDetail || 'Origin Point' }}</span>
+            </div>
+
+            <!-- Destination Node -->
+            <div class="relative flex flex-col">
+              <span class="absolute -left-6 top-1 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-950"></span>
+              <span class="text-[11px] font-semibold text-gray-400 dark:text-gray-500">To</span>
+              <span class="font-bold text-gray-900 dark:text-white">{{ currentTask.toLocation }}</span>
+              <span class="text-[11px] text-gray-500 dark:text-gray-400">{{ currentTask.toLocationDetail || 'Destination Point' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Status Progression Actions -->
+        <div class="border-t border-gray-100 pt-4 dark:border-gray-800">
+          <div class="grid grid-cols-2 gap-2">
+            @if (currentTask.status === 'New' || currentTask.status === 'Assigned') {
+              <button
+                type="button"
+                (click)="setStatus('In Progress')"
+                class="flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95">
+                <span class="material-icons-outlined text-sm">play_arrow</span>
+                <span>Start Task</span>
+              </button>
+            } @else if (currentTask.status === 'In Progress') {
+              <button
+                type="button"
+                (click)="setStatus('Awaiting Confirmation')"
+                class="flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-amber-600 active:scale-95">
+                <span class="material-icons-outlined text-sm">done</span>
+                <span>Ready Check</span>
+              </button>
+            } @else if (currentTask.status === 'Awaiting Confirmation') {
+              <button
+                type="button"
+                (click)="setStatus('Completed')"
+                class="flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-95">
+                <span class="material-icons-outlined text-sm">check_circle</span>
+                <span>Confirm Complete</span>
+              </button>
+            }
+
+            <button
+              type="button"
+              (click)="setStatus('Exception')"
+              class="flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 transition-all hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+              <span class="material-icons-outlined text-sm">report_problem</span>
+              <span>Flag Exception</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- View Full Details CTA Button -->
+        <div class="pt-2">
+          <button
+            type="button"
+            (click)="openFullDetails()"
+            class="flex w-full items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50/50 py-2.5 text-xs font-semibold text-blue-600 transition-all hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-400 dark:hover:bg-blue-900/40">
+            <span>View Full Details</span>
+            <span class="material-icons-outlined text-sm">open_in_new</span>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Full Details Modal Dialog -->
+  @if (isFullDetailsOpen()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm animate-fadeIn">
+      <div class="relative w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-800 dark:bg-gray-850 max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-800">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ currentTask.taskNo }}</h2>
+              <span class="rounded-md bg-blue-50 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                {{ currentTask.taskType }}
+              </span>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">CFS Container Move & Telemetry Dossier</p>
+          </div>
+
+          <button
+            type="button"
+            (click)="closeFullDetails()"
+            class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300">
+            <span class="material-icons-outlined text-base">close</span>
+          </button>
+        </div>
+
+        <!-- Modal Body Content -->
+        <div class="mt-6 space-y-6 text-sm">
+          <!-- Overview Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="rounded-xl border border-gray-100 bg-gray-50/70 p-3 dark:border-gray-800 dark:bg-gray-800/50">
+              <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Container</span>
+              <div class="font-mono font-bold text-gray-900 dark:text-white mt-1">{{ currentTask.containerNo }}</div>
+              <span class="text-[11px] text-gray-400">{{ currentTask.sizeType }}</span>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-gray-50/70 p-3 dark:border-gray-800 dark:bg-gray-800/50">
+              <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Operator</span>
+              <div class="font-bold text-gray-900 dark:text-white mt-1">{{ currentTask.operator }}</div>
+              <span class="text-[11px] text-blue-600 dark:text-blue-400">Assigned</span>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-gray-50/70 p-3 dark:border-gray-800 dark:bg-gray-800/50">
+              <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Equipment</span>
+              <div class="font-bold text-gray-900 dark:text-white mt-1">{{ currentTask.equipment }}</div>
+              <span class="text-[11px] text-gray-400">{{ currentTask.equipmentName }}</span>
+            </div>
+            <div class="rounded-xl border border-gray-100 bg-gray-50/70 p-3 dark:border-gray-800 dark:bg-gray-800/50">
+              <span class="text-[11px] font-medium text-gray-500 dark:text-gray-400">Target SLA</span>
+              <div class="font-mono font-bold text-gray-900 dark:text-white mt-1">{{ currentTask.slaDisplay }}</div>
+              <span class="text-[11px]" [class.text-rose-500]="currentTask.isOverdue" [class.text-emerald-500]="!currentTask.isOverdue">
+                {{ currentTask.isOverdue ? 'Overdue' : 'On Track' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Extended Metadata -->
+          <div class="rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Freight & Manifest Info</h4>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+              <div>
+                <span class="text-gray-400">Booking / BL No:</span>
+                <p class="font-mono font-medium text-gray-800 dark:text-gray-200">{{ currentTask.bookingNo }}</p>
+              </div>
+              <div>
+                <span class="text-gray-400">Cargo Type:</span>
+                <p class="font-medium text-gray-800 dark:text-gray-200">{{ currentTask.cargoType || 'General Freight' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-400">Gross Weight:</span>
+                <p class="font-medium text-gray-800 dark:text-gray-200">{{ currentTask.grossWeight || '24,000 KG' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-400">Customs Seal No:</span>
+                <p class="font-mono font-medium text-gray-800 dark:text-gray-200">{{ currentTask.sealNo || 'SEAL-OK-8812' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-400">Hazardous (DG):</span>
+                <p class="font-semibold" [class.text-rose-500]="currentTask.isHazardous" [class.text-emerald-600]="!currentTask.isHazardous">
+                  {{ currentTask.isHazardous ? '⚠️ Class 3 Flammable' : 'Non-Hazardous' }}
+                </p>
+              </div>
+              <div>
+                <span class="text-gray-400">Created Timestamp:</span>
+                <p class="text-gray-700 dark:text-gray-300">{{ currentTask.createdAt | date:'short' }}</p>
+              </div>
+            </div>
+          </div>
+
+          @if (currentTask.notes) {
+            <div class="rounded-xl bg-amber-50/60 border border-amber-200/80 p-3.5 text-xs text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+              <span class="font-bold flex items-center gap-1 mb-1">
+                <span class="material-icons-outlined text-sm">sticky_note_2</span> Dispatcher Operational Note:
+              </span>
+              <p>{{ currentTask.notes }}</p>
+            </div>
+          }
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="mt-6 flex justify-end gap-3 border-t border-gray-100 pt-4 dark:border-gray-800">
+          <button
+            type="button"
+            (click)="closeFullDetails()"
+            class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+}

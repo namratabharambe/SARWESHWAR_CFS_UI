@@ -1,0 +1,535 @@
+<div class="gate-detail-page">
+  <!-- Top Breadcrumb Bar -->
+  <nav class="detail-breadcrumbs-nav" aria-label="Breadcrumb">
+    <button type="button" class="crumb-link-btn" (click)="onBack()">Gate Events</button>
+    <span class="crumb-separator">/</span>
+    <span class="crumb-active">Detail</span>
+  </nav>
+
+  <!-- Main Title Header Row -->
+  <div class="detail-title-row">
+    <div class="title-with-back">
+      <button type="button" class="btn-back-arrow" (click)="onBack()" title="Back to Gate Events table">
+        <svg viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+      <h1 class="detail-page-title">Gate Event Detail</h1>
+    </div>
+  </div>
+
+  <!-- Metadata Pill Bar -->
+  <div class="detail-meta-bar">
+    <div class="meta-items-left">
+      <!-- Event ID with Copy Button -->
+      <div class="meta-item-badge">
+        <span class="meta-label">Event ID:</span>
+        <strong class="meta-id-text">{{ detail().eventId }}</strong>
+        <button
+          type="button"
+          class="btn-copy-id"
+          (click)="copyEventId(detail().eventId)"
+          [title]="copyFeedback() ? 'Copied!' : 'Copy Event ID'">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+            <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Direction Badge -->
+      <div class="meta-direction-group">
+        <span
+          class="meta-dir-pill"
+          [class.pill-in]="event().direction === 'IN'"
+          [class.pill-out]="event().direction === 'OUT'">
+          {{ event().direction }}
+        </span>
+        <span class="meta-dir-label">
+          {{ event().direction === 'IN' ? 'Arrival' : 'Departure' }}
+        </span>
+      </div>
+
+      <!-- Status Pill -->
+      <div class="meta-status-pill-wrap">
+        <span class="meta-label">Status:</span>
+        <span
+          class="meta-status-pill"
+          [class.pill-verified]="event().status === 'Verified'"
+          [class.pill-review]="event().status === 'Review'">
+          {{ event().status }}
+        </span>
+      </div>
+
+      <!-- Event Time -->
+      <div class="meta-time-wrap">
+        <span class="meta-label">Event Time:</span>
+        <span class="meta-time-val">
+          <svg class="calendar-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+              clip-rule="evenodd" />
+          </svg>
+          {{ event().eventTime }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Print / Export Dropdown Trigger -->
+    <div class="meta-actions-right">
+      <button
+        type="button"
+        class="btn-print-export"
+        (click)="toggleExportDropdown()"
+        aria-haspopup="true"
+        [attr.aria-expanded]="exportDropdownOpen()">
+        <svg class="action-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z"
+            clip-rule="evenodd" />
+        </svg>
+        <span>Print / Export</span>
+        <span class="dropdown-caret">▼</span>
+      </button>
+
+      @if (exportDropdownOpen()) {
+        <div class="export-dropdown-menu">
+          <button type="button" class="dropdown-item" (click)="printEvent()">
+            <span>🖨️</span> Print Inspection Sheet
+          </button>
+          <button type="button" class="dropdown-item" (click)="exportEventJson()">
+            <span>📄</span> Export Record (JSON)
+          </button>
+          <button type="button" class="dropdown-item" (click)="exportEventCsv()">
+            <span>📊</span> Export Record (CSV)
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Main 2-Column Content Grid -->
+  <div class="detail-main-grid">
+    <!-- Left Column: Captured Images (2x2 Grid) -->
+    <div class="detail-card captured-images-card">
+      <div class="card-title-bar">
+        <h3 class="card-section-title">Captured Images</h3>
+      </div>
+
+      <div class="captured-images-2x2">
+        @for (photo of detail().capturedPhotos; track photo.title) {
+          <div class="image-box-wrapper">
+            <div class="image-box-header">
+              <span class="image-box-title">{{ photo.title }}</span>
+              @if (photo.url) {
+                <button
+                  type="button"
+                  class="btn-expand-image"
+                  (click)="openLightbox(photo.title, photo.url, $event)"
+                  title="Expand full resolution">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l3.293 3.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-3.293 3.293a1 1 0 11-1.414-1.414L13.586 5H12a1 1 0 01-1-1z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </button>
+              }
+            </div>
+            <p class="image-box-sub">{{ photo.timestamp }}</p>
+            <div class="image-render-frame" (click)="photo.url ? openLightbox(photo.title, photo.url) : null">
+              @if (photo.url) {
+                <img [src]="photo.url" [alt]="photo.title" loading="lazy" class="gate-feed-img" />
+              } @else {
+                <div class="no-photo-box flex flex-col items-center justify-center h-full p-4 text-center text-gray-400">
+                  <span class="text-2xl mb-1">📷</span>
+                  <span class="text-xs font-semibold">{{ photo.title }}</span>
+                  <span class="text-[10px] text-gray-400">No live optical feed</span>
+                </div>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="col-span-2 py-8 text-center text-xs text-gray-400">
+            No camera captures recorded for this visit.
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Column Stack: OCR Details + Event Information -->
+    <div class="detail-right-stack">
+      <!-- OCR Extracted Details Card (Strictly 4 Requested Fields Only) -->
+      <div class="detail-card ocr-card">
+        <div class="ocr-card-header">
+          <h3 class="card-section-title">OCR Extracted Details</h3>
+          <div class="overall-confidence-pill">
+            <span>OCR Confidence (Overall)</span>
+            <strong class="confidence-number">{{ detail().overallConfidence }}%</strong>
+          </div>
+        </div>
+
+        <div class="ocr-fields-table">
+          <div class="ocr-row">
+            <span class="ocr-label">Container No <span class="required-star">*</span></span>
+            <strong class="ocr-value">{{ detail().containerNo }}</strong>
+            <span class="ocr-pct">{{ detail().containerConfidence }}%</span>
+            <span class="badge-verified-pill">Verified</span>
+          </div>
+
+          <div class="ocr-row">
+            <span class="ocr-label">ISO Code <span class="required-star">*</span></span>
+            <strong class="ocr-value">{{ detail().isoCode }}</strong>
+            <span class="ocr-pct">{{ detail().typeConfidence }}%</span>
+            <span class="badge-verified-pill">Verified</span>
+          </div>
+
+          <div class="ocr-row">
+            <span class="ocr-label">Size</span>
+            <strong class="ocr-value">{{ detail().size }}</strong>
+            <span class="ocr-pct">{{ detail().fullEmptyConfidence }}%</span>
+            <span class="badge-verified-pill">Verified</span>
+          </div>
+
+          <div class="ocr-row">
+            <span class="ocr-label">Truck Number</span>
+            <strong class="ocr-value">{{ detail().truckNo }}</strong>
+            <span class="ocr-pct">{{ detail().truckConfidence }}%</span>
+            <span class="badge-verified-pill">Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comprehensive Event Information Card -->
+      <div class="detail-card event-info-card">
+        <div class="card-title-bar">
+          <h3 class="card-section-title">Event Information</h3>
+        </div>
+
+        <div class="event-info-grid">
+          <!-- Container No * -->
+          <div class="info-field-item">
+            <span class="field-label">Container No <span class="required-star">*</span></span>
+            <strong class="field-value font-mono">{{ detail().containerNo }}</strong>
+          </div>
+
+          <!-- ISO Code * -->
+          <div class="info-field-item">
+            <span class="field-label">ISO Code <span class="required-star">*</span></span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().isoCode }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Size -->
+          <div class="info-field-item">
+            <span class="field-label">Size</span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().size }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Tare Weight -->
+          <div class="info-field-item">
+            <span class="field-label">Tare Weight</span>
+            <span class="field-value-text">{{ detail().tareWeight }}</span>
+          </div>
+
+          <!-- Type -->
+          <div class="info-field-item">
+            <span class="field-label">Type</span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().type }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Cargo Type -->
+          <div class="info-field-item">
+            <span class="field-label">Cargo Type</span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().cargoType }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- JO Type -->
+          <div class="info-field-item">
+            <span class="field-label">JO Type</span>
+            <span class="field-value-select highlight-select">
+              <span class="val-text">{{ detail().joType }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- FCL/LCL -->
+          <div class="info-field-item">
+            <span class="field-label">FCL/LCL</span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().fclLcl }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Scan Type -->
+          <div class="info-field-item">
+            <span class="field-label">Scan Type</span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().scanType }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- OffLoad Location -->
+          <div class="info-field-item">
+            <span class="field-label">OffLoad Location</span>
+            <span class="field-value-text">{{ detail().offLoadLocation }}</span>
+          </div>
+
+          <!-- Gate In Type -->
+          <div class="info-field-item">
+            <span class="field-label">Gate In Type</span>
+            <span class="field-value-text">{{ detail().gateInType }}</span>
+          </div>
+
+          <!-- Vessel Name/Via No -->
+          <div class="info-field-item">
+            <span class="field-label">Vessel Name/Via No</span>
+            <span class="field-value-text">{{ detail().vesselName }}</span>
+          </div>
+
+          <!-- Port Name -->
+          <div class="info-field-item">
+            <span class="field-label">Port Name</span>
+            <span class="field-value-select highlight-select">
+              <span class="val-text">{{ detail().portName }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Shipping Line -->
+          <div class="info-field-item">
+            <span class="field-label">Shipping Line</span>
+            <span class="field-value-text">{{ detail().shippingLine }}</span>
+          </div>
+
+          <!-- IGM Seal -->
+          <div class="info-field-item">
+            <span class="field-label">IGM Seal</span>
+            <span class="field-value-text font-mono">{{ detail().igmSeal }}</span>
+          </div>
+
+          <!-- Seal No. 1 * -->
+          <div class="info-field-item">
+            <span class="field-label">Seal No. 1 <span class="required-star">*</span></span>
+            <strong class="field-value font-mono">{{ detail().sealNo1 }}</strong>
+          </div>
+
+          <!-- Seal No. 2 -->
+          <div class="info-field-item">
+            <span class="field-label">Seal No. 2</span>
+            <span class="field-value-text font-mono">{{ detail().sealNo2 }}</span>
+          </div>
+
+          <!-- Custom Seal No. -->
+          <div class="info-field-item">
+            <span class="field-label">Custom Seal No.</span>
+            <span class="field-value-text font-mono">{{ detail().customSealNo }}</span>
+          </div>
+
+          <!-- Customer Name -->
+          <div class="info-field-item">
+            <span class="field-label">Customer Name</span>
+            <span class="field-value-text">{{ detail().customerName }}</span>
+          </div>
+
+          <!-- EIR No. -->
+          <div class="info-field-item">
+            <span class="field-label">EIR No.</span>
+            <span class="field-value-text font-mono">{{ detail().eirNo }}</span>
+          </div>
+
+          <!-- EIR Weight * -->
+          <div class="info-field-item">
+            <span class="field-label">EIR Weight <span class="required-star">*</span></span>
+            <strong class="field-value">{{ detail().eirWeight }}</strong>
+          </div>
+
+          <!-- EIR Date & Time * -->
+          <div class="info-field-item">
+            <span class="field-label">EIR Date & Time <span class="required-star">*</span></span>
+            <span class="field-value-text">{{ detail().eirDateTime }}</span>
+          </div>
+
+          <!-- Location -->
+          <div class="info-field-item">
+            <span class="field-label">Location</span>
+            <span class="field-value-select highlight-select">
+              <span class="val-text">{{ detail().location }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Condition * -->
+          <div class="info-field-item">
+            <span class="field-label">Condition <span class="required-star">*</span></span>
+            <span class="field-value-select">
+              <span class="val-text">{{ detail().condition }}</span>
+              <span class="select-caret">▾</span>
+            </span>
+          </div>
+
+          <!-- Door To Door -->
+          <div class="info-field-item">
+            <span class="field-label">Door To Door</span>
+            <span class="field-value-badge">{{ detail().doorToDoor }}</span>
+          </div>
+
+          <!-- Remarks -->
+          <div class="info-field-item col-span-full">
+            <span class="field-label">Remarks</span>
+            <span class="field-value-text">{{ detail().remarks }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Event Timeline (Left) & System Notes (Right) -->
+  <div class="detail-bottom-grid">
+    <!-- Event Timeline Card -->
+    <div class="detail-card timeline-card">
+      <div class="card-title-bar">
+        <h3 class="card-section-title">Event Timeline</h3>
+      </div>
+
+      <div class="timeline-stepper">
+        @for (step of detail().timelineSteps; track step.label; let idx = $index; let isLast = $last) {
+          <div class="timeline-step">
+            <div class="step-icon-wrap" [class]="'step-' + step.color">
+              @if (step.icon === 'camera') {
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
+                    clip-rule="evenodd" />
+                </svg>
+              } @else if (step.icon === 'target') {
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                    clip-rule="evenodd" />
+                </svg>
+              } @else if (step.icon === 'shield') {
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+              } @else {
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                    clip-rule="evenodd" />
+                </svg>
+              }
+            </div>
+
+            @if (!isLast) {
+              <div class="timeline-line">
+                <span class="line-check-dot">✓</span>
+              </div>
+            }
+
+            <div class="step-info">
+              <strong class="step-label">{{ step.label }}</strong>
+              <span class="step-time">{{ step.time }}</span>
+              <small class="step-actor">{{ step.actor }}</small>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- System Notes Card -->
+    <div class="detail-card notes-card">
+      <div class="card-title-bar">
+        <h3 class="card-section-title">
+          <span class="notes-icon">📋</span>
+          System Notes
+        </h3>
+      </div>
+
+      <div class="system-notes-list">
+        @for (note of detail().systemNotes; track note.text) {
+          <div class="note-item-row">
+            <div class="note-left">
+              <span class="note-bullet">▲</span>
+              <span class="note-text">{{ note.text }}</span>
+            </div>
+            <span class="note-timestamp">{{ note.time }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Action Bar (Clean Actions - Removed Re-run OCR) -->
+  <div class="detail-bottom-action-bar">
+    <button type="button" class="btn-detail-action btn-action-exception" (click)="onMarkException()">
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>Mark Exception</span>
+    </button>
+
+    <button type="button" class="btn-detail-action btn-action-create-task" (click)="onCreateTask()">
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>Create Task</span>
+    </button>
+
+    <button type="button" class="btn-detail-action btn-action-approve-solid" (click)="onApprove()">
+      <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>Approve</span>
+    </button>
+  </div>
+
+  <!-- Full-Resolution Lightbox Modal -->
+  @if (activeLightboxPhoto(); as lightbox) {
+    <div class="lightbox-backdrop" (click)="closeLightbox()">
+      <div class="lightbox-dialog" (click)="$event.stopPropagation()">
+        <div class="lightbox-header">
+          <h3>{{ lightbox.title }}</h3>
+          <button type="button" class="btn-close-lightbox" (click)="closeLightbox()">✕</button>
+        </div>
+        <div class="lightbox-body">
+          <img [src]="lightbox.url" [alt]="lightbox.title" class="lightbox-img" />
+        </div>
+      </div>
+    </div>
+  }
+</div>

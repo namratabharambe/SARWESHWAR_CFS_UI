@@ -1,0 +1,613 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true">
+    <div class="modal-window" (click)="$event.stopPropagation()">
+      <!-- Top Navigation & Breadcrumb Header -->
+      <div class="modal-top-bar">
+        <div class="top-bar-left">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+            <span class="crumb crumb-home">
+              <svg class="home-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+              </svg>
+              Home
+            </span>
+            <span class="crumb-separator">›</span>
+            <span class="crumb">Import</span>
+            <span class="crumb-separator">›</span>
+            <span class="crumb crumb-active">Gate In</span>
+          </nav>
+
+          <!-- Title with Truck Icon -->
+          <div class="title-row">
+            <div class="truck-icon-badge">
+              <svg class="truck-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
+              </svg>
+            </div>
+            <h1 class="page-title">Import Gate In</h1>
+          </div>
+        </div>
+
+        <div class="top-bar-right">
+          <!-- Date / Time Pill -->
+          <div class="datetime-pill">
+            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            <span class="datetime-text">{{ currentFormattedDate() }}</span>
+          </div>
+
+          <!-- Close 'X' Button -->
+          <button
+            type="button"
+            class="btn-close-modal"
+            (click)="close.emit()"
+            title="Close dialog"
+            aria-label="Close dialog">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Scrollable Form & Table Body -->
+      <div class="modal-body-scrollable">
+        <!-- Error Alert if any -->
+        @if (errorMessage()) {
+          <div class="form-error-banner" role="alert">
+            <span class="error-icon">⚠️</span>
+            <span>{{ errorMessage() }}</span>
+            <button type="button" class="btn-dismiss-error" (click)="errorMessage.set('')">✕</button>
+          </div>
+        }
+
+        <!-- 5-Row Form Section -->
+        <form class="gate-in-form" (ngSubmit)="$event.preventDefault()">
+          <!-- Row 1: 9 Columns -->
+          <div class="form-row form-row-9">
+            <div class="form-group">
+              <label class="form-label">Container No <span class="required-star">*</span></label>
+              <input
+                type="text"
+                class="form-control uppercase-input"
+                placeholder="CONTAINER NO"
+                [ngModel]="containerNo()"
+                (ngModelChange)="containerNo.set($event)"
+                name="containerNo"
+                maxlength="15"
+                autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">ISO Code <span class="required-star">*</span></label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="isoCode()"
+                  (ngModelChange)="isoCode.set($event)"
+                  name="isoCode">
+                  <option value="">Select...</option>
+                  <option value="22G1">22G1</option>
+                  <option value="42G1">42G1</option>
+                  <option value="45G1">45G1</option>
+                  <option value="20GP">20GP</option>
+                  <option value="40HC">40HC</option>
+                  <option value="45HC">45HC</option>
+                  <option value="22U1">22U1</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Size</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="size()"
+                  (ngModelChange)="size.set($event)"
+                  name="size">
+                  <option value="">Select...</option>
+                  <option value="20">20 FT</option>
+                  <option value="40">40 FT</option>
+                  <option value="45">45 FT</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tare Weight</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Tare Weight"
+                [ngModel]="tareWeight()"
+                (ngModelChange)="tareWeight.set($event)"
+                name="tareWeight" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Type</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="type()"
+                  (ngModelChange)="type.set($event)"
+                  name="type">
+                  <option value="">Select...</option>
+                  <option value="Dry">Dry</option>
+                  <option value="Reefer">Reefer</option>
+                  <option value="Flat Rack">Flat Rack</option>
+                  <option value="Open Top">Open Top</option>
+                  <option value="Tank">Tank</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Cargo Type</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="cargoType()"
+                  (ngModelChange)="cargoType.set($event)"
+                  name="cargoType">
+                  <option value="">Select...</option>
+                  <option value="General">General Cargo</option>
+                  <option value="Hazardous">Hazardous</option>
+                  <option value="Perishable">Perishable</option>
+                  <option value="Refrigerated">Refrigerated</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">JO Type</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="joType()"
+                  (ngModelChange)="joType.set($event)"
+                  name="joType">
+                  <option value="Air Import">Air Import</option>
+                  <option value="Sea Import">Sea Import</option>
+                  <option value="Direct Gate In">Direct Gate In</option>
+                  <option value="CFS Bonded">CFS Bonded</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">FCL/LCL</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="fclLcl()"
+                  (ngModelChange)="fclLcl.set($event)"
+                  name="fclLcl">
+                  <option value="">Select...</option>
+                  <option value="FCL">FCL</option>
+                  <option value="LCL">LCL</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Scan Type</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="scanType()"
+                  (ngModelChange)="scanType.set($event)"
+                  name="scanType">
+                  <option value="">Select...</option>
+                  <option value="Normal Scan">Normal Scan</option>
+                  <option value="X-Ray Scan">X-Ray Scan</option>
+                  <option value="Physical">Physical Inspection</option>
+                  <option value="Gamma">Gamma Ray</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: 5 Columns -->
+          <div class="form-row form-row-5">
+            <div class="form-group">
+              <label class="form-label">OffLoad Location</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Gate In Type"
+                [ngModel]="offloadLocation()"
+                (ngModelChange)="offloadLocation.set($event)"
+                name="offloadLocation" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Vessel Name/Via No</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Vessel Name"
+                [ngModel]="vesselName()"
+                (ngModelChange)="vesselName.set($event)"
+                name="vesselName" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Port Name</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="portName()"
+                  (ngModelChange)="portName.set($event)"
+                  name="portName">
+                  <option value="BMCT">BMCT</option>
+                  <option value="JNPT">JNPT</option>
+                  <option value="NSICT">NSICT</option>
+                  <option value="NSIGT">NSIGT</option>
+                  <option value="GTI">GTI</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Shipping Line</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Shipping Line"
+                [ngModel]="shippingLine()"
+                (ngModelChange)="shippingLine.set($event)"
+                name="shippingLine" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">IGM Seal</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="IGM Seal"
+                [ngModel]="igmSeal()"
+                (ngModelChange)="igmSeal.set($event)"
+                name="igmSeal" />
+            </div>
+          </div>
+
+          <!-- Row 3: 4 Columns -->
+          <div class="form-row form-row-4">
+            <div class="form-group">
+              <label class="form-label">Seal No. 1 <span class="required-star">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Seal No 1"
+                [ngModel]="sealNo1()"
+                (ngModelChange)="sealNo1.set($event)"
+                name="sealNo1" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Seal No. 2</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Seal No 2"
+                [ngModel]="sealNo2()"
+                (ngModelChange)="sealNo2.set($event)"
+                name="sealNo2" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Custom Seal No.</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Custom Seal No."
+                [ngModel]="customSealNo()"
+                (ngModelChange)="customSealNo.set($event)"
+                name="customSealNo" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Customer Name</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Customer Name"
+                [ngModel]="customerName()"
+                (ngModelChange)="customerName.set($event)"
+                name="customerName" />
+            </div>
+          </div>
+
+          <!-- Row 4: 5 Columns -->
+          <div class="form-row form-row-5-uneven">
+            <div class="form-group">
+              <label class="form-label">EIR No.</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="EIR No."
+                [ngModel]="eirNo()"
+                (ngModelChange)="eirNo.set($event)"
+                name="eirNo" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">EIR Weight <span class="required-star">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="EIR Weight"
+                [ngModel]="eirWeight()"
+                (ngModelChange)="eirWeight.set($event)"
+                name="eirWeight" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">EIR Date & Time <span class="required-star">*</span></label>
+              <div class="input-with-icon">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="dd-mm-yyyy --:--"
+                  [ngModel]="eirDateTime()"
+                  (ngModelChange)="eirDateTime.set($event)"
+                  name="eirDateTime" />
+                <svg
+                  class="inline-calendar-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="location()"
+                  (ngModelChange)="location.set($event)"
+                  name="location">
+                  <option value="A SHEL">A SHEL</option>
+                  <option value="B YARD">B YARD</option>
+                  <option value="C STACK">C STACK</option>
+                  <option value="D DOCK">D DOCK</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Condition <span class="required-star">*</span></label>
+              <div class="select-wrapper">
+                <select
+                  class="form-control form-select"
+                  [ngModel]="condition()"
+                  (ngModelChange)="condition.set($event)"
+                  name="condition">
+                  <option value="">--Select--</option>
+                  <option value="Sound">Sound</option>
+                  <option value="Damaged">Damaged</option>
+                  <option value="Pending Inspection">Pending Inspection</option>
+                </select>
+                <span class="select-chevron">▾</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 5: Remarks, Attachment, Add Plus Button, and Door to Door -->
+          <div class="form-row-actions">
+            <div class="remarks-group">
+              <label class="form-label">Remarks</label>
+              <div class="remarks-input-wrapper">
+                <input
+                  type="text"
+                  class="form-control remarks-input"
+                  placeholder="Remarks"
+                  [ngModel]="remarks()"
+                  (ngModelChange)="remarks.set($event)"
+                  name="remarks" />
+
+                <!-- Paperclip Attachment Button -->
+                <label class="btn-attachment" title="Attach Document" aria-label="Attach Document">
+                  <input type="file" class="hidden-file-input" (change)="handleAttachment($event)" />
+                  <svg class="paperclip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                  </svg>
+                </label>
+
+                <!-- Purple Plus Button to add into Table -->
+                <button
+                  type="button"
+                  class="btn-add-plus"
+                  (click)="addItemToTable()"
+                  title="Add to table"
+                  aria-label="Add entry to table">
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="plus-icon">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                  </svg>
+                </button>
+              </div>
+
+              @if (attachedFileName()) {
+                <span class="attachment-chip">
+                  📎 {{ attachedFileName() }}
+                  <button type="button" class="btn-remove-attach" (click)="attachedFileName.set('')">✕</button>
+                </span>
+              }
+            </div>
+          </div>
+
+          <!-- Door To Door Checkbox -->
+          <div class="door-to-door-group">
+            <label class="checkbox-label">
+              <input
+                type="checkbox"
+                class="form-checkbox"
+                [ngModel]="doorToDoor()"
+                (ngModelChange)="doorToDoor.set($event)"
+                name="doorToDoor" />
+              <span>Door To Door</span>
+            </label>
+          </div>
+        </form>
+
+        <!-- Purple Header Table Section -->
+        <div class="table-container">
+          <div class="table-responsive-wrapper">
+            <table class="purple-grid-table">
+              <thead>
+                <tr>
+                  <th>ACTION</th>
+                  <th>SCAN STATUS</th>
+                  <th>DOOR TO DOOR</th>
+                  <th>ISO CODE</th>
+                  <th>PORT NAME</th>
+                  <th>WEIGHT</th>
+                  <th>REMARKS</th>
+                  <th>SCAN TYPE</th>
+                  <th>SCAN DATE TIME</th>
+                  <th>CARGO TYPE</th>
+                  <th>UN NO.</th>
+                  <th>CLASS</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (tableItems().length === 0) {
+                  <!-- Empty Table State -->
+                  <tr class="empty-state-row">
+                    <td colspan="12">
+                      <div class="empty-state-box">
+                        <div class="empty-tray-icon">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.6" class="tray-svg">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                          </svg>
+                        </div>
+                        <p class="empty-state-text">No data available in table</p>
+                      </div>
+                    </td>
+                  </tr>
+                } @else {
+                  <!-- Populated Table Rows -->
+                  @for (item of tableItems(); track item.id) {
+                    <tr class="table-data-row">
+                      <td class="action-cell">
+                        <button
+                          type="button"
+                          class="btn-table-action"
+                          (click)="removeTableItem(item.id)"
+                          title="Delete entry">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="trash-svg">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                          </svg>
+                        </button>
+                      </td>
+                      <td>
+                        <span class="status-pill status-pending">{{ item.scanStatus }}</span>
+                      </td>
+                      <td>{{ item.doorToDoor ? 'Yes' : 'No' }}</td>
+                      <td class="mono-cell">{{ item.isoCode }}</td>
+                      <td>{{ item.portName }}</td>
+                      <td class="mono-cell">{{ item.weight }}</td>
+                      <td class="remarks-cell">{{ item.remarks }}</td>
+                      <td>{{ item.scanType }}</td>
+                      <td>{{ item.scanDateTime }}</td>
+                      <td>{{ item.cargoType }}</td>
+                      <td>{{ item.unNo }}</td>
+                      <td>{{ item.itemClass }}</td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Footer Actions Bar -->
+        <div class="modal-footer-bar">
+          <div class="footer-left-actions">
+            <!-- Green Save / Submit Button -->
+            <button
+              type="button"
+              class="btn-action-green"
+              (click)="submitForm()"
+              title="Save & Submit Gate In"
+              aria-label="Save Gate In">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg">
+                <path
+                  d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
+              </svg>
+            </button>
+
+            <!-- Slate / Blue Reset Button -->
+            <button
+              type="button"
+              class="btn-action-reset"
+              (click)="resetForm()"
+              title="Reset form"
+              aria-label="Reset Form">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="footer-icon-svg">
+                <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="footer-right-actions">
+            <!-- Purple Back Button '<' -->
+            <button
+              type="button"
+              class="btn-action-back"
+              (click)="close.emit()"
+              title="Back / Close"
+              aria-label="Back / Close">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Copyright & Legal Footer Links -->
+        <div class="legal-footer">
+          <div class="legal-left">
+            <span>© 2025 LogiPort. All rights reserved.</span>
+          </div>
+          <div class="legal-right">
+            <a href="javascript:void(0)" class="legal-link">Help</a>
+            <span class="legal-sep">|</span>
+            <a href="javascript:void(0)" class="legal-link">Support</a>
+            <span class="legal-sep">|</span>
+            <a href="javascript:void(0)" class="legal-link">Privacy</a>
+            <span class="legal-sep">|</span>
+            <a href="javascript:void(0)" class="legal-link">Terms</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

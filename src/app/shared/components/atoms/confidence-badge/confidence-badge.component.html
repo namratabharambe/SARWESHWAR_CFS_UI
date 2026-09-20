@@ -1,0 +1,10 @@
+<div class="confidence-pill-wrap" [class]="level()">
+  <span class="confidence-percent">{{ confidence() }}%</span>
+  @if (showBars()) {
+    <div class="signal-bars-icon" [class]="level()">
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+    </div>
+  }
+</div>

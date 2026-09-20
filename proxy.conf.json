@@ -1,0 +1,14 @@
+{
+  "/api/v1/gate": {
+    "target": "https://localhost:7248",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
+  "/api": {
+    "target": "https://localhost:7190",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  }
+}

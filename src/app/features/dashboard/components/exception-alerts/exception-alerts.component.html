@@ -1,0 +1,83 @@
+<div
+  class="glass-card flex h-full flex-col justify-between rounded-2xl p-5">
+  <!-- Header -->
+  <div class="mb-4 flex items-center justify-between">
+    <h3 class="text-base font-bold text-gray-900 dark:text-white">Exceptions / Alerts</h3>
+    <a
+      routerLink="/alerts"
+      class="inline-flex items-center text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400">
+      View All →
+    </a>
+  </div>
+
+  <!-- Alerts List -->
+  <div class="flex flex-1 flex-col justify-between gap-3">
+    @for (alert of alerts(); track alert.id) {
+      <div
+        class="group flex items-center justify-between gap-3 rounded-xl p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/60">
+        <div class="flex items-center gap-3 overflow-hidden">
+          <!-- Icon Circle Box -->
+          <div
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+            [class.bg-rose-50]="alert.severity === 'danger'"
+            [class.text-rose-600]="alert.severity === 'danger'"
+            [class.dark:bg-rose-950/40]="alert.severity === 'danger'"
+            [class.dark:text-rose-400]="alert.severity === 'danger'"
+            [class.bg-amber-50]="alert.severity === 'warning'"
+            [class.text-amber-600]="alert.severity === 'warning'"
+            [class.dark:bg-amber-950/40]="alert.severity === 'warning'"
+            [class.dark:text-amber-400]="alert.severity === 'warning'"
+            [class.bg-sky-50]="alert.severity === 'info'"
+            [class.text-sky-600]="alert.severity === 'info'"
+            [class.dark:bg-sky-950/40]="alert.severity === 'info'"
+            [class.dark:text-sky-400]="alert.severity === 'info'"
+            [class.bg-orange-50]="alert.severity === 'time'"
+            [class.text-orange-600]="alert.severity === 'time'"
+            [class.dark:bg-orange-950/40]="alert.severity === 'time'"
+            [class.dark:text-orange-400]="alert.severity === 'time'">
+            @switch (alert.severity) {
+              @case ('danger') {
+                <span class="material-icons-outlined text-lg">warning</span>
+              }
+              @case ('warning') {
+                <span class="material-icons-outlined text-lg">error_outline</span>
+              }
+              @case ('info') {
+                <span class="material-icons-outlined text-lg">info</span>
+              }
+              @case ('time') {
+                <span class="material-icons-outlined text-lg">schedule</span>
+              }
+            }
+          </div>
+
+          <!-- Alert Details -->
+          <div class="flex flex-col overflow-hidden">
+            <span class="truncate text-sm font-bold text-slate-900 dark:text-white">
+              {{ alert.title }}
+            </span>
+            <span class="truncate text-xs font-semibold text-slate-600 dark:text-slate-300">
+              {{ alert.description }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Timestamp -->
+        <span class="shrink-0 text-xs font-medium text-slate-500 dark:text-slate-400">
+          {{ alert.time }}
+        </span>
+      </div>
+    } @empty {
+      <div class="flex flex-1 flex-col items-center justify-center p-6 text-center">
+        <div
+          class="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 shadow-sm dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+          <span class="material-icons-outlined text-3xl">verified_user</span>
+        </div>
+        <span class="text-sm font-bold text-slate-900 dark:text-white">All Clear • No Active Exceptions</span>
+        <p class="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400 max-w-[240px]">
+          All gate visits and container events verified with high OCR accuracy.
+        </p>
+      </div>
+    }
+  </div>
+</div>

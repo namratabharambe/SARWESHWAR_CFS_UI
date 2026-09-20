@@ -1,0 +1,17 @@
+<div
+  class="icon-circle"
+  [class.primary]="variant() === 'primary'"
+  [class.success]="variant() === 'success'"
+  [class.danger]="variant() === 'danger'"
+  [class.neutral]="variant() === 'neutral'"
+  [class.w-7]="size() === 'sm'"
+  [class.h-7]="size() === 'sm'"
+  [class.text-xs]="size() === 'sm'"
+  [class.w-9]="size() === 'md'"
+  [class.h-9]="size() === 'md'"
+  [class.text-sm]="size() === 'md'"
+  [class.w-12]="size() === 'lg'"
+  [class.h-12]="size() === 'lg'"
+  [class.text-base]="size() === 'lg'">
+  <ng-content></ng-content>
+</div>

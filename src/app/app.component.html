@@ -1,0 +1,35 @@
+<router-outlet />
+
+<!-- Global Session Expired / 401 Unauthorized Popup Modal -->
+@if (auth.sessionExpired()) {
+  <div class="session-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="session-modal-title">
+    <div class="session-modal-card">
+      <div class="session-icon-circle">
+        <span class="session-lock-icon">🔒</span>
+      </div>
+
+      <div class="session-content-block">
+        <h3 id="session-modal-title" class="session-title">Session Expired</h3>
+        <p class="session-desc">
+          Your active login session has timed out or is no longer authorized. Please sign in again to continue managing
+          CFS operations.
+        </p>
+      </div>
+
+      <div class="session-user-badge">
+        <span class="session-user-avatar">{{ auth.userInitials() }}</span>
+        <div class="session-user-info">
+          <strong class="session-user-name">{{ auth.userName() }}</strong>
+          <small class="session-user-role">{{ auth.userRoleDisplay() }}</small>
+        </div>
+      </div>
+
+      <div class="session-modal-actions">
+        <button type="button" class="btn-session-relogin" (click)="relogin()" autofocus>
+          <span>Sign In Again</span>
+          <span class="arrow-icon">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,39 @@
+<div
+  class="mb-6 flex flex-col justify-between gap-4 border-b border-gray-200/80 pb-6 dark:border-gray-800 md:flex-row md:items-center">
+  <div>
+    @if (breadcrumbs().length > 0) {
+      <nav class="mb-1.5 flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400" aria-label="Breadcrumbs">
+        @for (item of breadcrumbs(); track item.label; let last = $last) {
+          @if (item.url && !last) {
+            <a [routerLink]="item.url" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{
+              item.label
+            }}</a>
+          } @else {
+            <span class="font-medium text-gray-900 dark:text-gray-200">{{ item.label }}</span>
+          }
+          @if (!last) {
+            <span class="text-gray-400 dark:text-gray-600">/</span>
+          }
+        }
+      </nav>
+    }
+    <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white lg:text-3xl">{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ subtitle() }}</p>
+    }
+  </div>
+
+  @if (actionLabel()) {
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        (click)="onAction()"
+        class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-blue-500/10 transition-all duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
+        @if (actionIcon()) {
+          <span class="material-icons-outlined text-lg">{{ actionIcon() }}</span>
+        }
+        <span>{{ actionLabel() }}</span>
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,92 @@
+@if (isOpen() && container(); as c) {
+  <div
+    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm animate-fadeIn"
+    (click)="onBackdropClick($event)">
+    <div
+      class="modal-container relative flex w-full max-w-md flex-col rounded-3xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-800 dark:bg-gray-850"
+      (click)="$event.stopPropagation()">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-800">
+        <div>
+          <h2 class="text-base font-bold text-gray-900 dark:text-white">Relocate Container</h2>
+          <p class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400">{{ c.containerNo }}</p>
+        </div>
+
+        <button
+          type="button"
+          (click)="close.emit()"
+          class="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-400 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400">
+          <span class="material-icons-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="py-4 space-y-4 text-xs">
+        <div class="rounded-xl bg-gray-50 p-3 dark:bg-gray-800">
+          <span class="text-gray-400 block text-[11px]">Current Location:</span>
+          <span class="font-mono font-bold text-gray-900 dark:text-white text-sm">{{ c.currentLocation }}</span>
+        </div>
+
+        <div>
+          <label class="block font-bold uppercase tracking-wider text-gray-400 text-[11px] mb-2">
+            Target Destination Coordinates
+          </label>
+          <div class="grid grid-cols-4 gap-2">
+            <div>
+              <span class="text-[10px] text-gray-400 block mb-1">Block</span>
+              <select
+                [ngModel]="targetBlock()"
+                (ngModelChange)="targetBlock.set($event)"
+                class="w-full rounded-xl border border-gray-200 bg-white px-2.5 py-2 font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                @for (b of blocks; track b) {
+                  <option [value]="b">Block {{ b }}</option>
+                }
+              </select>
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block mb-1">Row</span>
+              <input
+                type="text"
+                [ngModel]="targetRow()"
+                (ngModelChange)="targetRow.set($event)"
+                class="w-full rounded-xl border border-gray-200 bg-white px-2.5 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block mb-1">Bay</span>
+              <input
+                type="text"
+                [ngModel]="targetBay()"
+                (ngModelChange)="targetBay.set($event)"
+                class="w-full rounded-xl border border-gray-200 bg-white px-2.5 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block mb-1">Tier</span>
+              <input
+                type="text"
+                [ngModel]="targetTier()"
+                (ngModelChange)="targetTier.set($event)"
+                class="w-full rounded-xl border border-gray-200 bg-white px-2.5 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-end gap-2 border-t border-gray-100 pt-4 dark:border-gray-800">
+        <button
+          type="button"
+          (click)="close.emit()"
+          class="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300">
+          Cancel
+        </button>
+        <button
+          type="button"
+          (click)="submitMove()"
+          class="rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 active:scale-95">
+          Execute Relocation
+        </button>
+      </div>
+    </div>
+  </div>
+}
