@@ -1,0 +1,155 @@
+<div class="dropdown-wrapper relative w-full text-left" [class.z-50]="isOpen()">
+  @if (label()) {
+    <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+      {{ label() }}
+    </label>
+  }
+
+  <!-- Trigger Button / Box -->
+  <div
+    class="dropdown-trigger flex cursor-pointer select-none items-center justify-between gap-2 transition-all duration-150"
+    [ngClass]="[
+      customTriggerClass() || 'default-trigger',
+      size() === 'sm' ? 'trigger-sm' : size() === 'lg' ? 'trigger-lg' : 'trigger-md',
+      isOpen() ? 'is-active border-blue-500 ring-2 ring-blue-500/25' : '',
+      isDisabled() ? 'pointer-events-none opacity-60' : '',
+    ]"
+    (click)="toggle($event)"
+    role="combobox"
+    tabindex="0"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="listbox">
+    <div class="flex min-w-0 flex-1 items-center gap-2">
+      @if (selectedOption()?.icon) {
+        <span class="material-icons-outlined shrink-0 text-base text-blue-600 dark:text-blue-400">
+          {{ selectedOption()?.icon }}
+        </span>
+      }
+      <span
+        class="truncate text-xs font-semibold"
+        [class.text-gray-900]="hasValue()"
+        [class.dark:text-white]="hasValue()"
+        [class.text-gray-400]="!hasValue()"
+        [class.dark:text-gray-500]="!hasValue()">
+        {{ displayLabel() }}
+      </span>
+      @if (selectedOption()?.badge) {
+        <span
+          class="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+          {{ selectedOption()?.badge }}
+        </span>
+      }
+    </div>
+
+    <div class="flex shrink-0 items-center gap-1">
+      @if (showClear() && hasValue()) {
+        <button
+          type="button"
+          (click)="clear($event)"
+          class="flex h-5 w-5 items-center justify-center rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+          title="Clear selection"
+          aria-label="Clear selection">
+          <span class="text-xs leading-none">&times;</span>
+        </button>
+      }
+      <span
+        class="chevron-arrow text-[10px] text-gray-400 transition-transform duration-200"
+        [class.rotate-180]="isOpen()">
+        ▼
+      </span>
+    </div>
+  </div>
+
+  <!-- Floating Dropdown Popover Menu -->
+  @if (isOpen()) {
+    <div
+      class="dropdown-popover absolute z-[9999] mt-1.5 min-w-full rounded-2xl border border-gray-200 bg-white/95 p-1.5 shadow-2xl backdrop-blur-md dark:border-blue-900/40 dark:bg-[#111a2d]/95"
+      [class.left-0]="align() !== 'right'"
+      [class.right-0]="align() === 'right'"
+      [ngClass]="customMenuClass()"
+      [style.min-width]="minMenuWidth() || 'max(100%, 150px)'"
+      role="listbox"
+      (click)="$event.stopPropagation()">
+      <!-- Optional Search Filter Box -->
+      @if (isSearchVisible()) {
+        <div class="mb-1.5 px-1 pt-1">
+          <div class="relative flex items-center">
+            <svg
+              class="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd" />
+            </svg>
+            <input
+              type="text"
+              [value]="searchQuery()"
+              (input)="onSearchInput($event)"
+              placeholder="Search..."
+              class="h-8 w-full rounded-xl border border-gray-200 bg-gray-50/80 pl-8 pr-3 text-xs text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:bg-white dark:border-gray-700 dark:bg-gray-800/80 dark:text-white dark:placeholder-gray-500"
+              autofocus />
+          </div>
+        </div>
+      }
+
+      <!-- Options List -->
+      <div class="options-scroll max-h-60 overflow-y-auto pr-0.5">
+        @if (filteredOptions().length === 0) {
+          <div class="px-3 py-4 text-center text-xs text-gray-400 dark:text-gray-500">No options found</div>
+        } @else {
+          @for (
+            opt of filteredOptions();
+            track opt.value !== undefined && opt.value !== '' ? opt.value : idx;
+            let idx = $index
+          ) {
+            <button
+              type="button"
+              role="option"
+              [attr.aria-selected]="isSelected(opt)"
+              (click)="selectOption(opt, $event)"
+              class="option-item flex w-full cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors"
+              [ngClass]="{
+                'bg-blue-50 font-bold text-blue-600 dark:bg-blue-950/70 dark:text-blue-300': isSelected(opt),
+                'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800': !isSelected(opt),
+                'ring-1 ring-blue-400': focusedIndex() === idx,
+                'pointer-events-none cursor-not-allowed opacity-40': opt.disabled,
+              }">
+              <div class="flex items-center gap-2 truncate">
+                @if (opt.icon) {
+                  <span
+                    class="material-icons-outlined shrink-0 text-sm"
+                    [class.text-blue-600]="isSelected(opt)"
+                    [class.dark:text-blue-400]="isSelected(opt)"
+                    [class.text-gray-400]="!isSelected(opt)"
+                    [class.dark:text-gray-500]="!isSelected(opt)">
+                    {{ opt.icon }}
+                  </span>
+                }
+                <span class="truncate">{{ opt.label }}</span>
+              </div>
+
+              <div class="flex shrink-0 items-center gap-1.5">
+                @if (opt.badge) {
+                  <span
+                    class="rounded-md bg-gray-100 px-1.5 py-0.5 text-[10px] font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+                    {{ opt.badge }}
+                  </span>
+                }
+                @if (isSelected(opt)) {
+                  <svg class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                }
+              </div>
+            </button>
+          }
+        }
+      </div>
+    </div>
+  }
+</div>

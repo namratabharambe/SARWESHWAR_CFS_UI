@@ -1,0 +1,332 @@
+<div class="alerts-page flex flex-col gap-5">
+  <!-- Toast Notification -->
+  @if (alertService.toastMessage()) {
+    <div
+      class="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl dark:bg-white dark:text-slate-900">
+      <span class="material-icons-outlined text-base text-emerald-400 dark:text-emerald-600">check_circle</span>
+      <span>{{ alertService.toastMessage() }}</span>
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <nav class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
+        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{ 'BREADCRUMB.DASHBOARD' | translate }}</a>
+        <span>›</span>
+        <span class="font-medium text-gray-800 dark:text-gray-200">{{ 'BREADCRUMB.ALERTS' | translate }}</span>
+      </nav>
+
+      <div class="mt-1 flex items-center gap-2">
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'ALERTS.TITLE' | translate }}</h1>
+        <span
+          class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
+          <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500"></span>
+          Live OCR Telemetry
+        </span>
+      </div>
+      <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+        {{ 'ALERTS.SUBTITLE' | translate }}
+      </p>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <button
+        type="button"
+        (click)="refreshAlerts()"
+        class="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-850 dark:text-gray-200">
+        <span class="material-icons-outlined text-base">refresh</span>
+        <span>{{ 'COMMON.REFRESH' | translate }}</span>
+      </button>
+
+      <button
+        type="button"
+        routerLink="/reports"
+        class="flex items-center gap-1.5 rounded-xl border border-blue-600 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-blue-700 shadow-sm transition-all hover:bg-blue-100 dark:border-blue-500 dark:bg-blue-950/60 dark:text-blue-300">
+        <span class="material-icons-outlined text-base">analytics</span>
+        <span>{{ 'COMMON.VIEW_REPORT' | translate }}</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <section class="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
+    <!-- Total Active Alerts -->
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+          <span class="material-icons-outlined text-xl">notifications_active</span>
+        </div>
+        <div>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Total Alerts</span>
+          <div class="text-xl font-extrabold text-slate-900 dark:text-white">
+            {{ alertService.kpiMetrics().totalAlerts }}
+          </div>
+        </div>
+      </div>
+      <span class="mt-2.5 block text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        {{ alertService.kpiMetrics().totalAlertsTrend }}
+      </span>
+    </div>
+
+    <!-- Critical Mismatches -->
+    <div
+      class="rounded-xl border border-rose-200 bg-rose-50/40 p-4 shadow-sm transition-all hover:shadow-md dark:border-rose-900/60 dark:bg-rose-950/20">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
+          <span class="material-icons-outlined text-xl">gpp_bad</span>
+        </div>
+        <div>
+          <span class="text-xs font-medium text-rose-700 dark:text-rose-300">Open Critical</span>
+          <div class="text-xl font-extrabold text-rose-700 dark:text-rose-300">
+            {{ alertService.kpiMetrics().criticalCount }}
+          </div>
+        </div>
+      </div>
+      <span class="mt-2.5 block text-xs font-semibold text-rose-600 dark:text-rose-400">
+        {{ alertService.kpiMetrics().criticalTrend }}
+      </span>
+    </div>
+
+    <!-- OCR Number Mismatches -->
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+          <span class="material-icons-outlined text-xl">flaky</span>
+        </div>
+        <div>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Serial Mismatches</span>
+          <div class="text-xl font-extrabold text-slate-900 dark:text-white">
+            {{ alertService.kpiMetrics().mismatchCount }}
+          </div>
+        </div>
+      </div>
+      <span class="mt-2.5 block text-xs font-semibold text-purple-600 dark:text-purple-400">
+        {{ alertService.kpiMetrics().mismatchTrend }}
+      </span>
+    </div>
+
+    <!-- Under Review -->
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
+          <span class="material-icons-outlined text-xl">hourglass_top</span>
+        </div>
+        <div>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Under Review</span>
+          <div class="text-xl font-extrabold text-slate-900 dark:text-white">
+            {{ alertService.kpiMetrics().underReviewCount }}
+          </div>
+        </div>
+      </div>
+      <span class="mt-2.5 block text-xs font-semibold text-amber-600 dark:text-amber-400">
+        {{ alertService.kpiMetrics().underReviewTrend }}
+      </span>
+    </div>
+
+    <!-- Resolved Today -->
+    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+          <span class="material-icons-outlined text-xl">verified</span>
+        </div>
+        <div>
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Resolved Today</span>
+          <div class="text-xl font-extrabold text-slate-900 dark:text-white">
+            {{ alertService.kpiMetrics().resolvedTodayCount }}
+          </div>
+        </div>
+      </div>
+      <span class="mt-2.5 block text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        {{ alertService.kpiMetrics().resolvedTodayTrend }}
+      </span>
+    </div>
+  </section>
+
+  <!-- Filter Bar -->
+  <section class="relative z-30 flex flex-wrap items-center justify-between gap-3.5 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+    <div class="flex flex-1 flex-wrap items-center gap-2.5">
+      <!-- Severity Filter -->
+      <div class="flex flex-col">
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'FILTER.SEVERITY' | translate }}</span>
+        <app-dropdown
+          [options]="severityOptions"
+          [value]="alertService.severityFilter()"
+          (valueChange)="alertService.setSeverityFilter($event)"
+          placeholder="All Severities" />
+      </div>
+
+      <!-- Type Filter -->
+      <div class="flex flex-col">
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500"
+          >{{ 'TABLE.TYPE' | translate }}</span
+        >
+        <app-dropdown
+          [options]="typeOptions"
+          [value]="alertService.typeFilter()"
+          (valueChange)="alertService.setTypeFilter($event)"
+          placeholder="All Alert Types"
+          [searchable]="true" />
+      </div>
+
+      <!-- Status Filter -->
+      <div class="flex flex-col">
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'FILTER.STATUS' | translate }}</span>
+        <app-dropdown
+          [options]="statusOptions"
+          [value]="alertService.statusFilter()"
+          (valueChange)="alertService.setStatusFilter($event)"
+          placeholder="All Statuses" />
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="flex max-w-md flex-1 items-center justify-end gap-2">
+      <div class="relative flex-1">
+        <span class="material-icons-outlined absolute left-3 top-2.5 text-base text-slate-400">search</span>
+        <input
+          type="text"
+          [value]="alertService.searchQuery()"
+          (input)="alertService.setSearchQuery($any($event.target).value)"
+          [placeholder]="'COMMON.SEARCH' | translate"
+          class="h-9 w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-9 pr-4 text-xs text-slate-900 focus:border-blue-500 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+      </div>
+
+      <button
+        type="button"
+        (click)="resetFilters()"
+        class="h-9 rounded-xl border border-slate-200 bg-white/80 px-3 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-300">
+        {{ 'FILTER.CLEAR' | translate }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Alerts Table List -->
+  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+        <thead
+          class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+          <tr>
+            <th class="px-4 py-3.5">{{ 'TABLE.CODE' | translate }}</th>
+            <th class="px-4 py-3.5">{{ 'TABLE.TYPE' | translate }}</th>
+            <th class="px-4 py-3.5">{{ 'FILTER.SEVERITY' | translate }}</th>
+            <th class="px-4 py-3.5">Scanned Reality (OCR)</th>
+            <th class="px-4 py-3.5">Manifest Expected</th>
+            <th class="px-4 py-3.5">{{ 'TABLE.TRUCK_NO' | translate }}</th>
+            <th class="px-4 py-3.5">{{ 'TABLE.OCR_CONFIDENCE' | translate }}</th>
+            <th class="px-4 py-3.5">{{ 'TABLE.STATUS' | translate }}</th>
+            <th class="px-4 py-3.5 text-right">{{ 'TABLE.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          @if (alertService.filteredAlerts().length === 0) {
+            <tr>
+              <td colspan="9" class="py-12 text-center text-xs text-gray-500 dark:text-gray-400">
+                <span class="material-icons-outlined mb-2 text-3xl text-gray-400">check_circle_outline</span>
+                <p>No active mismatch alerts found matching the criteria.</p>
+              </td>
+            </tr>
+          }
+
+          @for (alert of alertService.filteredAlerts(); track alert.id) {
+            <tr class="transition-colors hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+              <!-- Alert Code -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">
+                {{ alert.alertCode }}
+              </td>
+
+              <!-- Alert Type -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <span class="font-semibold text-gray-800 dark:text-gray-200">{{ alert.alertType }}</span>
+              </td>
+
+              <!-- Severity Badge -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <span
+                  class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                  [class.bg-rose-50]="alert.severity === 'Critical'"
+                  [class.text-rose-700]="alert.severity === 'Critical'"
+                  [class.border]="alert.severity === 'Critical'"
+                  [class.border-rose-200]="alert.severity === 'Critical'"
+                  [class.dark:bg-rose-950/60]="alert.severity === 'Critical'"
+                  [class.dark:text-rose-300]="alert.severity === 'Critical'"
+                  [class.bg-amber-50]="alert.severity === 'High'"
+                  [class.text-amber-700]="alert.severity === 'High'"
+                  [class.bg-blue-50]="alert.severity === 'Medium'"
+                  [class.text-blue-700]="alert.severity === 'Medium'">
+                  <span
+                    class="h-1.5 w-1.5 rounded-full"
+                    [class.bg-rose-500]="alert.severity === 'Critical'"
+                    [class.bg-amber-500]="alert.severity === 'High'"
+                    [class.bg-blue-500]="alert.severity === 'Medium'"></span>
+                  {{ alert.severity }}
+                </span>
+              </td>
+
+              <!-- Scanned OCR Value -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-rose-600 dark:text-rose-400">
+                {{ alert.scannedContainerNo }}
+              </td>
+
+              <!-- Manifest Expected Value -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                {{ alert.expectedContainerNo }}
+              </td>
+
+              <!-- Gate & Truck -->
+              <td class="whitespace-nowrap px-4 py-3 text-gray-600 dark:text-gray-400">
+                <div class="font-medium text-gray-800 dark:text-gray-200">{{ alert.truckNo }}</div>
+                <div class="text-[10px] text-gray-400">{{ alert.gateLocation }}</div>
+              </td>
+
+              <!-- OCR Confidence Score -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-semibold text-gray-700 dark:text-gray-300">
+                {{ alert.ocrConfidence }}%
+              </td>
+
+              <!-- Status Badge -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <span
+                  class="rounded-md px-2 py-0.5 text-[11px] font-semibold"
+                  [class.bg-rose-50]="alert.status === 'Active'"
+                  [class.text-rose-700]="alert.status === 'Active'"
+                  [class.dark:bg-rose-950/60]="alert.status === 'Active'"
+                  [class.dark:text-rose-300]="alert.status === 'Active'"
+                  [class.bg-amber-50]="alert.status === 'Under Review'"
+                  [class.text-amber-700]="alert.status === 'Under Review'"
+                  [class.bg-emerald-50]="alert.status === 'Resolved'"
+                  [class.text-emerald-700]="alert.status === 'Resolved'">
+                  {{ alert.status }}
+                </span>
+              </td>
+
+              <!-- Inspect & Action CTA -->
+              <td class="whitespace-nowrap px-4 py-3 text-right">
+                <button
+                  type="button"
+                  (click)="openInspectModal(alert)"
+                  class="inline-flex items-center gap-1 rounded-xl bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/50">
+                  <span class="material-icons-outlined text-sm">troubleshoot</span>
+                  <span>Inspect & Triage</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Mismatch Comparison Modal -->
+  <app-mismatch-detail-modal
+    [alert]="alertService.selectedAlert()"
+    [isOpen]="alertService.isDetailModalOpen()"
+    (close)="alertService.closeAlertModal()"
+    (resolved)="handleResolution($event)" />
+</div>

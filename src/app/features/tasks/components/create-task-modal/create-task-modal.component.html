@@ -1,0 +1,316 @@
+@if (isOpen()) {
+  <div
+    class="modal-backdrop animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm"
+    (click)="onBackdropClick($event)">
+    <div
+      class="modal-container relative flex max-h-[92vh] w-full max-w-3xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-850"
+      (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
+        <div class="flex items-center gap-3">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400">
+            <span class="material-icons-outlined text-2xl">add_task</span>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">{{ 'TASKS.MODAL_TITLE' | translate }}</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'TASKS.MODAL_SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="close.emit()"
+          class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">
+          <span class="material-icons-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 space-y-6 overflow-y-auto px-6 py-5">
+        <!-- Error Banner if validation fails -->
+        @if (errorMessage()) {
+          <div
+            class="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+            <span class="material-icons-outlined text-base">error_outline</span>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <!-- 1. Task Type Selector Strip -->
+        <div>
+          <label class="mb-2.5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            1. Select Task Type
+          </label>
+          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
+            @for (t of taskTypes; track t.type) {
+              <button
+                type="button"
+                (click)="selectTaskType(t.type)"
+                class="flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-3 text-xs font-semibold transition-all duration-150"
+                [ngClass]="{
+                  'border-blue-600 bg-blue-50/80 text-blue-700 shadow-sm ring-2 ring-blue-500/20 dark:border-blue-500 dark:bg-blue-950/60 dark:text-blue-300':
+                    selectedTaskType() === t.type,
+                  'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-300 dark:hover:bg-gray-800':
+                    selectedTaskType() !== t.type,
+                }">
+                <span
+                  class="material-icons-outlined text-xl"
+                  [class.text-blue-600]="selectedTaskType() === t.type"
+                  [class.dark:text-blue-400]="selectedTaskType() === t.type">
+                  {{ t.icon }}
+                </span>
+                <span class="text-center leading-tight">{{ t.label }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- 2. Container & Cargo Information -->
+        <div
+          class="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/40 p-4 dark:border-gray-800 dark:bg-gray-800/20">
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            2. Container & Booking Details
+          </label>
+
+          <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3">
+            <!-- Container Number -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Container No. <span class="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                [ngModel]="containerNo()"
+                (ngModelChange)="containerNo.set($event)"
+                placeholder="e.g. MSCU 556123 4"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs font-bold uppercase text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+
+            <!-- Size / Type -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Container Size / Type
+              </label>
+              <app-dropdown
+                [value]="sizeType()"
+                (valueChange)="sizeType.set($event)"
+                [options]="sizeOptions"
+                size="sm"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select container size / type" />
+            </div>
+
+            <!-- Booking No. -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Booking / BL Reference
+              </label>
+              <input
+                type="text"
+                [ngModel]="bookingNo()"
+                (ngModelChange)="bookingNo.set($event)"
+                placeholder="e.g. BKGS2051709"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+
+            <!-- Cargo Type -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Cargo Description
+              </label>
+              <input
+                type="text"
+                [ngModel]="cargoType()"
+                (ngModelChange)="cargoType.set($event)"
+                placeholder="e.g. Industrial Machinery"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+
+            <!-- Gross Weight -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300"> Gross Weight </label>
+              <input
+                type="text"
+                [ngModel]="grossWeight()"
+                (ngModelChange)="grossWeight.set($event)"
+                placeholder="e.g. 24,500 KG"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+
+            <!-- Seal Number -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Customs / Line Seal
+              </label>
+              <input
+                type="text"
+                [ngModel]="sealNo()"
+                (ngModelChange)="sealNo.set($event)"
+                placeholder="e.g. ML-IN-982341"
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Routing & Location Assignment -->
+        <div
+          class="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/40 p-4 dark:border-gray-800 dark:bg-gray-800/20">
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            3. Routing & Location Assignment
+          </label>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <!-- From Location -->
+            <div>
+              <label class="mb-1 flex items-center gap-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                <span>From Location (Origin) <span class="text-rose-500">*</span></span>
+              </label>
+              <app-dropdown
+                [value]="fromLocation()"
+                (valueChange)="fromLocation.set($event)"
+                [options]="locationOptions"
+                size="sm"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select origin location" />
+            </div>
+
+            <!-- To Location -->
+            <div>
+              <label class="mb-1 flex items-center gap-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span>To Location (Destination) <span class="text-rose-500">*</span></span>
+              </label>
+              <app-dropdown
+                [value]="toLocation()"
+                (valueChange)="toLocation.set($event)"
+                [options]="locationOptions"
+                size="sm"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select destination location" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Equipment & Operator Dispatch -->
+        <div
+          class="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/40 p-4 dark:border-gray-800 dark:bg-gray-800/20">
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            4. Equipment, Operator & SLA Priority
+          </label>
+
+          <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-4">
+            <!-- Equipment -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300"> Equipment </label>
+              <app-dropdown
+                [value]="equipment()"
+                (valueChange)="equipment.set($event)"
+                [options]="equipmentOptions"
+                size="sm"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select equipment" />
+            </div>
+
+            <!-- Operator -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300"> Assign Operator </label>
+              <app-dropdown
+                [value]="operator()"
+                (valueChange)="operator.set($event)"
+                [options]="operatorOptions"
+                size="sm"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select operator" />
+            </div>
+
+            <!-- Priority -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300"> Priority </label>
+              <app-dropdown
+                [value]="priority()"
+                (valueChange)="priority.set($event)"
+                [options]="priorityOptions"
+                size="sm"
+                [fullWidth]="true"
+                placeholder="Select priority" />
+            </div>
+
+            <!-- Target SLA -->
+            <div>
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300"> Target SLA Time </label>
+              <app-dropdown
+                [value]="slaMinutes()"
+                (valueChange)="slaMinutes.set($event)"
+                [options]="slaOptions"
+                size="sm"
+                [fullWidth]="true"
+                placeholder="Select target SLA" />
+            </div>
+          </div>
+
+          <!-- Hazardous Material & Operational Notes -->
+          <div class="grid grid-cols-1 gap-3.5 pt-2 sm:grid-cols-3">
+            <!-- Hazardous Toggle -->
+            <div class="flex items-center pt-4 sm:col-span-1">
+              <label
+                class="relative flex cursor-pointer items-center gap-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  [ngModel]="isHazardous()"
+                  (ngModelChange)="isHazardous.set($event)"
+                  class="h-4 w-4 rounded border-gray-300 text-rose-600 focus:ring-rose-500 dark:border-gray-600 dark:bg-gray-800" />
+                <span>⚠️ Hazardous / Dangerous Goods (DG)</span>
+              </label>
+            </div>
+
+            <!-- Operational Notes -->
+            <div class="sm:col-span-2">
+              <label class="mb-1 block text-xs font-semibold text-gray-700 dark:text-gray-300">
+                Dispatcher Notes & Instructions
+              </label>
+              <input
+                type="text"
+                [ngModel]="notes()"
+                (ngModelChange)="notes.set($event)"
+                placeholder="e.g. Priority offload at Block C for customs verification."
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between border-t border-gray-100 px-6 py-4 dark:border-gray-800">
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="rounded-xl px-4 py-2 text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200">
+          {{ 'COMMON.RESET' | translate }}
+        </button>
+
+        <div class="flex items-center gap-2.5">
+          <button
+            type="button"
+            (click)="close.emit()"
+            class="rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button
+            type="button"
+            (click)="submitTask()"
+            class="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95">
+            <span class="material-icons-outlined text-sm">send</span>
+            <span>{{ 'TASKS.CREATE_TASK' | translate }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

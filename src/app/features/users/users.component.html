@@ -1,0 +1,432 @@
+<app-page-header
+  [breadcrumbs]="breadcrumbs"
+  [title]="'USERS.TITLE' | translate"
+  [subtitle]="'USERS.SUBTITLE' | translate"
+  [actionLabel]="'USERS.NEW_USER' | translate"
+  actionIcon="+"
+  (action)="openModal()" />
+
+<div class="management-card rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden dark:border-slate-800 dark:bg-[#111a2e]">
+  <!-- Top Filter & Search Bar -->
+  <div class="filters-row flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4 dark:border-slate-800">
+    <div class="filter-group search-filter flex items-center gap-3">
+      <div class="flex flex-col">
+        <label for="user-search-input" class="filter-label px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'COMMON.SEARCH' | translate }}</label>
+        <div class="search-input-wrapper relative flex items-center">
+          <svg class="search-icon pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd" />
+          </svg>
+          <input
+            id="user-search-input"
+            type="text"
+            class="filter-input h-9 w-64 rounded-lg border border-slate-300 bg-white px-3 py-1.5 pl-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-850 dark:text-slate-200"
+            [placeholder]="'USERS.SEARCH_PLACEHOLDER' | translate"
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)" />
+          @if (searchQuery()) {
+            <button type="button" class="btn-clear-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600" (click)="searchQuery.set('')" [title]="'COMMON.CLOSE' | translate">✕</button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-group status-filter flex flex-col">
+        <label class="filter-label px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'COMMON.STATUS' | translate }}</label>
+        <app-dropdown
+          [options]="statusFilterOptions"
+          [value]="statusFilter()"
+          (valueChange)="statusFilter.set($event)"
+          placeholder="All Statuses" />
+      </div>
+    </div>
+
+    <div class="filter-actions-right flex items-center gap-3">
+      <button type="button" class="btn-refresh flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-850 dark:text-slate-300" (click)="refresh()" [title]="'COMMON.REFRESH' | translate">
+        <svg class="refresh-icon h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.047a1 1 0 011.885-.666A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.608-1.286z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+      <span class="users-count-badge rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">{{ filteredUsers().length }} {{ 'NAV.USERS' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-responsive overflow-x-auto">
+    <table class="data-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
+      <thead class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
+        <tr>
+          <th class="th-user px-4 py-3.5">{{ 'NAV.USERS' | translate }}</th>
+          <th class="th-client px-4 py-3.5">{{ 'NAV.CLIENTS' | translate }}</th>
+          <th class="th-sites px-4 py-3.5">{{ 'NAV.SITES' | translate }}</th>
+          <th class="th-roles px-4 py-3.5">{{ 'NAV.ROLES' | translate }}</th>
+          <th class="th-status px-4 py-3.5">{{ 'COMMON.STATUS' | translate }}</th>
+          <th class="th-actions px-4 py-3.5 text-right">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        @for (user of filteredUsers(); track user.id) {
+          <tr class="table-row hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+            <td class="cell-user px-4 py-3.5">
+              <div class="user-identity flex items-center gap-2.5">
+                <app-avatar [name]="user.firstName + ' ' + user.lastName" size="sm" />
+                <div class="user-text-block flex flex-col">
+                  <strong
+                    class="user-full-name font-semibold text-slate-900 dark:text-white"
+                    [appHighlightText]="user.firstName + ' ' + user.lastName"
+                    [highlightTerm]="searchQuery()"
+                    >{{ user.firstName }} {{ user.lastName }}</strong
+                  >
+                  <small class="user-email text-slate-500 dark:text-slate-400 text-[11px]" [appHighlightText]="user.email" [highlightTerm]="searchQuery()">{{
+                    user.email
+                  }}</small>
+                </div>
+              </div>
+            </td>
+            <td class="cell-client px-4 py-3.5">
+              <span class="client-badge inline-flex rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" [class.is-global]="getUserClientName(user) === 'Global / Enterprise'">
+                {{ getUserClientName(user) }}
+              </span>
+            </td>
+            <td class="cell-sites px-4 py-3.5">
+              <div class="tag-list flex flex-wrap gap-1">
+                @for (siteName of getUserSites(user); track siteName) {
+                  <span
+                    class="tag-pill inline-flex rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                    [class.tag-all-sites]="siteName === 'All Sites'"
+                    [class.tag-site]="siteName !== 'All Sites'">
+                    {{ siteName }}
+                  </span>
+                }
+              </div>
+            </td>
+            <td class="cell-roles px-4 py-3.5">
+              <div class="tag-list flex flex-wrap gap-1">
+                @for (item of getUserSiteRoles(user); track item.siteName + item.role) {
+                  <span class="tag-pill tag-role inline-flex rounded-md border border-blue-200 bg-blue-50 px-1.5 py-0.5 text-[11px] font-medium text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-300">
+                    @if (item.siteCode) {
+                      <strong class="site-role-prefix mr-0.5">{{ item.siteCode }}:</strong>
+                    }
+                    {{ item.role }}
+                  </span>
+                } @empty {
+                  <span class="tag-pill tag-role inline-flex rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                    {{ user.role || 'Operator' }}
+                  </span>
+                }
+              </div>
+            </td>
+            <td class="cell-status px-4 py-3.5">
+              <app-status-badge [status]="user.status || 'Active'" />
+            </td>
+            <td class="cell-actions px-4 py-3.5 text-right">
+              <div class="action-buttons-group inline-flex items-center gap-2">
+                <button type="button" class="btn-action btn-edit flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="openModal(user)" [title]="'COMMON.EDIT' | translate">
+                  <svg class="action-icon-svg h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  <span>{{ 'COMMON.EDIT' | translate }}</span>
+                </button>
+
+                <button type="button" class="btn-action btn-delete flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50 dark:border-slate-700 dark:bg-slate-800 dark:text-rose-400 dark:hover:bg-rose-950/40" (click)="deleteUser(user)" [title]="'COMMON.DELETE' | translate">
+                  <svg class="action-icon-svg h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ 'COMMON.DELETE' | translate }}</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state-cell p-8 text-center">
+              <div class="empty-state-container flex flex-col items-center justify-center gap-2">
+                <div class="empty-icon-circle text-3xl">👥</div>
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">{{ 'USERS.EMPTY_TITLE' | translate }}</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'USERS.EMPTY_DESC' | translate }}</p>
+                <button type="button" class="btn-empty-add mt-2 rounded-lg bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700" (click)="openModal()">
+                  + {{ 'USERS.NEW_USER' | translate }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add / Edit User Modal with 2-Column Wide Layout and Per-Site Role Assignment -->
+@if (editingUser() !== undefined) {
+  <app-modal
+    [title]="editingUser() ? ('USERS.MODAL_EDIT_TITLE' | translate) : ('USERS.MODAL_NEW_TITLE' | translate)"
+    [subtitle]="
+      editingUser()
+        ? ('USERS.MODAL_EDIT_SUBTITLE' | translate)
+        : ('USERS.MODAL_NEW_SUBTITLE' | translate)
+    "
+    icon="👥"
+    size="xl"
+    (closed)="closeModal()">
+    <form [formGroup]="form" (ngSubmit)="saveUser()" class="user-modal-form">
+      <div class="user-modal-columns">
+        <!-- Left Panel: Profile & Credentials & Organization -->
+        <div class="user-form-panel user-panel-left">
+          <div class="panel-section-header">
+            <span class="panel-header-icon">👤</span>
+            <span class="panel-header-title">{{ 'USERS.PANEL_PROFILE' | translate }}</span>
+          </div>
+
+          <div class="panel-fields-grid">
+            <!-- Name Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                [label]="'USERS.FIELD_FIRST_NAME' | translate"
+                [control]="form.controls.firstName"
+                [placeholder]="'USERS.FIELD_FIRST_NAME' | translate"
+                icon="👤"
+                autocomplete="off" />
+
+              <app-form-field
+                [label]="'USERS.FIELD_LAST_NAME' | translate"
+                [control]="form.controls.lastName"
+                [placeholder]="'USERS.FIELD_LAST_NAME' | translate"
+                icon="👤"
+                autocomplete="off" />
+            </div>
+
+            <!-- Email & Mobile Number Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                [label]="'USERS.FIELD_EMAIL' | translate"
+                type="email"
+                [control]="form.controls.email"
+                [placeholder]="'USERS.FIELD_EMAIL' | translate"
+                icon="✉"
+                autocomplete="off" />
+
+              <app-form-field
+                [label]="'USERS.FIELD_MOBILE' | translate"
+                [control]="form.controls.mobileNumber"
+                [placeholder]="'USERS.FIELD_MOBILE' | translate"
+                icon="📞"
+                autocomplete="tel" />
+            </div>
+
+            <!-- Password Row with Show/Hide Toggle (Create Mode) -->
+            @if (!editingUser()) {
+              <div class="form-field-group">
+                <div class="label-row">
+                  <label class="field-label" for="user-password-input">
+                    {{ 'USERS.FIELD_PASSWORD' | translate }}
+                    <span class="required-star">*</span>
+                  </label>
+                </div>
+                <div
+                  class="input-container has-icon password-input-container"
+                  [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid">
+                  <span class="input-leading-icon">🔒</span>
+                  <input
+                    id="user-password-input"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    [formControl]="form.controls.password"
+                    placeholder="Min 6 chars (e.g. Prosper@123)"
+                    autocomplete="new-password"
+                    class="custom-input" />
+                  <button
+                    type="button"
+                    class="btn-toggle-pwd"
+                    (click)="togglePasswordVisibility()"
+                    title="Toggle password visibility">
+                    {{ showPassword() ? '👁‍🗨' : '👁' }}
+                  </button>
+                </div>
+                @if (form.controls.password.touched && form.controls.password.invalid) {
+                  <div class="field-error-message" role="alert">
+                    <svg class="error-bullet-icon" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span>{{ 'USERS.PASSWORD_MIN_LENGTH' | translate }}</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Client & Account Status Row -->
+            <div class="two-cols-grid">
+              <app-form-field
+                [label]="'USERS.FIELD_CLIENT' | translate"
+                type="select"
+                [control]="form.controls.clientId"
+                [options]="clientOptions()"
+                icon="🏢"
+                [placeholder]="'USERS.SELECT_CLIENT' | translate" />
+
+              <app-form-field
+                [label]="'USERS.FIELD_STATUS' | translate"
+                type="select"
+                [control]="form.controls.status"
+                [options]="statusOptions"
+                icon="⚡" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: Terminal Sites & Role Permissions -->
+        <div class="user-form-panel user-panel-right">
+          <app-centered-divider label="Location Access & Roles" />
+          <div class="custom-selector-section">
+            <div class="selector-header">
+              <div class="selector-label-group">
+                <span class="field-icon">📍</span>
+                <span class="custom-field-label">{{ 'USERS.TERMINAL_SITES_ROLES' | translate }}</span>
+                @if (siteRoles().length > 0) {
+                  <span class="count-badge-active"
+                    >{{ siteRoles().length }} site{{ siteRoles().length === 1 ? '' : 's' }}</span
+                  >
+                }
+              </div>
+              <div class="selector-quick-actions">
+                <button type="button" class="btn-quick-toggle" (click)="selectAllSites()">{{ 'COMMON.SELECT_ALL' | translate }}</button>
+                <span class="dot-separator">•</span>
+                <button type="button" class="btn-quick-toggle" (click)="clearAllSites()">{{ 'COMMON.CLEAR' | translate }}</button>
+              </div>
+            </div>
+
+            <p class="custom-field-hint">{{ 'USERS.SITE_ROLES_HINT' | translate }}</p>
+
+            <!-- Available Sites Toggle Chips -->
+            <div class="chips-grid">
+              @for (site of availableSites(); track site.id) {
+                <button
+                  type="button"
+                  class="chip-button"
+                  [class.chip-selected]="isSiteSelected(site.id)"
+                  (click)="toggleSite(site.id)">
+                  <span class="chip-checkbox">
+                    @if (isSiteSelected(site.id)) {
+                      ✓
+                    }
+                  </span>
+                  <span class="chip-name">{{ site.name }}</span>
+                  @if (site.code) {
+                    <span class="chip-code">{{ site.code }}</span>
+                  }
+                </button>
+              } @empty {
+                <div class="empty-chips-note">{{ 'USERS.NO_SITES_FOR_CLIENT' | translate }}</div>
+              }
+            </div>
+
+            <!-- Per-Site Role Assignment Card / Rows -->
+            @if (siteRoles().length > 0) {
+              <div class="site-roles-config-card">
+                <div class="site-roles-config-header">
+                  <div class="config-header-left">
+                    <span class="config-header-icon">🛡</span>
+                    <strong>{{ 'USERS.DESIGNATED_ROLES' | translate }}</strong>
+                  </div>
+                  <div class="bulk-role-apply">
+                    <span class="bulk-label">{{ 'USERS.SET_ALL' | translate }}</span>
+                    <app-dropdown
+                      [value]="globalDefaultRole()"
+                      (valueChange)="applyRoleToAllSelectedSites($event)"
+                      [options]="roleOptions()"
+                      size="sm"
+                      placeholder="Role" />
+                  </div>
+                </div>
+
+                <div class="site-role-rows-list">
+                  @for (sr of siteRoles(); track sr.siteId) {
+                    <div class="site-role-row">
+                      <div class="site-info-col">
+                        <span class="site-pin-icon">📍</span>
+                        <div class="site-text">
+                          <strong class="site-title">{{ getSiteObj(sr.siteId)?.name || sr.siteId }}</strong>
+                          @if (getSiteObj(sr.siteId)?.code) {
+                            <span class="site-code-pill">{{ getSiteObj(sr.siteId)?.code }}</span>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="site-role-select-col min-w-[150px]">
+                        <app-dropdown
+                          [value]="sr.role"
+                          (valueChange)="updateSiteRole(sr.siteId, $event)"
+                          [options]="roleOptions()"
+                          size="sm"
+                          [fullWidth]="true"
+                          placeholder="Select role" />
+                      </div>
+
+                      <button
+                        type="button"
+                        class="btn-remove-site-role"
+                        (click)="removeSite(sr.siteId)"
+                        [title]="'USERS.REMOVE_SITE_ACCESS' | translate">
+                        ✕
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            } @else {
+              <!-- Global Default Role when no specific site is chosen -->
+              <div class="global-role-config-box">
+                <div class="global-role-info">
+                  <span class="global-role-icon">🌐</span>
+                  <div>
+                    <strong>{{ 'USERS.GLOBAL_ACCESS_ROLE' | translate }}</strong>
+                    <p>{{ 'USERS.GLOBAL_ACCESS_DESC' | translate }}</p>
+                  </div>
+                </div>
+                <div class="global-role-dropdown-wrap min-w-[160px]">
+                  <app-dropdown
+                    [value]="globalDefaultRole()"
+                    (valueChange)="globalDefaultRole.set($event)"
+                    [options]="roleOptions()"
+                    size="sm"
+                    [fullWidth]="true"
+                    placeholder="Select global role" />
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (modalError()) {
+        <div class="modal-alert-error flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs font-semibold text-red-600 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-400" role="alert">
+          <span class="alert-icon">⚠️</span>
+          <span>{{ modalError() }}</span>
+        </div>
+      }
+
+      <div class="form-actions-footer mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <button type="button" class="btn-modal-cancel h-10 rounded-lg border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="closeModal()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn-modal-submit btn-electric flex h-10 items-center justify-center gap-2 px-5 text-xs font-semibold shadow-sm transition-all active:scale-95 disabled:opacity-50" [appFocusInvalidField]="form" [disabled]="isSaving()">
+          @if (isSaving()) {
+            <span class="btn-spinner inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            <span>{{ 'COMMON.LOADING' | translate }}</span>
+          } @else {
+            <span>{{ editingUser() ? ('COMMON.SAVE' | translate) : ('COMMON.SUBMIT' | translate) }}</span>
+          }
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}

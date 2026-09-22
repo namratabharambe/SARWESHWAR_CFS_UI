@@ -1,0 +1,280 @@
+<app-page-header
+  [breadcrumbs]="breadcrumbs"
+  [title]="'CLIENTS.TITLE' | translate"
+  [subtitle]="'CLIENTS.SUBTITLE' | translate"
+  [actionLabel]="'CLIENTS.NEW_CLIENT' | translate"
+  actionIcon="+"
+  (action)="openModal()" />
+
+<div class="management-card rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden dark:border-slate-800 dark:bg-[#111a2e]">
+  <!-- Top Filter & Search Bar -->
+  <div class="filters-row flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4 dark:border-slate-800">
+    <div class="filter-group search-filter flex items-center gap-3">
+      <div class="flex flex-col">
+        <label for="client-search-input" class="filter-label px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'COMMON.SEARCH' | translate }}</label>
+        <div class="search-input-wrapper relative flex items-center">
+          <svg class="search-icon pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd" />
+          </svg>
+          <input
+            id="client-search-input"
+            type="text"
+            class="filter-input h-9 w-64 rounded-lg border border-slate-300 bg-white px-3 py-1.5 pl-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-850 dark:text-slate-200"
+            [placeholder]="'CLIENTS.SEARCH_PLACEHOLDER' | translate"
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)" />
+          @if (searchQuery()) {
+            <button type="button" class="btn-clear-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600" (click)="searchQuery.set('')" [title]="'COMMON.CLOSE' | translate">✕</button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-group status-filter flex flex-col">
+        <label class="filter-label px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'COMMON.STATUS' | translate }}</label>
+        <app-dropdown
+          [options]="statusFilterOptions"
+          [value]="statusFilter()"
+          (valueChange)="statusFilter.set($event)"
+          placeholder="All Statuses" />
+      </div>
+    </div>
+
+    <div class="filter-actions-right flex items-center gap-3">
+      <button type="button" class="btn-refresh flex h-9 w-9 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-850 dark:text-slate-300" (click)="refresh()" [title]="'COMMON.REFRESH' | translate">
+        <svg class="refresh-icon h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.047a1 1 0 011.885-.666A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.608-1.286z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+      <span class="clients-count-badge rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">{{ filteredClients().length }} {{ 'NAV.CLIENTS' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="table-responsive overflow-x-auto">
+    <table class="data-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
+      <thead class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
+        <tr>
+          <th class="th-name px-4 py-3.5">{{ 'COMMON.NAME' | translate }}</th>
+          <th class="th-status px-4 py-3.5">{{ 'COMMON.STATUS' | translate }}</th>
+          <th class="th-actions px-4 py-3.5 text-right">{{ 'COMMON.ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        @for (client of filteredClients(); track client.id) {
+          <tr class="table-row hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+            <td class="cell-client-name px-4 py-3.5">
+              <div class="client-identity flex items-center gap-2.5">
+                <app-avatar [name]="client.clientName || client.name" size="sm" />
+                <span
+                  class="client-name-text font-semibold text-slate-900 dark:text-white"
+                  [appHighlightText]="client.clientName || client.name"
+                  [highlightTerm]="searchQuery()"
+                  >{{ client.clientName || client.name }}</span
+                >
+              </div>
+            </td>
+            <td class="cell-status px-4 py-3.5">
+              <button
+                type="button"
+                class="btn-status-badge-toggle inline-flex items-center"
+                (click)="openStatusModal(client)"
+                [title]="'CLIENTS.CHANGE_STATUS' | translate">
+                <app-status-badge [status]="client.status" />
+              </button>
+            </td>
+            <td class="cell-actions px-4 py-3.5 text-right">
+              <div class="action-buttons-group inline-flex items-center gap-2">
+                <button type="button" class="btn-action btn-edit flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="openModal(client)" [title]="'COMMON.EDIT' | translate">
+                  <svg class="action-icon-svg h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                  <span>{{ 'COMMON.EDIT' | translate }}</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="btn-action btn-delete flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                  (click)="openStatusModal(client)"
+                  [title]="
+                    client.status === 'Active' || client.active === true ? ('CLIENTS.DEACTIVATE' | translate) : ('CLIENTS.ACTIVATE' | translate)
+                  ">
+                  <svg class="action-icon-svg h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  <span>{{ client.status === 'Active' || client.active === true ? ('CLIENTS.DEACTIVATE' | translate) : ('CLIENTS.ACTIVATE' | translate) }}</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" class="empty-state-cell p-8 text-center">
+              <div class="empty-state-container flex flex-col items-center justify-center gap-2">
+                <div class="empty-icon-circle text-3xl">🏢</div>
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-white">{{ 'CLIENTS.EMPTY_TITLE' | translate }}</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'CLIENTS.EMPTY_DESC' | translate }}</p>
+                <button type="button" class="btn-empty-add mt-2 rounded-lg bg-blue-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700" (click)="openModal()">+ {{ 'CLIENTS.NEW_CLIENT' | translate }}</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add / Edit Client Modal (Client Name field only) -->
+@if (editingClient() !== undefined) {
+  <app-modal
+    [title]="editingClient() ? ('CLIENTS.MODAL_EDIT_TITLE' | translate) : ('CLIENTS.MODAL_NEW_TITLE' | translate)"
+    [subtitle]="editingClient() ? ('CLIENTS.MODAL_EDIT_SUBTITLE' | translate) : ('CLIENTS.MODAL_NEW_SUBTITLE' | translate)"
+    icon="🏢"
+    (closed)="closeModal()">
+    <form [formGroup]="form" (ngSubmit)="saveClient()" class="client-form">
+      <div class="form-body">
+        <app-form-field
+          [label]="'CLIENTS.FIELD_NAME' | translate"
+          [control]="form.controls.clientName"
+          [placeholder]="'CLIENTS.FIELD_NAME_PLACEHOLDER' | translate"
+          icon="🏢"
+          autocomplete="off" />
+
+        @if (saveError()) {
+          <div class="form-error-banner flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs font-semibold text-red-600 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-400" role="alert">
+            <span class="error-icon">⚠️</span>
+            <span>{{ saveError() }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="form-actions-footer mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <button type="button" class="btn-modal-cancel h-10 rounded-lg border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="closeModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button
+          type="submit"
+          class="btn-modal-submit btn-electric flex h-10 items-center justify-center gap-2 px-5 text-xs font-semibold shadow-sm transition-all active:scale-95 disabled:opacity-50"
+          [appFocusInvalidField]="form"
+          [disabled]="form.invalid || isSaving()">
+          @if (isSaving()) {
+            <span class="btn-spinner inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            <span>{{ 'COMMON.LOADING' | translate }}</span>
+          } @else {
+            <span>{{ editingClient() ? ('COMMON.SAVE' | translate) : ('COMMON.SUBMIT' | translate) }}</span>
+          }
+        </button>
+      </div>
+    </form>
+  </app-modal>
+}
+
+<!-- Status Activation / Deactivation Modal -->
+@if (statusModalClient()) {
+  <app-modal
+    [title]="targetStatus() ? ('CLIENTS.ACTIVATE' | translate) : ('CLIENTS.DEACTIVATE' | translate)"
+    [subtitle]="('CLIENTS.STATUS_MODAL_SUBTITLE' | translate) + ' ' + (statusModalClient()?.clientName || statusModalClient()?.name)"
+    [icon]="targetStatus() ? '✅' : '⏸️'"
+    (closed)="closeStatusModal()">
+    <div class="status-modal-content flex flex-col gap-4">
+      <div class="status-client-card rounded-xl border border-slate-200 bg-slate-50/70 p-4 dark:border-slate-800 dark:bg-[#0b1120]">
+        <div class="status-client-header flex items-center gap-3">
+          <span class="status-client-avatar flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 font-bold text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">{{
+            getInitials(statusModalClient()?.clientName || statusModalClient()?.name || '')
+          }}</span>
+          <div class="status-client-info flex flex-col">
+            <h4 class="status-client-title text-sm font-bold text-slate-900 dark:text-white">{{ statusModalClient()?.clientName || statusModalClient()?.name }}</h4>
+            <span class="status-client-guid font-mono text-[11px] text-slate-400">ID: {{ statusModalClient()?.id }}</span>
+          </div>
+        </div>
+
+        <div class="status-choice-group mt-3 flex flex-col gap-2">
+          <label class="status-choice-label text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'CLIENTS.CHOOSE_STATUS' | translate }}</label>
+          <div class="status-choice-pills flex gap-2.5">
+            <button
+              type="button"
+              class="status-choice-btn flex flex-1 items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-xs font-semibold transition-all"
+              [class.border-emerald-500]="targetStatus() === true"
+              [class.bg-emerald-50]="targetStatus() === true"
+              [class.text-emerald-700]="targetStatus() === true"
+              [class.border-slate-200]="targetStatus() !== true"
+              [class.bg-white]="targetStatus() !== true"
+              [class.text-slate-600]="targetStatus() !== true"
+              (click)="targetStatus.set(true)">
+              <span class="choice-dot h-2 w-2 rounded-full" [class.bg-emerald-500]="targetStatus() === true" [class.bg-slate-300]="targetStatus() !== true"></span>
+              <span class="choice-text">{{ 'COMMON.ACTIVE' | translate }}</span>
+            </button>
+
+            <button
+              type="button"
+              class="status-choice-btn flex flex-1 items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-xs font-semibold transition-all"
+              [class.border-rose-500]="targetStatus() === false"
+              [class.bg-rose-50]="targetStatus() === false"
+              [class.text-rose-700]="targetStatus() === false"
+              [class.border-slate-200]="targetStatus() !== false"
+              [class.bg-white]="targetStatus() !== false"
+              [class.text-slate-600]="targetStatus() !== false"
+              (click)="targetStatus.set(false)">
+              <span class="choice-dot h-2 w-2 rounded-full" [class.bg-rose-500]="targetStatus() === false" [class.bg-slate-300]="targetStatus() !== false"></span>
+              <span class="choice-text">{{ 'COMMON.INACTIVE' | translate }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="status-info-box mt-3 flex items-start gap-2.5 rounded-lg border p-3 text-xs leading-relaxed"
+          [class.border-emerald-200]="targetStatus()"
+          [class.bg-emerald-50/70]="targetStatus()"
+          [class.text-emerald-800]="targetStatus()"
+          [class.border-rose-200]="!targetStatus()"
+          [class.bg-rose-50/70]="!targetStatus()"
+          [class.text-rose-800]="!targetStatus()">
+          <span class="info-box-icon text-sm">{{ targetStatus() ? '💡' : '⚠️' }}</span>
+          <p class="info-box-text m-0">
+            @if (targetStatus()) {
+              Calling <code>PATCH /api/clients/&#123;ClientId&#125;/active/true</code> will activate this client and
+              restore full operational access across sites.
+            } @else {
+              Calling <code>PATCH /api/clients/&#123;ClientId&#125;/active/false</code> will mark this client inactive
+              and disable terminal site processing.
+            }
+          </p>
+        </div>
+      </div>
+
+      @if (statusError()) {
+        <div class="form-error-banner flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs font-semibold text-red-600" role="alert">
+          <span class="error-icon">⚠️</span>
+          <span>{{ statusError() }}</span>
+        </div>
+      }
+
+      <div class="form-actions-footer flex items-center justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
+        <button type="button" class="btn-modal-cancel h-10 rounded-lg border border-slate-200 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="closeStatusModal()">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button
+          type="button"
+          class="btn-modal-submit flex h-10 items-center justify-center gap-2 rounded-lg px-5 text-xs font-semibold shadow-sm transition-all active:scale-95 disabled:opacity-50"
+          [class.bg-blue-600]="targetStatus()"
+          [class.hover:bg-blue-700]="targetStatus()"
+          [class.text-white]="true"
+          [class.bg-rose-600]="!targetStatus()"
+          [class.hover:bg-rose-700]="!targetStatus()"
+          [disabled]="isUpdatingStatus()"
+          (click)="confirmStatusChange()">
+          @if (isUpdatingStatus()) {
+            <span class="btn-spinner inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+            <span>{{ 'COMMON.LOADING' | translate }}</span>
+          } @else {
+            <span>{{ targetStatus() ? ('CLIENTS.CONFIRM_ACTIVATE' | translate) : ('CLIENTS.CONFIRM_DEACTIVATE' | translate) }}</span>
+          }
+        </button>
+      </div>
+    </div>
+  </app-modal>
+}

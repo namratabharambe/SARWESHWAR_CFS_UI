@@ -1,0 +1,263 @@
+<div class="app-shell" [class.sidebar-collapsed]="collapsed()">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" [class.mobile-open]="mobileOpen()">
+    <!-- Brand Header -->
+    <div class="brand">
+      <div class="brand-cube-logo">
+        <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div class="brand-copy">
+        <strong class="brand-company-name">SARVESHWAR CFS</strong>
+        <small class="brand-product-desc">Container Freight Station</small>
+      </div>
+    </div>
+
+    <!-- Navigation Items: Only Dashboard, Gate Events, Tasks, Inventory, Reports, Alerts, Admin -->
+    <nav class="sidebar-nav" aria-label="Main Navigation">
+      <!-- Dashboard -->
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">dashboard</span>
+        <span class="nav-label-text">{{ 'NAV.DASHBOARD' | translate }}</span>
+      </a>
+
+      <!-- Gate Events (Parent) -->
+      <div class="nav-parent-group">
+        <button type="button" class="nav-item nav-parent-btn" [class.active]="isGateEventsRoute()" (click)="toggleGateEvents()">
+          <div class="nav-left-part">
+            <span class="material-icons-outlined text-lg">sensor_occupied</span>
+            <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
+          </div>
+          <span class="nav-chevron" [class.rotated]="gateEventsExpanded()">▾</span>
+        </button>
+
+        <!-- Gate Events Submenu -->
+        @if (gateEventsExpanded()) {
+          <div class="sub-nav-container">
+            <a routerLink="/gate-events/in" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.GATE_IN' | translate }}</span>
+            </a>
+            <a routerLink="/gate-events/out" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.GATE_OUT' | translate }}</span>
+            </a>
+          </div>
+        }
+      </div>
+
+      <!-- Tasks -->
+      <a routerLink="/tasks" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">task_alt</span>
+        <span class="nav-label-text">{{ 'NAV.TASKS' | translate }}</span>
+      </a>
+
+      <!-- Inventory -->
+      <a routerLink="/inventory" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">inventory_2</span>
+        <span class="nav-label-text">{{ 'NAV.INVENTORY' | translate }}</span>
+      </a>
+
+      <!-- Reports -->
+      <a routerLink="/reports" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">bar_chart</span>
+        <span class="nav-label-text">{{ 'NAV.REPORTS' | translate }}</span>
+      </a>
+
+      <!-- Alerts -->
+      <a routerLink="/alerts" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">shield</span>
+        <span class="nav-label-text">{{ 'NAV.ALERTS' | translate }}</span>
+      </a>
+
+      <!-- Admin (Parent) -->
+      <div class="nav-parent-group">
+        <button type="button" class="nav-item nav-parent-btn" [class.active]="isAdminRoute()" (click)="toggleAdmin()">
+          <div class="nav-left-part">
+            <span class="material-icons-outlined text-lg">settings</span>
+            <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
+          </div>
+          <span class="nav-chevron" [class.rotated]="adminExpanded()">▾</span>
+        </button>
+
+        <!-- Admin Submenu -->
+        @if (adminExpanded()) {
+          <div class="sub-nav-container">
+            <a routerLink="/clients" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.CLIENTS' | translate }}</span>
+            </a>
+            <a routerLink="/sites" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.SITES' | translate }}</span>
+            </a>
+            <a routerLink="/users" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.USERS' | translate }}</span>
+            </a>
+            <a routerLink="/roles" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.ROLES' | translate }}</span>
+            </a>
+          </div>
+        }
+      </div>
+    </nav>
+
+    <!-- Sidebar Collapse Button -->
+    <button class="collapse-button" type="button" (click)="collapsed.set(!collapsed())">
+      <span class="material-icons-outlined text-sm">{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</span>
+      <span>{{ 'COMMON.COLLAPSE' | translate }}</span>
+    </button>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="bg-slate-50 transition-colors duration-200 dark:bg-[#070c18]">
+    <!-- Top Bar -->
+    <header class="topbar border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0b1120]">
+      <button
+        class="mobile-menu text-gray-700 dark:text-gray-200"
+        type="button"
+        aria-label="Open menu"
+        (click)="mobileOpen.set(!mobileOpen())">
+        ☰
+      </button>
+
+      <!-- Left Header Controls: Role-based Client & Site Dropdowns -->
+      <div class="topbar-left-controls">
+        <!-- 1. System Admin ONLY: Client Selector Dropdown (Hidden for SiteAdmin / User) -->
+        @if (auth.isSystemAdmin()) {
+          <div class="header-context-pill header-client-pill" [class.is-loading]="switchingContext()">
+            <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">business</span>
+            <div class="pill-text-block">
+              <small>{{ 'NAV.CLIENT' | translate }} / Org</small>
+              <app-dropdown
+                size="sm"
+                [options]="clientDropdownOptions()"
+                [value]="auth.selectedClientId()"
+                (valueChange)="onClientSelect($event)"
+                placeholder="Select Client"
+                customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
+            </div>
+          </div>
+        }
+
+        <!-- 2. Site / Location Selector Dropdown (Shown for all roles including SiteAdmin and User) -->
+        <div class="header-context-pill header-site-pill" [class.is-loading]="loadingSites() || switchingContext()">
+          <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">location_on</span>
+          <div class="pill-text-block">
+            <small>{{ 'NAV.SITE' | translate }} / Location</small>
+            <app-dropdown
+              size="sm"
+              [options]="siteDropdownOptions()"
+              [value]="effectiveSelectedSiteId()"
+              (valueChange)="onSiteSelect($event)"
+              placeholder="Select Site"
+              customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
+          </div>
+        </div>
+
+        <!-- 3. Date Range Selector -->
+        <div class="header-context-pill xl:flex hidden">
+          <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">date_range</span>
+          <div class="pill-text-block">
+            <small>{{ 'FILTER.DATE_RANGE' | translate }}</small>
+            <app-dropdown
+              size="sm"
+              [options]="dateRangeOptions"
+              [value]="dashboardService.selectedDateRange()"
+              (valueChange)="dashboardService.setDateRange($event)"
+              placeholder="Select Date Range"
+              customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
+          </div>
+        </div>
+
+        <!-- Context Sync Indicator -->
+        @if (switchingContext() || auth.contextLoading()) {
+          <div class="context-sync-badge">
+            <span class="sync-spinner"></span>
+            <span>Switching Context & Token...</span>
+          </div>
+        } @else if (contextToast()) {
+          <div class="context-toast-badge">
+            <span>✓ {{ contextToast() }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Search Input -->
+      <div class="header-search-box hidden md:flex">
+        <span class="material-icons-outlined search-icon">search</span>
+        <input
+          type="text"
+          placeholder="Search container no., truck no., booking no., etc."
+          [value]="dashboardService.searchQuery()"
+          (input)="dashboardService.setSearchQuery($any($event.target).value)"
+          class="search-input" />
+        <kbd class="search-kbd">⌘ K</kbd>
+      </div>
+
+      <!-- Right Actions: Theme, Notifications, Live User Profile from Token -->
+      <div class="top-actions">
+        <!-- Theme Switcher -->
+        <button
+          type="button"
+          class="theme-toggle-btn cursor-pointer rounded-xl border border-gray-200 bg-gray-50 p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          (click)="theme.toggleTheme()"
+          [title]="theme.isDarkMode() ? ('NAV.LIGHT_MODE' | translate) : ('NAV.DARK_MODE' | translate)"
+          aria-label="Toggle theme mode">
+          @if (theme.isDarkMode()) {
+            <span class="material-icons-outlined text-lg text-amber-400">light_mode</span>
+          } @else {
+            <span class="material-icons-outlined text-lg text-slate-600">dark_mode</span>
+          }
+        </button>
+
+        <!-- Notification Bell with Counter -->
+        <div class="relative">
+          <button aria-label="Notifications" class="icon-button notification-btn">
+            <span class="material-icons-outlined text-xl">notifications</span>
+          </button>
+          @if (notificationCount() > 0) {
+            <span
+              class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-xs font-black text-white shadow-sm">
+              {{ notificationCount() }}
+            </span>
+          }
+        </div>
+
+        <!-- Live User Profile from JWT Login Claims -->
+        <div class="flex items-center gap-2.5">
+          <div
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-sm font-black text-white shadow-sm dark:bg-slate-700"
+            [title]="auth.userName()">
+            {{ auth.userInitials() }}
+          </div>
+          <div class="hidden flex-col leading-tight sm:flex">
+            <strong class="text-sm font-bold text-slate-900 dark:text-white">{{ auth.userName() }}</strong>
+            <small class="text-xs font-semibold text-blue-600 dark:text-blue-400">{{ auth.userRoleDisplay() }}</small>
+          </div>
+        </div>
+
+        <!-- Logout Button -->
+        <button
+          type="button"
+          class="icon-button logout-btn"
+          (click)="auth.logout()"
+          [title]="'NAV.LOGOUT' | translate"
+          [attr.aria-label]="'NAV.LOGOUT' | translate">
+          <span class="material-icons-outlined text-base">logout</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content Container -->
+    <section class="page">
+      <router-outlet />
+    </section>
+
+    <!-- Dashboard Footer -->
+    <footer
+      class="flex items-center justify-between border-t border-gray-200/80 px-5 py-2 text-xs text-gray-400 dark:border-gray-800 dark:text-gray-500">
+      <div class="flex-1 text-center text-[11px]">
+        © 2026 Sarveshwar CFS (Container Freight Station). All rights reserved.
+      </div>
+      <span class="font-mono text-[10px]">v1.0.0</span>
+    </footer>
+  </main>
+</div>

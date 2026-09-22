@@ -1,0 +1,44 @@
+<div class="dashboard-page flex flex-col gap-4">
+  <!-- Top Row: 5 KPI Metric Cards -->
+  <section class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+    @for (metric of dashboardService.kpiMetrics(); track metric.id) {
+      <app-kpi-metric-card [metric]="metric" />
+    }
+  </section>
+
+  <!-- Middle Row: Recent Gate Activity (8 cols) & Exceptions / Alerts (4 cols) -->
+  <section class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+    <!-- Recent Gate Activity (Primary Operations Log) -->
+    <div class="lg:col-span-8">
+      <app-recent-gate-activity
+        [activities]="dashboardService.paginatedGateActivities()"
+        [totalEntries]="dashboardService.totalGateEntries()"
+        [currentPage]="dashboardService.gateCurrentPage()"
+        [pageSize]="dashboardService.gatePageSize()"
+        (pageChange)="dashboardService.setPage($event)" />
+    </div>
+
+    <!-- Exceptions / Alerts -->
+    <div class="lg:col-span-4">
+      <app-exception-alerts [alerts]="dashboardService.exceptionAlerts()" />
+    </div>
+  </section>
+
+  <!-- Bottom Row: Yard Snapshot (4 cols), Gate Status Donut (4 cols), Inventory Summary (4 cols) -->
+  <section class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+    <!-- Yard Snapshot (Live) -->
+    <div class="lg:col-span-4">
+      <app-yard-snapshot [rows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()" />
+    </div>
+
+    <!-- Task & Gate Status Donut -->
+    <div class="lg:col-span-4">
+      <app-status-donut-chart [chartData]="dashboardService.taskStatusData()" />
+    </div>
+
+    <!-- Inventory Summary -->
+    <div class="lg:col-span-4">
+      <app-inventory-summary [data]="dashboardService.inventorySummary()" />
+    </div>
+  </section>
+</div>

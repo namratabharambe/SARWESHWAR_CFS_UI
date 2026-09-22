@@ -1,0 +1,28 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+@keyframes bounceShort {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-short {
+  animation: bounceShort 0.4s ease-in-out;
+}
+
+.tasks-filter-bar {
+  position: relative;
+  z-index: 30;
+}
+
+.tasks-content-section {
+  position: relative;
+  z-index: 10;
+}

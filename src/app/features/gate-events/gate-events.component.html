@@ -1,0 +1,489 @@
+<div class="gate-events-page flex flex-col gap-5">
+  <!-- Toast Notification Alert -->
+  @if (alertMessage()) {
+    <div class="gate-toast-alert fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-2xl backdrop-blur-md dark:bg-white/95 dark:text-slate-900" role="status">
+      <span class="toast-icon">ℹ️</span>
+      <span>{{ alertMessage() }}</span>
+      <button type="button" class="btn-close-toast ml-2 hover:opacity-80" (click)="alertMessage.set('')">✕</button>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 1. GATE EVENT DETAIL VIEW (Modular Component)                              -->
+  <!-- ========================================================================= -->
+  @if (selectedEventForDetails(); as selectedEvent) {
+    <app-gate-event-detail
+      [event]="selectedEvent"
+      (back)="closeDetails()"
+      (approve)="approveSingleEvent($event)"
+      (markException)="markExceptionForEvent($event)"
+      (reRunOcr)="reRunOcrForEvent($event)"
+      (createTask)="createTaskForEvent($event)"
+      (toast)="alertMessage.set($event)">
+    </app-gate-event-detail>
+  } @else {
+    <!-- ========================================================================= -->
+    <!-- 2. GATE EVENTS TABLE VIEW                                                 -->
+    <!-- ========================================================================= -->
+    <!-- Page Header with Dynamic Action Button: Manual Gate Entry for Gate In, Non ERP Container for Gate Out -->
+    <header class="page-title-header flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="header-title-content">
+        <h1 class="page-title text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          {{ gateMode() === 'out' ? 'Gate Out' : ('GATE_EVENTS.TITLE' | translate) }}
+        </h1>
+        <p class="page-subtitle mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          {{ gateMode() === 'out' ? 'Real-time OCR event monitoring & Gate Out verification' : ('GATE_EVENTS.SUBTITLE' | translate) }}
+        </p>
+      </div>
+      <div class="header-actions flex items-center gap-2.5">
+        @if (gateMode() === 'in') {
+          <button type="button" class="btn-manual-gate-entry flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="openGateInModal()" title="Manual Gate Entry">
+            <svg class="btn-entry-svg h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
+            </svg>
+            <span>{{ 'GATE_EVENTS.MANUAL_GATE_ENTRY' | translate }}</span>
+          </button>
+        } @else {
+          <button type="button" class="btn-non-erp-container flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="openNonErpContainerModal()" title="Non ERP Container">
+            <svg class="btn-non-erp-svg h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+            <span>Non ERP Container</span>
+          </button>
+        }
+      </div>
+    </header>
+
+    <!-- 4 KPI Metrics Cards Grid -->
+    <section class="kpi-metrics-grid grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Gate KPI Summary">
+      <!-- Card 1: Today's Arrivals (Gate In) / Today's Departures (Gate Out) -->
+      <div class="kpi-card card-arrivals rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+              {{ gateMode() === 'out' ? 'Today\'s Departures' : ('GATE_EVENTS.TODAYS_ARRIVALS' | translate) }}
+            </span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+              {{ gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals }}
+            </strong>
+          </div>
+        </div>
+        <div class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          ↑ {{ gateMode() === 'out' ? metrics().departuresTrend : metrics().arrivalsTrend }}
+        </div>
+      </div>
+
+      <!-- Card 2: OCR Verified -->
+      <div class="kpi-card card-ocr rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().ocrVerified }}</strong>
+          </div>
+        </div>
+        <div class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">{{ metrics().ocrVerifiedPercent }}</div>
+      </div>
+
+      <!-- Card 3: Pending Review -->
+      <div class="kpi-card card-review rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().pendingReview }}</strong>
+          </div>
+        </div>
+        <div class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">↓ {{ metrics().pendingReviewTrend }}</div>
+      </div>
+
+      <!-- Card 4: Damaged Captures -->
+      <div class="kpi-card card-damaged rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.DAMAGED_CAPTURES' | translate }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().damagedCaptures }}</strong>
+          </div>
+        </div>
+        <div class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">↓ {{ metrics().damagedTrend }}</div>
+      </div>
+    </section>
+
+    <!-- Main Table Card Container -->
+    <div class="gate-events-card rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+      <!-- Streamlined Toolbar: Date + Confidence + Search + Export -->
+      <div class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+        <div class="filter-controls-left flex flex-wrap items-center gap-3">
+          <!-- Date Selector -->
+          <div class="filter-item relative z-20 flex flex-col">
+            <span class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'GATE_EVENTS.FILTER_DATE' | translate }}</span>
+            <app-date-picker
+              [value]="dateFilter()"
+              (valueChange)="dateFilter.set($event)"
+              placeholder="Select Date" />
+          </div>
+
+          <!-- OCR Confidence Dropdown -->
+          <div class="filter-item flex flex-col">
+            <span class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'GATE_EVENTS.FILTER_CONFIDENCE' | translate }}</span>
+            <app-dropdown
+              [options]="confidenceOptions"
+              [value]="confidenceFilter()"
+              (valueChange)="confidenceFilter.set($event)"
+              placeholder="All Confidence" />
+          </div>
+        </div>
+
+        <div class="filter-controls-right flex items-center gap-2.5">
+          <!-- Live Search Box -->
+          <div class="search-field-wrapper relative flex items-center">
+            <svg class="search-lens-svg pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd" />
+            </svg>
+            <input
+              type="text"
+              class="gate-search-input h-9 w-60 rounded-lg border border-slate-300 bg-white px-3 py-1.5 pl-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-850 dark:text-slate-200"
+              [placeholder]="'GATE_EVENTS.SEARCH_PLACEHOLDER' | translate"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)" />
+            @if (searchQuery()) {
+              <button type="button" class="btn-clear-gate-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" (click)="searchQuery.set('')">✕</button>
+            }
+          </div>
+
+          <!-- Export Button (Prominent, replaces Filters/Approved/Reprocess) -->
+          <button type="button" class="btn-export-main flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="exportData()" title="Export gate events as CSV">
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Export</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table (Gate column removed, Clicking any record opens the detail screen) -->
+      <div class="table-responsive-wrapper overflow-x-auto">
+        <table class="gate-events-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
+          <thead class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
+            <tr>
+              <th class="col-checkbox px-4 py-3.5">
+                <input
+                  type="checkbox"
+                  class="gate-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  [checked]="isAllSelected()"
+                  (change)="toggleSelectAll()"
+                  title="Select all" />
+              </th>
+              <th class="col-time px-4 py-3.5">
+                <span>{{ 'GATE_EVENTS.COL_TIME' | translate }}</span>
+                <span class="sort-indicator ml-1 text-slate-400">↕</span>
+              </th>
+              <th class="col-cycle px-4 py-3.5">Cycle</th>
+              <th class="col-direction px-4 py-3.5">{{ 'GATE_EVENTS.COL_DIR' | translate }}</th>
+              <th class="col-truck px-4 py-3.5">{{ 'GATE_EVENTS.COL_TRUCK' | translate }}</th>
+              <th class="col-container px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONTAINER' | translate }}</th>
+              <th class="col-ocr px-4 py-3.5">{{ 'GATE_EVENTS.COL_OCR_RESULT' | translate }}</th>
+              <th class="col-confidence px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</th>
+              <th class="col-driver px-4 py-3.5">{{ 'GATE_EVENTS.COL_DRIVER' | translate }}</th>
+              <th class="col-status px-4 py-3.5">{{ 'GATE_EVENTS.COL_STATUS' | translate }}</th>
+              <th class="col-damage px-4 py-3.5">{{ 'GATE_EVENTS.COL_DAMAGE' | translate }}</th>
+              <th class="col-photos px-4 py-3.5">{{ 'GATE_EVENTS.COL_PHOTOS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (event of paginatedEvents(); track event.id) {
+              <tr
+                class="gate-event-row hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
+                [class.bg-blue-50/40]="isSelected(event.id)"
+                [class.dark:bg-blue-950/20]="isSelected(event.id)"
+                (click)="openDetails(event)"
+                title="Click to view full detail for {{ event.containerNo }}">
+                <!-- Checkbox -->
+                <td class="col-checkbox px-4 py-3.5" (click)="$event.stopPropagation()">
+                  <input
+                    type="checkbox"
+                    class="gate-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    [checked]="isSelected(event.id)"
+                    (change)="toggleSelect(event.id)" />
+                </td>
+
+                <!-- Event Time -->
+                <td class="col-time px-4 py-3.5">
+                  <span class="cell-event-time font-medium text-slate-600 dark:text-slate-300">{{ event.eventTime }}</span>
+                </td>
+
+                <!-- Cycle (Replaces Gate column) -->
+                <td class="col-cycle px-4 py-3.5">
+                  <span class="cycle-tag inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+                    [class.border-blue-200]="event.direction === 'IN'"
+                    [class.bg-blue-50]="event.direction === 'IN'"
+                    [class.text-blue-700]="event.direction === 'IN'"
+                    [class.dark:border-blue-800]="event.direction === 'IN'"
+                    [class.dark:bg-blue-950/30]="event.direction === 'IN'"
+                    [class.dark:text-blue-300]="event.direction === 'IN'"
+                    [class.border-emerald-200]="event.direction === 'OUT'"
+                    [class.bg-emerald-50]="event.direction === 'OUT'"
+                    [class.text-emerald-700]="event.direction === 'OUT'"
+                    [class.dark:border-emerald-800]="event.direction === 'OUT'"
+                    [class.dark:bg-emerald-950/30]="event.direction === 'OUT'"
+                    [class.dark:text-emerald-300]="event.direction === 'OUT'">
+                    <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                      @if (event.direction === 'IN') {
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+                      } @else {
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                      }
+                    </svg>
+                    {{ event.direction === 'IN' ? 'Gate In' : 'Gate Out' }}
+                  </span>
+                </td>
+
+                <!-- Direction Badge -->
+                <td class="col-direction px-4 py-3.5">
+                  <span
+                    class="dir-badge inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
+                    [class.bg-blue-100]="event.direction === 'IN'"
+                    [class.text-blue-800]="event.direction === 'IN'"
+                    [class.border]="true"
+                    [class.border-blue-200]="event.direction === 'IN'"
+                    [class.dark:bg-blue-950/40]="event.direction === 'IN'"
+                    [class.dark:text-blue-300]="event.direction === 'IN'"
+                    [class.bg-emerald-100]="event.direction === 'OUT'"
+                    [class.text-emerald-800]="event.direction === 'OUT'"
+                    [class.border-emerald-200]="event.direction === 'OUT'"
+                    [class.dark:bg-emerald-950/40]="event.direction === 'OUT'"
+                    [class.dark:text-emerald-300]="event.direction === 'OUT'">
+                    {{ event.direction }}
+                  </span>
+                </td>
+
+                <!-- Truck No -->
+                <td class="col-truck px-4 py-3.5">
+                  <span class="truck-plate font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ event.truckNo }}</span>
+                </td>
+
+                <!-- Container No -->
+                <td class="col-container px-4 py-3.5">
+                  <strong class="container-code font-mono text-xs font-bold text-blue-600 dark:text-blue-400">{{ event.containerNo }}</strong>
+                </td>
+
+                <!-- OCR Result -->
+                <td class="col-ocr px-4 py-3.5">
+                  <span class="ocr-text-result font-mono text-xs text-slate-700 dark:text-slate-300">{{ event.ocrResult }}</span>
+                </td>
+
+                <!-- Confidence Rating -->
+                <td class="col-confidence px-4 py-3.5">
+                  <div class="confidence-pill-wrap flex items-center gap-1.5">
+                    <span class="confidence-percent text-xs font-bold"
+                      [class.text-emerald-600]="event.confidence >= 95"
+                      [class.text-amber-600]="event.confidence >= 90 && event.confidence < 95"
+                      [class.text-rose-600]="event.confidence < 90">{{ event.confidence }}%</span>
+                    <div
+                      class="signal-bars-icon flex items-end gap-0.5 h-3"
+                      [class.high]="event.confidence >= 95"
+                      [class.med]="event.confidence >= 90 && event.confidence < 95"
+                      [class.low]="event.confidence < 90">
+                      <span class="bar bar-1 w-1 rounded-sm bg-slate-300 h-1.5" [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span class="bar bar-2 w-1 rounded-sm bg-slate-300 h-2.5" [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span class="bar bar-3 w-1 rounded-sm bg-slate-300 h-3" [class.bg-emerald-500]="event.confidence >= 95"></span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Driver Name -->
+                <td class="col-driver px-4 py-3.5">
+                  <span class="driver-name-text text-xs text-slate-600 dark:text-slate-300">{{ event.driver }}</span>
+                </td>
+
+                <!-- Status Badge -->
+                <td class="col-status px-4 py-3.5">
+                  <app-status-badge [status]="event.status === 'Verified' ? 'Active' : 'Pending'" />
+                </td>
+
+                <!-- Damage Flag -->
+                <td class="col-damage px-4 py-3.5">
+                  <span class="damage-tag inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
+                    [class.bg-slate-100]="!event.damageFlag"
+                    [class.text-slate-600]="!event.damageFlag"
+                    [class.bg-rose-100]="event.damageFlag"
+                    [class.text-rose-800]="event.damageFlag"
+                    [class.border]="true"
+                    [class.border-rose-200]="event.damageFlag">
+                    {{ event.damageFlag ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+
+                <!-- Camera Photos -->
+                <td class="col-photos px-4 py-3.5">
+                  <div class="camera-thumbnails-row flex items-center gap-1.5">
+                    @for (photo of event.photos; track photo.label) {
+                      <div
+                        class="camera-photo-thumb relative h-8 w-10 overflow-hidden rounded-md border border-slate-200 shadow-xs cursor-pointer hover:scale-105 transition-transform dark:border-slate-700"
+                        [style.background-color]="photo.color"
+                        [title]="photo.label"
+                        (click)="photo.url ? openLightbox(photo.label, photo.url, $event) : null">
+                        @if (photo.url) {
+                          <img
+                            [src]="photo.url"
+                            [alt]="photo.label"
+                            class="h-full w-full object-cover"
+                            loading="lazy" />
+                        } @else {
+                          <div class="thumb-container-ribs flex h-full items-center justify-center">
+                            <span class="text-[9px] font-bold text-white/80">{{ photo.tag }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="12" class="empty-state-cell p-8 text-center">
+                  <div class="empty-message-box flex flex-col items-center justify-center gap-2">
+                    <span class="empty-icon text-3xl">🔍</span>
+                    <strong class="text-sm font-semibold text-slate-900 dark:text-white">No gate events match your filter criteria</strong>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Try adjusting the cycle or search term to see records.</p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="table-pagination-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        <div class="pagination-info">
+          <span>Showing 1 to {{ paginatedEvents().length }} of {{ totalCount() }} events</span>
+        </div>
+
+        <div class="pagination-controls-group flex items-center gap-1">
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+            [class.border-blue-600]="currentPage() === 1"
+            [class.bg-blue-600]="currentPage() === 1"
+            [class.text-white]="currentPage() === 1"
+            [class.border-slate-200]="currentPage() !== 1"
+            [class.bg-white]="currentPage() !== 1"
+            [class.text-slate-700]="currentPage() !== 1"
+            [class.dark:border-slate-700]="currentPage() !== 1"
+            [class.dark:bg-slate-800]="currentPage() !== 1"
+            [class.dark:text-slate-300]="currentPage() !== 1"
+            (click)="currentPage.set(1)">
+            1
+          </button>
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+            [class.border-blue-600]="currentPage() === 2"
+            [class.bg-blue-600]="currentPage() === 2"
+            [class.text-white]="currentPage() === 2"
+            [class.border-slate-200]="currentPage() !== 2"
+            [class.bg-white]="currentPage() !== 2"
+            [class.text-slate-700]="currentPage() !== 2"
+            [class.dark:border-slate-700]="currentPage() !== 2"
+            [class.dark:bg-slate-800]="currentPage() !== 2"
+            [class.dark:text-slate-300]="currentPage() !== 2"
+            (click)="currentPage.set(2)">
+            2
+          </button>
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+            [class.border-blue-600]="currentPage() === 3"
+            [class.bg-blue-600]="currentPage() === 3"
+            [class.text-white]="currentPage() === 3"
+            [class.border-slate-200]="currentPage() !== 3"
+            [class.bg-white]="currentPage() !== 3"
+            [class.text-slate-700]="currentPage() !== 3"
+            [class.dark:border-slate-700]="currentPage() !== 3"
+            [class.dark:bg-slate-800]="currentPage() !== 3"
+            [class.dark:text-slate-300]="currentPage() !== 3"
+            (click)="currentPage.set(3)">
+            3
+          </button>
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+            [class.border-blue-600]="currentPage() === 4"
+            [class.bg-blue-600]="currentPage() === 4"
+            [class.text-white]="currentPage() === 4"
+            [class.border-slate-200]="currentPage() !== 4"
+            [class.bg-white]="currentPage() !== 4"
+            [class.text-slate-700]="currentPage() !== 4"
+            [class.dark:border-slate-700]="currentPage() !== 4"
+            [class.dark:bg-slate-800]="currentPage() !== 4"
+            [class.dark:text-slate-300]="currentPage() !== 4"
+            (click)="currentPage.set(4)">
+            4
+          </button>
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+            [class.border-blue-600]="currentPage() === 5"
+            [class.bg-blue-600]="currentPage() === 5"
+            [class.text-white]="currentPage() === 5"
+            [class.border-slate-200]="currentPage() !== 5"
+            [class.bg-white]="currentPage() !== 5"
+            [class.text-slate-700]="currentPage() !== 5"
+            [class.dark:border-slate-700]="currentPage() !== 5"
+            [class.dark:bg-slate-800]="currentPage() !== 5"
+            [class.dark:text-slate-300]="currentPage() !== 5"
+            (click)="currentPage.set(5)">
+            5
+          </button>
+          <span class="page-ellipsis px-1 text-slate-400">...</span>
+          <button type="button" class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="currentPage.set(7)">7</button>
+          <button type="button" class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" title="Next page">&gt;</button>
+        </div>
+
+        <div class="items-per-page-select-wrap">
+          <app-dropdown
+            size="sm"
+            [options]="pageSizeOptions"
+            [value]="pageSize()"
+            (valueChange)="pageSize.set(+$event)" />
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Import Gate In Popup Modal (Manual Gate Entry) -->
+  <app-gate-in-modal [isOpen]="isGateInModalOpen()" (close)="closeGateInModal()" (save)="handleGateInSave($event)">
+  </app-gate-in-modal>
+</div>
