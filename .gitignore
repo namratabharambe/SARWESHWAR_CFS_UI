@@ -1,8 +1,18 @@
+# Backend folders
+CFS.Admin/
+CFS.Gate/
+
 # Compiled output
 /dist
+dist/
 /tmp
 /out-tsc
 /bazel-out
+bin/
+obj/
+publish/
+publish_syapi/
+*.zip
 
 # Node
 node_modules/

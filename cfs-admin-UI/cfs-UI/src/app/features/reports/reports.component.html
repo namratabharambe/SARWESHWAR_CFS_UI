@@ -1,0 +1,428 @@
+<div class="reports-page flex flex-col gap-5">
+  <!-- Toast Notification -->
+  @if (reportService.toastMessage()) {
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl dark:bg-white dark:text-slate-900">
+      <span class="material-icons-outlined text-base text-emerald-400 dark:text-emerald-600">check_circle</span>
+      <span>{{ reportService.toastMessage() }}</span>
+    </div>
+  }
+
+  <!-- Header -->
+  <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <nav class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
+        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">Dashboard</a>
+        <span>›</span>
+        <span class="font-medium text-gray-800 dark:text-gray-200">Reports & Analytics Center</span>
+      </nav>
+
+      <h1 class="mt-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Reports & Operational Intelligence</h1>
+      <p class="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+        Granular CFS operational metrics, gate turnaround logs, OCR mismatch audits, yard dwell time, and customs billing dossiers.
+      </p>
+    </div>
+
+    <!-- Export Action Buttons & Date Preset Pills -->
+    <div class="flex flex-wrap items-center gap-2.5">
+      <!-- Date Presets -->
+      <div class="flex items-center rounded-xl border border-gray-200 bg-gray-50/70 p-1 dark:border-gray-800 dark:bg-gray-850">
+        @for (dp of datePresets; track dp.value) {
+          <button
+            type="button"
+            (click)="setDatePreset(dp.value)"
+            class="rounded-lg px-2.5 py-1 text-xs font-semibold transition-all"
+            [class.bg-white]="reportService.filter().preset === dp.value"
+            [class.text-blue-600]="reportService.filter().preset === dp.value"
+            [class.shadow-sm]="reportService.filter().preset === dp.value"
+            [class.dark:bg-gray-800]="reportService.filter().preset === dp.value"
+            [class.dark:text-blue-400]="reportService.filter().preset === dp.value"
+            [class.text-gray-600]="reportService.filter().preset !== dp.value"
+            [class.dark:text-gray-400]="reportService.filter().preset !== dp.value">
+            {{ dp.label }}
+          </button>
+        }
+      </div>
+
+      <!-- Export CSV Button -->
+      <button
+        type="button"
+        (click)="exportCsv()"
+        class="flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-850 dark:text-gray-200 dark:hover:bg-gray-800">
+        <span class="material-icons-outlined text-base text-emerald-600">table_view</span>
+        <span>Download CSV</span>
+      </button>
+
+      <!-- Export XLS (Excel) Button -->
+      <button
+        type="button"
+        (click)="exportXls()"
+        class="flex items-center gap-1.5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95">
+        <span class="material-icons-outlined text-base">download</span>
+        <span>Download XLS (Excel)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Report Category Selection Tabs -->
+  <section class="flex gap-2.5 overflow-x-auto pb-1">
+    @for (cat of categories; track cat.id) {
+      <button
+        type="button"
+        (click)="setCategory(cat.id)"
+        class="flex shrink-0 items-center gap-2 rounded-2xl px-4 py-3 text-xs font-bold transition-all duration-150"
+        [class.border-blue-500]="reportService.selectedCategory() === cat.id"
+        [class.bg-blue-600]="reportService.selectedCategory() === cat.id"
+        [class.text-white]="reportService.selectedCategory() === cat.id"
+        [class.shadow-lg]="reportService.selectedCategory() === cat.id"
+        [class.shadow-blue-500/30]="reportService.selectedCategory() === cat.id"
+        [class.glass-card]="reportService.selectedCategory() !== cat.id"
+        [class.text-slate-700]="reportService.selectedCategory() !== cat.id"
+        [class.dark:text-slate-300]="reportService.selectedCategory() !== cat.id">
+        <span class="material-icons-outlined text-lg">{{ cat.icon }}</span>
+        <span>{{ cat.label }}</span>
+        @if (cat.countBadge) {
+          <span
+            class="rounded-full px-2 py-0.5 text-[10px]"
+            [class.bg-white/20]="reportService.selectedCategory() === cat.id"
+            [class.text-white]="reportService.selectedCategory() === cat.id"
+            [class.bg-slate-200/80]="reportService.selectedCategory() !== cat.id"
+            [class.text-slate-700]="reportService.selectedCategory() !== cat.id"
+            [class.dark:bg-slate-700]="reportService.selectedCategory() !== cat.id"
+            [class.dark:text-slate-300]="reportService.selectedCategory() !== cat.id">
+            {{ cat.countBadge }}
+          </span>
+        }
+      </button>
+    }
+  </section>
+
+  <!-- Dynamic Glass KPI Summary Strip for Active Category -->
+  <section class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+    <!-- Metric 1 -->
+    <div class="glass-card glass-card-hover rounded-2xl p-4">
+      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        {{ reportService.activeKpis().metric1Label }}
+      </span>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">
+        {{ reportService.activeKpis().metric1Value }}
+      </div>
+      <span
+        class="mt-2 block text-xs font-semibold"
+        [class.text-emerald-600]="reportService.activeKpis().metric1IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric1IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric1IsPositive">
+        {{ reportService.activeKpis().metric1Trend }}
+      </span>
+    </div>
+
+    <!-- Metric 2 -->
+    <div class="glass-card glass-card-hover rounded-2xl p-4">
+      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        {{ reportService.activeKpis().metric2Label }}
+      </span>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">
+        {{ reportService.activeKpis().metric2Value }}
+      </div>
+      <span
+        class="mt-2 block text-xs font-semibold"
+        [class.text-emerald-600]="reportService.activeKpis().metric2IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric2IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric2IsPositive">
+        {{ reportService.activeKpis().metric2Trend }}
+      </span>
+    </div>
+
+    <!-- Metric 3 -->
+    <div class="glass-card glass-card-hover rounded-2xl p-4">
+      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        {{ reportService.activeKpis().metric3Label }}
+      </span>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">
+        {{ reportService.activeKpis().metric3Value }}
+      </div>
+      <span
+        class="mt-2 block text-xs font-semibold"
+        [class.text-emerald-600]="reportService.activeKpis().metric3IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric3IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric3IsPositive">
+        {{ reportService.activeKpis().metric3Trend }}
+      </span>
+    </div>
+
+    <!-- Metric 4 -->
+    <div class="glass-card glass-card-hover rounded-2xl p-4">
+      <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
+        {{ reportService.activeKpis().metric4Label }}
+      </span>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">
+        {{ reportService.activeKpis().metric4Value }}
+      </div>
+      <span
+        class="mt-2 block text-xs font-semibold"
+        [class.text-emerald-600]="reportService.activeKpis().metric4IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric4IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric4IsPositive">
+        {{ reportService.activeKpis().metric4Trend }}
+      </span>
+    </div>
+  </section>
+
+  <!-- Filter Controls Section -->
+  <section class="glass-card flex items-center justify-between gap-3 rounded-2xl p-4">
+    <div class="relative flex-1 max-w-lg">
+      <span class="material-icons-outlined absolute left-3 top-2.5 text-base text-gray-400">search</span>
+      <input
+        type="text"
+        [value]="reportService.filter().searchQuery"
+        (input)="reportService.setSearchQuery($any($event.target).value)"
+        placeholder="Filter records in current report..."
+        class="h-9 w-full rounded-xl border border-gray-200 bg-gray-50/60 pl-9 pr-4 text-xs text-gray-900 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        (click)="exportCsv()"
+        class="flex h-9 items-center gap-1 rounded-xl border border-gray-200 bg-gray-50 px-3 text-xs font-semibold text-gray-600 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
+        <span class="material-icons-outlined text-sm">file_download</span>
+        <span>CSV</span>
+      </button>
+      <button
+        type="button"
+        (click)="exportXls()"
+        class="flex h-9 items-center gap-1 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-semibold text-blue-700 hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300">
+        <span class="material-icons-outlined text-sm">grid_on</span>
+        <span>XLS</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Report Data Tables (Switched by active category) -->
+  <section class="glass-card overflow-hidden rounded-2xl">
+    <div class="overflow-x-auto">
+      
+      <!-- 1. Gate Operations Table -->
+      @if (reportService.selectedCategory() === 'gate-operations') {
+        <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+          <thead class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+            <tr>
+              <th class="px-4 py-3.5">Visit No</th>
+              <th class="px-4 py-3.5">Timestamp</th>
+              <th class="px-4 py-3.5">Gate / Lane</th>
+              <th class="px-4 py-3.5">Direction</th>
+              <th class="px-4 py-3.5">Truck / Driver</th>
+              <th class="px-4 py-3.5">Container No</th>
+              <th class="px-4 py-3.5">Line</th>
+              <th class="px-4 py-3.5">OCR Status</th>
+              <th class="px-4 py-3.5">TAT (Mins)</th>
+              <th class="px-4 py-3.5">Weighbridge</th>
+              <th class="px-4 py-3.5 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (row of reportService.filteredGateRows(); track row.id) {
+              <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium text-blue-600 dark:text-blue-400">{{ row.visitNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">{{ row.timestamp }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-medium">{{ row.gateLane }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span class="rounded px-2 py-0.5 text-[10px] font-bold" [class.bg-blue-50]="row.direction === 'IN'" [class.text-blue-700]="row.direction === 'IN'" [class.bg-teal-50]="row.direction === 'OUT'" [class.text-teal-700]="row.direction === 'OUT'">
+                    {{ row.direction === 'IN' ? '↓ INBOUND' : '↑ OUTBOUND' }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="font-semibold text-gray-900 dark:text-white">{{ row.truckNo }}</div>
+                  <div class="text-[10px] text-gray-400">{{ row.driverName }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">{{ row.containerNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-medium">{{ row.shippingLine }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span class="rounded px-2 py-0.5 text-[10px] font-bold" [class.bg-emerald-50]="row.ocrStatus === 'Auto-Matched'" [class.text-emerald-700]="row.ocrStatus === 'Auto-Matched'" [class.bg-amber-50]="row.ocrStatus === 'Manual Verified'" [class.text-amber-700]="row.ocrStatus === 'Manual Verified'" [class.bg-rose-50]="row.ocrStatus === 'Exception'" [class.text-rose-700]="row.ocrStatus === 'Exception'">
+                    {{ row.ocrStatus }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold" [class.text-emerald-600]="row.turnaroundMinutes <= 10" [class.text-amber-600]="row.turnaroundMinutes > 10 && row.turnaroundMinutes <= 20" [class.text-rose-600]="row.turnaroundMinutes > 20">
+                  {{ row.turnaroundMinutes }}m
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-gray-600 dark:text-gray-400">{{ row.weighbridgeKg | number }} KG</td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span class="rounded-md px-2 py-0.5 text-[11px] font-semibold" [class.bg-emerald-50]="row.status === 'Completed' || row.status === 'Gate Passed'" [class.text-emerald-700]="row.status === 'Completed' || row.status === 'Gate Passed'" [class.bg-rose-50]="row.status === 'Held'" [class.text-rose-700]="row.status === 'Held'">
+                    {{ row.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 2. Container Mismatch & OCR Audit Table -->
+      @if (reportService.selectedCategory() === 'container-mismatch') {
+        <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+          <thead class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+            <tr>
+              <th class="px-4 py-3.5">Alert Code</th>
+              <th class="px-4 py-3.5">Timestamp</th>
+              <th class="px-4 py-3.5">Gate Lane</th>
+              <th class="px-4 py-3.5">Scanned Reality (OCR)</th>
+              <th class="px-4 py-3.5">Manifest Record</th>
+              <th class="px-4 py-3.5">Discrepancy Detail</th>
+              <th class="px-4 py-3.5">Vision Conf.</th>
+              <th class="px-4 py-3.5">Line / BL</th>
+              <th class="px-4 py-3.5">Resolution SLA</th>
+              <th class="px-4 py-3.5 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (row of reportService.filteredMismatchRows(); track row.id) {
+              <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">{{ row.alertCode }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-500 dark:text-gray-400">{{ row.timestamp }}</td>
+                <td class="whitespace-nowrap px-4 py-3">{{ row.gateLane }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-rose-600 dark:text-rose-400">{{ row.scannedContainerNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">{{ row.manifestContainerNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="font-semibold text-gray-800 dark:text-gray-200">{{ row.discrepancyType }}</div>
+                  <div class="text-[10px] text-gray-400">{{ row.varianceDescription }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-semibold">{{ row.ocrConfidence }}%</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div>{{ row.shippingLine }}</div>
+                  <div class="text-[10px] text-gray-400 font-mono">{{ row.bookingNo }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-gray-600 dark:text-gray-400">{{ row.resolutionDurationMins }} mins</td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span class="rounded-md px-2 py-0.5 text-[11px] font-semibold" [class.bg-emerald-50]="row.resolutionStatus === 'Resolved'" [class.text-emerald-700]="row.resolutionStatus === 'Resolved'" [class.bg-blue-50]="row.resolutionStatus === 'Overridden'" [class.text-blue-700]="row.resolutionStatus === 'Overridden'" [class.bg-amber-50]="row.resolutionStatus === 'Pending Inspection'" [class.text-amber-700]="row.resolutionStatus === 'Pending Inspection'">
+                    {{ row.resolutionStatus }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 3. Yard Occupancy & Dwell Table -->
+      @if (reportService.selectedCategory() === 'yard-occupancy') {
+        <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+          <thead class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+            <tr>
+              <th class="px-4 py-3.5">Block Name</th>
+              <th class="px-4 py-3.5">Zone</th>
+              <th class="px-4 py-3.5">Total Capacity</th>
+              <th class="px-4 py-3.5">Occupied (TEU)</th>
+              <th class="px-4 py-3.5">Occupancy Rate</th>
+              <th class="px-4 py-3.5">Reefer Slots</th>
+              <th class="px-4 py-3.5">Avg Dwell</th>
+              <th class="px-4 py-3.5">Long-Stay (>30d)</th>
+              <th class="px-4 py-3.5 text-right">Last Audit</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (row of reportService.filteredYardRows(); track row.id) {
+              <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+                <td class="whitespace-nowrap px-4 py-3 font-bold text-gray-900 dark:text-white">{{ row.blockName }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-500">{{ row.yardZone }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.totalCapacityTeu | number }} TEU</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold">{{ row.occupiedTeu | number }} TEU</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="h-2 w-20 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                      <div class="h-full rounded-full" [class.bg-emerald-500]="row.occupancyRatePercent <= 75" [class.bg-amber-500]="row.occupancyRatePercent > 75 && row.occupancyRatePercent <= 90" [class.bg-rose-500]="row.occupancyRatePercent > 90" [style.width.%]="row.occupancyRatePercent"></div>
+                    </div>
+                    <span class="font-mono font-bold text-xs">{{ row.occupancyRatePercent }}%</span>
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.reeferSlotsOccupied }} / {{ row.reeferSlotsTotal }} plugs</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-semibold">{{ row.averageDwellDays }} Days</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono" [class.text-rose-600]="row.longStayOver30DaysCount > 5" [class.font-bold]="row.longStayOver30DaysCount > 5">
+                  {{ row.longStayOver30DaysCount }} units
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-right text-gray-500">{{ row.lastAuditedTime }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 4. Equipment Productivity Table -->
+      @if (reportService.selectedCategory() === 'equipment-productivity') {
+        <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+          <thead class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+            <tr>
+              <th class="px-4 py-3.5">Equipment Code</th>
+              <th class="px-4 py-3.5">Type</th>
+              <th class="px-4 py-3.5">Operator</th>
+              <th class="px-4 py-3.5">Shift</th>
+              <th class="px-4 py-3.5">Total Moves</th>
+              <th class="px-4 py-3.5">Moves / Hour</th>
+              <th class="px-4 py-3.5">Operating Hrs</th>
+              <th class="px-4 py-3.5">Fuel (L)</th>
+              <th class="px-4 py-3.5 text-right">Rating</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (row of reportService.filteredEquipmentRows(); track row.id) {
+              <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">{{ row.equipmentCode }}</td>
+                <td class="whitespace-nowrap px-4 py-3">{{ row.equipmentType }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-semibold">{{ row.assignedOperator }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-500">{{ row.shift }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">{{ row.totalMoves }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">{{ row.movesPerHour }} MPH</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.operatingHours }} hrs ({{ row.idleHours }} idle)</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.fuelConsumptionLitres }} L</td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span class="rounded-md px-2 py-0.5 text-[11px] font-semibold" [class.bg-emerald-50]="row.efficiencyRating === 'Optimal'" [class.text-emerald-700]="row.efficiencyRating === 'Optimal'" [class.bg-blue-50]="row.efficiencyRating === 'Standard'" [class.text-blue-700]="row.efficiencyRating === 'Standard'" [class.bg-amber-50]="row.efficiencyRating === 'Needs Attention'" [class.text-amber-700]="row.efficiencyRating === 'Needs Attention'">
+                    {{ row.efficiencyRating }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 5. Customs & Billing Table -->
+      @if (reportService.selectedCategory() === 'customs-billing') {
+        <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
+          <thead class="border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-400">
+            <tr>
+              <th class="px-4 py-3.5">Dossier No</th>
+              <th class="px-4 py-3.5">Container No</th>
+              <th class="px-4 py-3.5">BL Number</th>
+              <th class="px-4 py-3.5">Importer / Exporter</th>
+              <th class="px-4 py-3.5">Cargo Description</th>
+              <th class="px-4 py-3.5">Gross Weight</th>
+              <th class="px-4 py-3.5">Customs Status</th>
+              <th class="px-4 py-3.5">Bonded Days</th>
+              <th class="px-4 py-3.5 text-right">Demurrage (INR)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            @for (row of reportService.filteredCustomsRows(); track row.id) {
+              <tr class="hover:bg-gray-50/60 dark:hover:bg-gray-800/50">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium text-blue-600 dark:text-blue-400">{{ row.dossierNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-gray-900 dark:text-white">{{ row.containerNo }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-gray-600 dark:text-gray-400">{{ row.blNumber }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-800 dark:text-gray-200">{{ row.importerExporterName }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-gray-600 dark:text-gray-400">{{ row.cargoDescription }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.grossWeightKg | number }} KG</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span class="rounded-md px-2 py-0.5 text-[11px] font-semibold" [class.bg-emerald-50]="row.customsStatus === 'Cleared'" [class.text-emerald-700]="row.customsStatus === 'Cleared'" [class.bg-amber-50]="row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'" [class.text-amber-700]="row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'" [class.bg-rose-50]="row.customsStatus === 'Detained'" [class.text-rose-700]="row.customsStatus === 'Detained'">
+                    {{ row.customsStatus }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono">{{ row.bondedWarehouseDays }} Days</td>
+                <td class="whitespace-nowrap px-4 py-3 text-right font-mono font-bold" [class.text-emerald-600]="row.demurrageAccruedInr === 0" [class.text-amber-600]="row.demurrageAccruedInr > 0 && row.demurrageAccruedInr <= 10000" [class.text-rose-600]="row.demurrageAccruedInr > 10000">
+                  ₹{{ row.demurrageAccruedInr | number }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+    </div>
+  </section>
+</div>
