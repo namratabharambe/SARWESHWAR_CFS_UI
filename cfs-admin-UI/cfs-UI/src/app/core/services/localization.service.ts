@@ -1,0 +1,274 @@
+import { inject, Injectable, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+export type SupportedLanguage = 'en' | 'es' | 'fr';
+
+const DEFAULT_TRANSLATIONS: Record<string, any> = {
+  NAV: {
+    DASHBOARD: 'Dashboard',
+    ADMIN: 'Admin',
+    CLIENTS: 'Clients',
+    SITES: 'Sites',
+    USERS: 'Users',
+    ROLES: 'Roles',
+    GATE_EVENTS: 'Gate Events',
+    ALL_CLIENTS: 'All Clients',
+    ALL_SITES: 'All Sites',
+    LOGOUT: 'Sign Out',
+    SYSTEM_ADMIN: 'System Admin',
+    CLIENT: 'Client',
+    SITE: 'Site',
+    LIGHT_MODE: 'Light Mode',
+    DARK_MODE: 'Dark Mode',
+    LANGUAGE: 'Language',
+  },
+  COMMON: {
+    SEARCH: 'Search...',
+    FILTER: 'Filter',
+    STATUS: 'Status',
+    ACTIVE: 'Active',
+    INACTIVE: 'Inactive',
+    ALL: 'All',
+    ACTIONS: 'Actions',
+    ADD: 'Add',
+    EDIT: 'Edit',
+    DELETE: 'Delete',
+    SAVE: 'Save',
+    CANCEL: 'Cancel',
+    SUBMIT: 'Submit',
+    LOADING: 'Loading...',
+    REFRESH: 'Refresh',
+    CONFIRM: 'Confirm',
+    CLOSE: 'Close',
+    TOTAL: 'Total',
+    NAME: 'Name',
+    CODE: 'Code',
+    CREATED_AT: 'Created At',
+    UPDATED_AT: 'Updated At',
+    NO_DATA: 'No records found',
+    ERROR: 'An error occurred',
+    SUCCESS: 'Operation successful',
+  },
+  AUTH: {
+    SIGN_IN: 'Sign In',
+    LOGIN_TITLE: 'CFS Admin Portal',
+    LOGIN_SUBTITLE: 'Container Freight Station enterprise management console',
+    EMAIL: 'Email address',
+    PASSWORD: 'Password',
+    SUBMIT_BUTTON: 'Sign In to Admin',
+    INVALID_CREDENTIALS: 'Invalid email or password',
+    SIGNOUT_CONFIRM: 'Are you sure you want to sign out?',
+  },
+  DASHBOARD: {
+    TITLE: 'System Overview',
+    SUBTITLE: 'Enterprise metrics, facility network, and administration summary',
+    TOTAL_CLIENTS: 'Total Clients',
+    TOTAL_SITES: 'Total Sites',
+    ACTIVE_USERS: 'Active Users',
+    SYSTEM_ROLES: 'System Roles',
+    LIVE_CONTEXT: 'Live Context',
+    ACTIVE_CLIENT: 'Active Client',
+    ACTIVE_SITE: 'Active Site',
+    NO_CLIENT_SELECTED: 'No Client Selected',
+    NO_SITE_SELECTED: 'No Site Selected',
+  },
+  CLIENTS: {
+    TITLE: 'Client Management',
+    SUBTITLE: 'Manage enterprise tenant clients, codes, and operational status',
+    NEW_CLIENT: 'New Client',
+    SEARCH_PLACEHOLDER: 'Search clients by name or code...',
+    EMPTY_TITLE: 'No clients found',
+    EMPTY_DESC: 'Create a new client or adjust your filter query',
+    MODAL_NEW_TITLE: 'Create Client',
+    MODAL_EDIT_TITLE: 'Edit Client',
+    FIELD_NAME: 'Client Name',
+    FIELD_CODE: 'Client Code',
+    FIELD_STATUS: 'Status',
+  },
+  SITES: {
+    TITLE: 'Site Management',
+    SUBTITLE: 'Oversee container freight station sites, regional hubs, and client assignments',
+    NEW_SITE: 'New Site',
+    SEARCH_PLACEHOLDER: 'Search sites by name or code...',
+    EMPTY_TITLE: 'No sites found',
+    EMPTY_DESC: 'Create a site or verify your search filter',
+    MODAL_NEW_TITLE: 'Create Site',
+    MODAL_EDIT_TITLE: 'Edit Site',
+    FIELD_NAME: 'Site Name',
+    FIELD_CODE: 'Site Code',
+    FIELD_CLIENT: 'Assigned Client',
+    FIELD_STATUS: 'Status',
+  },
+  USERS: {
+    TITLE: 'User Management',
+    SUBTITLE: 'Provision administrators, field operators, site personnel, and access credentials',
+    NEW_USER: 'New User',
+    SEARCH_PLACEHOLDER: 'Search users by name, email, or role...',
+    EMPTY_TITLE: 'No users found',
+    EMPTY_DESC: 'Add a user or modify search parameters',
+    MODAL_NEW_TITLE: 'Create User',
+    MODAL_EDIT_TITLE: 'Edit User',
+    FIELD_NAME: 'Full Name',
+    FIELD_EMAIL: 'Email Address',
+    FIELD_PASSWORD: 'Password',
+    FIELD_ROLE: 'System Role',
+    FIELD_CLIENT: 'Assigned Client',
+    FIELD_SITE: 'Assigned Site',
+    FIELD_STATUS: 'Status',
+  },
+  ROLES: {
+    TITLE: 'Role & Permission Management',
+    SUBTITLE: 'Configure role-based access control, scopes, and administrative privileges',
+    NEW_ROLE: 'New Role',
+    SEARCH_PLACEHOLDER: 'Search roles...',
+    EMPTY_TITLE: 'No roles found',
+    EMPTY_DESC: 'Create a role to define access boundaries',
+    MODAL_NEW_TITLE: 'Create Role',
+    MODAL_EDIT_TITLE: 'Edit Role',
+    FIELD_NAME: 'Role Name',
+    FIELD_DESCRIPTION: 'Description',
+    FIELD_PERMISSIONS: 'Permissions',
+  },
+  GATE_EVENTS: {
+    TITLE: 'Gate Events',
+    SUBTITLE: 'Live optical gate transactions, container captures, and verification log',
+    TODAYS_ARRIVALS: "Today's Arrivals",
+    TODAYS_DEPARTURES: "Today's Departures",
+    OCR_VERIFIED: 'OCR Verified',
+    PENDING_REVIEW: 'Pending Review',
+    DAMAGED_CAPTURES: 'Damaged Captures',
+    TAB_ALL: 'All',
+    TAB_ARRIVALS: 'Arrivals',
+    TAB_DEPARTURES: 'Departures',
+    FILTER_DIRECTION: 'Direction',
+    FILTER_GATE: 'Gate',
+    FILTER_DATE: 'Date',
+    FILTER_CONFIDENCE: 'Min Confidence',
+    SEARCH_PLACEHOLDER: 'Search events by container, truck plate, driver...',
+    VIEW_DETAILS: 'View Details',
+    APPROVE: 'Approve',
+    REPROCESS_OCR: 'Reprocess OCR',
+    EXPORT: 'Export',
+    COL_TIME: 'Time',
+    COL_GATE: 'Gate',
+    COL_DIR: 'Dir',
+    COL_TRUCK: 'Truck Plate',
+    COL_CONTAINER: 'Container No',
+    COL_OCR_RESULT: 'OCR Result',
+    COL_CONFIDENCE: 'Confidence',
+    COL_DRIVER: 'Driver',
+    COL_STATUS: 'Status',
+    COL_DAMAGE: 'Damage',
+    COL_PHOTOS: 'Photos (4-Angle)',
+    DAMAGE_DETECTED: 'Damage Detected',
+    DAMAGE_ANOMALY_FLAGGED: '⚠️ Damage Anomaly Flagged',
+    NO_STRUCTURAL_DAMAGE: '✓ No Structural Damage',
+    INSPECTION_TITLE: 'Multi-Angle OCR & Damage Evidence Cameras',
+    MATCH_RATING: 'Confidence Rating',
+    RAW_OPTICAL_STENCIL: 'Raw Optical Stencil',
+    AI_DAMAGE_DETECTION: 'AI Damage Detection',
+    FLAG_INSPECTION: 'Flag Damage Inspection',
+    MARK_VERIFIED: '✓ Mark Verified & Release',
+    CLOSE: 'Close',
+  },
+};
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LocalizationService {
+  private readonly http = inject(HttpClient);
+  private readonly STORAGE_KEY = 'cfs_ui_lang';
+
+  private readonly _currentLang = signal<SupportedLanguage>('en');
+  private readonly _translations = signal<Record<string, any>>(DEFAULT_TRANSLATIONS);
+  private readonly _availableLangs = signal<{ code: SupportedLanguage; label: string; flag: string }[]>([
+    { code: 'en', label: 'English', flag: 'EN' },
+    { code: 'es', label: 'Español', flag: 'ES' },
+    { code: 'fr', label: 'Français', flag: 'FR' },
+  ]);
+
+  public readonly currentLang = this._currentLang.asReadonly();
+  public readonly translations = this._translations.asReadonly();
+  public readonly availableLangs = this._availableLangs.asReadonly();
+
+  constructor() {
+    this.initializeLanguage();
+  }
+
+  private initializeLanguage(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedLang = window.localStorage.getItem(this.STORAGE_KEY) as SupportedLanguage | null;
+      if (savedLang && (savedLang === 'en' || savedLang === 'es' || savedLang === 'fr')) {
+        this.setLanguage(savedLang);
+        return;
+      }
+    }
+    // Load default language
+    this.loadTranslations('en');
+  }
+
+  public setLanguage(lang: SupportedLanguage): void {
+    this._currentLang.set(lang);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(this.STORAGE_KEY, lang);
+    }
+    this.loadTranslations(lang);
+  }
+
+  public loadTranslations(lang: SupportedLanguage): void {
+    this.http.get<Record<string, any>>(`assets/i18n/${lang}.json`).subscribe({
+      next: (data) => {
+        this._translations.set(data);
+      },
+      error: () => {
+        // Fallback to default if load fails
+        if (lang === 'en') {
+          this._translations.set(DEFAULT_TRANSLATIONS);
+        }
+      },
+    });
+  }
+
+  public translate(key: string, params?: Record<string, string | number>): string {
+    if (!key) return '';
+
+    const keys = key.split('.');
+    let value: any = this._translations();
+
+    for (const segment of keys) {
+      if (value && typeof value === 'object' && segment in value) {
+        value = value[segment];
+      } else {
+        // Fallback to default English translation dictionary if not found in current dictionary
+        let fallbackVal: any = DEFAULT_TRANSLATIONS;
+        for (const fbSegment of keys) {
+          if (fallbackVal && typeof fallbackVal === 'object' && fbSegment in fallbackVal) {
+            fallbackVal = fallbackVal[fbSegment];
+          } else {
+            fallbackVal = null;
+            break;
+          }
+        }
+        value = fallbackVal ?? key;
+        break;
+      }
+    }
+
+    if (typeof value !== 'string') {
+      return key;
+    }
+
+    if (params) {
+      return Object.entries(params).reduce((acc, [paramKey, paramVal]) => {
+        return acc.replace(new RegExp(`{{\\s*${paramKey}\\s*}}`, 'g'), String(paramVal));
+      }, value);
+    }
+
+    return value;
+  }
+
+  public instant(key: string, params?: Record<string, string | number>): string {
+    return this.translate(key, params);
+  }
+}

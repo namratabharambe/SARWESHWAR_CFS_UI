@@ -1,0 +1,200 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.session-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  animation: sessionBackdropFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sessionBackdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.session-modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 28px 28px;
+  text-align: center;
+  box-shadow:
+    0 25px 50px -12px rgba(15, 23, 42, 0.35),
+    0 0 0 1px rgba(226, 232, 240, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: sessionCardScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+:host-context(.dark) .session-modal-card {
+  background: #111928;
+  border: 1px solid #1f2a37;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+
+  .session-title {
+    color: #f9fafb;
+  }
+  .session-desc {
+    color: #9ca3af;
+  }
+  .session-user-badge {
+    background: #1f2a37;
+    border-color: #374151;
+  }
+  .session-user-name {
+    color: #f9fafb;
+  }
+  .session-user-role {
+    color: #9ca3af;
+  }
+}
+
+@keyframes sessionCardScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.session-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 2px solid #fecaca;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+}
+
+.session-lock-icon {
+  font-size: 28px;
+}
+
+.session-content-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-title {
+  margin: 0;
+  font-family: 'Lexend', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.session-desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.session-user-badge {
+  width: 100%;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.session-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #2563eb;
+  font-family: 'Lexend', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid #bfdbfe;
+}
+
+.session-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.session-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-user-role {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.session-modal-actions {
+  width: 100%;
+}
+
+.btn-session-relogin {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    transform: translateY(-1px);
+  }
+}
+
+.arrow-icon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.btn-session-relogin:hover .arrow-icon {
+  transform: translateX(4px);
+}

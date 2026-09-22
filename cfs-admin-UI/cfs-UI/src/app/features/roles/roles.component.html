@@ -1,0 +1,56 @@
+<app-page-header
+  [breadcrumbs]="breadcrumbs"
+  [title]="'ROLES.TITLE' | translate"
+  [subtitle]="'ROLES.SUBTITLE' | translate"
+  [actionLabel]="'ROLES.NEW_ROLE' | translate"
+  actionIcon="add"
+  (action)="open()" />
+
+<div class="role-grid">
+  @for (x of repo.roles(); track x.id) {
+    <article class="role-card">
+      <div class="role-icon">
+        <span class="material-icons-outlined">verified_user</span>
+      </div>
+      <div class="role-card-content">
+        <div class="role-title">
+          <h2>{{ x.name }}</h2>
+          <span class="level-badge" [class.level-client]="x.level === 'Client'" [class.level-site]="x.level === 'Site'">
+            {{ x.level }}
+          </span>
+        </div>
+        <p>{{ x.description }}</p>
+        <button type="button" class="btn-edit-role" (click)="open(x)">{{ 'COMMON.EDIT' | translate }} →</button>
+      </div>
+    </article>
+  }
+</div>
+
+@if (editing() !== undefined) {
+  <app-modal
+    [title]="editing() ? 'Edit Role' : 'Add Role'"
+    [subtitle]="editing() ? 'Update role permissions and scope' : 'Define a new role and its access level'"
+    icon="security"
+    (closed)="editing.set(undefined)">
+    <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+      <app-form-field label="Role name" name="name" [control]="form.controls.name" placeholder="e.g. Supervisor" />
+      <app-form-field
+        label="Scope"
+        name="level"
+        type="select"
+        [control]="form.controls.level"
+        [options]="levelOptions" />
+      <app-form-field
+        label="Description"
+        name="description"
+        type="textarea"
+        [control]="form.controls.description"
+        placeholder="Describe role responsibilities..." />
+
+      <div class="form-actions">
+        <app-button variant="secondary" (pressed)="editing.set(undefined)">Cancel</app-button>
+        <app-button type="submit" [appFocusInvalidField]="form" [disabled]="form.invalid">Save role</app-button>
+      </div>
+    </form>
+  </app-modal>
+}

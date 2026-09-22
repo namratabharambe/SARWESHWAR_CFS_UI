@@ -1,6 +1,53 @@
+<<<<<<< HEAD
 /node_modules
 /dist
 /.angular
 /.idea
 /.vscode
 npm-debug.log
+=======
+# Backend folders
+CFS.Admin/
+CFS.Gate/
+
+# Compiled output
+/dist
+dist/
+/tmp
+/out-tsc
+/bazel-out
+bin/
+obj/
+publish/
+publish_syapi/
+*.zip
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Angular
+.angular/cache
+.angular
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+.openai
+>>>>>>> origin/development
