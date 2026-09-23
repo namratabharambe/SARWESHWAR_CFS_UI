@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
 import { ContainerInventoryItem } from 'shared/types/inventory/inventory.interface';
+
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-move-container-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownComponent, TranslatePipe],
   templateUrl: './move-container-modal.component.html',
   styleUrls: ['./move-container-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +26,10 @@ export class MoveContainerModalComponent {
   public readonly targetBay = signal<string>('03');
   public readonly targetTier = signal<string>('01');
 
-  public readonly blocks = ['A', 'B', 'C', 'D', 'E', 'F'];
+  public readonly blockOptions: DropdownOption[] = ['A', 'B', 'C', 'D', 'E', 'F'].map((b) => ({
+    value: b,
+    label: `Block ${b}`,
+  }));
 
   public onBackdropClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {

@@ -3,10 +3,12 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { YardBlockRow, YardContainerStatus, YardMetrics } from 'shared/types/dashboard/dashboard.interface';
 
+import { TranslatePipe } from 'shared/pipes';
+
 @Component({
   selector: 'app-yard-snapshot',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, TranslatePipe],
   templateUrl: './yard-snapshot.component.html',
   styleUrls: ['./yard-snapshot.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

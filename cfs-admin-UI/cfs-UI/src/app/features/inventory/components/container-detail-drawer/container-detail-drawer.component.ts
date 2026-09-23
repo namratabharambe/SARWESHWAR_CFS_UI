@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ContainerInventoryItem } from 'shared/types/inventory/inventory.interface';
 
+import { TranslatePipe } from 'shared/pipes';
+
 @Component({
   selector: 'app-container-detail-drawer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './container-detail-drawer.component.html',
   styleUrls: ['./container-detail-drawer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

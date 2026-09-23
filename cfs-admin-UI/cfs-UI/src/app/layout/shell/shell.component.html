@@ -9,8 +9,8 @@
         </svg>
       </div>
       <div class="brand-copy">
-        <strong class="brand-company-name">Prosper</strong>
-        <small class="brand-product-desc">CFS & Container<br />AI Automation</small>
+        <strong class="brand-company-name">SARVESHWAR CFS</strong>
+        <small class="brand-product-desc">Container Freight Station</small>
       </div>
     </div>
 
@@ -19,37 +19,54 @@
       <!-- Dashboard -->
       <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">dashboard</span>
-        <span class="nav-label-text">Dashboard</span>
+        <span class="nav-label-text">{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
 
-      <!-- Gate Events -->
-      <a routerLink="/gate-events" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
-        <span class="material-icons-outlined text-lg">sensor_occupied</span>
-        <span class="nav-label-text">Gate Events</span>
-      </a>
+      <!-- Gate Events (Parent) -->
+      <div class="nav-parent-group">
+        <button type="button" class="nav-item nav-parent-btn" [class.active]="isGateEventsRoute()" (click)="toggleGateEvents()">
+          <div class="nav-left-part">
+            <span class="material-icons-outlined text-lg">sensor_occupied</span>
+            <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
+          </div>
+          <span class="nav-chevron" [class.rotated]="gateEventsExpanded()">▾</span>
+        </button>
+
+        <!-- Gate Events Submenu -->
+        @if (gateEventsExpanded()) {
+          <div class="sub-nav-container">
+            <a routerLink="/gate-events/in" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.GATE_IN' | translate }}</span>
+            </a>
+            <a routerLink="/gate-events/out" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+              <span class="sub-nav-label">{{ 'NAV.GATE_OUT' | translate }}</span>
+            </a>
+          </div>
+        }
+      </div>
 
       <!-- Tasks -->
       <a routerLink="/tasks" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">task_alt</span>
-        <span class="nav-label-text">Tasks</span>
+        <span class="nav-label-text">{{ 'NAV.TASKS' | translate }}</span>
       </a>
 
       <!-- Inventory -->
       <a routerLink="/inventory" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">inventory_2</span>
-        <span class="nav-label-text">Inventory</span>
+        <span class="nav-label-text">{{ 'NAV.INVENTORY' | translate }}</span>
       </a>
 
       <!-- Reports -->
       <a routerLink="/reports" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">bar_chart</span>
-        <span class="nav-label-text">Reports</span>
+        <span class="nav-label-text">{{ 'NAV.REPORTS' | translate }}</span>
       </a>
 
       <!-- Alerts -->
       <a routerLink="/alerts" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">shield</span>
-        <span class="nav-label-text">Alerts</span>
+        <span class="nav-label-text">{{ 'NAV.ALERTS' | translate }}</span>
       </a>
 
       <!-- Admin (Parent) -->
@@ -57,7 +74,7 @@
         <button type="button" class="nav-item nav-parent-btn" [class.active]="isAdminRoute()" (click)="toggleAdmin()">
           <div class="nav-left-part">
             <span class="material-icons-outlined text-lg">settings</span>
-            <span class="nav-label-text">Admin</span>
+            <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
           </div>
           <span class="nav-chevron" [class.rotated]="adminExpanded()">▾</span>
         </button>
@@ -66,16 +83,16 @@
         @if (adminExpanded()) {
           <div class="sub-nav-container">
             <a routerLink="/clients" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">Clients</span>
+              <span class="sub-nav-label">{{ 'NAV.CLIENTS' | translate }}</span>
             </a>
             <a routerLink="/sites" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">Sites</span>
+              <span class="sub-nav-label">{{ 'NAV.SITES' | translate }}</span>
             </a>
             <a routerLink="/users" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">Users</span>
+              <span class="sub-nav-label">{{ 'NAV.USERS' | translate }}</span>
             </a>
             <a routerLink="/roles" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">Roles</span>
+              <span class="sub-nav-label">{{ 'NAV.ROLES' | translate }}</span>
             </a>
           </div>
         }
@@ -85,14 +102,14 @@
     <!-- Sidebar Collapse Button -->
     <button class="collapse-button" type="button" (click)="collapsed.set(!collapsed())">
       <span class="material-icons-outlined text-sm">{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</span>
-      <span>Collapse</span>
+      <span>{{ 'COMMON.COLLAPSE' | translate }}</span>
     </button>
   </aside>
 
   <!-- Main Content Area -->
-  <main class="bg-gray-50/70 transition-colors duration-200 dark:bg-gray-900">
+  <main class="bg-slate-50 transition-colors duration-200 dark:bg-[#070c18]">
     <!-- Top Bar -->
-    <header class="topbar border-b border-gray-200/80 bg-white/90 dark:border-gray-800 dark:bg-gray-850/90">
+    <header class="topbar border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0b1120]">
       <button
         class="mobile-menu text-gray-700 dark:text-gray-200"
         type="button"
@@ -108,65 +125,45 @@
           <div class="header-context-pill header-client-pill" [class.is-loading]="switchingContext()">
             <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">business</span>
             <div class="pill-text-block">
-              <small>Client / Org</small>
-              <div class="select-wrapper">
-                <select
-                  class="header-context-select"
-                  [value]="auth.selectedClientId()"
-                  (change)="onClientSelect($event)"
-                  aria-label="Select Client">
-                  @if (availableClients().length === 0) {
-                    <option value="" disabled>Loading Clients...</option>
-                  }
-                  @for (client of availableClients(); track client.id) {
-                    <option [value]="client.id">{{ client.name }}</option>
-                  }
-                </select>
-                <span class="custom-select-chevron">⌄</span>
-              </div>
+              <small>{{ 'NAV.CLIENT' | translate }} / Org</small>
+              <app-dropdown
+                size="sm"
+                [options]="clientDropdownOptions()"
+                [value]="auth.selectedClientId()"
+                (valueChange)="onClientSelect($event)"
+                placeholder="Select Client"
+                customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
             </div>
           </div>
         }
 
         <!-- 2. Site / Location Selector Dropdown (Shown for all roles including SiteAdmin and User) -->
-        <div
-          class="header-context-pill header-site-pill"
-          [class.is-loading]="loadingSites() || switchingContext()">
+        <div class="header-context-pill header-site-pill" [class.is-loading]="loadingSites() || switchingContext()">
           <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">location_on</span>
           <div class="pill-text-block">
-            <small>Site / Location</small>
-            <div class="select-wrapper">
-              <select
-                class="header-context-select"
-                [value]="effectiveSelectedSiteId()"
-                (change)="onSiteSelect($event)"
-                aria-label="Select Site">
-                @for (site of sitesForSelectedClient(); track site.id) {
-                  <option [value]="site.id">{{ site.name }}</option>
-                }
-              </select>
-              <span class="custom-select-chevron">⌄</span>
-            </div>
+            <small>{{ 'NAV.SITE' | translate }} / Location</small>
+            <app-dropdown
+              size="sm"
+              [options]="siteDropdownOptions()"
+              [value]="effectiveSelectedSiteId()"
+              (valueChange)="onSiteSelect($event)"
+              placeholder="Select Site"
+              customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
           </div>
         </div>
 
         <!-- 3. Date Range Selector -->
-        <div class="header-context-pill hidden xl:flex">
+        <div class="header-context-pill xl:flex hidden">
           <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">date_range</span>
           <div class="pill-text-block">
-            <small>Date Range</small>
-            <div class="select-wrapper">
-              <select
-                class="header-context-select"
-                [value]="dashboardService.selectedDateRange()"
-                (change)="dashboardService.setDateRange($any($event.target).value)"
-                aria-label="Select Date Range">
-                <option value="17 May 2025 - 23 May 2025">17 May 2025 - 23 May 2025</option>
-                <option value="10 May 2025 - 16 May 2025">10 May 2025 - 16 May 2025</option>
-                <option value="Today">Today</option>
-              </select>
-              <span class="custom-select-chevron">⌄</span>
-            </div>
+            <small>{{ 'FILTER.DATE_RANGE' | translate }}</small>
+            <app-dropdown
+              size="sm"
+              [options]="dateRangeOptions"
+              [value]="dashboardService.selectedDateRange()"
+              (valueChange)="dashboardService.setDateRange($event)"
+              placeholder="Select Date Range"
+              customTriggerClass="border-0 bg-transparent p-0 font-bold h-6 text-xs text-gray-900 dark:text-white" />
           </div>
         </div>
 
@@ -202,7 +199,7 @@
           type="button"
           class="theme-toggle-btn cursor-pointer rounded-xl border border-gray-200 bg-gray-50 p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
           (click)="theme.toggleTheme()"
-          [title]="theme.isDarkMode() ? 'Light Mode' : 'Dark Mode'"
+          [title]="theme.isDarkMode() ? ('NAV.LIGHT_MODE' | translate) : ('NAV.DARK_MODE' | translate)"
           aria-label="Toggle theme mode">
           @if (theme.isDarkMode()) {
             <span class="material-icons-outlined text-lg text-amber-400">light_mode</span>
@@ -227,7 +224,7 @@
         <!-- Live User Profile from JWT Login Claims -->
         <div class="flex items-center gap-2.5">
           <div
-            class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 font-black text-sm text-white shadow-sm dark:bg-slate-700"
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-sm font-black text-white shadow-sm dark:bg-slate-700"
             [title]="auth.userName()">
             {{ auth.userInitials() }}
           </div>
@@ -242,8 +239,8 @@
           type="button"
           class="icon-button logout-btn"
           (click)="auth.logout()"
-          title="Sign Out"
-          aria-label="Sign Out">
+          [title]="'NAV.LOGOUT' | translate"
+          [attr.aria-label]="'NAV.LOGOUT' | translate">
           <span class="material-icons-outlined text-base">logout</span>
         </button>
       </div>
@@ -255,11 +252,12 @@
     </section>
 
     <!-- Dashboard Footer -->
-    <footer class="flex items-center justify-between border-t border-gray-200/80 px-5 py-2 text-xs text-gray-400 dark:border-gray-800 dark:text-gray-500">
+    <footer
+      class="flex items-center justify-between border-t border-gray-200/80 px-5 py-2 text-xs text-gray-400 dark:border-gray-800 dark:text-gray-500">
       <div class="flex-1 text-center text-[11px]">
-        © 2025 Prosper CFS & Container AI Automation. All rights reserved.
+        © 2026 Sarveshwar CFS (Container Freight Station). All rights reserved.
       </div>
-      <span class="text-[10px] font-mono">v1.0.0</span>
+      <span class="font-mono text-[10px]">v1.0.0</span>
     </footer>
   </main>
 </div>

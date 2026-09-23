@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
+import { TranslatePipe } from 'shared/pipes';
 
 export interface GateInTableItem {
   id: string;
@@ -50,7 +53,7 @@ export interface GateInFormData {
 @Component({
   selector: 'app-gate-in-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePickerComponent, DropdownComponent, TranslatePipe],
   templateUrl: './gate-in-modal.component.html',
   styleUrls: ['./gate-in-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -96,6 +99,78 @@ export class GateInModalComponent {
 
   // Attachment state
   public readonly attachedFileName = signal<string>('');
+
+  // Dropdown Options
+  public readonly isoCodeOptions: DropdownOption[] = [
+    { value: '22G1', label: '22G1' },
+    { value: '42G1', label: '42G1' },
+    { value: '45G1', label: '45G1' },
+    { value: '20GP', label: '20GP' },
+    { value: '40HC', label: '40HC' },
+    { value: '45HC', label: '45HC' },
+    { value: '22U1', label: '22U1' },
+  ];
+
+  public readonly sizeOptions: DropdownOption[] = [
+    { value: '20', label: '20 FT' },
+    { value: '40', label: '40 FT' },
+    { value: '45', label: '45 FT' },
+  ];
+
+  public readonly typeOptions: DropdownOption[] = [
+    { value: 'Dry', label: 'Dry' },
+    { value: 'Reefer', label: 'Reefer' },
+    { value: 'Flat Rack', label: 'Flat Rack' },
+    { value: 'Open Top', label: 'Open Top' },
+    { value: 'Tank', label: 'Tank' },
+  ];
+
+  public readonly cargoTypeOptions: DropdownOption[] = [
+    { value: 'General', label: 'General Cargo' },
+    { value: 'Hazardous', label: 'Hazardous' },
+    { value: 'Perishable', label: 'Perishable' },
+    { value: 'Refrigerated', label: 'Refrigerated' },
+  ];
+
+  public readonly joTypeOptions: DropdownOption[] = [
+    { value: 'Air Import', label: 'Air Import' },
+    { value: 'Sea Import', label: 'Sea Import' },
+    { value: 'Direct Gate In', label: 'Direct Gate In' },
+    { value: 'CFS Bonded', label: 'CFS Bonded' },
+  ];
+
+  public readonly fclLclOptions: DropdownOption[] = [
+    { value: 'FCL', label: 'FCL' },
+    { value: 'LCL', label: 'LCL' },
+  ];
+
+  public readonly scanTypeOptions: DropdownOption[] = [
+    { value: 'Normal Scan', label: 'Normal Scan' },
+    { value: 'X-Ray Scan', label: 'X-Ray Scan' },
+    { value: 'Physical', label: 'Physical Inspection' },
+    { value: 'Gamma', label: 'Gamma Ray' },
+  ];
+
+  public readonly portNameOptions: DropdownOption[] = [
+    { value: 'BMCT', label: 'BMCT' },
+    { value: 'JNPT', label: 'JNPT' },
+    { value: 'NSICT', label: 'NSICT' },
+    { value: 'NSIGT', label: 'NSIGT' },
+    { value: 'GTI', label: 'GTI' },
+  ];
+
+  public readonly locationOptions: DropdownOption[] = [
+    { value: 'A SHEL', label: 'A SHEL' },
+    { value: 'B YARD', label: 'B YARD' },
+    { value: 'C STACK', label: 'C STACK' },
+    { value: 'D DOCK', label: 'D DOCK' },
+  ];
+
+  public readonly conditionOptions: DropdownOption[] = [
+    { value: 'Sound', label: 'Sound' },
+    { value: 'Damaged', label: 'Damaged' },
+    { value: 'Pending Inspection', label: 'Pending Inspection' },
+  ];
 
   // Validation feedback
   public readonly errorMessage = signal<string>('');

@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
+import { TranslatePipe } from 'shared/pipes';
 import { CreateTaskFormData, TaskPriority, TaskType } from 'shared/types/task/task.interface';
 
 @Component({
   selector: 'app-create-task-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownComponent, TranslatePipe],
   templateUrl: './create-task-modal.component.html',
   styleUrls: ['./create-task-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,6 +87,21 @@ export class CreateTaskModalComponent {
     { value: 'Vikram Singh', label: 'Vikram Singh (Equipment Operator)' },
     { value: 'Anil Deshmukh', label: 'Anil Deshmukh (Yard Master)' },
     { value: 'Deepak Sharma', label: 'Deepak Sharma (Reach Stacker Driver)' },
+  ];
+
+  public readonly priorityOptions: DropdownOption[] = [
+    { value: 'Critical', label: '⚡ Critical / Expedited' },
+    { value: 'High', label: '🔴 High Priority' },
+    { value: 'Medium', label: '🟠 Medium Priority' },
+    { value: 'Low', label: '🟢 Low Priority' },
+  ];
+
+  public readonly slaOptions: DropdownOption[] = [
+    { value: 15, label: '15 Minutes (Urgent)' },
+    { value: 30, label: '30 Minutes' },
+    { value: 45, label: '45 Minutes (Standard)' },
+    { value: 60, label: '60 Minutes' },
+    { value: 90, label: '90 Minutes' },
   ];
 
   public selectTaskType(type: TaskType): void {

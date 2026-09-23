@@ -73,10 +73,12 @@ export interface GateEventDetailData {
   }>;
 }
 
+import { TranslatePipe } from 'shared/pipes';
+
 @Component({
   selector: 'app-gate-event-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './gate-event-detail.component.html',
   styleUrls: ['./gate-event-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

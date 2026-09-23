@@ -1,12 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AddInventoryFormData, ContainerFullEmpty, ContainerYardStatus } from 'shared/types/inventory/inventory.interface';
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
+import {
+  AddInventoryFormData,
+  ContainerFullEmpty,
+  ContainerYardStatus,
+} from 'shared/types/inventory/inventory.interface';
+
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-add-inventory-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DropdownComponent, TranslatePipe],
   templateUrl: './add-inventory-modal.component.html',
   styleUrls: ['./add-inventory-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,9 +41,41 @@ export class AddInventoryModalComponent {
   public readonly holds = signal<string>('-');
   public readonly errorMessage = signal<string>('');
 
-  public readonly lines = ['MSK', 'TCLU', 'OOCL', 'HMM', 'TRHU', 'COSC', 'CMA', 'NYK', 'SUD', 'PIL', 'BEA', 'ZIM', 'TGHU', 'UES'];
+  public readonly lines = [
+    'MSK',
+    'TCLU',
+    'OOCL',
+    'HMM',
+    'TRHU',
+    'COSC',
+    'CMA',
+    'NYK',
+    'SUD',
+    'PIL',
+    'BEA',
+    'ZIM',
+    'TGHU',
+    'UES',
+  ];
   public readonly sizeTypes = ["20' GP", "40' GP", "40' HC", "45' HC", "20' OT", "40' Reefer"];
   public readonly blocks = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+  public readonly fullEmptyOptions: DropdownOption[] = [
+    { value: 'Full', label: 'Full (Laden)' },
+    { value: 'Empty', label: 'Empty' },
+  ];
+
+  public readonly yardStatusOptions: DropdownOption[] = [
+    { value: 'In Yard', label: 'In Yard' },
+    { value: 'Hold', label: 'Hold' },
+    { value: 'Ready Out', label: 'Ready Out' },
+    { value: 'Overstay', label: 'Overstay' },
+  ];
+
+  public readonly blockOptions: DropdownOption[] = ['A', 'B', 'C', 'D', 'E', 'F'].map((b) => ({
+    value: b,
+    label: `Block ${b}`,
+  }));
 
   public onBackdropClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('modal-backdrop')) {

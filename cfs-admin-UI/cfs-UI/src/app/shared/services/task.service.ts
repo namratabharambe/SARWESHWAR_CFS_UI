@@ -476,6 +476,11 @@ export class TaskService {
     this.currentPage.set(1);
   }
 
+  public setDateFilter(date: string): void {
+    this.dateFilter.set(date);
+    this.currentPage.set(1);
+  }
+
   public setSearchQuery(query: string): void {
     this.searchQuery.set(query);
     this.currentPage.set(1);

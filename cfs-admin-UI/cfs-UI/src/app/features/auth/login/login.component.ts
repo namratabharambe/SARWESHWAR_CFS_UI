@@ -62,6 +62,8 @@ export class LoginComponent {
   }
 
   public handleSso(): void {
-    this.error.set('Single Sign-On (SSO) is configured for enterprise directory accounts. Please enter your credentials above or contact IT support.');
+    this.error.set(
+      'Single Sign-On (SSO) is configured for enterprise directory accounts. Please enter your credentials above or contact IT support.',
+    );
   }
 }

@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'core/auth/auth.service';
-import { AdminRepository, matchIds } from 'core/data/admin.repository';
+import { AdminRepository } from 'core/data/admin.repository';
 import { Site } from 'core/models/admin.models';
 import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
 import { StatusBadgeComponent } from 'shared/components/atoms/status-badge/status-badge.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { FocusInvalidFieldDirective, HighlightTextDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -19,6 +20,7 @@ import { TranslatePipe } from 'shared/pipes';
     StatusBadgeComponent,
     ModalComponent,
     FormFieldComponent,
+    DropdownComponent,
     FocusInvalidFieldDirective,
     HighlightTextDirective,
     TranslatePipe,
@@ -33,6 +35,11 @@ export class SitesComponent {
 
   public readonly searchQuery = signal<string>('');
   public readonly statusFilter = signal<'ALL' | 'Active' | 'Inactive'>('ALL');
+  public readonly statusFilterOptions = [
+    { value: 'ALL', label: 'All Statuses' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' },
+  ];
   public readonly editingSite = signal<Site | null | undefined>(undefined);
   public readonly isSaving = signal<boolean>(false);
   public readonly saveError = signal<string>('');
@@ -46,12 +53,6 @@ export class SitesComponent {
   constructor() {
     this.repo.loadClients();
     this.repo.loadSites();
-    effect(() => {
-      const cid = this.auth.selectedClientId() || this.auth.getActiveClientId();
-      if (cid) {
-        this.repo.loadSites(cid);
-      }
-    });
   }
 
   public readonly form = new FormGroup({
@@ -79,23 +80,8 @@ export class SitesComponent {
   public readonly filteredSites = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
     const status = this.statusFilter();
-    const isSysAdmin = this.auth.isSystemAdmin();
-    const selectedCid = this.auth.selectedClientId() || this.auth.getActiveClientId();
 
-    let list = this.repo.sites();
-
-    if (!isSysAdmin) {
-      const tokenSiteIds = new Set(this.auth.tokenSites().map((s) => s.id || s.siteId));
-      list = list.filter(
-        (s) =>
-          tokenSiteIds.has(s.id) ||
-          (selectedCid && (s.clientId === selectedCid || matchIds(s.clientId, selectedCid))),
-      );
-    } else if (selectedCid) {
-      list = list.filter((s) => !s.clientId || s.clientId === selectedCid || matchIds(s.clientId, selectedCid));
-    }
-
-    return list.filter((site) => {
+    return this.repo.sites().filter((site) => {
       const siteName = (site.name ?? '').toLowerCase();
       const siteCode = (site.code ?? '').toLowerCase();
       const clientName = (this.getClientName(site.clientId) ?? '').toLowerCase();
@@ -107,7 +93,6 @@ export class SitesComponent {
       return matchesQuery && matchesStatus;
     });
   });
-
 
   public getClientName(clientId: string): string {
     const client = this.repo.clients().find((c) => c.id === clientId);

@@ -5,11 +5,14 @@ import { RouterLink } from '@angular/router';
 import { AlertService } from 'shared/services/alert.service';
 import { AlertResolutionRequest, ContainerMismatchAlert } from 'shared/types/alert/alert.interface';
 import { MismatchDetailModalComponent } from './components/mismatch-detail-modal/mismatch-detail-modal.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-alerts',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MismatchDetailModalComponent],
+  imports: [CommonModule, FormsModule, RouterLink, MismatchDetailModalComponent, DropdownComponent, TranslatePipe],
   templateUrl: './alerts.component.html',
   styleUrls: ['./alerts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

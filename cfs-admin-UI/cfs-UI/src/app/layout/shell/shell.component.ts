@@ -7,17 +7,17 @@ import { Site } from 'core/models/admin.models';
 import { ThemeService } from 'core/services/theme.service';
 import { LocalizationService, SupportedLanguage } from 'core/services/localization.service';
 import { DashboardService } from 'app/features/dashboard/services/dashboard.service';
-
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, DropdownComponent, TranslatePipe],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ShellComponent {
   public readonly auth = inject(AuthService);
   public readonly repository = inject(AdminRepository);
@@ -29,73 +29,69 @@ export class ShellComponent {
   public readonly collapsed = signal<boolean>(false);
   public readonly mobileOpen = signal<boolean>(false);
   public readonly adminExpanded = signal<boolean>(true);
+  public readonly gateEventsExpanded = signal<boolean>(true);
   public readonly currentUrl = signal<string>(this.router.url);
 
   public readonly sitesForSelectedClient = computed<Site[]>(() => {
     const selectedCid = this.auth.selectedClientId() || this.auth.getActiveClientId();
-    const tokenSites = this.auth.tokenSites();
     const repoSites = this.repository.sites();
-    const isSysAdmin = this.auth.isSystemAdmin();
+    const tokenSites = this.auth.tokenSites();
 
     const siteMap = new Map<string, Site>();
 
-    if (isSysAdmin) {
-      // 1. From repository sites belonging strictly to the selected client
+    // 1. From repository sites (fetched from Site GET API - highest priority for real names)
+    for (const s of repoSites) {
+      if (!s.id) continue;
+      if (!selectedCid || !s.clientId || matchIds(s.clientId, selectedCid)) {
+        siteMap.set(s.id, { ...s });
+      }
+    }
+
+    // 2. From token / auth user sites (supplement any missing sites from token)
+    for (const ts of tokenSites) {
+      const id = ts.id || ts.siteId || '';
+      if (!id) continue;
+      const existing = siteMap.get(id);
+      if (!existing) {
+        if (!selectedCid || !ts.clientId || matchIds(ts.clientId, selectedCid)) {
+          siteMap.set(id, {
+            id,
+            clientId: ts.clientId || selectedCid,
+            name: ts.name || `Site (${id.slice(0, 8)})`,
+            code: ts.code || '',
+            status: 'Active',
+            active: true,
+          });
+        }
+      } else {
+        // Upgrade if existing name is generic and token site has a more specific name
+        if ((!existing.name || existing.name.startsWith('Site (')) && ts.name && !ts.name.startsWith('Site (')) {
+          existing.name = ts.name;
+        }
+      }
+    }
+
+    // 3. Fallback: If no sites matched the specific client ID, show all available repository sites
+    if (siteMap.size === 0 && repoSites.length > 0) {
       for (const s of repoSites) {
-        if (!s.id) continue;
-        if (!selectedCid || matchIds(s.clientId, selectedCid) || s.clientId === selectedCid) {
-          siteMap.set(s.id, { ...s });
-        }
+        if (s.id) siteMap.set(s.id, { ...s });
       }
+    }
 
-      // 2. From token sites belonging strictly to the selected client
+    // 4. Fallback: All token sites if still empty
+    if (siteMap.size === 0 && tokenSites.length > 0) {
       for (const ts of tokenSites) {
-        const id = (ts.id || ts.siteId || '').trim();
-        if (!id) continue;
-        if (!selectedCid || !ts.clientId || matchIds(ts.clientId, selectedCid) || ts.clientId === selectedCid) {
-          const existing = siteMap.get(id);
-          if (!existing) {
-            siteMap.set(id, {
-              id,
-              clientId: ts.clientId || selectedCid,
-              name: ts.name || `Site (${id.slice(0, 8)})`,
-              code: ts.code || '',
-              status: 'Active',
-              active: true,
-              isActive: true,
-            });
-          } else if ((!existing.name || existing.name.startsWith('Site (')) && ts.name && !ts.name.startsWith('Site (')) {
-            existing.name = ts.name;
-          }
+        const id = ts.id || ts.siteId || '';
+        if (id && !siteMap.has(id)) {
+          siteMap.set(id, {
+            id,
+            clientId: ts.clientId || selectedCid,
+            name: ts.name || `Site (${id.slice(0, 8)})`,
+            code: ts.code || '',
+            status: 'Active',
+            active: true,
+          });
         }
-      }
-    } else {
-      // Non-System Admin (ClientAdmin, SiteAdmin, Operator, User):
-      // MUST ONLY show sites authorized in the login token / getMySites!
-      for (const ts of tokenSites) {
-        const id = (ts.id || ts.siteId || '').trim();
-        if (!id) continue;
-
-        // Strictly filter to the selected client
-        if (selectedCid && ts.clientId && !matchIds(ts.clientId, selectedCid) && ts.clientId !== selectedCid) {
-          continue;
-        }
-
-        const repoMatch = repoSites.find((r) => r.id === id || matchIds(r.id, id));
-        const displayName =
-          repoMatch && repoMatch.name && !repoMatch.name.startsWith('Site (')
-            ? repoMatch.name
-            : ts.name || `Site (${id.slice(0, 8)})`;
-
-        siteMap.set(id, {
-          id,
-          clientId: ts.clientId || repoMatch?.clientId || selectedCid,
-          name: displayName,
-          code: ts.code || repoMatch?.code || '',
-          status: 'Active',
-          active: true,
-          isActive: true,
-        });
       }
     }
 
@@ -108,41 +104,30 @@ export class ShellComponent {
   public readonly notificationCount = signal<number>(8);
 
   public readonly availableClients = computed<ContextClient[]>(() => {
-    const isSysAdmin = this.auth.isSystemAdmin();
     const fromRepo = this.repository.clients();
     const fromToken = this.auth.tokenClients();
 
     const clientMap = new Map<string, ContextClient>();
 
-    if (isSysAdmin) {
-      for (const c of fromRepo) {
-        if (c.id) {
-          clientMap.set(c.id, {
-            id: c.id,
-            name: c.clientName || c.name || 'Client',
-            code: c.code,
-          });
-        }
+    for (const c of fromRepo) {
+      if (c.id) {
+        clientMap.set(c.id, {
+          id: c.id,
+          name: c.clientName || c.name || 'Client',
+          code: c.code,
+        });
       }
-      for (const c of fromToken) {
-        if (c.id && !clientMap.has(c.id)) {
+    }
+
+    for (const c of fromToken) {
+      if (c.id) {
+        const existing = clientMap.get(c.id);
+        if (!existing) {
           clientMap.set(c.id, c);
-        }
-      }
-    } else {
-      // Non-SystemAdmin: ONLY clients authorized in the token
-      for (const c of fromToken) {
-        if (c.id) {
-          const repoMatch = fromRepo.find((r) => r.id === c.id || matchIds(r.id, c.id));
-          const name =
-            repoMatch && (repoMatch.clientName || repoMatch.name) && repoMatch.clientName !== 'Primary Client'
-              ? repoMatch.clientName || repoMatch.name
-              : c.name;
-          clientMap.set(c.id, {
-            id: c.id,
-            name: name || 'Client',
-            code: c.code || repoMatch?.code,
-          });
+        } else if (existing.name === 'Primary Client' || existing.name === 'Client') {
+          if (c.name && c.name !== 'Primary Client') {
+            existing.name = c.name;
+          }
         }
       }
     }
@@ -228,6 +213,9 @@ export class ShellComponent {
         if (this.isAdminRoute(event.urlAfterRedirects)) {
           this.adminExpanded.set(true);
         }
+        if (this.isGateEventsRoute(event.urlAfterRedirects)) {
+          this.gateEventsExpanded.set(true);
+        }
       });
 
     // Automatically trigger initial client & site API calls and context switch on initial login
@@ -243,45 +231,32 @@ export class ShellComponent {
           this.auth.selectedClientId.set(initialClientId);
         }
 
-        if (this.auth.isSystemAdmin()) {
-          this.loadingSites.set(true);
-          this.repository.getSitesByClientId(initialClientId).subscribe({
-            next: (sites) => {
-              this.loadingSites.set(false);
-              const availableSites = sites.filter(
-                (s) => matchIds(s.clientId, initialClientId) || s.clientId === initialClientId,
-              );
-              const initialSiteId = this.auth.selectedSiteId() || (availableSites.length > 0 ? availableSites[0].id : '');
-              if (initialSiteId) {
-                this.auth.selectedSiteId.set(initialSiteId);
-              }
-              if (initialClientId) {
-                this.performContextSwitch(initialClientId, initialSiteId);
-              }
-            },
-            error: () => {
-              this.loadingSites.set(false);
-              const fallbackSites = this.sitesForSelectedClient();
-              const fallbackSiteId = this.auth.selectedSiteId() || (fallbackSites.length > 0 ? fallbackSites[0].id : '');
-              if (fallbackSiteId) {
-                this.auth.selectedSiteId.set(fallbackSiteId);
-              }
-              if (initialClientId) {
-                this.performContextSwitch(initialClientId, fallbackSiteId);
-              }
-            },
-          });
-        } else {
-          // Non-SystemAdmin
-          const availableSites = this.sitesForSelectedClient();
-          const initialSiteId = this.auth.selectedSiteId() || (availableSites.length > 0 ? availableSites[0].id : '');
-          if (initialSiteId) {
-            this.auth.selectedSiteId.set(initialSiteId);
-          }
-          if (initialClientId) {
-            this.performContextSwitch(initialClientId, initialSiteId);
-          }
-        }
+        // Always query Site API for the client to retrieve actual site names
+        this.loadingSites.set(true);
+        this.repository.getSitesByClientId(initialClientId).subscribe({
+          next: (sites) => {
+            this.loadingSites.set(false);
+            const availableSites = sites.length > 0 ? sites : this.sitesForSelectedClient();
+            const initialSiteId = this.auth.selectedSiteId() || (availableSites.length > 0 ? availableSites[0].id : '');
+            if (initialSiteId) {
+              this.auth.selectedSiteId.set(initialSiteId);
+            }
+            if (initialClientId) {
+              this.performContextSwitch(initialClientId, initialSiteId);
+            }
+          },
+          error: () => {
+            this.loadingSites.set(false);
+            const fallbackSites = this.sitesForSelectedClient();
+            const fallbackSiteId = this.auth.selectedSiteId() || (fallbackSites.length > 0 ? fallbackSites[0].id : '');
+            if (fallbackSiteId) {
+              this.auth.selectedSiteId.set(fallbackSiteId);
+            }
+            if (initialClientId) {
+              this.performContextSwitch(initialClientId, fallbackSiteId);
+            }
+          },
+        });
       }
     });
   }
@@ -294,9 +269,36 @@ export class ShellComponent {
     this.adminExpanded.update((v) => !v);
   }
 
-  public onClientSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const clientId = target.value;
+  public isGateEventsRoute(url: string = this.currentUrl()): boolean {
+    return url.includes('/gate-events');
+  }
+
+  public toggleGateEvents(): void {
+    this.gateEventsExpanded.update((v) => !v);
+  }
+
+  public readonly clientDropdownOptions = computed<DropdownOption[]>(() => {
+    return this.availableClients().map(c => ({
+      value: c.id,
+      label: c.name,
+    }));
+  });
+
+  public readonly siteDropdownOptions = computed<DropdownOption[]>(() => {
+    return this.sitesForSelectedClient().map(s => ({
+      value: s.id,
+      label: s.name,
+    }));
+  });
+
+  public readonly dateRangeOptions: DropdownOption[] = [
+    { value: '17 May 2025 - 23 May 2025', label: '17 May 2025 - 23 May 2025' },
+    { value: '10 May 2025 - 16 May 2025', label: '10 May 2025 - 16 May 2025' },
+    { value: 'Today', label: 'Today' },
+  ];
+
+  public onClientSelect(eventOrValue: Event | string): void {
+    const clientId = typeof eventOrValue === 'string' ? eventOrValue : (eventOrValue.target as HTMLSelectElement).value;
     if (!clientId) return;
 
     this.auth.selectedClientId.set(clientId);
@@ -304,62 +306,42 @@ export class ShellComponent {
       sessionStorage.setItem('cfs_selected_client_id', clientId);
     }
 
-    if (this.auth.isSystemAdmin()) {
-      this.loadingSites.set(true);
-      this.repository.getSitesByClientId(clientId).subscribe({
-        next: (sites) => {
-          this.loadingSites.set(false);
-          const availableSites = sites.filter(
-            (s) => matchIds(s.clientId, clientId) || s.clientId === clientId,
-          );
-          const firstSiteId = availableSites.length > 0 ? availableSites[0].id : '';
+    // Query Sites API on the basis of selected Client
+    this.loadingSites.set(true);
+    this.repository.getSitesByClientId(clientId).subscribe({
+      next: (sites) => {
+        this.loadingSites.set(false);
+        const availableSites = sites.length > 0 ? sites : this.sitesForSelectedClient();
+        const firstSiteId = availableSites.length > 0 ? availableSites[0].id : '';
 
-          if (firstSiteId) {
-            this.auth.selectedSiteId.set(firstSiteId);
-            if (typeof sessionStorage !== 'undefined') {
-              sessionStorage.setItem('cfs_selected_site_id', firstSiteId);
-            }
-            this.performContextSwitch(clientId, firstSiteId);
-          } else {
-            this.auth.selectedSiteId.set('');
-            this.performContextSwitch(clientId, '');
+        if (firstSiteId) {
+          this.auth.selectedSiteId.set(firstSiteId);
+          if (typeof sessionStorage !== 'undefined') {
+            sessionStorage.setItem('cfs_selected_site_id', firstSiteId);
           }
-        },
-        error: () => {
-          this.loadingSites.set(false);
-          const localSites = this.sitesForSelectedClient();
-          const firstSiteId = localSites.length > 0 ? localSites[0].id : '';
-
-          if (firstSiteId) {
-            this.auth.selectedSiteId.set(firstSiteId);
-            this.performContextSwitch(clientId, firstSiteId);
-          } else {
-            this.performContextSwitch(clientId, '');
-          }
-        },
-      });
-    } else {
-      // Non-SystemAdmin: filter token sites for the chosen client
-      const availableSites = this.sitesForSelectedClient();
-      const firstSiteId = availableSites.length > 0 ? availableSites[0].id : '';
-
-      if (firstSiteId) {
-        this.auth.selectedSiteId.set(firstSiteId);
-        if (typeof sessionStorage !== 'undefined') {
-          sessionStorage.setItem('cfs_selected_site_id', firstSiteId);
+          this.performContextSwitch(clientId, firstSiteId);
+        } else {
+          this.auth.selectedSiteId.set('');
+          this.performContextSwitch(clientId, '');
         }
-        this.performContextSwitch(clientId, firstSiteId);
-      } else {
-        this.auth.selectedSiteId.set('');
-        this.performContextSwitch(clientId, '');
-      }
-    }
+      },
+      error: () => {
+        this.loadingSites.set(false);
+        const localSites = this.sitesForSelectedClient();
+        const firstSiteId = localSites.length > 0 ? localSites[0].id : '';
+
+        if (firstSiteId) {
+          this.auth.selectedSiteId.set(firstSiteId);
+          this.performContextSwitch(clientId, firstSiteId);
+        } else {
+          this.performContextSwitch(clientId, '');
+        }
+      },
+    });
   }
 
-
-  public onSiteSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const siteId = target.value;
+  public onSiteSelect(eventOrValue: Event | string): void {
+    const siteId = typeof eventOrValue === 'string' ? eventOrValue : (eventOrValue.target as HTMLSelectElement).value;
     const clientId = this.auth.getActiveClientId() || this.auth.selectedClientId();
 
     if (!siteId) return;

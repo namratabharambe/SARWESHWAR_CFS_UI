@@ -7,7 +7,7 @@ body {
   --Body-Large-Line-Height: 24px;
   --Body-Large-Tracking: 0.5px;
   font-family:
-    'Lexend',
+    'Inter',
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
@@ -54,14 +54,16 @@ body {
 
 .dark,
 [data-mode='dark'] {
+  color-scheme: dark;
+
   /* M3 Schemes - Dark */
-  --Schemes-Surface: #111928;
-  --Schemes-Surface-Container-Low: #1f2a37;
-  --Schemes-Surface-Container: #374151;
-  --Schemes-Surface-Container-High: #4b5563;
-  --Schemes-On-Surface: #f9fafb;
-  --Schemes-On-Surface-Variant: #9ca3af;
-  --Schemes-Outline: #374151;
+  --Schemes-Surface: #0d1627;
+  --Schemes-Surface-Container-Low: #070c18;
+  --Schemes-Surface-Container: #111a2d;
+  --Schemes-Surface-Container-High: #1a273f;
+  --Schemes-On-Surface: #f8fafc;
+  --Schemes-On-Surface-Variant: #94a3b8;
+  --Schemes-Outline: rgba(59, 130, 246, 0.22);
   --Schemes-Primary: #3b82f6;
   --Schemes-On-Primary: #ffffff;
 }

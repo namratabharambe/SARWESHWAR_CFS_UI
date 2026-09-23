@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GateActivityItem } from 'shared/types/dashboard/dashboard.interface';
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-recent-gate-activity',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './recent-gate-activity.component.html',
   styleUrls: ['./recent-gate-activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

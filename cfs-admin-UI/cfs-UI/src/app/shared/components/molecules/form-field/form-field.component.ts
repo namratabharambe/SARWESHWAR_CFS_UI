@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { DropdownComponent } from '../dropdown/dropdown.component';
 
 export interface SelectOption {
   label: string;
@@ -11,7 +12,7 @@ export type FieldType = 'text' | 'email' | 'password' | 'select' | 'multiselect'
 @Component({
   selector: 'app-form-field',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DropdownComponent],
   templateUrl: './form-field.component.html',
   styleUrls: ['./form-field.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminRepository, matchIds } from 'core/data/admin.repository';
+import { AdminRepository } from 'core/data/admin.repository';
 import { AuthService } from 'core/auth/auth.service';
 import { User, Site, Role } from 'core/models/admin.models';
 import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
@@ -10,6 +10,7 @@ import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component
 import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { FocusInvalidFieldDirective, HighlightTextDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -35,6 +36,7 @@ export interface SiteRoleItem {
     CenteredDividerComponent,
     ModalComponent,
     FormFieldComponent,
+    DropdownComponent,
     FocusInvalidFieldDirective,
     HighlightTextDirective,
     TranslatePipe,
@@ -44,12 +46,17 @@ export interface SiteRoleItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent implements OnInit {
-  public readonly repo = inject(AdminRepository);
+  private readonly repo = inject(AdminRepository);
   public readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly searchQuery = signal('');
   public readonly statusFilter = signal<'ALL' | 'Active' | 'Inactive'>('ALL');
+  public readonly statusFilterOptions = [
+    { value: 'ALL', label: 'All Statuses' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' },
+  ];
   public readonly roleFilter = signal<string>('ALL');
   public readonly editingUser = signal<User | null | undefined>(undefined);
   public readonly isSaving = signal(false);
@@ -165,18 +172,8 @@ export class UsersComponent implements OnInit {
     const query = this.searchQuery().trim().toLowerCase();
     const status = this.statusFilter();
     const roleId = this.roleFilter();
-    const isSysAdmin = this.auth.isSystemAdmin();
-    const selectedCid = this.auth.selectedClientId() || this.auth.getActiveClientId();
 
-    let users = this.repo.users();
-
-    if (!isSysAdmin && selectedCid) {
-      users = users.filter((u) => !u.clientId || matchIds(u.clientId, selectedCid) || u.clientId === selectedCid);
-    } else if (selectedCid) {
-      users = users.filter((u) => !u.clientId || matchIds(u.clientId, selectedCid) || u.clientId === selectedCid);
-    }
-
-    return users.filter((user) => {
+    return this.repo.users().filter((user) => {
       const fullName = `${user.firstName || ''} ${user.lastName || ''}`.toLowerCase();
       const email = (user.email || '').toLowerCase();
       const clientName = (this.getUserClientName(user) || '').toLowerCase();
@@ -204,15 +201,7 @@ export class UsersComponent implements OnInit {
 
   constructor() {
     this.repo.loadAll();
-    effect(() => {
-      const cid = this.auth.selectedClientId() || this.auth.getActiveClientId();
-      const sid = this.auth.selectedSiteId() || this.auth.getActiveSiteId();
-      if (cid || sid) {
-        this.repo.loadUsers(cid, sid);
-      }
-    });
   }
-
 
   public ngOnInit(): void {
     // When user changes selected client in modal, dynamically load that client's sites

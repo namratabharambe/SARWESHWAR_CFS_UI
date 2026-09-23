@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
-import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent } from 'shared/components';
+import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent, StatusBadgeComponent } from 'shared/components';
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.component';
 import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 import { GateEventService } from 'shared/services/gate-event.service';
@@ -46,6 +50,9 @@ export interface GateEventItem {
     TranslatePipe,
     GateEventDetailComponent,
     GateInModalComponent,
+    DatePickerComponent,
+    DropdownComponent,
+    StatusBadgeComponent,
   ],
   templateUrl: './gate-events.component.html',
   styleUrls: ['./gate-events.component.scss'],
@@ -54,15 +61,51 @@ export interface GateEventItem {
 export class GateEventsComponent implements OnInit {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute, { optional: true });
+  private readonly router = inject(Router, { optional: true });
 
+  public readonly gateMode = signal<'in' | 'out'>('in');
   public readonly events = signal<GateEventItem[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly activeTab = signal<'all' | 'arrivals' | 'departures'>('all');
+  public readonly cycleFilter = signal<string>('All');
   public readonly directionFilter = signal<string>('All');
   public readonly gateFilter = signal<string>('All');
   public readonly confidenceFilter = signal<string>('All');
   public readonly dateFilter = signal<string>('17 May 2025');
   public readonly searchQuery = signal<string>('');
+
+  public readonly cycleOptions = [
+    { value: 'All', label: 'All Cycles' },
+    { value: 'IN', label: 'Gate In' },
+    { value: 'OUT', label: 'Gate Out' },
+  ];
+
+  public readonly directionOptions = [
+    { value: 'All', label: 'All Directions' },
+    { value: 'IN', label: 'IN' },
+    { value: 'OUT', label: 'OUT' },
+  ];
+
+  public readonly gateOptions = [
+    { value: 'All', label: 'All Gates' },
+    { value: 'GATE-01', label: 'GATE-01' },
+    { value: 'GATE-02', label: 'GATE-02' },
+    { value: 'GATE-03', label: 'GATE-03' },
+  ];
+
+  public readonly confidenceOptions = [
+    { value: 'All', label: 'All Confidence' },
+    { value: 'High', label: 'High (≥ 95%)' },
+    { value: 'Medium', label: 'Medium (90% - 94%)' },
+    { value: 'Low', label: 'Low (< 90%)' },
+  ];
+
+  public readonly pageSizeOptions = [
+    { value: 10, label: '10 per page' },
+    { value: 25, label: '25 per page' },
+    { value: 50, label: '50 per page' },
+  ];
 
   public readonly isGateInModalOpen = signal<boolean>(false);
   public readonly selectedIds = signal<Set<string>>(new Set());
@@ -77,6 +120,16 @@ export class GateEventsComponent implements OnInit {
   public readonly totalCount = signal<number>(0);
 
   constructor() {
+    this.syncGateMode();
+
+    if (this.router) {
+      this.router.events
+        .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.syncGateMode();
+        });
+    }
+
     effect(() => {
       // Track site or client selection changes and reload visits
       const siteId = this.authService.selectedSiteId();
@@ -87,6 +140,15 @@ export class GateEventsComponent implements OnInit {
     });
   }
 
+  private syncGateMode(): void {
+    const url = this.router?.url ?? '';
+    const routeMode = this.route?.snapshot?.data?.['mode'];
+    const isOut = url.includes('/gate-events/out') || routeMode === 'out';
+    this.gateMode.set(isOut ? 'out' : 'in');
+    this.cycleFilter.set(isOut ? 'OUT' : 'IN');
+    this.currentPage.set(1);
+  }
+
   public ngOnInit(): void {
     this.loadGateEvents();
   }
@@ -95,56 +157,64 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
-    const userId = this.authService.getUserId() || undefined;
-    const isElevated = this.authService.hasRole(['SystemAdmin', 'ClientAdmin', 'SiteAdmin']);
 
     this.gateEventService
       .getVisits({
-        page: 1,
-        pageSize: 100,
+        page: this.currentPage(),
+        pageSize: this.pageSize(),
         siteId,
         clientId,
-        createdByUserId: !isElevated ? userId : undefined,
-        userId: !isElevated ? userId : undefined,
       })
       .subscribe({
         next: (response: VisitsPagedResponse) => {
           this.isLoading.set(false);
-          const rawItems = response?.items ?? (Array.isArray(response) ? (response as any) : []);
-          const items = (!isElevated && userId)
-            ? rawItems.filter((visit: any) => {
-                const events: any[] = Array.isArray(visit.events) ? visit.events : Array.isArray(visit.Events) ? visit.Events : [];
-                if (events.length > 0) {
-                  return events.some((e) => {
-                    const creator = e.createdByUserId ?? e.CreatedByUserId ?? e.userId ?? e.UserId;
-                    return !creator || String(creator).toLowerCase() === userId.toLowerCase();
-                  });
-                }
-                const visitCreator = visit.createdByUserId ?? visit.CreatedByUserId ?? visit.userId ?? visit.UserId;
-                return !visitCreator || String(visitCreator).toLowerCase() === userId.toLowerCase();
-              })
-            : rawItems;
-
+          const items = response?.items ?? (Array.isArray(response) ? (response as any) : []);
           if (items && items.length > 0) {
             const mapped = items.map((visit: VisitListItemDto) => this.mapVisitToGateEventItem(visit));
             this.events.set(mapped);
-            this.totalCount.set(items.length);
+            this.totalCount.set(response.totalCount ?? mapped.length);
           } else {
             this.events.set([]);
             this.totalCount.set(0);
           }
         },
         error: () => {
-          this.isLoading.set(false);
-          this.events.set([]);
-          this.totalCount.set(0);
+          // Fallback to legacy gate events API
+          this.gateEventService
+            .getGateEvents({
+              page: this.currentPage(),
+              pageSize: this.pageSize(),
+            })
+            .subscribe({
+              next: (legacyRes) => {
+                this.isLoading.set(false);
+                const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
+                if (legacyItems && legacyItems.length > 0) {
+                  const mapped = legacyItems.map((dto: GateEventDetailDto) => this.mapDtoToGateEventItem(dto));
+                  this.events.set(mapped);
+                  this.totalCount.set(legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length);
+                } else {
+                  this.events.set([]);
+                  this.totalCount.set(0);
+                }
+              },
+              error: () => {
+                this.isLoading.set(false);
+                this.events.set([]);
+                this.totalCount.set(0);
+              },
+            });
         },
       });
   }
 
   private mapVisitToGateEventItem(visit: any): GateEventItem {
     const id = visit.visitId || visit.VisitId || visit.id || visit.Id || crypto.randomUUID();
-    const eventsList: any[] = Array.isArray(visit.events) ? visit.events : Array.isArray(visit.Events) ? visit.Events : [];
+    const eventsList: any[] = Array.isArray(visit.events)
+      ? visit.events
+      : Array.isArray(visit.Events)
+        ? visit.Events
+        : [];
     const primaryEvent = eventsList.length > 0 ? eventsList[0] : null;
 
     const capturedAt =
@@ -209,7 +279,8 @@ export class GateEventsComponent implements OnInit {
         else if (type.includes('REAR')) color = '#993030';
         else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
 
-        const url = img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const url =
+          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
         const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || 'CAM';
 
         photos.push({
@@ -280,7 +351,8 @@ export class GateEventsComponent implements OnInit {
     if (images && images.length > 0) {
       images.forEach((img: any) => {
         const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
-        const url = img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const url =
+          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
         photos.push({
           label: rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`,
           color: '#1f487e',
@@ -290,16 +362,36 @@ export class GateEventsComponent implements OnInit {
       });
     } else {
       if (dto.frontImageUrl ?? dto.FrontImageUrl) {
-        photos.push({ label: 'Front OCR', color: '#c9842a', tag: 'FRONT', url: dto.frontImageUrl ?? dto.FrontImageUrl ?? '' });
+        photos.push({
+          label: 'Front OCR',
+          color: '#c9842a',
+          tag: 'FRONT',
+          url: dto.frontImageUrl ?? dto.FrontImageUrl ?? '',
+        });
       }
       if (dto.leftImageUrl ?? dto.LeftImageUrl) {
-        photos.push({ label: 'Left Side', color: '#1f487e', tag: 'LEFT', url: dto.leftImageUrl ?? dto.LeftImageUrl ?? '' });
+        photos.push({
+          label: 'Left Side',
+          color: '#1f487e',
+          tag: 'LEFT',
+          url: dto.leftImageUrl ?? dto.LeftImageUrl ?? '',
+        });
       }
       if (dto.rightImageUrl ?? dto.RightImageUrl) {
-        photos.push({ label: 'Right Side', color: '#1f487e', tag: 'RIGHT', url: dto.rightImageUrl ?? dto.RightImageUrl ?? '' });
+        photos.push({
+          label: 'Right Side',
+          color: '#1f487e',
+          tag: 'RIGHT',
+          url: dto.rightImageUrl ?? dto.RightImageUrl ?? '',
+        });
       }
       if (dto.rearImageUrl ?? dto.RearImageUrl) {
-        photos.push({ label: 'Rear Doors', color: '#993030', tag: 'REAR', url: dto.rearImageUrl ?? dto.RearImageUrl ?? '' });
+        photos.push({
+          label: 'Rear Doors',
+          color: '#993030',
+          tag: 'REAR',
+          url: dto.rearImageUrl ?? dto.RearImageUrl ?? '',
+        });
       }
     }
 
@@ -365,21 +457,16 @@ export class GateEventsComponent implements OnInit {
     };
   });
 
-  // Filtered dataset
+  // Filtered dataset (uses Cycle filter instead of tabs/direction/gate)
   public readonly filteredEvents = computed<GateEventItem[]>(() => {
     const list = this.events();
-    const tab = this.activeTab();
-    const dir = this.directionFilter();
-    const gate = this.gateFilter();
+    const cycle = this.cycleFilter();
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
 
     return list.filter((item) => {
-      if (tab === 'arrivals' && item.direction !== 'IN') return false;
-      if (tab === 'departures' && item.direction !== 'OUT') return false;
-
-      if (dir !== 'All' && item.direction !== dir) return false;
-      if (gate !== 'All' && item.gate !== gate) return false;
+      // Cycle filter replaces direction + gate + tabs
+      if (cycle !== 'All' && item.direction !== cycle) return false;
 
       if (conf === 'High' && item.confidence < 95) return false;
       if (conf === 'Medium' && (item.confidence < 90 || item.confidence >= 95)) return false;
@@ -406,62 +493,6 @@ export class GateEventsComponent implements OnInit {
     return list.slice(start, start + this.pageSize());
   });
 
-  public readonly totalPages = computed<number>(() => {
-    const total = this.filteredEvents().length;
-    const size = this.pageSize();
-    return Math.max(1, Math.ceil(total / size));
-  });
-
-  public readonly paginationStart = computed<number>(() => {
-    const total = this.filteredEvents().length;
-    if (total === 0) return 0;
-    return (this.currentPage() - 1) * this.pageSize() + 1;
-  });
-
-  public readonly paginationEnd = computed<number>(() => {
-    const total = this.filteredEvents().length;
-    if (total === 0) return 0;
-    return Math.min(this.currentPage() * this.pageSize(), total);
-  });
-
-  public readonly pageNumbers = computed<number[]>(() => {
-    const pages = this.totalPages();
-    const current = this.currentPage();
-    const pageList: number[] = [];
-
-    if (pages <= 5) {
-      for (let i = 1; i <= pages; i++) pageList.push(i);
-    } else {
-      let start = Math.max(1, current - 2);
-      let end = Math.min(pages, start + 4);
-      if (end - start < 4) {
-        start = Math.max(1, end - 4);
-      }
-      for (let i = start; i <= end; i++) pageList.push(i);
-    }
-
-    return pageList;
-  });
-
-  public goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages()) {
-      this.currentPage.set(page);
-    }
-  }
-
-  public prevPage(): void {
-    this.goToPage(this.currentPage() - 1);
-  }
-
-  public nextPage(): void {
-    this.goToPage(this.currentPage() + 1);
-  }
-
-  public onPageSizeChange(size: number): void {
-    this.pageSize.set(size);
-    this.currentPage.set(1);
-  }
-
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
     if (!current.length) return false;
@@ -471,6 +502,13 @@ export class GateEventsComponent implements OnInit {
 
   public setActiveTab(tab: 'all' | 'arrivals' | 'departures'): void {
     this.activeTab.set(tab);
+    if (tab === 'arrivals') {
+      this.cycleFilter.set('IN');
+    } else if (tab === 'departures') {
+      this.cycleFilter.set('OUT');
+    } else {
+      this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
+    }
     this.currentPage.set(1);
   }
 
@@ -654,7 +692,6 @@ export class GateEventsComponent implements OnInit {
     };
   }
 
-
   public copyEventId(idStr: string): void {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       void navigator.clipboard.writeText(idStr);
@@ -706,6 +743,10 @@ export class GateEventsComponent implements OnInit {
 
   public openGateInModal(): void {
     this.isGateInModalOpen.set(true);
+  }
+
+  public openNonErpContainerModal(): void {
+    this.showToast('Non ERP Container workflow triggered.');
   }
 
   public closeGateInModal(): void {

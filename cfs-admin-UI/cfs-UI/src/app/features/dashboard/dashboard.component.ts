@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DashboardService } from './services/dashboard.service';
 import { AuthService } from 'core/auth/auth.service';
 import { KpiMetricCardComponent } from './components/kpi-metric-card/kpi-metric-card.component';
@@ -23,11 +23,7 @@ import { InventorySummaryComponent } from './components/inventory-summary/invent
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   public readonly dashboardService = inject(DashboardService);
   public readonly auth = inject(AuthService);
-
-  public ngOnInit(): void {
-    this.dashboardService.loadGateActivities();
-  }
 }

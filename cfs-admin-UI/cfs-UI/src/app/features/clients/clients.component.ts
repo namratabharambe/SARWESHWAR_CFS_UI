@@ -6,6 +6,7 @@ import { PageHeaderComponent } from 'shared/components/organisms/page-header/pag
 import { StatusBadgeComponent } from 'shared/components/atoms/status-badge/status-badge.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent } from 'shared/components/molecules/form-field/form-field.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component';
 import { FocusInvalidFieldDirective, HighlightTextDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
@@ -20,6 +21,7 @@ import { TranslatePipe } from 'shared/pipes';
     AvatarComponent,
     ModalComponent,
     FormFieldComponent,
+    DropdownComponent,
     FocusInvalidFieldDirective,
     HighlightTextDirective,
     TranslatePipe,
@@ -33,6 +35,11 @@ export class ClientsComponent {
 
   public readonly searchQuery = signal<string>('');
   public readonly statusFilter = signal<'ALL' | 'Active' | 'Inactive'>('ALL');
+  public readonly statusFilterOptions = [
+    { value: 'ALL', label: 'All Statuses' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' },
+  ];
   public readonly editingClient = signal<Client | null | undefined>(undefined);
   public readonly isSaving = signal<boolean>(false);
   public readonly saveError = signal<string>('');
