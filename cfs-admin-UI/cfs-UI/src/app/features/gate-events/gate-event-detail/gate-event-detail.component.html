@@ -126,26 +126,26 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 2. HIGH-DENSITY TOP ROW: [Fit-to-Images Box] + [Dynamic OCR & Timeline Card] -->
+  <!-- 2. HIGH-DENSITY TOP ROW: [Large Captured Images Card] + [Compact OCR Details Card] -->
   <!-- ========================================================================= -->
   <div class="flex flex-col gap-2.5 lg:flex-row lg:items-stretch">
-    <!-- Box 1: Captured Images Box (Sized Exactly Up to Images Set) -->
-    <div class="flex-none w-fit flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
-      <div class="mb-1.5 flex items-center justify-between gap-4 border-b border-slate-100 pb-1.5 dark:border-slate-800">
-        <div class="flex items-center gap-1.5">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">Captured Images</span>
-          <span class="rounded bg-slate-100 px-1 py-0.2 text-[9px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-            {{ detail().capturedPhotos.length }}
+    <!-- Box 1: Captured Images Card (Enlarged Card & Big Square Images) -->
+    <div class="flex-1 min-w-0 flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-3 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+      <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Captured Images</span>
+          <span class="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold text-blue-600 dark:bg-blue-950/60 dark:text-blue-300">
+            {{ detail().capturedPhotos.length }} Views
           </span>
         </div>
-        <span class="text-[9px] font-medium text-slate-400">Click to expand</span>
+        <span class="text-[10px] font-medium text-slate-400">Click photo for full preview</span>
       </div>
 
-      <!-- Square Image Thumbnails Flex Row (Sized to Images) -->
-      <div class="flex items-center gap-2">
+      <!-- Square Image Thumbnails (Prominent Square Dimensions) -->
+      <div class="flex flex-wrap items-center gap-3 py-1">
         @for (photo of detail().capturedPhotos; track photo.title) {
           <div
-            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800 w-28 sm:w-32"
+            class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-slate-950 transition-all duration-200 hover:border-blue-500 hover:shadow-lg dark:border-slate-800 w-44 sm:w-52 md:w-56 lg:w-64"
             (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
             <!-- 1:1 Square Shape Thumbnail Viewport -->
             <div class="relative aspect-square w-full cursor-pointer overflow-hidden bg-slate-900">
@@ -155,48 +155,50 @@
                   [alt]="photo.title"
                   loading="lazy"
                   class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="absolute right-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded bg-black/60 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <!-- Zoom button badge -->
+                <div class="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-black/70 text-xs text-white backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-all shadow-md">
                   🔍
                 </div>
               } @else {
                 <div class="flex h-full flex-col items-center justify-center text-slate-500">
-                  <span class="text-base">📷</span>
+                  <span class="text-2xl">📷</span>
+                  <span class="text-[10px] mt-1 text-slate-400">No Image</span>
                 </div>
               }
             </div>
-            <!-- Bottom Title Bar -->
-            <div class="flex items-center justify-between bg-slate-900 px-1.5 py-0.5 text-[9px] text-slate-300">
-              <span class="truncate font-semibold">{{ photo.title }}</span>
-              <span class="text-[8px] text-slate-400">{{ photo.timestamp ? photo.timestamp.slice(-8) : '' }}</span>
+            <!-- Bottom Title Bar with Timestamp -->
+            <div class="flex items-center justify-between bg-slate-900 px-2.5 py-1.5 text-[10px] text-slate-300">
+              <span class="truncate font-bold">{{ photo.title }}</span>
+              <span class="text-[9px] text-slate-400 font-mono">{{ photo.timestamp ? photo.timestamp.slice(-8) : '' }}</span>
             </div>
           </div>
         } @empty {
-          <div class="py-4 px-6 text-center text-[10px] text-slate-400">No photos available</div>
+          <div class="flex flex-1 items-center justify-center py-8 text-center text-xs text-slate-400">
+            No camera photos available for this event
+          </div>
         }
       </div>
     </div>
 
-    <!-- Box 2: OCR Extracted Details (Dynamically Fills the Rest of the Row) -->
-    <div class="flex-1 min-w-0 flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+    <!-- Box 2: OCR Extracted Details (Reduced & Compact Card) -->
+    <div class="w-full lg:w-80 xl:w-92 shrink-0 flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
       <div>
-        <!-- Header -->
-        <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
-          <div class="flex items-center gap-1.5">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">OCR Extracted Details</span>
-          </div>
-          <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.2 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+        <!-- Compact Header -->
+        <div class="mb-1.5 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">OCR Extracted Details</span>
+          <span class="inline-flex items-center gap-1 rounded bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-            Overall: {{ detail().overallConfidence }}% Verified
+            {{ detail().overallConfidence }}% Verified
           </span>
         </div>
 
-        <!-- 4 Key Fields in One Unified Grid Row -->
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <!-- 2x2 Ultra-Compact Grid -->
+        <div class="grid grid-cols-2 gap-1.5">
           <!-- 1. Container Number -->
           <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
             <div class="flex items-center justify-between text-[9px] font-semibold text-slate-400">
-              <span>Container No *</span>
+              <span>Container No</span>
               <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().containerNo, 'Container No')" title="Copy">
                 📋
               </button>
@@ -204,7 +206,7 @@
             <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-blue-600 dark:text-blue-400 truncate">
               {{ detail().containerNo }}
             </strong>
-            <div class="flex items-center justify-between text-[9px]">
+            <div class="flex items-center justify-between text-[8px]">
               <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
               <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
             </div>
@@ -212,11 +214,11 @@
 
           <!-- 2. ISO Code -->
           <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
-            <span class="text-[9px] font-semibold text-slate-400">ISO Code *</span>
+            <span class="text-[9px] font-semibold text-slate-400">ISO Code</span>
             <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().isoCode }}
             </strong>
-            <div class="flex items-center justify-between text-[9px]">
+            <div class="flex items-center justify-between text-[8px]">
               <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
               <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
             </div>
@@ -228,7 +230,7 @@
             <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().size }}
             </strong>
-            <div class="flex items-center justify-between text-[9px]">
+            <div class="flex items-center justify-between text-[8px]">
               <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
               <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
             </div>
@@ -245,7 +247,7 @@
             <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().truckNo }}
             </strong>
-            <div class="flex items-center justify-between text-[9px]">
+            <div class="flex items-center justify-between text-[8px]">
               <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
               <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
             </div>
@@ -253,12 +255,12 @@
         </div>
       </div>
 
-      <!-- Integrated Slim Timeline Bar -->
-      <div class="mt-2 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-100 pt-1.5 dark:border-slate-800">
-        <div class="flex flex-wrap items-center gap-2 text-[11px]">
+      <!-- Integrated Compact Timeline Stepper -->
+      <div class="mt-2 border-t border-slate-100 pt-1.5 dark:border-slate-800">
+        <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
           <span class="text-[9px] font-bold uppercase text-slate-400">Timeline:</span>
           @for (step of detail().timelineSteps; track step.label) {
-            <div class="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.2 dark:bg-slate-900/50">
+            <div class="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.5 dark:bg-slate-900/50">
               <span
                 class="flex h-3 w-3 items-center justify-center rounded-full text-[7px] font-bold text-white"
                 [class.bg-blue-500]="step.color === 'blue'"
@@ -268,15 +270,9 @@
                 ✓
               </span>
               <span class="font-semibold text-slate-800 dark:text-slate-200">{{ step.label }}</span>
-              <span class="text-[9px] text-slate-400">({{ step.actor }})</span>
             </div>
           }
         </div>
-        @if (detail().systemNotes.length > 0) {
-          <span class="hidden xl:inline-flex text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-xs">
-            💬 {{ detail().systemNotes[0].text }}
-          </span>
-        }
       </div>
     </div>
   </div>
