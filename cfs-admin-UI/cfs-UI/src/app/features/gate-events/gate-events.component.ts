@@ -11,12 +11,12 @@ import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.
 import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import {
-  GateEventDetailDto,
+import { GateEventDetailDto,
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
 } from 'shared/types/gate-event/gate-event.interface';
+import { DashboardService } from '../dashboard/services/dashboard.service';
 
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
@@ -61,6 +61,7 @@ export interface GateEventItem {
 export class GateEventsComponent implements OnInit {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
+  private readonly dashboardService = inject(DashboardService, { optional: true });
   private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly router = inject(Router, { optional: true });
 
@@ -213,27 +214,9 @@ export class GateEventsComponent implements OnInit {
   }
 
   public loadLiveSummaryCounts(siteId?: string, clientId?: string): void {
-    // Live Arrivals from API
-    this.gateEventService
-      .getVisits({ page: 1, pageSize: 1, status: 'InYard', siteId, clientId })
-      .subscribe({
-        next: (res) => {
-          if (res?.totalCount != null) {
-            this.totalArrivalsCount.set(res.totalCount);
-          }
-        },
-      });
-
-    // Live Departures from API
-    this.gateEventService
-      .getVisits({ page: 1, pageSize: 1, status: 'Departed', siteId, clientId })
-      .subscribe({
-        next: (res) => {
-          if (res?.totalCount != null) {
-            this.totalDeparturesCount.set(res.totalCount);
-          }
-        },
-      });
+    if (this.dashboardService) {
+      this.dashboardService.loadGateActivities(siteId, clientId);
+    }
   }
 
   private mapVisitToGateEventItem(visit: any): GateEventItem {
@@ -454,39 +437,34 @@ export class GateEventsComponent implements OnInit {
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const total = this.totalCount() || list.length;
-    const isOut = this.gateMode() === 'out';
+    const dashKpi = this.dashboardService?.kpiMetrics() ?? [];
 
-    const apiArrivals = this.totalArrivalsCount();
-    const apiDepartures = this.totalDeparturesCount();
+    const arrivalsMetric = dashKpi.find((m) => m.id === 'arrivals-today');
+    const departuresMetric = dashKpi.find((m) => m.id === 'departures-today');
+    const exceptionsMetric = dashKpi.find((m) => m.id === 'exceptions');
 
-    const arrivals = isOut
-      ? (apiArrivals > 0 ? apiArrivals : list.filter((e) => e.direction === 'IN').length)
-      : (total > 0 ? total : apiArrivals);
+    const arrivals = arrivalsMetric
+      ? parseInt(arrivalsMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'IN').length;
+    const departures = departuresMetric
+      ? parseInt(departuresMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'OUT').length;
 
-    const departures = isOut
-      ? (total > 0 ? total : apiDepartures)
-      : (apiDepartures > 0 ? apiDepartures : list.filter((e) => e.direction === 'OUT').length);
+    const verified = list.filter((e) => e.status === 'Verified' || (e.confidence ?? 0) >= 90).length;
+    const pendingReview = exceptionsMetric
+      ? parseInt(exceptionsMetric.value, 10) || 0
+      : list.filter((e) => e.status === 'Review' || (e.confidence ?? 0) < 90).length;
+    const damagedCaptures = list.filter((e) => e.damageFlag).length;
 
-    const verifiedInPage = list.filter((e) => (e.confidence ?? 0) >= 90 || e.status === 'Verified').length;
-    const reviewInPage = list.filter((e) => (e.confidence ?? 0) < 90 || e.status === 'Review').length;
-    const damagedInPage = list.filter((e) => e.damageFlag).length;
-
-    const scale = list.length > 0 && total > list.length ? total / list.length : 1;
-    const ocrVerified = total > 0 ? Math.round(verifiedInPage * scale) : 0;
-    const pendingReview = total > 0 ? Math.round(reviewInPage * scale) : 0;
-    const damagedCaptures = total > 0 ? Math.round(damagedInPage * scale) : 0;
-
-    const verifiedPercent = total > 0
-      ? `${Math.min(100, Math.round((ocrVerified / total) * 100))}% of total`
-      : '0% of total';
+    const total = arrivals + departures || list.length || 1;
+    const verifiedPercent = `${Math.min(100, Math.round((verified / (list.length || 1)) * 100))}% of total`;
 
     return {
       todayArrivals: arrivals,
-      arrivalsTrend: `${arrivals} arrivals total`,
+      arrivalsTrend: `${arrivals} entry visits`,
       todayDepartures: departures,
-      departuresTrend: `${departures} departures total`,
-      ocrVerified: ocrVerified,
+      departuresTrend: `${departures} exit visits`,
+      ocrVerified: verified,
       ocrVerifiedPercent: verifiedPercent,
       pendingReview: pendingReview,
       pendingReviewTrend: `${pendingReview} pending`,
