@@ -141,14 +141,14 @@
         <span class="text-[9px] font-medium text-slate-400">Click to expand</span>
       </div>
 
-      <!-- Compact 2-Col Image Grid -->
-      <div class="grid grid-cols-2 gap-1.5">
+      <!-- Compact 2-Col Square Image Thumbnails Grid -->
+      <div class="grid grid-cols-2 gap-2">
         @for (photo of detail().capturedPhotos; track photo.title) {
           <div
-            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 dark:border-slate-800"
+            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800"
             (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
-            <!-- Compact 16:9 Thumbnail -->
-            <div class="relative h-20 w-full cursor-pointer overflow-hidden bg-slate-900 sm:h-22">
+            <!-- 1:1 Square Shape Thumbnail Viewport -->
+            <div class="relative aspect-square w-full cursor-pointer overflow-hidden bg-slate-900">
               @if (photo.url) {
                 <img
                   [src]="photo.url"
@@ -156,12 +156,12 @@
                   loading="lazy"
                   class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
                 <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div class="absolute right-1 top-1 z-10 flex h-4 w-4 items-center justify-center rounded bg-black/60 text-[9px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="absolute right-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded bg-black/60 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   🔍
                 </div>
               } @else {
                 <div class="flex h-full flex-col items-center justify-center text-slate-500">
-                  <span class="text-xs">📷</span>
+                  <span class="text-base">📷</span>
                 </div>
               }
             </div>
@@ -172,7 +172,7 @@
             </div>
           </div>
         } @empty {
-          <div class="col-span-2 py-3 text-center text-[10px] text-slate-400">No photos available</div>
+          <div class="col-span-2 py-4 text-center text-[10px] text-slate-400">No photos available</div>
         }
       </div>
     </div>
