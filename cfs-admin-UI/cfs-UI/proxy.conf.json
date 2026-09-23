@@ -1,12 +1,12 @@
 {
-  "/api/v1/gate": {
-    "target": "https://localhost:7248",
+  "/api/v1": {
+    "target": "https://syapi.prosperassettracking.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"
   },
   "/api": {
-    "target": "https://localhost:7190",
+    "target": "https://cfsapi.prosperassettracking.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"
