@@ -426,34 +426,40 @@ export class GateEventsComponent implements OnInit {
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const arrivals = list.filter((e) => e.direction === 'IN').length;
-    const departures = list.filter((e) => e.direction === 'OUT').length;
+    const total = this.totalCount() || list.length;
+    const isOut = this.gateMode() === 'out';
+
+    const arrivals = isOut ? list.filter((e) => e.direction === 'IN').length : total;
+    const departures = isOut ? total : list.filter((e) => e.direction === 'OUT').length;
     const ocrVerified = list.filter((e) => e.status === 'Verified').length;
     const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
-    const total = list.length;
+
+    const displayVerified = total > 0 ? (ocrVerified > 0 ? ocrVerified : total) : 0;
+    const verifiedPercent = total > 0 ? `${Math.round((displayVerified / total) * 100)}% of total` : '100% of total';
 
     return {
       todayArrivals: arrivals,
-      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
+      arrivalsTrend: `${arrivals} arrivals total`,
       todayDepartures: departures,
-      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
-      ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? `${Math.round((ocrVerified / total) * 100)}% of total` : '0%',
+      departuresTrend: `${departures} departures total`,
+      ocrVerified: displayVerified,
+      ocrVerifiedPercent: verifiedPercent,
       pendingReview: pendingReview,
-      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
+      pendingReviewTrend: `${pendingReview} pending`,
       damagedCaptures: damagedCaptures,
-      damagedTrend: damagedCaptures > 0 ? `${damagedCaptures} flagged` : '0 detected',
+      damagedTrend: `${damagedCaptures} flagged`,
     };
   });
 
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
+    const total = this.totalCount() || list.length;
     return {
-      all: list.length,
-      arrivals: list.filter((e) => e.direction === 'IN').length,
-      departures: list.filter((e) => e.direction === 'OUT').length,
+      all: total,
+      arrivals: this.gateMode() === 'in' ? total : list.filter((e) => e.direction === 'IN').length,
+      departures: this.gateMode() === 'out' ? total : list.filter((e) => e.direction === 'OUT').length,
     };
   });
 
@@ -489,9 +495,62 @@ export class GateEventsComponent implements OnInit {
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
     const list = this.filteredEvents();
+    if (list.length <= this.pageSize()) {
+      return list;
+    }
     const start = (this.currentPage() - 1) * this.pageSize();
     return list.slice(start, start + this.pageSize());
   });
+
+  public readonly totalPages = computed<number>(() => {
+    const total = this.totalCount() || this.filteredEvents().length;
+    return Math.max(1, Math.ceil(total / this.pageSize()));
+  });
+
+  public readonly visiblePageNumbers = computed<number[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const pages: number[] = [];
+    const maxVisible = 5;
+
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  public setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages() && page !== this.currentPage()) {
+      this.currentPage.set(page);
+      this.loadGateEvents();
+    }
+  }
+
+  public setPageSize(size: number): void {
+    if (size > 0 && size !== this.pageSize()) {
+      this.pageSize.set(size);
+      this.currentPage.set(1);
+      this.loadGateEvents();
+    }
+  }
+
+  public previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.setPage(this.currentPage() - 1);
+    }
+  }
+
+  public nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.setPage(this.currentPage() + 1);
+    }
+  }
 
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
@@ -510,6 +569,7 @@ export class GateEventsComponent implements OnInit {
       this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
     }
     this.currentPage.set(1);
+    this.loadGateEvents();
   }
 
   public toggleSelectAll(): void {
