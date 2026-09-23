@@ -10,6 +10,7 @@ import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component
 import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { FocusInvalidFieldDirective, HighlightTextDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -35,6 +36,7 @@ export interface SiteRoleItem {
     CenteredDividerComponent,
     ModalComponent,
     FormFieldComponent,
+    DropdownComponent,
     FocusInvalidFieldDirective,
     HighlightTextDirective,
     TranslatePipe,
@@ -44,12 +46,17 @@ export interface SiteRoleItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent implements OnInit {
-  public readonly repo = inject(AdminRepository);
+  private readonly repo = inject(AdminRepository);
   public readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly searchQuery = signal('');
   public readonly statusFilter = signal<'ALL' | 'Active' | 'Inactive'>('ALL');
+  public readonly statusFilterOptions = [
+    { value: 'ALL', label: 'All Statuses' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Inactive', label: 'Inactive' },
+  ];
   public readonly roleFilter = signal<string>('ALL');
   public readonly editingUser = signal<User | null | undefined>(undefined);
   public readonly isSaving = signal(false);

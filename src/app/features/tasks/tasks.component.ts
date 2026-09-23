@@ -8,6 +8,10 @@ import { CreateTaskModalComponent } from './components/create-task-modal/create-
 import { TaskDetailPanelComponent } from './components/task-detail-panel/task-detail-panel.component';
 import { TaskQueueViewComponent } from './components/task-queue-view/task-queue-view.component';
 
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+import { TranslatePipe } from 'shared/pipes';
+
 @Component({
   selector: 'app-tasks',
   standalone: true,
@@ -18,6 +22,9 @@ import { TaskQueueViewComponent } from './components/task-queue-view/task-queue-
     TaskDetailPanelComponent,
     CreateTaskModalComponent,
     TaskQueueViewComponent,
+    DatePickerComponent,
+    DropdownComponent,
+    TranslatePipe,
   ],
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss'],
@@ -65,6 +72,12 @@ export class TasksComponent {
     { value: 'RTG-03', label: 'RTG Crane RTG-03' },
     { value: 'FLT-01', label: 'Forklift FLT-01' },
     { value: 'FLT-02', label: 'Forklift FLT-02' },
+  ];
+
+  public readonly pageSizeOptions = [
+    { value: 10, label: '10 per page' },
+    { value: 25, label: '25 per page' },
+    { value: 50, label: '50 per page' },
   ];
 
   // Pagination display range

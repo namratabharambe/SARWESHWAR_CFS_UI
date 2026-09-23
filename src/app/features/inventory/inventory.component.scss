@@ -7,24 +7,3 @@
   min-height: 100%;
 }
 
-/* Glass & Negative Space Enhancements */
-.glass-card {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle linear border glow */
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.25), transparent);
-  pointer-events: none;
-}
-
-.dark .glass-card::before {
-  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.45), transparent);
-}

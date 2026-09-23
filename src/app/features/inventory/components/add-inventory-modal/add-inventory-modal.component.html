@@ -1,20 +1,22 @@
 @if (isOpen()) {
   <div
-    class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm animate-fadeIn"
+    class="modal-backdrop animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm"
     (click)="onBackdropClick($event)">
     <div
       class="modal-container relative flex max-h-[92vh] w-full max-w-2xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-850"
       (click)="$event.stopPropagation()">
-      
       <!-- Header -->
       <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
         <div class="flex items-center gap-3">
-          <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400">
             <span class="material-icons-outlined text-2xl">add_box</span>
           </div>
           <div>
-            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">Add Container to Inventory</h2>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Register new container position and storage telemetry</p>
+            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">{{ 'DIALOG.ADD_INVENTORY' | translate }}</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              {{ 'INVENTORY.SUBTITLE' | translate }}
+            </p>
           </div>
         </div>
 
@@ -27,18 +29,19 @@
       </div>
 
       <!-- Body -->
-      <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+      <div class="flex-1 space-y-4 overflow-y-auto px-6 py-5">
         @if (errorMessage()) {
-          <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
+          <div
+            class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300">
             {{ errorMessage() }}
           </div>
         }
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 text-xs">
+        <div class="grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2 md:grid-cols-3">
           <!-- Container No -->
           <div class="sm:col-span-2">
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">
-              Container No. <span class="text-rose-500">*</span>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">
+              {{ 'TABLE.CONTAINER_NO' | translate }} <span class="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -50,76 +53,72 @@
 
           <!-- Size Type -->
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Size / Type</label>
-            <select
-              [ngModel]="sizeType()"
-              (ngModelChange)="sizeType.set($event)"
-              class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-              @for (st of sizeTypes; track st) {
-                <option [value]="st">{{ st }}</option>
-              }
-            </select>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'TABLE.SIZE_TYPE' | translate }}</label>
+            <app-dropdown
+              [value]="sizeType()"
+              (valueChange)="sizeType.set($event)"
+              [options]="sizeTypes"
+              size="sm"
+              [fullWidth]="true"
+              [searchable]="true"
+              placeholder="Select size / type" />
           </div>
 
           <!-- Shipping Line -->
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Shipping Line</label>
-            <select
-              [ngModel]="line()"
-              (ngModelChange)="line.set($event)"
-              class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-semibold text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-              @for (l of lines; track l) {
-                <option [value]="l">{{ l }}</option>
-              }
-            </select>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.LINE' | translate }}</label>
+            <app-dropdown
+              [value]="line()"
+              (valueChange)="line.set($event)"
+              [options]="lines"
+              size="sm"
+              [fullWidth]="true"
+              [searchable]="true"
+              placeholder="Select shipping line" />
           </div>
 
           <!-- Full / Empty -->
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Full / Empty Status</label>
-            <select
-              [ngModel]="fullEmpty()"
-              (ngModelChange)="fullEmpty.set($event)"
-              class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-              <option value="Full">Full (Laden)</option>
-              <option value="Empty">Empty</option>
-            </select>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.FULL_EMPTY' | translate }}</label>
+            <app-dropdown
+              [value]="fullEmpty()"
+              (valueChange)="fullEmpty.set($event)"
+              [options]="fullEmptyOptions"
+              size="sm"
+              [fullWidth]="true"
+              placeholder="Select status" />
           </div>
 
           <!-- Yard Status -->
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Yard Status</label>
-            <select
-              [ngModel]="yardStatus()"
-              (ngModelChange)="yardStatus.set($event)"
-              class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-              <option value="In Yard">In Yard</option>
-              <option value="Hold">Hold</option>
-              <option value="Ready Out">Ready Out</option>
-              <option value="Overstay">Overstay</option>
-            </select>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'TABLE.YARD_STATUS' | translate }}</label>
+            <app-dropdown
+              [value]="yardStatus()"
+              (valueChange)="yardStatus.set($event)"
+              [options]="yardStatusOptions"
+              size="sm"
+              [fullWidth]="true"
+              placeholder="Select yard status" />
           </div>
         </div>
 
         <!-- Yard Location Coordinates -->
         <div class="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-800/30">
-          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2.5">
+          <label class="mb-2.5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
             Yard Grid Coordinates (Block / Row / Bay / Tier)
           </label>
           <div class="grid grid-cols-4 gap-2.5 text-xs">
             <div>
-              <label class="block text-[11px] text-gray-500 dark:text-gray-400 mb-1">Block</label>
-              <select
-                [ngModel]="block()"
-                (ngModelChange)="block.set($event)"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                @for (b of blocks; track b) {
-                  <option [value]="b">Block {{ b }}</option>
-                }
-              </select>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.BLOCK' | translate }}</label>
+              <app-dropdown
+                [value]="block()"
+                (valueChange)="block.set($event)"
+                [options]="blockOptions"
+                size="sm"
+                [fullWidth]="true" />
             </div>
             <div>
-              <label class="block text-[11px] text-gray-500 dark:text-gray-400 mb-1">Row</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.ROW' | translate }}</label>
               <input
                 type="text"
                 [ngModel]="row()"
@@ -128,7 +127,7 @@
                 class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
             <div>
-              <label class="block text-[11px] text-gray-500 dark:text-gray-400 mb-1">Bay</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.BAY' | translate }}</label>
               <input
                 type="text"
                 [ngModel]="bay()"
@@ -137,7 +136,7 @@
                 class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
             <div>
-              <label class="block text-[11px] text-gray-500 dark:text-gray-400 mb-1">Tier</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.TIER' | translate }}</label>
               <input
                 type="text"
                 [ngModel]="tier()"
@@ -149,9 +148,9 @@
         </div>
 
         <!-- Customer & Additional Details -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+        <div class="grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2">
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Customer / Consignee</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.CUSTOMER' | translate }}</label>
             <input
               type="text"
               [ngModel]="customerName()"
@@ -160,7 +159,7 @@
               class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
           </div>
           <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Booking / BL No</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">Booking / BL No</label>
             <input
               type="text"
               [ngModel]="bookingNo()"
@@ -177,13 +176,13 @@
           type="button"
           (click)="close.emit()"
           class="rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-          Cancel
+          {{ 'COMMON.CANCEL' | translate }}
         </button>
         <button
           type="button"
           (click)="submitForm()"
           class="rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700 active:scale-95">
-          Save Container
+          {{ 'COMMON.SAVE' | translate }}
         </button>
       </div>
     </div>

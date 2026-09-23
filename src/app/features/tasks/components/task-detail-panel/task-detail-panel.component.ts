@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { TranslatePipe } from 'shared/pipes';
 import { TaskItem, TaskStatus } from 'shared/types/task/task.interface';
 
 @Component({
   selector: 'app-task-detail-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './task-detail-panel.component.html',
   styleUrls: ['./task-detail-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

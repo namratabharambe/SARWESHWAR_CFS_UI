@@ -12,6 +12,12 @@ const DEFAULT_TRANSLATIONS: Record<string, any> = {
     USERS: 'Users',
     ROLES: 'Roles',
     GATE_EVENTS: 'Gate Events',
+    GATE_IN: 'Gate In',
+    GATE_OUT: 'Gate Out',
+    TASKS: 'Tasks',
+    INVENTORY: 'Inventory',
+    REPORTS: 'Reports',
+    ALERTS: 'Alerts',
     ALL_CLIENTS: 'All Clients',
     ALL_SITES: 'All Sites',
     LOGOUT: 'Sign Out',
@@ -255,8 +261,12 @@ export class LocalizationService {
       }
     }
 
-    if (typeof value !== 'string') {
-      return key;
+    if (typeof value !== 'string' || value === key) {
+      if (key.startsWith('NAV.')) {
+        const raw = key.replace('NAV.', '');
+        return raw.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      }
+      return typeof value === 'string' ? value : key;
     }
 
     if (params) {

@@ -3,10 +3,12 @@ import { ChangeDetectionStrategy, Component, input, output, signal } from '@angu
 import { FormsModule } from '@angular/forms';
 import { AlertResolutionRequest, ContainerMismatchAlert } from 'shared/types/alert/alert.interface';
 
+import { TranslatePipe } from 'shared/pipes';
+
 @Component({
   selector: 'app-mismatch-detail-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './mismatch-detail-modal.component.html',
   styleUrls: ['./mismatch-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

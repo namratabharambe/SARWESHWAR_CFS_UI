@@ -1,13 +1,12 @@
-<div
-  class="glass-card flex h-full flex-col justify-between rounded-2xl p-5">
+<div class="flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
   <!-- Header -->
   <div class="mb-3 flex items-center justify-between">
-    <h3 class="text-base font-bold text-gray-900 dark:text-white">{{ chartData().title }}</h3>
+    <h3 class="text-base font-semibold text-slate-900 dark:text-white">{{ chartData().title | translate }}</h3>
     @if (chartData().viewAllRoute) {
       <a
         [routerLink]="chartData().viewAllRoute"
         class="inline-flex items-center text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400">
-        View All →
+        {{ 'COMMON.VIEW_ALL' | translate }} →
       </a>
     }
   </div>
@@ -25,18 +24,18 @@
           stroke-width="11"
           class="fill-transparent stroke-gray-100 dark:stroke-gray-800" />
 
-        <!-- Segments -->
+        <!-- Segment Arcs -->
         @for (seg of calculatedSegments(); track seg.id) {
           <circle
             cx="50"
             cy="50"
             [attr.r]="radius"
-            [attr.stroke]="seg.color"
             stroke-width="11"
-            fill="transparent"
-            [attr.stroke-dasharray]="seg.strokeDasharray"
-            [attr.stroke-dashoffset]="seg.strokeDashoffset"
-            class="transition-all duration-500 hover:opacity-85" />
+            class="transition-all duration-500 ease-out"
+            [style.stroke]="seg.color"
+            [style.stroke-dasharray]="seg.strokeDasharray"
+            [style.stroke-dashoffset]="seg.strokeDashoffset"
+            fill="transparent" />
         }
       </svg>
 
@@ -46,7 +45,7 @@
           {{ chartData().totalCount }}
         </span>
         <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {{ chartData().totalLabel }}
+          {{ chartData().totalLabel | translate }}
         </span>
       </div>
     </div>
@@ -56,13 +55,11 @@
       @for (seg of chartData().segments; track seg.id) {
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2.5 overflow-hidden">
-            <span
-              class="h-3 w-3 shrink-0 rounded-full shadow-sm"
-              [style.background-color]="seg.color"></span>
-            <span class="truncate font-semibold text-slate-700 dark:text-slate-200 text-xs">{{ seg.label }}</span>
+            <span class="h-3 w-3 shrink-0 rounded-full shadow-sm" [style.background-color]="seg.color"></span>
+            <span class="truncate text-xs font-semibold text-slate-700 dark:text-slate-200">{{ seg.label | translate }}</span>
           </div>
 
-          <div class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white text-xs">
+          <div class="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
             <span>{{ seg.count }}</span>
             <span class="text-xs font-medium text-slate-500 dark:text-slate-400">({{ seg.percentage }}%)</span>
           </div>

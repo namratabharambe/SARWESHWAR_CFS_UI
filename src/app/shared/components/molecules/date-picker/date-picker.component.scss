@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  position: relative;
+  font-family: 'Inter', system-ui, sans-serif;
+
+  &.is-open,
+  &.z-50,
+  &:has(.calendar-popover) {
+    z-index: 50;
+  }
+}
+
+.default-trigger {
+  height: 38px;
+  min-width: 170px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #334155;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: #94a3b8;
+    background-color: #f8fafc;
+  }
+
+  :host-context(.dark) & {
+    background-color: rgba(17, 26, 45, 0.85);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #cbd5e1;
+
+    &:hover {
+      border-color: rgba(96, 165, 250, 0.5);
+      background-color: rgba(30, 43, 68, 0.9);
+    }
+  }
+}
+
+.calendar-popover {
+  animation: calendarPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow:
+    0 20px 35px -5px rgba(0, 0, 0, 0.15),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(0, 102, 255, 0.08);
+
+  :host-context(.dark) & {
+    box-shadow:
+      0 20px 40px -5px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(59, 130, 246, 0.25);
+  }
+}
+
+@keyframes calendarPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.day-cell {
+  user-select: none;
+  cursor: pointer;
+}

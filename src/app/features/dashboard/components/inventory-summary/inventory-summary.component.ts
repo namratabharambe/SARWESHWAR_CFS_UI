@@ -2,11 +2,12 @@ import { DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { InventorySummaryData } from 'shared/types/dashboard/dashboard.interface';
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-inventory-summary',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, TranslatePipe],
   templateUrl: './inventory-summary.component.html',
   styleUrls: ['./inventory-summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

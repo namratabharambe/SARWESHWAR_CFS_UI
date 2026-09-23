@@ -28,9 +28,7 @@
   <section class="grid grid-cols-1 gap-4 lg:grid-cols-12">
     <!-- Yard Snapshot (Live) -->
     <div class="lg:col-span-4">
-      <app-yard-snapshot
-        [rows]="dashboardService.yardRows()"
-        [metrics]="dashboardService.yardMetrics()" />
+      <app-yard-snapshot [rows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()" />
     </div>
 
     <!-- Task & Gate Status Donut -->

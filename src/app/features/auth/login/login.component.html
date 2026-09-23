@@ -82,7 +82,7 @@
                 type="button"
                 class="btn-toggle-password"
                 (click)="togglePasswordVisibility()"
-                [title]="showPassword() ? 'Hide password' : 'Show password'">
+                [title]="showPassword() ? ('AUTH.HIDE_PASSWORD' | translate) : ('AUTH.SHOW_PASSWORD' | translate)">
                 @if (showPassword()) {
                   <svg class="eye-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -109,9 +109,9 @@
           <div class="form-options-row">
             <label class="checkbox-container">
               <input type="checkbox" [formControl]="form.controls.rememberMe" />
-              <span class="checkbox-label">Remember this device</span>
+              <span class="checkbox-label">{{ 'AUTH.REMEMBER_DEVICE' | translate }}</span>
             </label>
-            <a href="javascript:void(0)" class="forgot-password-link">Forgot password?</a>
+            <a href="javascript:void(0)" class="forgot-password-link">{{ 'AUTH.FORGOT_PASSWORD' | translate }}</a>
           </div>
 
           <!-- Submit Button -->
@@ -127,7 +127,6 @@
               <span>{{ 'AUTH.SUBMIT_BUTTON' | translate }}</span>
             }
           </button>
-
 
           <!-- Divider -->
           <app-centered-divider label="OR CONTINUE WITH" />
@@ -146,7 +145,7 @@
           <!-- Security Note Box -->
           <div class="mfa-security-box">
             <div class="mfa-bar"></div>
-            <p class="mfa-text">Multi-factor authentication is enforced for supervisors and administrators.</p>
+            <p class="mfa-text">{{ 'AUTH.MFA_NOTE' | translate }}</p>
           </div>
         </form>
       </div>

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { BaseApiService } from 'shared/services/base-api.service';
 import { ApiUrlService } from 'core/services/api.url.service';
 import { Role } from 'shared/types/role/role.interface';
@@ -16,6 +16,8 @@ export class RoleService extends BaseApiService<Role[], Role, Role> {
   }
 
   public listRoles(): Observable<Role[]> {
-    return this.get();
+    return this.get().pipe(
+      catchError(() => of([])),
+    );
   }
 }

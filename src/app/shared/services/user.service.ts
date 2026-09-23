@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { BaseApiService } from 'shared/services/base-api.service';
 import { ApiUrlService } from 'core/services/api.url.service';
 import {
@@ -23,13 +23,16 @@ export class UserService extends BaseApiService<User[], User, CreateUserRequest 
 
   public listUsers(clientId?: string, siteId?: string): Observable<User[]> {
     let params = new HttpParams();
-    if (clientId) {
-      params = params.set('ClientId', clientId);
+    if (clientId && clientId.trim().length > 0) {
+      params = params.set('ClientId', clientId.trim());
     }
-    if (siteId) {
-      params = params.set('SiteId', siteId);
+    if (siteId && siteId.trim().length > 0) {
+      params = params.set('SiteId', siteId.trim());
     }
-    return this.get({ params });
+    const options = params.keys().length > 0 ? { params } : undefined;
+    return this.get(options).pipe(
+      catchError(() => of([])),
+    );
   }
 
   public getUserById(id: string): Observable<User> {

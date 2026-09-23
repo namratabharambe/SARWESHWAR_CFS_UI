@@ -187,17 +187,35 @@ export class DashboardService {
     if (!this.gateEventService) return;
     const activeSiteId = siteId || this.auth?.getActiveSiteId() || undefined;
     const activeClientId = clientId || this.auth?.getActiveClientId() || undefined;
+    const activeUserId = this.auth?.getUserId() || undefined;
+    const isElevated = this.auth?.hasRole(['SystemAdmin', 'ClientAdmin', 'SiteAdmin']) ?? false;
 
     this.gateEventService
       .getVisits({
         page: 1,
-        pageSize: 25,
+        pageSize: 100,
         siteId: activeSiteId,
         clientId: activeClientId,
+        createdByUserId: !isElevated ? activeUserId : undefined,
+        userId: !isElevated ? activeUserId : undefined,
       })
       .subscribe({
         next: (response) => {
-          const items: VisitListItemDto[] = response?.items ?? (Array.isArray(response) ? (response as any) : []);
+          const rawItems: any[] = response?.items ?? (Array.isArray(response) ? (response as any) : []);
+          const items: VisitListItemDto[] = (!isElevated && activeUserId)
+            ? rawItems.filter((visit: any) => {
+                const events: any[] = Array.isArray(visit.events) ? visit.events : Array.isArray(visit.Events) ? visit.Events : [];
+                if (events.length > 0) {
+                  return events.some((e) => {
+                    const creator = e.createdByUserId ?? e.CreatedByUserId ?? e.userId ?? e.UserId;
+                    return !creator || String(creator).toLowerCase() === activeUserId.toLowerCase();
+                  });
+                }
+                const visitCreator = visit.createdByUserId ?? visit.CreatedByUserId ?? visit.userId ?? visit.UserId;
+                return !visitCreator || String(visitCreator).toLowerCase() === activeUserId.toLowerCase();
+              })
+            : rawItems;
+
           if (items && items.length > 0) {
             const mapped: GateActivityItem[] = items.map((visit) => {
               const primaryEvent = visit.events?.[0];

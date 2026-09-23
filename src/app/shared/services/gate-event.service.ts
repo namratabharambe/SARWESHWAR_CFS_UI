@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { BaseApiService } from 'shared/services/base-api.service';
 import { ApiUrlService } from 'core/services/api.url.service';
 import { environment } from 'environment/environment';
@@ -19,14 +19,14 @@ export class GateEventService extends BaseApiService<
   GateEventDetailDto,
   GateEventCaptureRequest
 > {
-  private readonly gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://localhost:7248/api/v1';
+  private readonly gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
 
   constructor(http: HttpClient) {
-    super(http, inject(ApiUrlService).apiUrl);
+    super(http, (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1');
   }
 
   public override controllerName(): string {
-    return 'gate-events';
+    return 'gate/events';
   }
 
   /**
@@ -44,10 +44,17 @@ export class GateEventService extends BaseApiService<
     to?: string;
     siteId?: string;
     clientId?: string;
+    createdByUserId?: string;
+    userId?: string;
+    eventType?: string;
   }): Observable<VisitsPagedResponse> {
     let params = new HttpParams()
       .set('page', options?.page ?? 1)
       .set('pageSize', options?.pageSize ?? 25);
+
+    if (options?.eventType) {
+      params = params.set('eventType', options.eventType);
+    }
 
     if (options?.visitNumber) {
       params = params.set('visitNumber', options.visitNumber);
@@ -73,14 +80,33 @@ export class GateEventService extends BaseApiService<
     if (options?.clientId) {
       params = params.set('clientId', options.clientId);
     }
+    if (options?.createdByUserId) {
+      params = params.set('createdByUserId', options.createdByUserId);
+      params = params.set('userId', options.createdByUserId);
+    } else if (options?.userId) {
+      params = params.set('createdByUserId', options.userId);
+      params = params.set('userId', options.userId);
+    }
 
     const url = `${this.gateBaseUrl}/gate/visits`;
-    return this.http.get<VisitsPagedResponse>(url, { params });
+    return this.http.get<VisitsPagedResponse>(url, { params }).pipe(
+      catchError(() => {
+        return of({
+          items: [],
+          page: options?.page ?? 1,
+          pageSize: options?.pageSize ?? 25,
+          totalCount: 0,
+          totalPages: 0,
+        });
+      }),
+    );
   }
 
-  public getVisitById(visitId: string): Observable<VisitListItemDto> {
+  public getVisitById(visitId: string): Observable<VisitListItemDto | null> {
     const url = `${this.gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}`;
-    return this.http.get<VisitListItemDto>(url);
+    return this.http.get<VisitListItemDto>(url).pipe(
+      catchError(() => of(null as any)),
+    );
   }
 
   public getGateEvents(options?: {
@@ -120,6 +146,6 @@ export class GateEventService extends BaseApiService<
   }
 
   public captureGateEvent(request: GateEventCaptureRequest): Observable<GateEventCaptureResponse> {
-    return this.http.post<GateEventCaptureResponse>(`${this.endpointUrl}/capture`, request);
+    return this.http.post<GateEventCaptureResponse>(this.endpointUrl, request);
   }
 }

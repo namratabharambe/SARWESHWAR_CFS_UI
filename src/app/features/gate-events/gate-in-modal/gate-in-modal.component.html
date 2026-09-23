@@ -1,40 +1,40 @@
 @if (isOpen()) {
-  <div class="modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true">
-    <div class="modal-window" (click)="$event.stopPropagation()">
+  <div class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md animate-fadeIn" (click)="onBackdropClick($event)" role="dialog" aria-modal="true">
+    <div class="modal-window relative flex max-h-[94vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-[#111a2e]" (click)="$event.stopPropagation()">
       <!-- Top Navigation & Breadcrumb Header -->
-      <div class="modal-top-bar">
-        <div class="top-bar-left">
+      <div class="modal-top-bar flex flex-shrink-0 items-start justify-between border-b border-slate-100 bg-white px-7 py-5 dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="top-bar-left flex flex-col gap-1.5">
           <!-- Breadcrumb -->
-          <nav class="breadcrumb-nav" aria-label="Breadcrumb">
-            <span class="crumb crumb-home">
-              <svg class="home-icon" viewBox="0 0 20 20" fill="currentColor">
+          <nav class="breadcrumb-nav flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400" aria-label="Breadcrumb">
+            <span class="crumb crumb-home inline-flex items-center gap-1 text-slate-500 hover:text-blue-600 dark:text-slate-400">
+              <svg class="home-icon h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
-              Home
+              {{ 'BREADCRUMB.HOME' | translate }}
             </span>
-            <span class="crumb-separator">›</span>
-            <span class="crumb">Import</span>
-            <span class="crumb-separator">›</span>
-            <span class="crumb crumb-active">Gate In</span>
+            <span class="crumb-separator text-slate-400">›</span>
+            <span class="crumb">{{ 'INVENTORY.IMPORT' | translate }}</span>
+            <span class="crumb-separator text-slate-400">›</span>
+            <span class="crumb crumb-active font-semibold text-blue-600 dark:text-blue-400">{{ 'GATE_EVENTS.TITLE' | translate }}</span>
           </nav>
 
           <!-- Title with Truck Icon -->
-          <div class="title-row">
-            <div class="truck-icon-badge">
-              <svg class="truck-svg" viewBox="0 0 24 24" fill="currentColor">
+          <div class="title-row mt-0.5 flex items-center gap-2.5">
+            <div class="truck-icon-badge flex items-center justify-center text-blue-600 dark:text-blue-400">
+              <svg class="truck-svg h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
               </svg>
             </div>
-            <h1 class="page-title">Import Gate In</h1>
+            <h1 class="page-title text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ 'GATE_EVENTS.IMPORT_GATE_IN' | translate }}</h1>
           </div>
         </div>
 
-        <div class="top-bar-right">
+        <div class="top-bar-right flex items-center gap-3.5">
           <!-- Date / Time Pill -->
-          <div class="datetime-pill">
-            <svg class="calendar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="datetime-pill inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200">
+            <svg class="calendar-icon h-4 w-4 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
@@ -46,7 +46,7 @@
           <!-- Close 'X' Button -->
           <button
             type="button"
-            class="btn-close-modal"
+            class="btn-close-modal flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 transition-colors hover:border-rose-300 hover:bg-rose-50 hover:text-rose-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-rose-950/50 dark:hover:text-rose-400"
             (click)="close.emit()"
             title="Close dialog"
             aria-label="Close dialog">
@@ -56,25 +56,25 @@
       </div>
 
       <!-- Main Scrollable Form & Table Body -->
-      <div class="modal-body-scrollable">
+      <div class="modal-body-scrollable flex-1 overflow-y-auto px-7 py-6">
         <!-- Error Alert if any -->
         @if (errorMessage()) {
-          <div class="form-error-banner" role="alert">
-            <span class="error-icon">⚠️</span>
+          <div class="form-error-banner mb-4 flex items-center gap-2.5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-xs font-semibold text-rose-700 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300" role="alert">
+            <span class="error-icon text-sm">⚠️</span>
             <span>{{ errorMessage() }}</span>
-            <button type="button" class="btn-dismiss-error" (click)="errorMessage.set('')">✕</button>
+            <button type="button" class="btn-dismiss-error ml-auto text-xs text-rose-700 hover:text-rose-900 dark:text-rose-300" (click)="errorMessage.set('')">✕</button>
           </div>
         }
 
         <!-- 5-Row Form Section -->
-        <form class="gate-in-form" (ngSubmit)="$event.preventDefault()">
+        <form class="gate-in-form mb-6 flex flex-col gap-3.5" (ngSubmit)="$event.preventDefault()">
           <!-- Row 1: 9 Columns -->
-          <div class="form-row form-row-9">
-            <div class="form-group">
-              <label class="form-label">Container No <span class="required-star">*</span></label>
+          <div class="form-row form-row-9 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-9">
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Container No <span class="required-star text-rose-500 font-bold">*</span></label>
               <input
                 type="text"
-                class="form-control uppercase-input"
+                class="form-control uppercase-input h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs font-bold uppercase text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="CONTAINER NO"
                 [ngModel]="containerNo()"
                 (ngModelChange)="containerNo.set($event)"
@@ -83,202 +83,148 @@
                 autocomplete="off" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">ISO Code <span class="required-star">*</span></label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="isoCode()"
-                  (ngModelChange)="isoCode.set($event)"
-                  name="isoCode">
-                  <option value="">Select...</option>
-                  <option value="22G1">22G1</option>
-                  <option value="42G1">42G1</option>
-                  <option value="45G1">45G1</option>
-                  <option value="20GP">20GP</option>
-                  <option value="40HC">40HC</option>
-                  <option value="45HC">45HC</option>
-                  <option value="22U1">22U1</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">ISO Code <span class="required-star text-rose-500 font-bold">*</span></label>
+              <app-dropdown
+                [value]="isoCode()"
+                (valueChange)="isoCode.set($event)"
+                [options]="isoCodeOptions"
+                size="md"
+                [fullWidth]="true"
+                [searchable]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Size</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="size()"
-                  (ngModelChange)="size.set($event)"
-                  name="size">
-                  <option value="">Select...</option>
-                  <option value="20">20 FT</option>
-                  <option value="40">40 FT</option>
-                  <option value="45">45 FT</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Size</label>
+              <app-dropdown
+                [value]="size()"
+                (valueChange)="size.set($event)"
+                [options]="sizeOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Tare Weight</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Tare Weight</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Tare Weight"
                 [ngModel]="tareWeight()"
                 (ngModelChange)="tareWeight.set($event)"
                 name="tareWeight" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Type</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="type()"
-                  (ngModelChange)="type.set($event)"
-                  name="type">
-                  <option value="">Select...</option>
-                  <option value="Dry">Dry</option>
-                  <option value="Reefer">Reefer</option>
-                  <option value="Flat Rack">Flat Rack</option>
-                  <option value="Open Top">Open Top</option>
-                  <option value="Tank">Tank</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Type</label>
+              <app-dropdown
+                [value]="type()"
+                (valueChange)="type.set($event)"
+                [options]="typeOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Cargo Type</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="cargoType()"
-                  (ngModelChange)="cargoType.set($event)"
-                  name="cargoType">
-                  <option value="">Select...</option>
-                  <option value="General">General Cargo</option>
-                  <option value="Hazardous">Hazardous</option>
-                  <option value="Perishable">Perishable</option>
-                  <option value="Refrigerated">Refrigerated</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Cargo Type</label>
+              <app-dropdown
+                [value]="cargoType()"
+                (valueChange)="cargoType.set($event)"
+                [options]="cargoTypeOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">JO Type</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="joType()"
-                  (ngModelChange)="joType.set($event)"
-                  name="joType">
-                  <option value="Air Import">Air Import</option>
-                  <option value="Sea Import">Sea Import</option>
-                  <option value="Direct Gate In">Direct Gate In</option>
-                  <option value="CFS Bonded">CFS Bonded</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">JO Type</label>
+              <app-dropdown
+                [value]="joType()"
+                (valueChange)="joType.set($event)"
+                [options]="joTypeOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">FCL/LCL</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="fclLcl()"
-                  (ngModelChange)="fclLcl.set($event)"
-                  name="fclLcl">
-                  <option value="">Select...</option>
-                  <option value="FCL">FCL</option>
-                  <option value="LCL">LCL</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">FCL/LCL</label>
+              <app-dropdown
+                [value]="fclLcl()"
+                (valueChange)="fclLcl.set($event)"
+                [options]="fclLclOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select..." />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Scan Type</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="scanType()"
-                  (ngModelChange)="scanType.set($event)"
-                  name="scanType">
-                  <option value="">Select...</option>
-                  <option value="Normal Scan">Normal Scan</option>
-                  <option value="X-Ray Scan">X-Ray Scan</option>
-                  <option value="Physical">Physical Inspection</option>
-                  <option value="Gamma">Gamma Ray</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Scan Type</label>
+              <app-dropdown
+                [value]="scanType()"
+                (valueChange)="scanType.set($event)"
+                [options]="scanTypeOptions"
+                size="md"
+                [fullWidth]="true"
+                align="right"
+                placeholder="Select..." />
             </div>
           </div>
 
           <!-- Row 2: 5 Columns -->
-          <div class="form-row form-row-5">
-            <div class="form-group">
-              <label class="form-label">OffLoad Location</label>
+          <div class="form-row form-row-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">OffLoad Location</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Gate In Type"
                 [ngModel]="offloadLocation()"
                 (ngModelChange)="offloadLocation.set($event)"
                 name="offloadLocation" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Vessel Name/Via No</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Vessel Name/Via No</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Vessel Name"
                 [ngModel]="vesselName()"
                 (ngModelChange)="vesselName.set($event)"
                 name="vesselName" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Port Name</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="portName()"
-                  (ngModelChange)="portName.set($event)"
-                  name="portName">
-                  <option value="BMCT">BMCT</option>
-                  <option value="JNPT">JNPT</option>
-                  <option value="NSICT">NSICT</option>
-                  <option value="NSIGT">NSIGT</option>
-                  <option value="GTI">GTI</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Port Name</label>
+              <app-dropdown
+                [value]="portName()"
+                (valueChange)="portName.set($event)"
+                [options]="portNameOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select port" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Shipping Line</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Shipping Line</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Shipping Line"
                 [ngModel]="shippingLine()"
                 (ngModelChange)="shippingLine.set($event)"
                 name="shippingLine" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">IGM Seal</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">IGM Seal</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="IGM Seal"
                 [ngModel]="igmSeal()"
                 (ngModelChange)="igmSeal.set($event)"
@@ -287,45 +233,45 @@
           </div>
 
           <!-- Row 3: 4 Columns -->
-          <div class="form-row form-row-4">
-            <div class="form-group">
-              <label class="form-label">Seal No. 1 <span class="required-star">*</span></label>
+          <div class="form-row form-row-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Seal No. 1 <span class="required-star text-rose-500 font-bold">*</span></label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Seal No 1"
                 [ngModel]="sealNo1()"
                 (ngModelChange)="sealNo1.set($event)"
                 name="sealNo1" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Seal No. 2</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Seal No. 2</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Seal No 2"
                 [ngModel]="sealNo2()"
                 (ngModelChange)="sealNo2.set($event)"
                 name="sealNo2" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Custom Seal No.</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Custom Seal No.</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Custom Seal No."
                 [ngModel]="customSealNo()"
                 (ngModelChange)="customSealNo.set($event)"
                 name="customSealNo" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Customer Name</label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Customer Name</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Customer Name"
                 [ngModel]="customerName()"
                 (ngModelChange)="customerName.set($event)"
@@ -334,211 +280,187 @@
           </div>
 
           <!-- Row 4: 5 Columns -->
-          <div class="form-row form-row-5-uneven">
-            <div class="form-group">
-              <label class="form-label">EIR No.</label>
+          <div class="form-row form-row-5-uneven grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">EIR No.</label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="EIR No."
                 [ngModel]="eirNo()"
                 (ngModelChange)="eirNo.set($event)"
                 name="eirNo" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">EIR Weight <span class="required-star">*</span></label>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">EIR Weight <span class="required-star text-rose-500 font-bold">*</span></label>
               <input
                 type="text"
-                class="form-control"
+                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="EIR Weight"
                 [ngModel]="eirWeight()"
                 (ngModelChange)="eirWeight.set($event)"
                 name="eirWeight" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">EIR Date & Time <span class="required-star">*</span></label>
-              <div class="input-with-icon">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="dd-mm-yyyy --:--"
-                  [ngModel]="eirDateTime()"
-                  (ngModelChange)="eirDateTime.set($event)"
-                  name="eirDateTime" />
-                <svg
-                  class="inline-calendar-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">EIR Date & Time <span class="required-star text-rose-500 font-bold">*</span></label>
+              <app-date-picker
+                [value]="eirDateTime()"
+                (valueChange)="eirDateTime.set($event)"
+                mode="datetime"
+                format="dmy"
+                placeholder="dd-mm-yyyy --:--"
+                customTriggerClass="form-control flex items-center justify-between w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Location</label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="location()"
-                  (ngModelChange)="location.set($event)"
-                  name="location">
-                  <option value="A SHEL">A SHEL</option>
-                  <option value="B YARD">B YARD</option>
-                  <option value="C STACK">C STACK</option>
-                  <option value="D DOCK">D DOCK</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Location</label>
+              <app-dropdown
+                [value]="location()"
+                (valueChange)="location.set($event)"
+                [options]="locationOptions"
+                size="md"
+                [fullWidth]="true"
+                placeholder="Select location" />
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Condition <span class="required-star">*</span></label>
-              <div class="select-wrapper">
-                <select
-                  class="form-control form-select"
-                  [ngModel]="condition()"
-                  (ngModelChange)="condition.set($event)"
-                  name="condition">
-                  <option value="">--Select--</option>
-                  <option value="Sound">Sound</option>
-                  <option value="Damaged">Damaged</option>
-                  <option value="Pending Inspection">Pending Inspection</option>
-                </select>
-                <span class="select-chevron">▾</span>
-              </div>
+            <div class="form-group flex flex-col gap-1 min-w-0">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Condition <span class="required-star text-rose-500 font-bold">*</span></label>
+              <app-dropdown
+                [value]="condition()"
+                (valueChange)="condition.set($event)"
+                [options]="conditionOptions"
+                size="md"
+                [fullWidth]="true"
+                align="right"
+                placeholder="--Select--" />
             </div>
           </div>
 
           <!-- Row 5: Remarks, Attachment, Add Plus Button, and Door to Door -->
-          <div class="form-row-actions">
-            <div class="remarks-group">
-              <label class="form-label">Remarks</label>
-              <div class="remarks-input-wrapper">
+          <div class="form-row-actions flex flex-wrap items-end gap-3 pt-1">
+            <div class="remarks-group flex flex-1 flex-col gap-1 min-w-[280px]">
+              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Remarks</label>
+              <div class="remarks-input-wrapper flex items-center gap-2">
                 <input
                   type="text"
-                  class="form-control remarks-input"
+                  class="form-control remarks-input h-9 flex-1 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                   placeholder="Remarks"
                   [ngModel]="remarks()"
                   (ngModelChange)="remarks.set($event)"
                   name="remarks" />
 
                 <!-- Paperclip Attachment Button -->
-                <label class="btn-attachment" title="Attach Document" aria-label="Attach Document">
-                  <input type="file" class="hidden-file-input" (change)="handleAttachment($event)" />
-                  <svg class="paperclip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <label class="btn-attachment flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700" title="Attach Document" aria-label="Attach Document">
+                  <input type="file" class="hidden" (change)="handleAttachment($event)" />
+                  <svg class="paperclip-icon h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path
                       d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
                   </svg>
                 </label>
 
-                <!-- Purple Plus Button to add into Table -->
+                <!-- Plus Button to add into Table -->
                 <button
                   type="button"
-                  class="btn-add-plus"
+                  class="btn-add-plus flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95"
                   (click)="addItemToTable()"
                   title="Add to table"
                   aria-label="Add entry to table">
-                  <svg viewBox="0 0 24 24" fill="currentColor" class="plus-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                   </svg>
                 </button>
               </div>
 
               @if (attachedFileName()) {
-                <span class="attachment-chip">
+                <span class="attachment-chip mt-1 inline-flex w-fit items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300">
                   📎 {{ attachedFileName() }}
-                  <button type="button" class="btn-remove-attach" (click)="attachedFileName.set('')">✕</button>
+                  <button type="button" class="btn-remove-attach text-blue-700 hover:text-blue-900 dark:text-blue-300" (click)="attachedFileName.set('')">✕</button>
                 </span>
               }
             </div>
-          </div>
 
-          <!-- Door To Door Checkbox -->
-          <div class="door-to-door-group">
-            <label class="checkbox-label">
-              <input
-                type="checkbox"
-                class="form-checkbox"
-                [ngModel]="doorToDoor()"
-                (ngModelChange)="doorToDoor.set($event)"
-                name="doorToDoor" />
-              <span>Door To Door</span>
-            </label>
+            <!-- Door To Door Checkbox -->
+            <div class="door-to-door-group flex items-center pb-2">
+              <label class="checkbox-label inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <input
+                  type="checkbox"
+                  class="form-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800"
+                  [ngModel]="doorToDoor()"
+                  (ngModelChange)="doorToDoor.set($event)"
+                  name="doorToDoor" />
+                <span>Door To Door</span>
+              </label>
+            </div>
           </div>
         </form>
 
-        <!-- Purple Header Table Section -->
-        <div class="table-container">
-          <div class="table-responsive-wrapper">
-            <table class="purple-grid-table">
-              <thead>
+        <!-- Table Section -->
+        <div class="table-container mb-5 overflow-hidden rounded-xl border border-slate-200 shadow-sm dark:border-slate-800">
+          <div class="table-responsive-wrapper w-full overflow-x-auto">
+            <table class="purple-grid-table w-full min-w-[1050px] border-collapse text-left text-xs">
+              <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/80">
                 <tr>
-                  <th>ACTION</th>
-                  <th>SCAN STATUS</th>
-                  <th>DOOR TO DOOR</th>
-                  <th>ISO CODE</th>
-                  <th>PORT NAME</th>
-                  <th>WEIGHT</th>
-                  <th>REMARKS</th>
-                  <th>SCAN TYPE</th>
-                  <th>SCAN DATE TIME</th>
-                  <th>CARGO TYPE</th>
-                  <th>UN NO.</th>
-                  <th>CLASS</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">ACTION</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">SCAN STATUS</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">DOOR TO DOOR</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">ISO CODE</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">PORT NAME</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">WEIGHT</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">REMARKS</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">SCAN TYPE</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">SCAN DATE TIME</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">CARGO TYPE</th>
+                  <th class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">UN NO.</th>
+                  <th class="px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">CLASS</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
                 @if (tableItems().length === 0) {
                   <!-- Empty Table State -->
                   <tr class="empty-state-row">
-                    <td colspan="12">
-                      <div class="empty-state-box">
-                        <div class="empty-tray-icon">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.6" class="tray-svg">
+                    <td colspan="12" class="bg-white py-12 text-center dark:bg-[#111a2e]">
+                      <div class="empty-state-box flex flex-col items-center justify-center gap-2.5">
+                        <div class="empty-tray-icon flex h-10 w-10 items-center justify-center text-slate-400">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-8 w-8">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                             <polyline points="22,6 12,13 2,6" />
                           </svg>
                         </div>
-                        <p class="empty-state-text">No data available in table</p>
+                        <p class="empty-state-text text-xs font-medium text-slate-500 dark:text-slate-400">No data available in table</p>
                       </div>
                     </td>
                   </tr>
                 } @else {
                   <!-- Populated Table Rows -->
                   @for (item of tableItems(); track item.id) {
-                    <tr class="table-data-row">
-                      <td class="action-cell">
+                    <tr class="table-data-row bg-white transition-colors hover:bg-slate-50/80 dark:bg-[#111a2e] dark:hover:bg-slate-800/50">
+                      <td class="action-cell px-3 py-2.5 text-center">
                         <button
                           type="button"
-                          class="btn-table-action"
+                          class="btn-table-action inline-flex items-center justify-center rounded p-1 text-rose-500 transition-colors hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950/50"
                           (click)="removeTableItem(item.id)"
                           title="Delete entry">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="trash-svg">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                             <polyline points="3 6 5 6 21 6" />
                             <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
                           </svg>
                         </button>
                       </td>
-                      <td>
-                        <span class="status-pill status-pending">{{ item.scanStatus }}</span>
+                      <td class="px-3 py-2.5">
+                        <span class="status-pill status-pending inline-block rounded-md border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300">{{ item.scanStatus }}</span>
                       </td>
-                      <td>{{ item.doorToDoor ? 'Yes' : 'No' }}</td>
-                      <td class="mono-cell">{{ item.isoCode }}</td>
-                      <td>{{ item.portName }}</td>
-                      <td class="mono-cell">{{ item.weight }}</td>
-                      <td class="remarks-cell">{{ item.remarks }}</td>
-                      <td>{{ item.scanType }}</td>
-                      <td>{{ item.scanDateTime }}</td>
-                      <td>{{ item.cargoType }}</td>
-                      <td>{{ item.unNo }}</td>
-                      <td>{{ item.itemClass }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.doorToDoor ? 'Yes' : 'No' }}</td>
+                      <td class="mono-cell px-3 py-2.5 font-mono text-xs font-semibold text-slate-900 dark:text-white">{{ item.isoCode }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.portName }}</td>
+                      <td class="mono-cell px-3 py-2.5 font-mono text-xs font-semibold text-slate-900 dark:text-white">{{ item.weight }}</td>
+                      <td class="remarks-cell max-w-[180px] truncate px-3 py-2.5 text-xs text-slate-600 dark:text-slate-400">{{ item.remarks }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.scanType }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.scanDateTime }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.cargoType }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.unNo }}</td>
+                      <td class="px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300">{{ item.itemClass }}</td>
                     </tr>
                   }
                 }
@@ -548,63 +470,63 @@
         </div>
 
         <!-- Footer Actions Bar -->
-        <div class="modal-footer-bar">
-          <div class="footer-left-actions">
-            <!-- Green Save / Submit Button -->
+        <div class="modal-footer-bar mb-6 flex flex-wrap items-center justify-between gap-3 pt-2">
+          <div class="footer-left-actions flex items-center gap-2.5">
+            <!-- Primary Save & Submit Button -->
             <button
               type="button"
-              class="btn-action-green"
+              class="btn-electric flex h-9.5 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-xs font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95"
               (click)="submitForm()"
               title="Save & Submit Gate In"
               aria-label="Save Gate In">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg h-4 w-4">
                 <path
                   d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
               </svg>
+              <span>{{ 'COMMON.SAVE' | translate }}</span>
             </button>
 
-            <!-- Slate / Blue Reset Button -->
+            <!-- Reset Button -->
             <button
               type="button"
-              class="btn-action-reset"
+              class="btn-action-reset flex h-9.5 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
               (click)="resetForm()"
-              title="Reset form"
+              [title]="'COMMON.RESET' | translate"
               aria-label="Reset Form">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="footer-icon-svg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="footer-icon-svg h-4 w-4">
                 <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
                 <path d="M3 3v5h5" />
               </svg>
+              <span>{{ 'COMMON.RESET' | translate }}</span>
             </button>
           </div>
 
           <div class="footer-right-actions">
-            <!-- Purple Back Button '<' -->
+            <!-- Cancel Button -->
             <button
               type="button"
-              class="btn-action-back"
+              class="btn-modal-cancel flex h-9.5 items-center justify-center rounded-xl border border-slate-300 bg-white px-4.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
               (click)="close.emit()"
-              title="Back / Close"
-              aria-label="Back / Close">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-              </svg>
+              [title]="'COMMON.CANCEL' | translate"
+              aria-label="Cancel">
+              <span>{{ 'COMMON.CANCEL' | translate }}</span>
             </button>
           </div>
         </div>
 
         <!-- Copyright & Legal Footer Links -->
-        <div class="legal-footer">
+        <div class="legal-footer flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4 text-xs text-slate-400 dark:border-slate-800 dark:text-slate-500">
           <div class="legal-left">
-            <span>© 2025 LogiPort. All rights reserved.</span>
+            <span>© 2026 Sarveshwar CFS (Container Freight Station). All rights reserved.</span>
           </div>
-          <div class="legal-right">
-            <a href="javascript:void(0)" class="legal-link">Help</a>
-            <span class="legal-sep">|</span>
-            <a href="javascript:void(0)" class="legal-link">Support</a>
-            <span class="legal-sep">|</span>
-            <a href="javascript:void(0)" class="legal-link">Privacy</a>
-            <span class="legal-sep">|</span>
-            <a href="javascript:void(0)" class="legal-link">Terms</a>
+          <div class="legal-right flex items-center gap-2">
+            <a href="javascript:void(0)" class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">Help</a>
+            <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
+            <a href="javascript:void(0)" class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">Support</a>
+            <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
+            <a href="javascript:void(0)" class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">Privacy</a>
+            <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
+            <a href="javascript:void(0)" class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400">Terms</a>
           </div>
         </div>
       </div>

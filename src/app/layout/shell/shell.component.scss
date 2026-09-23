@@ -7,31 +7,25 @@
   min-height: 100vh;
   display: grid;
   grid-template-columns: 240px 1fr;
-  background: radial-gradient(at 0% 0%, rgba(0, 102, 255, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(15, 23, 42, 0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(0, 102, 255, 0.04) 0px, transparent 50%),
-    #f8fafc;
+  background-color: #f8fafc;
   transition: grid-template-columns 0.2s ease;
 }
 
 :host-context(.dark) .app-shell {
-  background: radial-gradient(at 0% 0%, rgba(0, 102, 255, 0.18) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(2, 6, 23, 0.95) 0px, transparent 60%),
-    radial-gradient(at 50% 0%, rgba(0, 229, 255, 0.08) 0px, transparent 50%),
-    #070c18;
+  background-color: #070c18;
 }
 
 .sidebar {
   position: fixed;
   inset: 0 auto 0 0;
   width: 240px;
-  background: #001a33;
-  color: #dbe4f2;
+  background: #0f172a;
+  color: #f1f5f9;
   padding: 0 12px 16px;
   display: flex;
   flex-direction: column;
   z-index: 30;
-  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
   transition:
     width 0.2s ease,
@@ -39,7 +33,7 @@
 }
 
 :host-context(.dark) .sidebar {
-  background: #050b14;
+  background: #090e17;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.45);
   border-right: 1px solid rgba(59, 130, 246, 0.15);
 }
@@ -48,42 +42,47 @@
   height: 72px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   padding: 0 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .brand-cube-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #0066ff 0%, #0044cc 100%);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #2563eb;
   display: grid;
   place-items: center;
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
   flex-shrink: 0;
 }
 
 .brand-copy {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .brand-company-name {
-  font-family: 'Lexend', sans-serif;
-  font-size: 17px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14.5px;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.2;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .brand-product-desc {
-  font-size: 9.5px;
-  color: #93c5fd;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: #94a3b8;
   line-height: 1.2;
-  margin-top: 1px;
+  margin-top: 2px;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -96,32 +95,34 @@
 .nav-item {
   width: 100%;
   height: 40px;
-  color: #cbd5e1;
+  color: #94a3b8;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 0 12px;
   border-radius: 8px;
+  font-family: 'Inter', sans-serif;
   font-size: 13.5px;
   font-weight: 500;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.15s ease;
   box-sizing: border-box;
   text-align: left;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: #1e293b;
     color: #ffffff;
   }
 
   &.active {
-    background: #0066ff;
+    background: rgba(37, 99, 235, 0.16);
     color: #ffffff;
     font-weight: 600;
-    box-shadow: 0 3px 10px rgba(0, 102, 255, 0.35);
+    border-left: 3px solid #2563eb;
+    padding-left: 9px;
   }
 }
 
@@ -137,7 +138,7 @@
 
 .nav-chevron {
   font-size: 12px;
-  color: #93c5fd;
+  color: #94a3b8;
   transition: transform 0.2s ease;
 
   &.rotated {
@@ -151,7 +152,7 @@
   gap: 2px;
   padding: 4px 4px 4px 16px;
   margin: 2px 0 6px 0;
-  background: rgba(0, 0, 0, 0.16);
+  background: rgba(0, 0, 0, 0.18);
   border-radius: 8px;
 }
 
@@ -160,21 +161,22 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  color: #bfdbfe;
+  color: #94a3b8;
   text-decoration: none;
+  font-family: 'Inter', sans-serif;
   font-size: 12.5px;
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: #1e293b;
     color: #ffffff;
   }
 
   &.sub-active {
-    background: #0044cc;
-    color: #ffffff;
+    background: rgba(37, 99, 235, 0.2);
+    color: #60a5fa;
     font-weight: 600;
   }
 }
@@ -249,14 +251,12 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 :host-context(.dark) .topbar {
-  background: rgba(7, 12, 24, 0.75);
+  background: #0b1120;
   border-bottom: 1px solid rgba(59, 130, 246, 0.18);
 }
 
@@ -271,22 +271,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(203, 213, 225, 0.8);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 4px 10px;
   transition: all 0.2s ease;
 
   &:hover {
-    border-color: #0066ff;
-    box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.12);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
   }
 }
 
 :host-context(.dark) .header-context-pill {
-  background: rgba(15, 23, 42, 0.75);
+  background: #111a2e;
   border-color: rgba(59, 130, 246, 0.25);
 
   &:hover {
@@ -325,9 +323,9 @@
   border: none;
   background: transparent;
   padding: 0 20px 0 0;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 13.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: #0f172a;
   outline: none;
   cursor: pointer;

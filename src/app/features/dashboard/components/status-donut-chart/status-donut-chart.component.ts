@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DonutChartData, DonutChartSegment } from 'shared/types/dashboard/dashboard.interface';
+import { TranslatePipe } from 'shared/pipes';
 
 interface CalculatedArcSegment extends DonutChartSegment {
   strokeDasharray: string;
@@ -10,7 +11,7 @@ interface CalculatedArcSegment extends DonutChartSegment {
 @Component({
   selector: 'app-status-donut-chart',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './status-donut-chart.component.html',
   styleUrls: ['./status-donut-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

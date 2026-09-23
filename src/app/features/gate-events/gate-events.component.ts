@@ -1,18 +1,22 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
-import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent } from 'shared/components';
+import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent, StatusBadgeComponent } from 'shared/components';
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.component';
 import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import {
-  GateEventDetailDto,
+import { GateEventDetailDto,
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
 } from 'shared/types/gate-event/gate-event.interface';
+import { DashboardService } from '../dashboard/services/dashboard.service';
 
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
@@ -46,6 +50,9 @@ export interface GateEventItem {
     TranslatePipe,
     GateEventDetailComponent,
     GateInModalComponent,
+    DatePickerComponent,
+    DropdownComponent,
+    StatusBadgeComponent,
   ],
   templateUrl: './gate-events.component.html',
   styleUrls: ['./gate-events.component.scss'],
@@ -54,15 +61,52 @@ export interface GateEventItem {
 export class GateEventsComponent implements OnInit {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
+  private readonly dashboardService = inject(DashboardService, { optional: true });
+  private readonly route = inject(ActivatedRoute, { optional: true });
+  private readonly router = inject(Router, { optional: true });
 
+  public readonly gateMode = signal<'in' | 'out'>('in');
   public readonly events = signal<GateEventItem[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly activeTab = signal<'all' | 'arrivals' | 'departures'>('all');
+  public readonly cycleFilter = signal<string>('All');
   public readonly directionFilter = signal<string>('All');
   public readonly gateFilter = signal<string>('All');
   public readonly confidenceFilter = signal<string>('All');
   public readonly dateFilter = signal<string>('17 May 2025');
   public readonly searchQuery = signal<string>('');
+
+  public readonly cycleOptions = [
+    { value: 'All', label: 'All Cycles' },
+    { value: 'IN', label: 'Gate In' },
+    { value: 'OUT', label: 'Gate Out' },
+  ];
+
+  public readonly directionOptions = [
+    { value: 'All', label: 'All Directions' },
+    { value: 'IN', label: 'IN' },
+    { value: 'OUT', label: 'OUT' },
+  ];
+
+  public readonly gateOptions = [
+    { value: 'All', label: 'All Gates' },
+    { value: 'GATE-01', label: 'GATE-01' },
+    { value: 'GATE-02', label: 'GATE-02' },
+    { value: 'GATE-03', label: 'GATE-03' },
+  ];
+
+  public readonly confidenceOptions = [
+    { value: 'All', label: 'All Confidence' },
+    { value: 'High', label: 'High (≥ 95%)' },
+    { value: 'Medium', label: 'Medium (90% - 94%)' },
+    { value: 'Low', label: 'Low (< 90%)' },
+  ];
+
+  public readonly pageSizeOptions = [
+    { value: 10, label: '10 per page' },
+    { value: 25, label: '25 per page' },
+    { value: 50, label: '50 per page' },
+  ];
 
   public readonly isGateInModalOpen = signal<boolean>(false);
   public readonly selectedIds = signal<Set<string>>(new Set());
@@ -75,8 +119,20 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
+  public readonly totalArrivalsCount = signal<number>(0);
+  public readonly totalDeparturesCount = signal<number>(0);
 
   constructor() {
+    this.syncGateMode();
+
+    if (this.router) {
+      this.router.events
+        .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.syncGateMode();
+        });
+    }
+
     effect(() => {
       // Track site or client selection changes and reload visits
       const siteId = this.authService.selectedSiteId();
@@ -87,6 +143,15 @@ export class GateEventsComponent implements OnInit {
     });
   }
 
+  private syncGateMode(): void {
+    const url = this.router?.url ?? '';
+    const routeMode = this.route?.snapshot?.data?.['mode'];
+    const isOut = url.includes('/gate-events/out') || routeMode === 'out';
+    this.gateMode.set(isOut ? 'out' : 'in');
+    this.cycleFilter.set(isOut ? 'OUT' : 'IN');
+    this.currentPage.set(1);
+  }
+
   public ngOnInit(): void {
     this.loadGateEvents();
   }
@@ -95,6 +160,8 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
+
+    this.loadLiveSummaryCounts(siteId, clientId);
 
     this.gateEventService
       .getVisits({
@@ -146,9 +213,19 @@ export class GateEventsComponent implements OnInit {
       });
   }
 
+  public loadLiveSummaryCounts(siteId?: string, clientId?: string): void {
+    if (this.dashboardService) {
+      this.dashboardService.loadGateActivities(siteId, clientId);
+    }
+  }
+
   private mapVisitToGateEventItem(visit: any): GateEventItem {
     const id = visit.visitId || visit.VisitId || visit.id || visit.Id || crypto.randomUUID();
-    const eventsList: any[] = Array.isArray(visit.events) ? visit.events : Array.isArray(visit.Events) ? visit.Events : [];
+    const eventsList: any[] = Array.isArray(visit.events)
+      ? visit.events
+      : Array.isArray(visit.Events)
+        ? visit.Events
+        : [];
     const primaryEvent = eventsList.length > 0 ? eventsList[0] : null;
 
     const capturedAt =
@@ -213,7 +290,8 @@ export class GateEventsComponent implements OnInit {
         else if (type.includes('REAR')) color = '#993030';
         else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
 
-        const url = img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const url =
+          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
         const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || 'CAM';
 
         photos.push({
@@ -284,7 +362,8 @@ export class GateEventsComponent implements OnInit {
     if (images && images.length > 0) {
       images.forEach((img: any) => {
         const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
-        const url = img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const url =
+          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
         photos.push({
           label: rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`,
           color: '#1f487e',
@@ -294,16 +373,36 @@ export class GateEventsComponent implements OnInit {
       });
     } else {
       if (dto.frontImageUrl ?? dto.FrontImageUrl) {
-        photos.push({ label: 'Front OCR', color: '#c9842a', tag: 'FRONT', url: dto.frontImageUrl ?? dto.FrontImageUrl ?? '' });
+        photos.push({
+          label: 'Front OCR',
+          color: '#c9842a',
+          tag: 'FRONT',
+          url: dto.frontImageUrl ?? dto.FrontImageUrl ?? '',
+        });
       }
       if (dto.leftImageUrl ?? dto.LeftImageUrl) {
-        photos.push({ label: 'Left Side', color: '#1f487e', tag: 'LEFT', url: dto.leftImageUrl ?? dto.LeftImageUrl ?? '' });
+        photos.push({
+          label: 'Left Side',
+          color: '#1f487e',
+          tag: 'LEFT',
+          url: dto.leftImageUrl ?? dto.LeftImageUrl ?? '',
+        });
       }
       if (dto.rightImageUrl ?? dto.RightImageUrl) {
-        photos.push({ label: 'Right Side', color: '#1f487e', tag: 'RIGHT', url: dto.rightImageUrl ?? dto.RightImageUrl ?? '' });
+        photos.push({
+          label: 'Right Side',
+          color: '#1f487e',
+          tag: 'RIGHT',
+          url: dto.rightImageUrl ?? dto.RightImageUrl ?? '',
+        });
       }
       if (dto.rearImageUrl ?? dto.RearImageUrl) {
-        photos.push({ label: 'Rear Doors', color: '#993030', tag: 'REAR', url: dto.rearImageUrl ?? dto.RearImageUrl ?? '' });
+        photos.push({
+          label: 'Rear Doors',
+          color: '#993030',
+          tag: 'REAR',
+          url: dto.rearImageUrl ?? dto.RearImageUrl ?? '',
+        });
       }
     }
 
@@ -338,52 +437,63 @@ export class GateEventsComponent implements OnInit {
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const arrivals = list.filter((e) => e.direction === 'IN').length;
-    const departures = list.filter((e) => e.direction === 'OUT').length;
-    const ocrVerified = list.filter((e) => e.status === 'Verified').length;
-    const pendingReview = list.filter((e) => e.status === 'Review').length;
+    const dashKpi = this.dashboardService?.kpiMetrics() ?? [];
+
+    const arrivalsMetric = dashKpi.find((m) => m.id === 'arrivals-today');
+    const departuresMetric = dashKpi.find((m) => m.id === 'departures-today');
+    const exceptionsMetric = dashKpi.find((m) => m.id === 'exceptions');
+
+    const arrivals = arrivalsMetric
+      ? parseInt(arrivalsMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'IN').length;
+    const departures = departuresMetric
+      ? parseInt(departuresMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'OUT').length;
+
+    const verified = list.filter((e) => e.status === 'Verified' || (e.confidence ?? 0) >= 90).length;
+    const pendingReview = exceptionsMetric
+      ? parseInt(exceptionsMetric.value, 10) || 0
+      : list.filter((e) => e.status === 'Review' || (e.confidence ?? 0) < 90).length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
-    const total = list.length;
+
+    const total = arrivals + departures || list.length || 1;
+    const verifiedPercent = `${Math.min(100, Math.round((verified / (list.length || 1)) * 100))}% of total`;
 
     return {
       todayArrivals: arrivals,
-      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
+      arrivalsTrend: `${arrivals} entry visits`,
       todayDepartures: departures,
-      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
-      ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? `${Math.round((ocrVerified / total) * 100)}% of total` : '0%',
+      departuresTrend: `${departures} exit visits`,
+      ocrVerified: verified,
+      ocrVerifiedPercent: verifiedPercent,
       pendingReview: pendingReview,
-      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
+      pendingReviewTrend: `${pendingReview} pending`,
       damagedCaptures: damagedCaptures,
-      damagedTrend: damagedCaptures > 0 ? `${damagedCaptures} flagged` : '0 detected',
+      damagedTrend: `${damagedCaptures} flagged`,
     };
   });
 
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
+    const total = this.totalCount() || list.length;
     return {
-      all: list.length,
-      arrivals: list.filter((e) => e.direction === 'IN').length,
-      departures: list.filter((e) => e.direction === 'OUT').length,
+      all: total,
+      arrivals: this.gateMode() === 'in' ? total : list.filter((e) => e.direction === 'IN').length,
+      departures: this.gateMode() === 'out' ? total : list.filter((e) => e.direction === 'OUT').length,
     };
   });
 
-  // Filtered dataset
+  // Filtered dataset (uses Cycle filter instead of tabs/direction/gate)
   public readonly filteredEvents = computed<GateEventItem[]>(() => {
     const list = this.events();
-    const tab = this.activeTab();
-    const dir = this.directionFilter();
-    const gate = this.gateFilter();
+    const cycle = this.cycleFilter();
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
 
     return list.filter((item) => {
-      if (tab === 'arrivals' && item.direction !== 'IN') return false;
-      if (tab === 'departures' && item.direction !== 'OUT') return false;
-
-      if (dir !== 'All' && item.direction !== dir) return false;
-      if (gate !== 'All' && item.gate !== gate) return false;
+      // Cycle filter replaces direction + gate + tabs
+      if (cycle !== 'All' && item.direction !== cycle) return false;
 
       if (conf === 'High' && item.confidence < 95) return false;
       if (conf === 'Medium' && (item.confidence < 90 || item.confidence >= 95)) return false;
@@ -406,9 +516,62 @@ export class GateEventsComponent implements OnInit {
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
     const list = this.filteredEvents();
+    if (list.length <= this.pageSize()) {
+      return list;
+    }
     const start = (this.currentPage() - 1) * this.pageSize();
     return list.slice(start, start + this.pageSize());
   });
+
+  public readonly totalPages = computed<number>(() => {
+    const total = this.totalCount() || this.filteredEvents().length;
+    return Math.max(1, Math.ceil(total / this.pageSize()));
+  });
+
+  public readonly visiblePageNumbers = computed<number[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const pages: number[] = [];
+    const maxVisible = 5;
+
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  public setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages() && page !== this.currentPage()) {
+      this.currentPage.set(page);
+      this.loadGateEvents();
+    }
+  }
+
+  public setPageSize(size: number): void {
+    if (size > 0 && size !== this.pageSize()) {
+      this.pageSize.set(size);
+      this.currentPage.set(1);
+      this.loadGateEvents();
+    }
+  }
+
+  public previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.setPage(this.currentPage() - 1);
+    }
+  }
+
+  public nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.setPage(this.currentPage() + 1);
+    }
+  }
 
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
@@ -419,7 +582,15 @@ export class GateEventsComponent implements OnInit {
 
   public setActiveTab(tab: 'all' | 'arrivals' | 'departures'): void {
     this.activeTab.set(tab);
+    if (tab === 'arrivals') {
+      this.cycleFilter.set('IN');
+    } else if (tab === 'departures') {
+      this.cycleFilter.set('OUT');
+    } else {
+      this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
+    }
     this.currentPage.set(1);
+    this.loadGateEvents();
   }
 
   public toggleSelectAll(): void {
@@ -602,7 +773,6 @@ export class GateEventsComponent implements OnInit {
     };
   }
 
-
   public copyEventId(idStr: string): void {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       void navigator.clipboard.writeText(idStr);
@@ -654,6 +824,10 @@ export class GateEventsComponent implements OnInit {
 
   public openGateInModal(): void {
     this.isGateInModalOpen.set(true);
+  }
+
+  public openNonErpContainerModal(): void {
+    this.showToast('Non ERP Container workflow triggered.');
   }
 
   public closeGateInModal(): void {

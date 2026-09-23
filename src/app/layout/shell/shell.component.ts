@@ -7,17 +7,17 @@ import { Site } from 'core/models/admin.models';
 import { ThemeService } from 'core/services/theme.service';
 import { LocalizationService, SupportedLanguage } from 'core/services/localization.service';
 import { DashboardService } from 'app/features/dashboard/services/dashboard.service';
-
+import { DropdownComponent, DropdownOption } from 'shared/components/molecules/dropdown/dropdown.component';
+import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, DropdownComponent, TranslatePipe],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ShellComponent {
   public readonly auth = inject(AuthService);
   public readonly repository = inject(AdminRepository);
@@ -29,6 +29,7 @@ export class ShellComponent {
   public readonly collapsed = signal<boolean>(false);
   public readonly mobileOpen = signal<boolean>(false);
   public readonly adminExpanded = signal<boolean>(true);
+  public readonly gateEventsExpanded = signal<boolean>(true);
   public readonly currentUrl = signal<string>(this.router.url);
 
   public readonly sitesForSelectedClient = computed<Site[]>(() => {
@@ -212,6 +213,9 @@ export class ShellComponent {
         if (this.isAdminRoute(event.urlAfterRedirects)) {
           this.adminExpanded.set(true);
         }
+        if (this.isGateEventsRoute(event.urlAfterRedirects)) {
+          this.gateEventsExpanded.set(true);
+        }
       });
 
     // Automatically trigger initial client & site API calls and context switch on initial login
@@ -265,9 +269,36 @@ export class ShellComponent {
     this.adminExpanded.update((v) => !v);
   }
 
-  public onClientSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const clientId = target.value;
+  public isGateEventsRoute(url: string = this.currentUrl()): boolean {
+    return url.includes('/gate-events');
+  }
+
+  public toggleGateEvents(): void {
+    this.gateEventsExpanded.update((v) => !v);
+  }
+
+  public readonly clientDropdownOptions = computed<DropdownOption[]>(() => {
+    return this.availableClients().map(c => ({
+      value: c.id,
+      label: c.name,
+    }));
+  });
+
+  public readonly siteDropdownOptions = computed<DropdownOption[]>(() => {
+    return this.sitesForSelectedClient().map(s => ({
+      value: s.id,
+      label: s.name,
+    }));
+  });
+
+  public readonly dateRangeOptions: DropdownOption[] = [
+    { value: '17 May 2025 - 23 May 2025', label: '17 May 2025 - 23 May 2025' },
+    { value: '10 May 2025 - 16 May 2025', label: '10 May 2025 - 16 May 2025' },
+    { value: 'Today', label: 'Today' },
+  ];
+
+  public onClientSelect(eventOrValue: Event | string): void {
+    const clientId = typeof eventOrValue === 'string' ? eventOrValue : (eventOrValue.target as HTMLSelectElement).value;
     if (!clientId) return;
 
     this.auth.selectedClientId.set(clientId);
@@ -309,9 +340,8 @@ export class ShellComponent {
     });
   }
 
-  public onSiteSelect(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const siteId = target.value;
+  public onSiteSelect(eventOrValue: Event | string): void {
+    const siteId = typeof eventOrValue === 'string' ? eventOrValue : (eventOrValue.target as HTMLSelectElement).value;
     const clientId = this.auth.getActiveClientId() || this.auth.selectedClientId();
 
     if (!siteId) return;
