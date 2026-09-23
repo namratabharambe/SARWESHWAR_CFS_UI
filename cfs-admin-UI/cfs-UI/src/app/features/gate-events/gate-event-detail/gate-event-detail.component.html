@@ -160,7 +160,7 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 2. PARALLEL TOP ROW: [Images Box] + [OCR Extracted] + [Timeline & Notes]   -->
+  <!-- 2. PARALLEL TOP ROW: [Images Box] + [OCR Extracted Details in One Card]   -->
   <!-- ========================================================================= -->
   <div class="grid grid-cols-1 gap-3 lg:grid-cols-12">
     <!-- Box 1: Small Compact Captured Images Box (4 cols on lg/xl) -->
@@ -181,7 +181,7 @@
           <div
             class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800"
             (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
-            <!-- Compact 16:9 Thumbnail -->
+            <!-- Compact 16:10 Thumbnail -->
             <div class="relative aspect-[16/10] w-full cursor-pointer overflow-hidden bg-slate-900">
               @if (photo.url) {
                 <img
@@ -213,116 +213,113 @@
       </div>
     </div>
 
-    <!-- Box 2: OCR Extracted Details Card (5 cols on lg/xl) -->
-    <div class="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a] lg:col-span-5">
-      <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-        <div class="flex items-center gap-1.5">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">OCR Extracted Details</span>
+    <!-- Box 2: OCR Extracted Details (IN ONE CARD with integrated horizontal timeline) (8 cols on lg/xl) -->
+    <div class="flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a] lg:col-span-8">
+      <div>
+        <!-- Card Header -->
+        <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <polyline points="9 12 11 14 15 10"/>
+              </svg>
+            </div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">OCR Extracted Details</h2>
+          </div>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Overall: {{ detail().overallConfidence }}% Verified
+          </span>
         </div>
-        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-          Overall: {{ detail().overallConfidence }}%
-        </span>
+
+        <!-- 4 Key Fields in One Unified Grid Row -->
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <!-- 1. Container Number -->
+          <div class="group relative flex flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400">
+              <span>Container No *</span>
+              <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().containerNo, 'Container No')" title="Copy Container No">
+                📋
+              </button>
+            </div>
+            <strong class="my-1 font-mono text-sm font-extrabold tracking-wider text-blue-600 dark:text-blue-400">
+              {{ detail().containerNo }}
+            </strong>
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+
+          <!-- 2. ISO Code -->
+          <div class="group relative flex flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-semibold text-slate-400">ISO Code *</span>
+            <strong class="my-1 font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
+              {{ detail().isoCode }}
+            </strong>
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+
+          <!-- 3. Size -->
+          <div class="group relative flex flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-semibold text-slate-400">Size</span>
+            <strong class="my-1 font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
+              {{ detail().size }}
+            </strong>
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+
+          <!-- 4. Truck Number -->
+          <div class="group relative flex flex-col justify-between rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400">
+              <span>Truck Number</span>
+              <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().truckNo, 'Truck No')" title="Copy Truck No">
+                📋
+              </button>
+            </div>
+            <strong class="my-1 font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
+              {{ detail().truckNo }}
+            </strong>
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- 2x2 Metric Cards Grid -->
-      <div class="grid grid-cols-2 gap-2 flex-1">
-        <!-- Container Number -->
-        <div class="group relative flex flex-col justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
-          <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400">
-            <span>Container No *</span>
-            <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().containerNo, 'Container No')" title="Copy Container No">
-              📋
-            </button>
-          </div>
-          <strong class="font-mono text-sm font-extrabold tracking-wider text-blue-600 dark:text-blue-400">
-            {{ detail().containerNo }}
-          </strong>
-          <div class="flex items-center justify-between text-[10px]">
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-          </div>
-        </div>
-
-        <!-- ISO Code -->
-        <div class="group relative flex flex-col justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
-          <span class="text-[10px] font-semibold text-slate-400">ISO Code *</span>
-          <strong class="font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
-            {{ detail().isoCode }}
-          </strong>
-          <div class="flex items-center justify-between text-[10px]">
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-          </div>
-        </div>
-
-        <!-- Size -->
-        <div class="group relative flex flex-col justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
-          <span class="text-[10px] font-semibold text-slate-400">Size</span>
-          <strong class="font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
-            {{ detail().size }}
-          </strong>
-          <div class="flex items-center justify-between text-[10px]">
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-          </div>
-        </div>
-
-        <!-- Truck Number -->
-        <div class="group relative flex flex-col justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
-          <div class="flex items-center justify-between text-[10px] font-semibold text-slate-400">
-            <span>Truck Number</span>
-            <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().truckNo, 'Truck No')" title="Copy Truck No">
-              📋
-            </button>
-          </div>
-          <strong class="font-mono text-sm font-extrabold tracking-wider text-slate-900 dark:text-white">
-            {{ detail().truckNo }}
-          </strong>
-          <div class="flex items-center justify-between text-[10px]">
-            <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
-            <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Box 3: Event Timeline & System Notes (3 cols on lg/xl) -->
-    <div class="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a] lg:col-span-3">
-      <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-        <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Event Timeline</span>
-      </div>
-
-      <!-- Stepper List -->
-      <div class="space-y-1.5 flex-1">
-        @for (step of detail().timelineSteps; track step.label) {
-          <div class="flex items-center justify-between rounded-lg bg-slate-50/80 px-2 py-1 text-xs dark:bg-slate-900/50">
-            <div class="flex items-center gap-1.5">
+      <!-- Integrated Slim Event Timeline (Replaces the empty timeline card) -->
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-2.5 dark:border-slate-800">
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Timeline:</span>
+          @for (step of detail().timelineSteps; track step.label) {
+            <div class="flex items-center gap-1.5 rounded-md bg-slate-50 px-2 py-0.5 dark:bg-slate-900/50">
               <span
-                class="flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold"
+                class="flex h-3.5 w-3.5 items-center justify-center rounded-full text-[8px] font-bold text-white"
                 [class.bg-blue-500]="step.color === 'blue'"
-                [class.text-white]="step.color === 'blue'"
                 [class.bg-purple-500]="step.color === 'purple'"
-                [class.text-white]="step.color === 'purple'"
                 [class.bg-emerald-500]="step.color === 'emerald' || step.color === 'green'"
-                [class.text-white]="step.color === 'emerald' || step.color === 'green'"
-                [class.bg-amber-500]="step.color === 'amber'"
-                [class.text-white]="step.color === 'amber'">
+                [class.bg-amber-500]="step.color === 'amber'">
                 ✓
               </span>
               <span class="font-semibold text-slate-800 dark:text-slate-200">{{ step.label }}</span>
+              <span class="text-[10px] text-slate-400">({{ step.actor }})</span>
             </div>
-            <span class="text-[10px] text-slate-400">{{ step.actor }}</span>
-          </div>
+          }
+        </div>
+        @if (detail().systemNotes.length > 0) {
+          <span class="hidden xl:inline-flex text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate max-w-xs">
+            💬 {{ detail().systemNotes[0].text }}
+          </span>
         }
       </div>
-
-      <!-- System Note Snippet -->
-      @if (detail().systemNotes.length > 0) {
-        <div class="mt-2 rounded-lg bg-slate-50/60 p-1.5 text-[11px] text-slate-600 dark:bg-slate-900/40 dark:text-slate-400">
-          <p class="truncate">💬 {{ detail().systemNotes[0].text }}</p>
-        </div>
-      }
     </div>
   </div>
 
