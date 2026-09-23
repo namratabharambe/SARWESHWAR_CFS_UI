@@ -223,20 +223,27 @@ export class GateEventDetailComponent {
     this.activeLightboxPhoto.set(null);
   }
 
+  public copyText(text: string, label: string = 'Text'): void {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      void navigator.clipboard.writeText(text);
+    }
+    this.toast.emit(`${label} "${text}" copied to clipboard`);
+  }
+
   public buildEventDetail(event: GateEventItem): GateEventDetailData {
     const rawNumber = event.id.replace('evt-', '').padStart(6, '0');
-    const eventId = `GE-2025-05-17-${rawNumber}`;
-    const cleanContainer = event.containerNo ? event.containerNo.replace(/\s+/g, '') : '';
-    const cleanTruck = event.truckNo ? event.truckNo.replace(/\s+/g, '') : '';
+    const eventId = event.id.length > 10 ? event.id : `GE-2025-05-17-${rawNumber}`;
+    const cleanContainer = event.containerNo ? event.containerNo.replace(/\s+/g, '') : 'GESU2463138';
+    const cleanTruck = event.truckNo ? event.truckNo.replace(/\s+/g, '') : 'MH 12 AB 1234';
     const containerSize = event.rawVisit?.containerSize || event.rawDto?.container?.size || '40 FT';
     const isoCode = containerSize.includes('20') ? '22G1' : '45G1';
-    const eventTime = event.eventTime || '15 Sept 2026, 01:53 PM';
+    const eventTime = event.eventTime || '22 Sept 2026, 11:37 AM';
 
     return {
       eventId,
-      truckNo: cleanTruck || 'MH12AB1234',
-      truckConfidence: Math.max(95, event.confidence || 95),
-      containerNo: cleanContainer || 'MSCU1234567',
+      truckNo: cleanTruck,
+      truckConfidence: Math.max(95, event.confidence || 96),
+      containerNo: cleanContainer,
       containerConfidence: Math.max(94, event.confidence || 95),
       containerType: isoCode,
       typeConfidence: 97,
@@ -245,14 +252,14 @@ export class GateEventDetailComponent {
       sealNo: 'MSCU-S1-9981',
       sealConfidence: 95,
       overallConfidence: event.confidence || 95,
-      gate: event.gate === 'GATE-01' ? 'Gate 1' : event.gate === 'GATE-02' ? 'Gate 2' : event.gate || 'GATE-01A0',
-      terminal: 'Prosper CFS Terminal',
+      gate: event.gate === 'GATE-01' ? 'Gate 1' : event.gate === 'GATE-02' ? 'Gate 2' : event.gate || 'GATE-EDGE',
+      terminal: 'Sarveshwar CFS Terminal',
       driver: event.driver || 'Driver (Unassigned)',
       driverPhone: '9876543210',
-      transporter: 'Shree Logistics Pvt. Ltd.',
-      appointmentId: `APPT-2025-05-17-${rawNumber.slice(-5)}`,
+      transporter: 'Apex Logistics Pvt. Ltd.',
+      appointmentId: `APPT-2026-09-22-${rawNumber.slice(-5)}`,
       operatorReviewStatus: event.status === 'Verified' ? 'Verified by Admin User' : 'Pending Review',
-      remarks: event.notes || 'Clean container, verified at gate',
+      remarks: event.notes || 'Sound condition, optical scan verified at gate.',
       damageDetected: event.damageFlag,
       sealIntact: true,
       containerClean: true,
@@ -261,7 +268,7 @@ export class GateEventDetailComponent {
 
       // CFS Operational Details
       isoCode,
-      size: containerSize,
+      size: containerSize.includes('40') ? '40' : containerSize.includes('20') ? '20' : '40',
       tareWeight: '3,800 kg',
       type: 'Dry Standard',
       cargoType: 'General',
@@ -278,7 +285,7 @@ export class GateEventDetailComponent {
       sealNo2: 'MSCU-S2-4412',
       customSealNo: 'CUST-8831',
       customerName: 'Apex Global Logistics',
-      eirNo: `EIR-2026-${rawNumber.slice(-4) || '9041'}`,
+      eirNo: `EIR-2026-${rawNumber.slice(-4) || '22CF'}`,
       eirWeight: '28,450 kg',
       eirDateTime: eventTime,
       location: 'A SHEL',
@@ -288,7 +295,7 @@ export class GateEventDetailComponent {
       capturedPhotos:
         event.photos && event.photos.length > 0
           ? event.photos.map((p, idx) => ({
-              title: `${idx + 1}. ${p.label || 'Camera Scan'}`,
+              title: `${idx + 1}. ${p.label || 'Camera View'}`,
               timestamp: eventTime,
               url: p.url || '',
             }))

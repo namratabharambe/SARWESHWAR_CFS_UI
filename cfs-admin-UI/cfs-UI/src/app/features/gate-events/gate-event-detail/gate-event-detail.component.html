@@ -1,28 +1,32 @@
-<div class="gate-detail-page flex flex-col gap-2.5">
-  <!-- Unified Compact Header Bar (Breadcrumb + Meta + Actions in One Row) -->
-  <div class="detail-top-bar flex flex-wrap items-center justify-between gap-2.5 rounded-xl border border-slate-200 bg-white p-2.5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-    <!-- Left: Back Button + Breadcrumbs + Meta Info -->
-    <div class="flex flex-wrap items-center gap-2">
+<div class="gate-detail-page flex flex-col gap-4">
+  <!-- ========================================================================= -->
+  <!-- 1. HERO TOP BAR: Breadcrumb, Meta, Status & High-Impact Action Buttons   -->
+  <!-- ========================================================================= -->
+  <header class="detail-hero-bar flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-3.5 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-[#0f172a]/95">
+    <!-- Left: Navigation & Identifiers -->
+    <div class="flex flex-wrap items-center gap-2.5">
+      <!-- Back Button -->
       <button
         type="button"
-        class="btn-back flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition-all hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        class="btn-back group flex h-9 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-700 shadow-xs transition-all hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-slate-700"
         (click)="onBack()"
-        title="Back to Gate Events list">
-        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        title="Return to Gate Events List">
+        <svg class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
             clip-rule="evenodd" />
         </svg>
+        <span class="hidden sm:inline">Back</span>
       </button>
 
-      <!-- Event ID Pill with Copy -->
-      <div class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs dark:border-slate-700 dark:bg-slate-800/80">
-        <span class="text-slate-400">ID:</span>
-        <strong class="font-mono font-bold text-slate-800 dark:text-white">{{ detail().eventId }}</strong>
+      <!-- Event / Visit ID Chip with Copy -->
+      <div class="flex items-center gap-1.5 rounded-xl border border-slate-200/90 bg-slate-50/80 px-3 py-1.5 text-xs dark:border-slate-700 dark:bg-slate-800/80">
+        <span class="font-medium text-slate-400">ID:</span>
+        <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eventId }}</strong>
         <button
           type="button"
-          class="rounded p-0.5 text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"
+          class="ml-0.5 rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400"
           (click)="copyEventId(detail().eventId)"
           [title]="copyFeedback() ? 'Copied!' : 'Copy Event ID'">
           <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
@@ -34,15 +38,19 @@
 
       <!-- Direction Badge -->
       <span
-        class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-bold text-white shadow-xs"
-        [class.bg-emerald-600]="event().direction === 'IN'"
-        [class.bg-blue-600]="event().direction === 'OUT'">
-        <span>{{ event().direction === 'IN' ? '↓ GATE IN' : '↑ GATE OUT' }}</span>
+        class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold text-white shadow-xs"
+        [class.bg-gradient-to-r]="true"
+        [class.from-emerald-600]="event().direction === 'IN'"
+        [class.to-teal-600]="event().direction === 'IN'"
+        [class.from-blue-600]="event().direction === 'OUT'"
+        [class.to-indigo-600]="event().direction === 'OUT'">
+        <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+        <span>{{ event().direction === 'IN' ? '+ GATE IN' : '↑ GATE OUT' }}</span>
       </span>
 
       <!-- Status Pill -->
       <span
-        class="inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[11px] font-semibold"
+        class="inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-xs font-semibold"
         [class.bg-emerald-50]="event().status === 'Verified'"
         [class.text-emerald-700]="event().status === 'Verified'"
         [class.border-emerald-200]="event().status === 'Verified'"
@@ -55,13 +63,13 @@
         [class.dark:bg-amber-950/60]="event().status === 'Review'"
         [class.dark:text-amber-300]="event().status === 'Review'"
         [class.dark:border-amber-800]="event().status === 'Review'">
-        <span class="h-1.5 w-1.5 rounded-full" [class.bg-emerald-500]="event().status === 'Verified'" [class.bg-amber-500]="event().status === 'Review'"></span>
-        {{ event().status }}
+        <span class="h-2 w-2 rounded-full" [class.bg-emerald-500]="event().status === 'Verified'" [class.bg-amber-500]="event().status === 'Review'"></span>
+        <span>{{ event().status }}</span>
       </span>
 
-      <!-- Timestamp -->
-      <div class="hidden items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 sm:flex">
-        <svg class="h-3.5 w-3.5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+      <!-- Live Timestamp -->
+      <div class="hidden items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 md:flex">
+        <svg class="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
@@ -71,13 +79,13 @@
       </div>
     </div>
 
-    <!-- Right: Header Action Buttons -->
+    <!-- Right: Header Action Suite -->
     <div class="flex items-center gap-2">
-      <!-- Export Menu -->
+      <!-- Export Dropdown -->
       <div class="relative">
         <button
           type="button"
-          class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs font-semibold text-slate-700 shadow-xs transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           (click)="toggleExportDropdown()">
           <svg class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -90,55 +98,57 @@
         </button>
 
         @if (exportDropdownOpen()) {
-          <div class="absolute right-0 top-9 z-50 w-48 rounded-xl border border-slate-200 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-800">
-            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="printEvent()">
+          <div class="absolute right-0 top-10 z-50 w-48 rounded-xl border border-slate-200 bg-white p-1.5 shadow-2xl backdrop-blur-md dark:border-slate-700 dark:bg-slate-800">
+            <button type="button" class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="printEvent()">
               <span>🖨️</span> Print Inspection
             </button>
-            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventJson()">
+            <button type="button" class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventJson()">
               <span>📄</span> Export JSON
             </button>
-            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventCsv()">
+            <button type="button" class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventCsv()">
               <span>📊</span> Export CSV
             </button>
           </div>
         }
       </div>
 
-      <!-- Action Buttons in Top Bar -->
+      <!-- Exception Button -->
       <button
         type="button"
-        class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-2.5 text-xs font-semibold text-rose-700 transition-colors hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300"
+        class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-3 text-xs font-semibold text-rose-700 shadow-xs transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300"
         (click)="onMarkException()"
         title="Flag exception for manual review">
-        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="h-3.5 w-3.5 text-rose-600 dark:text-rose-400" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
             clip-rule="evenodd" />
         </svg>
-        <span class="hidden md:inline">Exception</span>
+        <span>Exception</span>
       </button>
 
+      <!-- Task Button -->
       <button
         type="button"
-        class="inline-flex h-8 items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-2.5 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300"
+        class="inline-flex h-9 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-semibold text-blue-700 shadow-xs transition-all hover:bg-blue-100 active:scale-95 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300"
         (click)="onCreateTask()"
         title="Create task for yard operators">
-        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
             clip-rule="evenodd" />
         </svg>
-        <span class="hidden md:inline">Task</span>
+        <span>Task</span>
       </button>
 
+      <!-- Approve Button -->
       <button
         type="button"
-        class="inline-flex h-8 items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-95"
+        class="inline-flex h-9 items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 text-xs font-bold text-white shadow-md transition-all hover:from-emerald-500 hover:to-teal-500 hover:shadow-emerald-500/20 active:scale-95"
         (click)="onApprove()"
         title="Approve and verify gate event">
-        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -147,298 +157,473 @@
         <span>Approve</span>
       </button>
     </div>
-  </div>
+  </header>
 
-  <!-- Main 2-Column Compact Dashboard Grid -->
-  <div class="grid grid-cols-1 gap-2.5 xl:grid-cols-12">
-    <!-- Left Column (5 Cols on XL): Camera Feeds + Compact Timeline/Notes -->
-    <div class="flex flex-col gap-2.5 xl:col-span-5">
-      <!-- Camera Feeds Compact 2x2 Grid -->
-      <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-        <div class="mb-2 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Captured Images</span>
-            <span class="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ detail().capturedPhotos.length }} Cameras</span>
+  <!-- ========================================================================= -->
+  <!-- 2. CAPTURED IMAGES (Widescreen Multi-Angle Inspection Feeds)              -->
+  <!-- ========================================================================= -->
+  <section class="camera-gallery-card rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a]">
+    <div class="mb-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Captured Images</h2>
+        </div>
+        <span class="rounded-lg bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          {{ detail().capturedPhotos.length }} Cameras
+        </span>
+      </div>
+      <span class="flex items-center gap-1 text-xs font-medium text-slate-400 dark:text-slate-500">
+        <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+        </svg>
+        Click to expand
+      </span>
+    </div>
+
+    <!-- Responsive Camera Grid (Clean Widescreen Proportion) -->
+    <div class="grid grid-cols-1 gap-4"
+      [class.md:grid-cols-2]="detail().capturedPhotos.length <= 2"
+      [class.lg:grid-cols-3]="detail().capturedPhotos.length === 3"
+      [class.lg:grid-cols-4]="detail().capturedPhotos.length >= 4">
+      @for (photo of detail().capturedPhotos; track photo.title) {
+        <div
+          class="camera-feed-card group relative flex flex-col overflow-hidden rounded-xl border border-slate-200/80 bg-slate-950 shadow-md transition-all duration-300 hover:border-blue-500 hover:shadow-xl dark:border-slate-800"
+          (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
+          
+          <!-- Image Container with proper widescreen 16:9 proportion -->
+          <div class="relative aspect-video w-full cursor-pointer overflow-hidden bg-slate-900 sm:aspect-[16/9]">
+            @if (photo.url) {
+              <img
+                [src]="photo.url"
+                [alt]="photo.title"
+                loading="lazy"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              
+              <!-- Subtle Dark Gradient Overlays for readability of tags -->
+              <div class="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/70 via-black/20 to-transparent pointer-events-none"></div>
+              <div class="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none"></div>
+
+              <!-- Top-Left: Camera Title Chip -->
+              <div class="absolute left-2.5 top-2.5 z-10 flex items-center gap-1.5 rounded-lg bg-black/60 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm backdrop-blur-md">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>{{ photo.title }}</span>
+              </div>
+
+              <!-- Top-Right: Full-Screen Zoom Overlay Button -->
+              <div class="absolute right-2.5 top-2.5 z-10 flex h-7 w-7 items-center justify-center rounded-lg bg-black/60 text-white opacity-0 shadow-sm backdrop-blur-md transition-all duration-200 group-hover:opacity-100 group-hover:scale-110">
+                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l3.293 3.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-3.293 3.293a1 1 0 11-1.414-1.414L13.586 5H12a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+
+              <!-- Bottom-Right: Capture Timestamp Badge -->
+              <div class="absolute bottom-2.5 right-2.5 z-10 rounded-md bg-black/70 px-2 py-0.5 text-[10px] font-medium text-slate-300 backdrop-blur-md">
+                {{ photo.timestamp }}
+              </div>
+            } @else {
+              <div class="flex h-full flex-col items-center justify-center gap-1.5 text-slate-500">
+                <span class="text-2xl">📷</span>
+                <span class="text-xs font-medium">No live stream</span>
+              </div>
+            }
           </div>
-          <span class="text-[11px] text-slate-400">Click to expand</span>
+        </div>
+      } @empty {
+        <div class="py-10 text-center text-xs text-slate-400">No camera captures available for this event</div>
+      }
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 3. OCR AI EXTRACTION CONSOLE                                              -->
+  <!-- ========================================================================= -->
+  <section class="ocr-matrix-card rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a]">
+    <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+      <div class="flex items-center gap-2.5">
+        <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">OCR Extracted Details</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+          Overall: {{ detail().overallConfidence }}%
+        </span>
+      </div>
+    </div>
+
+    <!-- 4 AI Extraction Metric Cards -->
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- Container Number -->
+      <div class="group relative overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 transition-all hover:border-blue-500 hover:bg-blue-50/20 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-blue-500">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+          <span>Container No *</span>
+          <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().containerNo, 'Container No')" title="Copy Container No">
+            📋
+          </button>
+        </div>
+        <strong class="mt-1 block font-mono text-base font-extrabold tracking-wider text-blue-600 dark:text-blue-400">
+          {{ detail().containerNo }}
+        </strong>
+        <div class="mt-2 flex items-center justify-between text-xs">
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
+          <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Verified
+          </span>
+        </div>
+      </div>
+
+      <!-- ISO Code -->
+      <div class="group relative overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 transition-all hover:border-blue-500 hover:bg-blue-50/20 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-blue-500">
+        <span class="block text-[11px] font-semibold text-slate-400">ISO Code *</span>
+        <strong class="mt-1 block font-mono text-base font-extrabold tracking-wider text-slate-900 dark:text-white">
+          {{ detail().isoCode }}
+        </strong>
+        <div class="mt-2 flex items-center justify-between text-xs">
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
+          <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Verified
+          </span>
+        </div>
+      </div>
+
+      <!-- Size & Type -->
+      <div class="group relative overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 transition-all hover:border-blue-500 hover:bg-blue-50/20 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-blue-500">
+        <span class="block text-[11px] font-semibold text-slate-400">Size</span>
+        <strong class="mt-1 block font-mono text-base font-extrabold tracking-wider text-slate-900 dark:text-white">
+          {{ detail().size }}
+        </strong>
+        <div class="mt-2 flex items-center justify-between text-xs">
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
+          <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Verified
+          </span>
+        </div>
+      </div>
+
+      <!-- Truck Number -->
+      <div class="group relative overflow-hidden rounded-xl border border-slate-200/80 bg-slate-50/60 p-3.5 transition-all hover:border-blue-500 hover:bg-blue-50/20 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-blue-500">
+        <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+          <span>Truck Number</span>
+          <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().truckNo, 'Truck No')" title="Copy Truck No">
+            📋
+          </button>
+        </div>
+        <strong class="mt-1 block font-mono text-base font-extrabold tracking-wider text-slate-900 dark:text-white">
+          {{ detail().truckNo }}
+        </strong>
+        <div class="mt-2 flex items-center justify-between text-xs">
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
+          <span class="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400">
+            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Verified
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. DUAL COLUMN CONSOLE: Logistics Info + Event Timeline & System Notes   -->
+  <!-- ========================================================================= -->
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+    <!-- Left Column (8 Cols on LG / XL): High-Density CFS Event Logistics -->
+    <div class="flex flex-col gap-4 lg:col-span-8">
+      <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a]">
+        <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Event Information & Logistics</h3>
+          </div>
+          <span class="text-xs font-semibold text-slate-400">
+            Gate: <strong class="text-slate-800 dark:text-slate-200">{{ detail().gate }}</strong>
+          </span>
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          @for (photo of detail().capturedPhotos; track photo.title) {
-            <div class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200 bg-slate-900 transition-all hover:border-blue-500 dark:border-slate-800">
-              <div class="relative h-24 w-full cursor-pointer overflow-hidden sm:h-28" (click)="photo.url ? openLightbox(photo.title, photo.url) : null">
-                @if (photo.url) {
-                  <img [src]="photo.url" [alt]="photo.title" loading="lazy" class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
-                  <div class="absolute inset-0 bg-black/20 opacity-0 transition-opacity group-hover:opacity-100"></div>
-                  <div class="absolute right-1 top-1 rounded bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                    <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l3.293 3.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-3.293 3.293a1 1 0 11-1.414-1.414L13.586 5H12a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                } @else {
-                  <div class="flex h-full flex-col items-center justify-center text-slate-500">
-                    <span class="text-lg">📷</span>
-                    <span class="text-[10px]">No feed</span>
-                  </div>
-                }
-              </div>
-              <div class="flex items-center justify-between bg-slate-950/90 px-2 py-1 text-[10px] text-slate-300">
-                <span class="truncate font-semibold">{{ photo.title }}</span>
-                <span class="text-[9px] text-slate-400">{{ photo.timestamp }}</span>
-              </div>
+        <!-- 4-Column Structured Key-Value Matrix -->
+        <div class="grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-3 lg:grid-cols-4">
+          <!-- Item 1: Tare Weight -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Tare Weight</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().tareWeight || '—' }}</span>
+          </div>
+
+          <!-- Item 2: Type -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Type</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().type || '—' }}</span>
+          </div>
+
+          <!-- Item 3: Cargo Type -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Cargo Type</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().cargoType || '—' }}</span>
+          </div>
+
+          <!-- Item 4: JO Type -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">JO Type</span>
+            <span class="mt-0.5 text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().joType || '—' }}</span>
+          </div>
+
+          <!-- Item 5: FCL / LCL -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">FCL / LCL</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().fclLcl || '—' }}</span>
+          </div>
+
+          <!-- Item 6: Scan Type -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Scan Type</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().scanType || '—' }}</span>
+          </div>
+
+          <!-- Item 7: Offload Location -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Offload Location</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().offLoadLocation || '—' }}</span>
+          </div>
+
+          <!-- Item 8: Gate In Type -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Gate In Type</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().gateInType || '—' }}</span>
+          </div>
+
+          <!-- Item 9: Vessel / Via No -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Vessel / Via No</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().vesselName || '—' }}</span>
+          </div>
+
+          <!-- Item 10: Port Name -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Port Name</span>
+            <span class="mt-0.5 text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().portName || '—' }}</span>
+          </div>
+
+          <!-- Item 11: Shipping Line -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Shipping Line</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().shippingLine || '—' }}</span>
+          </div>
+
+          <!-- Item 12: IGM Seal -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">IGM Seal</span>
+            <span class="mt-0.5 font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().igmSeal || '—' }}</span>
+          </div>
+
+          <!-- Item 13: Seal No. 1 -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Seal No. 1 *</span>
+            <strong class="mt-0.5 font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().sealNo1 || '—' }}</strong>
+          </div>
+
+          <!-- Item 14: Seal No. 2 -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Seal No. 2</span>
+            <span class="mt-0.5 font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().sealNo2 || '—' }}</span>
+          </div>
+
+          <!-- Item 15: Custom Seal -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Custom Seal</span>
+            <span class="mt-0.5 font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().customSealNo || '—' }}</span>
+          </div>
+
+          <!-- Item 16: Customer -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Customer</span>
+            <span class="mt-0.5 truncate text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().customerName || '—' }}</span>
+          </div>
+
+          <!-- Item 17: EIR No. -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">EIR No.</span>
+            <span class="mt-0.5 font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().eirNo || '—' }}</span>
+          </div>
+
+          <!-- Item 18: EIR Weight -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">EIR Weight *</span>
+            <strong class="mt-0.5 font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eirWeight || '—' }}</strong>
+          </div>
+
+          <!-- Item 19: EIR Date & Time -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">EIR Date & Time</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().eirDateTime || '—' }}</span>
+          </div>
+
+          <!-- Item 20: Location -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Location</span>
+            <span class="mt-0.5 text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().location || '—' }}</span>
+          </div>
+
+          <!-- Item 21: Condition -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Condition *</span>
+            <span class="mt-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">{{ detail().condition || 'Sound' }}</span>
+          </div>
+
+          <!-- Item 22: Door To Door -->
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Door To Door</span>
+            <span class="mt-0.5 text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().doorToDoor || '—' }}</span>
+          </div>
+
+          <!-- Remarks (Full Span) -->
+          <div class="col-span-full flex flex-col border-t border-slate-100 pt-3 dark:border-slate-800">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Remarks</span>
+            <p class="mt-1 text-xs text-slate-700 dark:text-slate-300">{{ detail().remarks || 'No remarks recorded' }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column (4 Cols on LG / XL): Event Timeline & System Notes -->
+    <div class="flex flex-col gap-4 lg:col-span-4">
+      <!-- Event Timeline Stepper -->
+      <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a]">
+        <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
             </div>
-          } @empty {
-            <div class="col-span-2 py-6 text-center text-xs text-slate-400">No images recorded</div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Event Timeline</h3>
+          </div>
+        </div>
+
+        <div class="relative pl-6 space-y-4 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+          @for (step of detail().timelineSteps; track step.label) {
+            <div class="relative flex items-start justify-between gap-2">
+              <!-- Timeline Milestone Node -->
+              <div
+                class="absolute -left-6 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold shadow-xs ring-4 ring-white dark:ring-[#0f172a]"
+                [class.bg-blue-500]="step.color === 'blue'"
+                [class.text-white]="step.color === 'blue'"
+                [class.bg-purple-500]="step.color === 'purple'"
+                [class.text-white]="step.color === 'purple'"
+                [class.bg-emerald-500]="step.color === 'emerald' || step.color === 'green'"
+                [class.text-white]="step.color === 'emerald' || step.color === 'green'"
+                [class.bg-amber-500]="step.color === 'amber'"
+                [class.text-white]="step.color === 'amber'">
+                ✓
+              </div>
+              <div class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-900 dark:text-white">{{ step.label }}</strong>
+                <span class="block text-[11px] text-slate-400">{{ step.actor }}</span>
+              </div>
+              <span class="shrink-0 text-[10px] font-medium text-slate-400">{{ step.time }}</span>
+            </div>
           }
         </div>
       </div>
 
-      <!-- Compact Timeline & System Notes (Side-by-Side in Left Column) -->
-      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <!-- Event Timeline -->
-        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-          <h4 class="mb-2 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Event Timeline</h4>
-          <div class="space-y-2">
-            @for (step of detail().timelineSteps; track step.label) {
-              <div class="flex items-start gap-2">
-                <div
-                  class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
-                  [class.bg-blue-100]="step.color === 'blue'"
-                  [class.text-blue-700]="step.color === 'blue'"
-                  [class.dark:bg-blue-950]="step.color === 'blue'"
-                  [class.dark:text-blue-300]="step.color === 'blue'"
-                  [class.bg-emerald-100]="step.color === 'emerald' || step.color === 'green'"
-                  [class.text-emerald-700]="step.color === 'emerald' || step.color === 'green'"
-                  [class.dark:bg-emerald-950]="step.color === 'emerald' || step.color === 'green'"
-                  [class.dark:text-emerald-300]="step.color === 'emerald' || step.color === 'green'">
-                  ✓
-                </div>
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-baseline justify-between gap-1">
-                    <strong class="truncate text-xs font-semibold text-slate-900 dark:text-white">{{ step.label }}</strong>
-                    <span class="text-[10px] text-slate-400">{{ step.time }}</span>
-                  </div>
-                  <small class="block truncate text-[10px] text-slate-400">{{ step.actor }}</small>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-
-        <!-- System Notes -->
-        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-          <h4 class="mb-2 text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">System Notes</h4>
-          <div class="space-y-1.5">
-            @for (note of detail().systemNotes; track note.text) {
-              <div class="rounded-lg bg-slate-50 p-1.5 text-xs dark:bg-slate-800/60">
-                <p class="text-[11px] leading-tight text-slate-700 dark:text-slate-300">{{ note.text }}</p>
-                <span class="mt-0.5 block text-[9px] text-slate-400">{{ note.time }}</span>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Column (7 Cols on XL): OCR Extracted + Dense Operational Matrix -->
-    <div class="flex flex-col gap-2.5 xl:col-span-7">
-      <!-- OCR Extracted Quick Matrix -->
-      <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-        <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
+      <!-- System Notes & AI Diagnostics -->
+      <div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800/80 dark:bg-[#0f172a]">
+        <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">OCR Extracted Details</span>
-            <span class="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-              Overall: {{ detail().overallConfidence }}%
-            </span>
+            <div class="flex h-6 w-6 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            </div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">System Notes</h3>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <!-- Container No -->
-          <div class="rounded-lg border border-slate-100 bg-slate-50/70 p-2 dark:border-slate-800 dark:bg-slate-800/40">
-            <span class="block text-[10px] font-semibold text-slate-400">Container No *</span>
-            <strong class="block truncate font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().containerNo }}</strong>
-            <div class="mt-1 flex items-center justify-between text-[10px]">
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
-              <span class="text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+        <div class="space-y-2">
+          @for (note of detail().systemNotes; track note.text) {
+            <div class="rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 text-xs dark:border-slate-800/60 dark:bg-slate-900/60">
+              <p class="text-xs leading-relaxed text-slate-700 dark:text-slate-300">{{ note.text }}</p>
+              <span class="mt-1 block text-[10px] font-medium text-slate-400">{{ note.time }}</span>
             </div>
-          </div>
-
-          <!-- ISO Code -->
-          <div class="rounded-lg border border-slate-100 bg-slate-50/70 p-2 dark:border-slate-800 dark:bg-slate-800/40">
-            <span class="block text-[10px] font-semibold text-slate-400">ISO Code *</span>
-            <strong class="block truncate font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().isoCode }}</strong>
-            <div class="mt-1 flex items-center justify-between text-[10px]">
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
-              <span class="text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-            </div>
-          </div>
-
-          <!-- Size -->
-          <div class="rounded-lg border border-slate-100 bg-slate-50/70 p-2 dark:border-slate-800 dark:bg-slate-800/40">
-            <span class="block text-[10px] font-semibold text-slate-400">Size</span>
-            <strong class="block truncate font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().size }}</strong>
-            <div class="mt-1 flex items-center justify-between text-[10px]">
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
-              <span class="text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-            </div>
-          </div>
-
-          <!-- Truck Number -->
-          <div class="rounded-lg border border-slate-100 bg-slate-50/70 p-2 dark:border-slate-800 dark:bg-slate-800/40">
-            <span class="block text-[10px] font-semibold text-slate-400">Truck Number</span>
-            <strong class="block truncate font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().truckNo }}</strong>
-            <div class="mt-1 flex items-center justify-between text-[10px]">
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
-              <span class="text-emerald-600 dark:text-emerald-400">✓ Verified</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- High-Density Operational Event Information -->
-      <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-        <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Event Information & Logistics</span>
-          <span class="text-[11px] text-slate-400">Gate: <strong class="text-slate-700 dark:text-slate-200">{{ detail().gate }}</strong></span>
-        </div>
-
-        <!-- Dense 3-Column Key-Value Grid -->
-        <div class="grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-3 lg:grid-cols-4">
-          <!-- Item -->
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Tare Weight</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().tareWeight || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Type</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().type || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Cargo Type</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().cargoType || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">JO Type</span>
-            <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().joType || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">FCL / LCL</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().fclLcl || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Scan Type</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().scanType || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">OffLoad Location</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().offLoadLocation || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Gate In Type</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().gateInType || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Vessel / Via No</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().vesselName || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Port Name</span>
-            <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().portName || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Shipping Line</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().shippingLine || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">IGM Seal</span>
-            <span class="font-mono text-xs text-slate-800 dark:text-slate-200">{{ detail().igmSeal || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Seal No. 1 *</span>
-            <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().sealNo1 || '—' }}</strong>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Seal No. 2</span>
-            <span class="font-mono text-xs text-slate-800 dark:text-slate-200">{{ detail().sealNo2 || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Custom Seal</span>
-            <span class="font-mono text-xs text-slate-800 dark:text-slate-200">{{ detail().customSealNo || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Customer</span>
-            <span class="truncate text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().customerName || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">EIR No.</span>
-            <span class="font-mono text-xs text-slate-800 dark:text-slate-200">{{ detail().eirNo || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">EIR Weight *</span>
-            <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eirWeight || '—' }}</strong>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">EIR Date & Time</span>
-            <span class="text-xs text-slate-800 dark:text-slate-200">{{ detail().eirDateTime || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Location</span>
-            <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().location || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Condition *</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().condition || '—' }}</span>
-          </div>
-
-          <div class="flex flex-col">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Door To Door</span>
-            <span class="text-xs font-medium text-slate-800 dark:text-slate-200">{{ detail().doorToDoor || '—' }}</span>
-          </div>
-
-          <!-- Remarks -->
-          <div class="col-span-full flex flex-col border-t border-slate-100 pt-1.5 dark:border-slate-800">
-            <span class="text-[10px] font-semibold uppercase text-slate-400">Remarks</span>
-            <p class="text-xs text-slate-700 dark:text-slate-300">{{ detail().remarks || 'No remarks recorded' }}</p>
-          </div>
+          }
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Full-Resolution Lightbox Modal -->
+  <!-- ========================================================================= -->
+  <!-- 5. FULL-RESOLUTION LIGHTBOX MODAL                                         -->
+  <!-- ========================================================================= -->
   @if (activeLightboxPhoto(); as lightbox) {
-    <div class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md" (click)="closeLightbox()">
-      <div class="lightbox-dialog relative max-h-[92vh] max-w-4xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl" (click)="$event.stopPropagation()">
-        <div class="lightbox-header flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
-          <button type="button" class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white" (click)="closeLightbox()">✕</button>
+    <div class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md transition-all" (click)="closeLightbox()">
+      <div class="lightbox-dialog relative flex max-h-[92vh] max-w-5xl w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="lightbox-header flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-5 py-3.5 backdrop-blur-sm">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600/20 text-blue-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
+              <p class="text-[11px] text-slate-400">Gate Optical Inspection Capture • High Resolution</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            @if (lightbox.url) {
+              <a
+                [href]="lightbox.url"
+                target="_blank"
+                download
+                class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 text-xs font-semibold text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+                title="Open full resolution in new tab">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                <span>Full Size</span>
+              </a>
+            }
+            <button
+              type="button"
+              class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+              (click)="closeLightbox()"
+              title="Close image preview (Esc)">
+              ✕
+            </button>
+          </div>
         </div>
-        <div class="lightbox-body p-4">
-          <img [src]="lightbox.url" [alt]="lightbox.title" class="lightbox-img max-h-[75vh] w-auto rounded-lg object-contain" />
+        <!-- Image Viewport -->
+        <div class="lightbox-body flex items-center justify-center overflow-auto bg-slate-950 p-4 min-h-[360px]">
+          @if (lightbox.url) {
+            <img
+              [src]="lightbox.url"
+              [alt]="lightbox.title"
+              class="lightbox-img max-h-[75vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-transform" />
+          } @else {
+            <div class="flex flex-col items-center justify-center gap-2 py-16 text-slate-400">
+              <span class="text-4xl">📷</span>
+              <p class="text-xs font-medium">No optical image stream available for this camera angle.</p>
+            </div>
+          }
         </div>
       </div>
     </div>
