@@ -126,12 +126,12 @@
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 2. HIGH-DENSITY TOP ROW: [Images Box] + [Unified OCR & Timeline Card]     -->
+  <!-- 2. HIGH-DENSITY TOP ROW: [Fit-to-Images Box] + [Dynamic OCR & Timeline Card] -->
   <!-- ========================================================================= -->
-  <div class="grid grid-cols-1 gap-2.5 lg:grid-cols-12">
-    <!-- Box 1: Small Compact Captured Images Box (4 cols on lg/xl) -->
-    <div class="flex flex-col rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a] lg:col-span-4">
-      <div class="mb-1.5 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+  <div class="flex flex-col gap-2.5 lg:flex-row lg:items-stretch">
+    <!-- Box 1: Captured Images Box (Sized Exactly Up to Images Set) -->
+    <div class="flex-none w-fit flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+      <div class="mb-1.5 flex items-center justify-between gap-4 border-b border-slate-100 pb-1.5 dark:border-slate-800">
         <div class="flex items-center gap-1.5">
           <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">Captured Images</span>
           <span class="rounded bg-slate-100 px-1 py-0.2 text-[9px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
@@ -141,11 +141,11 @@
         <span class="text-[9px] font-medium text-slate-400">Click to expand</span>
       </div>
 
-      <!-- Compact 2-Col Square Image Thumbnails Grid -->
-      <div class="grid grid-cols-2 gap-2">
+      <!-- Square Image Thumbnails Flex Row (Sized to Images) -->
+      <div class="flex items-center gap-2">
         @for (photo of detail().capturedPhotos; track photo.title) {
           <div
-            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800"
+            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800 w-28 sm:w-32"
             (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
             <!-- 1:1 Square Shape Thumbnail Viewport -->
             <div class="relative aspect-square w-full cursor-pointer overflow-hidden bg-slate-900">
@@ -172,13 +172,13 @@
             </div>
           </div>
         } @empty {
-          <div class="col-span-2 py-4 text-center text-[10px] text-slate-400">No photos available</div>
+          <div class="py-4 px-6 text-center text-[10px] text-slate-400">No photos available</div>
         }
       </div>
     </div>
 
-    <!-- Box 2: OCR Extracted Details (IN ONE COMPACT CARD WITH SLIM TIMELINE) (8 cols on lg/xl) -->
-    <div class="flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a] lg:col-span-8">
+    <!-- Box 2: OCR Extracted Details (Dynamically Fills the Rest of the Row) -->
+    <div class="flex-1 min-w-0 flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
       <div>
         <!-- Header -->
         <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
@@ -201,7 +201,7 @@
                 📋
               </button>
             </div>
-            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-blue-600 dark:text-blue-400">
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-blue-600 dark:text-blue-400 truncate">
               {{ detail().containerNo }}
             </strong>
             <div class="flex items-center justify-between text-[9px]">
@@ -213,7 +213,7 @@
           <!-- 2. ISO Code -->
           <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
             <span class="text-[9px] font-semibold text-slate-400">ISO Code *</span>
-            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white">
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().isoCode }}
             </strong>
             <div class="flex items-center justify-between text-[9px]">
@@ -225,7 +225,7 @@
           <!-- 3. Size -->
           <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
             <span class="text-[9px] font-semibold text-slate-400">Size</span>
-            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white">
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().size }}
             </strong>
             <div class="flex items-center justify-between text-[9px]">
@@ -242,7 +242,7 @@
                 📋
               </button>
             </div>
-            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white">
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
               {{ detail().truckNo }}
             </strong>
             <div class="flex items-center justify-between text-[9px]">
