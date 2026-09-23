@@ -15,7 +15,9 @@ describe('InventorySummaryComponent', () => {
       { category: 'Empty', teuCount: 162, percentage: 13, colorTheme: 'sky' },
       { category: 'Hazardous', teuCount: 60, percentage: 5, colorTheme: 'red' },
     ],
-    topContainerTypes: [{ typeName: "40' High Cube", count: 712, percentage: 56 }],
+    topContainerTypes: [
+      { typeName: "40' High Cube", count: 712, percentage: 56 },
+    ],
     currentTeu: 1256,
     maxTeu: 2400,
     utilizationPercentage: 52,

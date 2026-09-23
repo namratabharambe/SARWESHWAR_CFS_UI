@@ -415,7 +415,7 @@ export class InventoryService {
           c.currentLocation.toLowerCase().includes(q) ||
           c.bookingNo?.toLowerCase().includes(q) ||
           c.customerName?.toLowerCase().includes(q) ||
-          c.cargoDescription?.toLowerCase().includes(q),
+          c.cargoDescription?.toLowerCase().includes(q)
       );
     }
 
@@ -501,7 +501,9 @@ export class InventoryService {
 
   public toggleStar(id: string, event: MouseEvent): void {
     event.stopPropagation();
-    this.containers.update((items) => items.map((c) => (c.id === id ? { ...c, isStarred: !c.isStarred } : c)));
+    this.containers.update((items) =>
+      items.map((c) => (c.id === id ? { ...c, isStarred: !c.isStarred } : c))
+    );
   }
 
   public setPage(page: number): void {
@@ -595,8 +597,8 @@ export class InventoryService {
               lastAction: `Moved to ${locString}`,
               lastUpdated: formatted,
             }
-          : c,
-      ),
+          : c
+      )
     );
 
     const sel = this.selectedContainer();
@@ -631,26 +633,14 @@ export class InventoryService {
           };
         }
         return c;
-      }),
+      })
     );
     this.showToast(`Hold status toggled for container.`);
   }
 
   public exportDataToCsv(): void {
     const rows = this.filteredContainers();
-    const headers = [
-      'Container No',
-      'Size/Type',
-      'Line',
-      'Full/Empty',
-      'Location',
-      'Status',
-      'Last Action',
-      'Last Updated',
-      'Days in Yard',
-      'Holds',
-      'Customer',
-    ];
+    const headers = ['Container No', 'Size/Type', 'Line', 'Full/Empty', 'Location', 'Status', 'Last Action', 'Last Updated', 'Days in Yard', 'Holds', 'Customer'];
     const csvContent =
       'data:text/csv;charset=utf-8,' +
       [
@@ -670,7 +660,7 @@ export class InventoryService {
             c.customerName || '',
           ]
             .map((v) => `"${v}"`)
-            .join(','),
+            .join(',')
         ),
       ].join('\n');
 

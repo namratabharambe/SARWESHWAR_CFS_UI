@@ -5,12 +5,12 @@ import { AuthService } from 'core/auth/auth.service';
 
 export const apiInterceptor: HttpInterceptorFn = (request, next) => {
   const auth = inject(AuthService);
-  const token = sessionStorage.getItem('cfs_admin_token');
+  const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_admin_token') : null;
   const clientId = auth.getActiveClientId();
   const siteId = auth.getActiveSiteId();
 
   // If token is already expired and user is requesting protected API, trigger session expiration
-  if (token && !request.url.includes('/auth/login') && auth.isTokenExpired()) {
+  if (token && !request.url.includes('/auth/login') && !auth.isBypassMode() && auth.isTokenExpired()) {
     auth.triggerSessionExpired();
   }
 
@@ -18,19 +18,19 @@ export const apiInterceptor: HttpInterceptorFn = (request, next) => {
   if (token) {
     setHeaders['Authorization'] = `Bearer ${token}`;
   }
-  if (siteId) {
-    setHeaders['Site-ID'] = siteId;
-    setHeaders['X-Site-Id'] = siteId;
+  if (siteId && siteId.trim().length > 0) {
+    setHeaders['Site-ID'] = siteId.trim();
+    setHeaders['X-Site-Id'] = siteId.trim();
   }
-  if (clientId) {
-    setHeaders['X-Client-Id'] = clientId;
+  if (clientId && clientId.trim().length > 0) {
+    setHeaders['X-Client-Id'] = clientId.trim();
   }
 
   const authReq = Object.keys(setHeaders).length > 0 ? request.clone({ setHeaders }) : request;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !request.url.includes('/auth/login')) {
+      if (error.status === 401 && !request.url.includes('/auth/login') && !auth.isBypassMode()) {
         auth.triggerSessionExpired();
       }
       return throwError(() => error);

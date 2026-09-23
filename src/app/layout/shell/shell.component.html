@@ -69,34 +69,39 @@
         <span class="nav-label-text">{{ 'NAV.ALERTS' | translate }}</span>
       </a>
 
-      <!-- Admin (Parent) -->
-      <div class="nav-parent-group">
-        <button type="button" class="nav-item nav-parent-btn" [class.active]="isAdminRoute()" (click)="toggleAdmin()">
-          <div class="nav-left-part">
-            <span class="material-icons-outlined text-lg">settings</span>
-            <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
-          </div>
-          <span class="nav-chevron" [class.rotated]="adminExpanded()">▾</span>
-        </button>
+      <!-- Admin (Parent) - Shown for SystemAdmin, ClientAdmin, SiteAdmin (Hidden for User) -->
+      @if (auth.hasAdminAccess()) {
+        <div class="nav-parent-group">
+          <button type="button" class="nav-item nav-parent-btn" [class.active]="isAdminRoute()" (click)="toggleAdmin()">
+            <div class="nav-left-part">
+              <span class="material-icons-outlined text-lg">settings</span>
+              <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
+            </div>
+            <span class="nav-chevron" [class.rotated]="adminExpanded()">▾</span>
+          </button>
 
-        <!-- Admin Submenu -->
-        @if (adminExpanded()) {
-          <div class="sub-nav-container">
-            <a routerLink="/clients" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">{{ 'NAV.CLIENTS' | translate }}</span>
-            </a>
-            <a routerLink="/sites" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">{{ 'NAV.SITES' | translate }}</span>
-            </a>
-            <a routerLink="/users" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">{{ 'NAV.USERS' | translate }}</span>
-            </a>
-            <a routerLink="/roles" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
-              <span class="sub-nav-label">{{ 'NAV.ROLES' | translate }}</span>
-            </a>
-          </div>
-        }
-      </div>
+          <!-- Admin Submenu -->
+          @if (adminExpanded()) {
+            <div class="sub-nav-container">
+              <!-- Clients: Shown for SystemAdmin & ClientAdmin (Hidden for SiteAdmin) -->
+              @if (auth.hasClientsAccess()) {
+                <a routerLink="/clients" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+                  <span class="sub-nav-label">{{ 'NAV.CLIENTS' | translate }}</span>
+                </a>
+              }
+              <a routerLink="/sites" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+                <span class="sub-nav-label">{{ 'NAV.SITES' | translate }}</span>
+              </a>
+              <a routerLink="/users" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+                <span class="sub-nav-label">{{ 'NAV.USERS' | translate }}</span>
+              </a>
+              <a routerLink="/roles" routerLinkActive="sub-active" class="sub-nav-item" (click)="mobileOpen.set(false)">
+                <span class="sub-nav-label">{{ 'NAV.ROLES' | translate }}</span>
+              </a>
+            </div>
+          }
+        </div>
+      }
     </nav>
 
     <!-- Sidebar Collapse Button -->

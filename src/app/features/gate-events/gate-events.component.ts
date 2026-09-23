@@ -11,12 +11,12 @@ import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.
 import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import {
-  GateEventDetailDto,
+import { GateEventDetailDto,
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
 } from 'shared/types/gate-event/gate-event.interface';
+import { DashboardService } from '../dashboard/services/dashboard.service';
 
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
@@ -61,6 +61,7 @@ export interface GateEventItem {
 export class GateEventsComponent implements OnInit {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
+  private readonly dashboardService = inject(DashboardService, { optional: true });
   private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly router = inject(Router, { optional: true });
 
@@ -118,6 +119,8 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
+  public readonly totalArrivalsCount = signal<number>(0);
+  public readonly totalDeparturesCount = signal<number>(0);
 
   constructor() {
     this.syncGateMode();
@@ -157,6 +160,8 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
+
+    this.loadLiveSummaryCounts(siteId, clientId);
 
     this.gateEventService
       .getVisits({
@@ -206,6 +211,12 @@ export class GateEventsComponent implements OnInit {
             });
         },
       });
+  }
+
+  public loadLiveSummaryCounts(siteId?: string, clientId?: string): void {
+    if (this.dashboardService) {
+      this.dashboardService.loadGateActivities(siteId, clientId);
+    }
   }
 
   private mapVisitToGateEventItem(visit: any): GateEventItem {
@@ -426,34 +437,50 @@ export class GateEventsComponent implements OnInit {
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const arrivals = list.filter((e) => e.direction === 'IN').length;
-    const departures = list.filter((e) => e.direction === 'OUT').length;
-    const ocrVerified = list.filter((e) => e.status === 'Verified').length;
-    const pendingReview = list.filter((e) => e.status === 'Review').length;
+    const dashKpi = this.dashboardService?.kpiMetrics() ?? [];
+
+    const arrivalsMetric = dashKpi.find((m) => m.id === 'arrivals-today');
+    const departuresMetric = dashKpi.find((m) => m.id === 'departures-today');
+    const exceptionsMetric = dashKpi.find((m) => m.id === 'exceptions');
+
+    const arrivals = arrivalsMetric
+      ? parseInt(arrivalsMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'IN').length;
+    const departures = departuresMetric
+      ? parseInt(departuresMetric.value, 10) || 0
+      : list.filter((e) => e.direction === 'OUT').length;
+
+    const verified = list.filter((e) => e.status === 'Verified' || (e.confidence ?? 0) >= 90).length;
+    const pendingReview = exceptionsMetric
+      ? parseInt(exceptionsMetric.value, 10) || 0
+      : list.filter((e) => e.status === 'Review' || (e.confidence ?? 0) < 90).length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
-    const total = list.length;
+
+    const total = arrivals + departures || list.length || 1;
+    const verifiedPercent = `${Math.min(100, Math.round((verified / (list.length || 1)) * 100))}% of total`;
 
     return {
       todayArrivals: arrivals,
-      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
+      arrivalsTrend: `${arrivals} entry visits`,
       todayDepartures: departures,
-      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
-      ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? `${Math.round((ocrVerified / total) * 100)}% of total` : '0%',
+      departuresTrend: `${departures} exit visits`,
+      ocrVerified: verified,
+      ocrVerifiedPercent: verifiedPercent,
       pendingReview: pendingReview,
-      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
+      pendingReviewTrend: `${pendingReview} pending`,
       damagedCaptures: damagedCaptures,
-      damagedTrend: damagedCaptures > 0 ? `${damagedCaptures} flagged` : '0 detected',
+      damagedTrend: `${damagedCaptures} flagged`,
     };
   });
 
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
+    const total = this.totalCount() || list.length;
     return {
-      all: list.length,
-      arrivals: list.filter((e) => e.direction === 'IN').length,
-      departures: list.filter((e) => e.direction === 'OUT').length,
+      all: total,
+      arrivals: this.gateMode() === 'in' ? total : list.filter((e) => e.direction === 'IN').length,
+      departures: this.gateMode() === 'out' ? total : list.filter((e) => e.direction === 'OUT').length,
     };
   });
 
@@ -489,9 +516,62 @@ export class GateEventsComponent implements OnInit {
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
     const list = this.filteredEvents();
+    if (list.length <= this.pageSize()) {
+      return list;
+    }
     const start = (this.currentPage() - 1) * this.pageSize();
     return list.slice(start, start + this.pageSize());
   });
+
+  public readonly totalPages = computed<number>(() => {
+    const total = this.totalCount() || this.filteredEvents().length;
+    return Math.max(1, Math.ceil(total / this.pageSize()));
+  });
+
+  public readonly visiblePageNumbers = computed<number[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const pages: number[] = [];
+    const maxVisible = 5;
+
+    let start = Math.max(1, current - 2);
+    let end = Math.min(total, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  public setPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages() && page !== this.currentPage()) {
+      this.currentPage.set(page);
+      this.loadGateEvents();
+    }
+  }
+
+  public setPageSize(size: number): void {
+    if (size > 0 && size !== this.pageSize()) {
+      this.pageSize.set(size);
+      this.currentPage.set(1);
+      this.loadGateEvents();
+    }
+  }
+
+  public previousPage(): void {
+    if (this.currentPage() > 1) {
+      this.setPage(this.currentPage() - 1);
+    }
+  }
+
+  public nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.setPage(this.currentPage() + 1);
+    }
+  }
 
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
@@ -510,6 +590,7 @@ export class GateEventsComponent implements OnInit {
       this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
     }
     this.currentPage.set(1);
+    this.loadGateEvents();
   }
 
   public toggleSelectAll(): void {

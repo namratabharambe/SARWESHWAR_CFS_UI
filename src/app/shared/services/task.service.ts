@@ -402,16 +402,8 @@ export class TaskService {
           t.operator.toLowerCase().includes(query) ||
           t.fromLocation.toLowerCase().includes(query) ||
           t.toLocation.toLowerCase().includes(query) ||
-          t.equipment.toLowerCase().includes(query),
+          t.equipment.toLowerCase().includes(query)
       );
-    }
-
-    const date = this.dateFilter().trim().toLowerCase();
-    if (date && date !== 'all' && date !== 'all dates') {
-      list = list.filter((t) => {
-        if (!t.dueTime) return true;
-        return t.dueTime.toLowerCase().includes(date);
-      });
     }
 
     return list;
@@ -554,7 +546,7 @@ export class TaskService {
 
   public updateTaskStatus(id: string, newStatus: TaskStatus): void {
     this.allTasks.update((tasks) =>
-      tasks.map((t) => (t.id === id ? { ...t, status: newStatus, updatedAt: new Date().toISOString() } : t)),
+      tasks.map((t) => (t.id === id ? { ...t, status: newStatus, updatedAt: new Date().toISOString() } : t))
     );
 
     const currentSelected = this.selectedTask();
@@ -587,10 +579,7 @@ export class TaskService {
       bookingNo: form.bookingNo || `BKGS-${Date.now().toString().slice(-6)}`,
       priority: form.priority,
       slaMinutes: form.slaMinutes || 45,
-      slaDisplay:
-        form.slaMinutes < 0
-          ? `-${Math.abs(form.slaMinutes).toString().padStart(2, '0')}:00`
-          : `00:${form.slaMinutes.toString().padStart(2, '0')}`,
+      slaDisplay: form.slaMinutes < 0 ? `-${Math.abs(form.slaMinutes).toString().padStart(2, '0')}:00` : `00:${form.slaMinutes.toString().padStart(2, '0')}`,
       isOverdue: form.slaMinutes < 0,
       status: 'New',
       dueTime: dateFormatted,
@@ -633,20 +622,7 @@ export class TaskService {
 
   public exportTasksToCsv(): void {
     const tasks = this.filteredTasks();
-    const headers = [
-      'Task No',
-      'Type',
-      'Container No',
-      'Size',
-      'From',
-      'To',
-      'Equipment',
-      'Operator',
-      'Priority',
-      'SLA',
-      'Status',
-      'Due Time',
-    ];
+    const headers = ['Task No', 'Type', 'Container No', 'Size', 'From', 'To', 'Equipment', 'Operator', 'Priority', 'SLA', 'Status', 'Due Time'];
     const rows = tasks.map((t) => [
       t.taskNo,
       t.taskType,
