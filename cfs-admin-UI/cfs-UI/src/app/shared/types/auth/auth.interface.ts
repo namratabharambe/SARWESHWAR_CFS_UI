@@ -74,3 +74,14 @@ export interface UserProfileDto {
   roles?: string[];
   sites?: UserSiteDto[];
 }
+
+export interface NavigationModuleDto {
+  id: string;
+  title: string;
+  transKey: string;
+  icon: string;
+  route?: string | null;
+  order?: number;
+  children?: NavigationModuleDto[] | null;
+}
+

@@ -46,10 +46,15 @@ export class GateEventService extends BaseApiService<
     clientId?: string;
     createdByUserId?: string;
     userId?: string;
+    eventType?: string;
   }): Observable<VisitsPagedResponse> {
     let params = new HttpParams()
       .set('page', options?.page ?? 1)
       .set('pageSize', options?.pageSize ?? 25);
+
+    if (options?.eventType) {
+      params = params.set('eventType', options.eventType);
+    }
 
     if (options?.visitNumber) {
       params = params.set('visitNumber', options.visitNumber);

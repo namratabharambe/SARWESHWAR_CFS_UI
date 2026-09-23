@@ -11,9 +11,10 @@ import {
   RefreshRequest,
   ChangePasswordRequest,
   UserSiteDto,
+  NavigationModuleDto,
 } from 'shared/types/auth/auth.interface';
 
-export type { ContextClient };
+export type { ContextClient, NavigationModuleDto };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -51,13 +52,13 @@ export class AuthService {
     this.initContextFromToken();
     if (this.authenticated()) {
       this.loadMySites();
+      this.loadMyModules();
     }
   }
 
 
-  /**
-   * Evaluates if the authenticated user has SystemAdmin privileges
-   */
+  public readonly sidebarModules = signal<NavigationModuleDto[]>([]);
+
   public readonly isSystemAdmin = computed<boolean>(() => {
     const claims = this.userClaims();
     if (!claims) return false;
@@ -76,6 +77,26 @@ export class AuthService {
         .trim()
         .toLowerCase() === 'systemadmin'
     );
+  });
+
+  public readonly isClientAdmin = computed<boolean>(() => {
+    return this.hasRole('ClientAdmin');
+  });
+
+  public readonly isSiteAdmin = computed<boolean>(() => {
+    return this.hasRole('SiteAdmin');
+  });
+
+  public readonly isUserRole = computed<boolean>(() => {
+    return this.hasRole('User') || (!this.isSystemAdmin() && !this.isClientAdmin() && !this.isSiteAdmin());
+  });
+
+  public readonly hasAdminAccess = computed<boolean>(() => {
+    return this.isSystemAdmin() || this.isClientAdmin() || this.isSiteAdmin();
+  });
+
+  public readonly hasClientsAccess = computed<boolean>(() => {
+    return this.isSystemAdmin() || this.isClientAdmin();
   });
 
   /**
@@ -482,6 +503,7 @@ export class AuthService {
         this.userClaims.set(claims);
         this.initContextFromToken(claims);
         this.loadMySites();
+        this.loadMyModules();
       }),
       map(() => undefined),
       finalize(() => this.loading.set(false)),
@@ -533,6 +555,7 @@ export class AuthService {
           this.selectedSiteId.set('');
         }
 
+        this.loadMyModules();
         return newToken;
       }),
       finalize(() => this.contextLoading.set(false)),
@@ -558,6 +581,101 @@ export class AuthService {
    */
   public getMyPermissions(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiBaseUrl}/auth/me/permissions`);
+  }
+
+  /**
+   * Retrieves current user's authorized navigation modules from GET /api/auth/me/modules
+   */
+  public getMyModules(): Observable<NavigationModuleDto[]> {
+    return this.http.get<any>(`${this.apiBaseUrl}/auth/me/modules`).pipe(
+      map((res) => {
+        if (Array.isArray(res)) return res;
+        if (res && Array.isArray(res.data)) return res.data;
+        if (res && Array.isArray(res.value)) return res.value;
+        return this.generateDefaultModules();
+      }),
+    );
+  }
+
+  /**
+   * Loads current user's navigation modules into sidebarModules signal with fallback
+   */
+  public loadMyModules(): void {
+    if (!this.authenticated()) return;
+    if (this.isBypassMode()) {
+      this.sidebarModules.set(this.generateDefaultModules());
+      return;
+    }
+    this.getMyModules()
+      .pipe(catchError(() => of(this.generateDefaultModules())))
+      .subscribe({
+        next: (modules) => {
+          if (modules && modules.length > 0) {
+            this.sidebarModules.set(modules);
+          } else {
+            this.sidebarModules.set(this.generateDefaultModules());
+          }
+        },
+      });
+  }
+
+  public generateDefaultModules(): NavigationModuleDto[] {
+    const isSys = this.isSystemAdmin();
+    const isClient = this.isClientAdmin();
+    const isSite = this.isSiteAdmin();
+
+    const modules: NavigationModuleDto[] = [
+      { id: 'dashboard', title: 'Dashboard', transKey: 'NAV.DASHBOARD', icon: 'dashboard', route: '/dashboard', order: 1 },
+      {
+        id: 'gate-events',
+        title: 'Gate Events',
+        transKey: 'NAV.GATE_EVENTS',
+        icon: 'sensor_occupied',
+        route: '/gate-events',
+        order: 2,
+        children: [
+          { id: 'gate-in', title: 'Gate In', transKey: 'NAV.GATE_IN', icon: 'login', route: '/gate-events/in', order: 1 },
+          { id: 'gate-out', title: 'Gate Out', transKey: 'NAV.GATE_OUT', icon: 'logout', route: '/gate-events/out', order: 2 },
+        ],
+      },
+      { id: 'tasks', title: 'Tasks', transKey: 'NAV.TASKS', icon: 'task_alt', route: '/tasks', order: 3 },
+      { id: 'inventory', title: 'Inventory', transKey: 'NAV.INVENTORY', icon: 'inventory_2', route: '/inventory', order: 4 },
+      { id: 'reports', title: 'Reports', transKey: 'NAV.REPORTS', icon: 'bar_chart', route: '/reports', order: 5 },
+      { id: 'alerts', title: 'Alerts', transKey: 'NAV.ALERTS', icon: 'shield', route: '/alerts', order: 6 },
+    ];
+
+    if (isSys || isClient) {
+      modules.push({
+        id: 'admin',
+        title: 'Admin',
+        transKey: 'NAV.ADMIN',
+        icon: 'settings',
+        route: '/admin',
+        order: 7,
+        children: [
+          { id: 'clients', title: 'Clients', transKey: 'NAV.CLIENTS', icon: 'business', route: '/clients', order: 1 },
+          { id: 'sites', title: 'Sites', transKey: 'NAV.SITES', icon: 'location_on', route: '/sites', order: 2 },
+          { id: 'users', title: 'Users', transKey: 'NAV.USERS', icon: 'people', route: '/users', order: 3 },
+          { id: 'roles', title: 'Roles', transKey: 'NAV.ROLES', icon: 'admin_panel_settings', route: '/roles', order: 4 },
+        ],
+      });
+    } else if (isSite) {
+      modules.push({
+        id: 'admin',
+        title: 'Admin',
+        transKey: 'NAV.ADMIN',
+        icon: 'settings',
+        route: '/admin',
+        order: 7,
+        children: [
+          { id: 'sites', title: 'Sites', transKey: 'NAV.SITES', icon: 'location_on', route: '/sites', order: 1 },
+          { id: 'users', title: 'Users', transKey: 'NAV.USERS', icon: 'people', route: '/users', order: 2 },
+          { id: 'roles', title: 'Roles', transKey: 'NAV.ROLES', icon: 'admin_panel_settings', route: '/roles', order: 3 },
+        ],
+      });
+    }
+
+    return modules;
   }
 
   /**
@@ -746,6 +864,7 @@ export class AuthService {
     this.userClaims.set(mockClaims);
     this.selectedClientId.set('01a07f00-0000-0000-0000-000000000001');
     this.selectedSiteId.set('01a07f00-0000-0000-0000-000000000011');
+    this.loadMyModules();
   }
 
   public isBypassMode(): boolean {

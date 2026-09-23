@@ -118,6 +118,8 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
+  public readonly totalArrivalsCount = signal<number>(0);
+  public readonly totalDeparturesCount = signal<number>(0);
 
   constructor() {
     this.syncGateMode();
@@ -157,6 +159,8 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
+
+    this.loadLiveSummaryCounts(siteId, clientId);
 
     this.gateEventService
       .getVisits({
@@ -204,6 +208,30 @@ export class GateEventsComponent implements OnInit {
                 this.totalCount.set(0);
               },
             });
+        },
+      });
+  }
+
+  public loadLiveSummaryCounts(siteId?: string, clientId?: string): void {
+    // Live Arrivals from API
+    this.gateEventService
+      .getVisits({ page: 1, pageSize: 1, status: 'InYard', siteId, clientId })
+      .subscribe({
+        next: (res) => {
+          if (res?.totalCount != null) {
+            this.totalArrivalsCount.set(res.totalCount);
+          }
+        },
+      });
+
+    // Live Departures from API
+    this.gateEventService
+      .getVisits({ page: 1, pageSize: 1, status: 'Departed', siteId, clientId })
+      .subscribe({
+        next: (res) => {
+          if (res?.totalCount != null) {
+            this.totalDeparturesCount.set(res.totalCount);
+          }
         },
       });
   }
@@ -429,21 +457,36 @@ export class GateEventsComponent implements OnInit {
     const total = this.totalCount() || list.length;
     const isOut = this.gateMode() === 'out';
 
-    const arrivals = isOut ? list.filter((e) => e.direction === 'IN').length : total;
-    const departures = isOut ? total : list.filter((e) => e.direction === 'OUT').length;
-    const ocrVerified = list.filter((e) => e.status === 'Verified').length;
-    const pendingReview = list.filter((e) => e.status === 'Review').length;
-    const damagedCaptures = list.filter((e) => e.damageFlag).length;
+    const apiArrivals = this.totalArrivalsCount();
+    const apiDepartures = this.totalDeparturesCount();
 
-    const displayVerified = total > 0 ? (ocrVerified > 0 ? ocrVerified : total) : 0;
-    const verifiedPercent = total > 0 ? `${Math.round((displayVerified / total) * 100)}% of total` : '100% of total';
+    const arrivals = isOut
+      ? (apiArrivals > 0 ? apiArrivals : list.filter((e) => e.direction === 'IN').length)
+      : (total > 0 ? total : apiArrivals);
+
+    const departures = isOut
+      ? (total > 0 ? total : apiDepartures)
+      : (apiDepartures > 0 ? apiDepartures : list.filter((e) => e.direction === 'OUT').length);
+
+    const verifiedInPage = list.filter((e) => (e.confidence ?? 0) >= 90 || e.status === 'Verified').length;
+    const reviewInPage = list.filter((e) => (e.confidence ?? 0) < 90 || e.status === 'Review').length;
+    const damagedInPage = list.filter((e) => e.damageFlag).length;
+
+    const scale = list.length > 0 && total > list.length ? total / list.length : 1;
+    const ocrVerified = total > 0 ? Math.round(verifiedInPage * scale) : 0;
+    const pendingReview = total > 0 ? Math.round(reviewInPage * scale) : 0;
+    const damagedCaptures = total > 0 ? Math.round(damagedInPage * scale) : 0;
+
+    const verifiedPercent = total > 0
+      ? `${Math.min(100, Math.round((ocrVerified / total) * 100))}% of total`
+      : '0% of total';
 
     return {
       todayArrivals: arrivals,
       arrivalsTrend: `${arrivals} arrivals total`,
       todayDepartures: departures,
       departuresTrend: `${departures} departures total`,
-      ocrVerified: displayVerified,
+      ocrVerified: ocrVerified,
       ocrVerifiedPercent: verifiedPercent,
       pendingReview: pendingReview,
       pendingReviewTrend: `${pendingReview} pending`,
