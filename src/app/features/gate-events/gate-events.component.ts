@@ -290,8 +290,13 @@ export class GateEventsComponent implements OnInit {
         else if (type.includes('REAR')) color = '#993030';
         else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
 
-        const url =
+        let url =
           img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const imgId = img.id ?? img.Id;
+        if (!url && imgId && id) {
+          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(id)}/images/${encodeURIComponent(imgId)}`;
+        }
         const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || 'CAM';
 
         photos.push({
@@ -362,8 +367,13 @@ export class GateEventsComponent implements OnInit {
     if (images && images.length > 0) {
       images.forEach((img: any) => {
         const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
-        const url =
+        let url =
           img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+        const imgId = img.id ?? img.Id;
+        if (!url && imgId && id) {
+          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(id)}/images/${encodeURIComponent(imgId)}`;
+        }
         photos.push({
           label: rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`,
           color: '#1f487e',

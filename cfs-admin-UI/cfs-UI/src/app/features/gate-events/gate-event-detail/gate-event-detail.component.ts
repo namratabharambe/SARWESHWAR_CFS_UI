@@ -199,6 +199,13 @@ export class GateEventDetailComponent {
     setTimeout(() => this.copyFeedback.set(false), 2500);
   }
 
+  public copyText(text: string, label: string): void {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && text) {
+      void navigator.clipboard.writeText(text);
+    }
+    this.toast.emit(`${label} copied to clipboard`);
+  }
+
   public toggleExportDropdown(): void {
     this.exportDropdownOpen.update((v) => !v);
   }

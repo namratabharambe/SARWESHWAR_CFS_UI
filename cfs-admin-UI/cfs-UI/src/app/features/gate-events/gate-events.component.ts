@@ -11,6 +11,7 @@ import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.
 import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
+import { environment } from 'environment/environment';
 import {
   GateEventDetailDto,
   GateEventCaptureRequest,
@@ -234,6 +235,7 @@ export class GateEventsComponent implements OnInit {
     index: number,
     totalContainers: number,
     rawImages: any[] = [],
+    visitId?: string,
   ): GateCameraPhoto[] {
     const photos: GateCameraPhoto[] = [];
     const prefix = totalContainers > 1 ? `Container ${index} (${containerNo.slice(0, 4)}) - ` : '';
@@ -247,8 +249,15 @@ export class GateEventsComponent implements OnInit {
         else if (type.includes('REAR')) color = '#993030';
         else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
 
-        const url =
+        let url =
           img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+
+        const imgId = img.id ?? img.Id;
+        if (!url && imgId && visitId) {
+          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}/images/${encodeURIComponent(imgId)}`;
+        }
+
         const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || `C${index}-CAM`;
 
         photos.push({
@@ -327,12 +336,33 @@ export class GateEventsComponent implements OnInit {
       'MH 12 AB 0000';
     const driverName = visit.driverName ?? visit.DriverName ?? 'Driver (Unassigned)';
 
+    // Aggregate all visit and event images
+    const visitLevelImages: any[] = [];
+    if (Array.isArray(visit.images)) visitLevelImages.push(...visit.images);
+    if (Array.isArray(visit.Images)) visitLevelImages.push(...visit.Images);
+    eventsList.forEach((ev) => {
+      const evImgs = ev.images ?? ev.Images;
+      if (Array.isArray(evImgs) && evImgs.length > 0) {
+        visitLevelImages.push(...evImgs);
+      }
+    });
+
     // Extract all container records (e.g. when 2 containers on 1 visit / 20ft dual trailer)
     const rawContainersList: any[] = [];
     if (Array.isArray(visit.containers) && visit.containers.length > 0) {
-      rawContainersList.push(...visit.containers);
+      visit.containers.forEach((c: any) => {
+        rawContainersList.push({
+          ...c,
+          images: (Array.isArray(c.images) && c.images.length > 0) ? c.images : visitLevelImages,
+        });
+      });
     } else if (Array.isArray(visit.Containers) && visit.Containers.length > 0) {
-      rawContainersList.push(...visit.Containers);
+      visit.Containers.forEach((c: any) => {
+        rawContainersList.push({
+          ...c,
+          images: (Array.isArray(c.Images) && c.Images.length > 0) ? c.Images : visitLevelImages,
+        });
+      });
     } else if (eventsList.length > 1) {
       // 2 events for 2 containers under the same visit
       eventsList.forEach((ev) => {
@@ -341,7 +371,7 @@ export class GateEventsComponent implements OnInit {
           containerNumberConfidence: ev.detectedContainerConfidence ?? ev.DetectedContainerConfidence,
           size: ev.detectedContainerSize ?? ev.DetectedContainerSize ?? '20 FT',
           isoCode: ev.detectedContainerIsoCode ?? '22G1',
-          images: ev.images ?? ev.Images ?? [],
+          images: (Array.isArray(ev.images) && ev.images.length > 0) ? ev.images : (Array.isArray(ev.Images) && ev.Images.length > 0 ? ev.Images : visitLevelImages),
         });
       });
     } else {
@@ -366,6 +396,7 @@ export class GateEventsComponent implements OnInit {
             size: '20 FT',
             isoCode: '22G1',
             containerNumberConfidence: 0.96 - idx * 0.02,
+            images: idx === 0 ? (primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages) : (eventsList[idx]?.images ?? eventsList[idx]?.Images ?? []),
           });
         });
       } else if (is20FtTwin && !String(visit.containerSize || '').includes('40')) {
@@ -377,6 +408,7 @@ export class GateEventsComponent implements OnInit {
           containerNumberConfidence: 0.98,
           sealNo: 'MSCU-S1-9981',
           tareWeight: '2,250 kg',
+          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
         });
         rawContainersList.push({
           containerNumber: 'TCLU 819203 1',
@@ -385,6 +417,7 @@ export class GateEventsComponent implements OnInit {
           containerNumberConfidence: 0.96,
           sealNo: 'TCLU-S2-8114',
           tareWeight: '2,280 kg',
+          images: eventsList[1]?.images ?? eventsList[1]?.Images ?? [],
         });
       } else {
         rawContainersList.push({
@@ -396,6 +429,7 @@ export class GateEventsComponent implements OnInit {
             visit.ContainerConfidence ??
             primaryEvent?.detectedContainerConfidence ??
             0.95,
+          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
         });
       }
     }
@@ -411,7 +445,7 @@ export class GateEventsComponent implements OnInit {
       const cSize = c.size ?? c.Size ?? (isDualContainer ? '20 FT' : '40 FT');
       const cIso = c.isoCode ?? (cSize.includes('20') ? '22G1' : '45G1');
 
-      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? []);
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
 
       return {
         index: idx + 1,
@@ -495,18 +529,21 @@ export class GateEventsComponent implements OnInit {
       const cNo = container?.containerNumber ?? container?.ContainerNumber ?? 'MSCU 204918 2';
       const cSize = container?.size ?? container?.Size ?? '20 FT';
 
+      const dtoImages = dto.images ?? dto.Images ?? [];
       if (cSize.includes('20')) {
         rawContainersList.push({
           containerNumber: cNo,
           size: '20 FT',
           isoCode: '22G1',
           containerNumberConfidence: container?.containerNumberConfidence ?? 0.98,
+          images: dtoImages,
         });
         rawContainersList.push({
           containerNumber: 'TCLU 819203 1',
           size: '20 FT',
           isoCode: '22G1',
           containerNumberConfidence: 0.96,
+          images: [],
         });
       } else {
         rawContainersList.push({
@@ -514,6 +551,7 @@ export class GateEventsComponent implements OnInit {
           size: cSize,
           isoCode: '45G1',
           containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
+          images: dtoImages,
         });
       }
     }
@@ -527,7 +565,7 @@ export class GateEventsComponent implements OnInit {
       const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
       const cSize = c.size ?? (isDualContainer ? '20 FT' : '40 FT');
       const cIso = cSize.includes('20') ? '22G1' : '45G1';
-      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? []);
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
 
       return {
         index: idx + 1,
