@@ -5,6 +5,17 @@ export interface ContainerInfo {
   ContainerNumberConfidence?: number | null;
   size?: string | null;
   Size?: string | null;
+  isoCode?: string | null;
+  sealNo?: string | null;
+  sealNo2?: string | null;
+  customSealNo?: string | null;
+  tareWeight?: string | null;
+  cargoType?: string | null;
+  fullOrEmpty?: string | null;
+  location?: string | null;
+  condition?: string | null;
+  damageFlag?: boolean;
+  images?: SavedImageDto[];
 }
 
 export interface TruckInfo {
@@ -30,6 +41,8 @@ export interface SavedImageDto {
   S3Url?: string;
   s3Key?: string;
   S3Key?: string;
+  containerIndex?: number;
+  containerNumber?: string;
 }
 
 export interface CapturedImageInfo {
@@ -41,6 +54,8 @@ export interface CapturedImageInfo {
   CapturedAt?: string;
   image?: string;
   Image?: string;
+  containerIndex?: number;
+  containerNumber?: string;
 }
 
 export interface GateEventDetailDto {
@@ -56,6 +71,8 @@ export interface GateEventDetailDto {
   CapturedAt?: string;
   container?: ContainerInfo | null;
   Container?: ContainerInfo | null;
+  containers?: ContainerInfo[];
+  Containers?: ContainerInfo[];
   truck?: TruckInfo | null;
   Truck?: TruckInfo | null;
   driver?: DriverInfo | null;
@@ -112,6 +129,8 @@ export interface GateEventCaptureRequest {
   CapturedAt?: string;
   container?: ContainerInfo | null;
   Container?: ContainerInfo | null;
+  containers?: ContainerInfo[];
+  Containers?: ContainerInfo[];
   truck?: TruckInfo | null;
   Truck?: TruckInfo | null;
   driver?: DriverInfo | null;
@@ -147,6 +166,8 @@ export interface VisitImageDto {
   cameraId?: string;
   capturedAt?: string;
   imageUrl?: string;
+  containerIndex?: number;
+  containerNumber?: string;
 }
 
 export interface VisitEventDto {
@@ -158,6 +179,7 @@ export interface VisitEventDto {
   detectedContainerNumber?: string | null;
   detectedContainerConfidence?: number | null;
   detectedContainerSize?: string | null;
+  detectedContainerIsoCode?: string | null;
   detectedTruckNumber?: string | null;
   detectedTruckConfidence?: number | null;
   images?: VisitImageDto[];
@@ -168,6 +190,7 @@ export interface VisitListItemDto {
   containerNumber?: string | null;
   containerConfidence?: number | null;
   containerSize?: string | null;
+  containers?: ContainerInfo[];
   truckNumber?: string | null;
   truckConfidence?: number | null;
   driverName?: string | null;
@@ -184,3 +207,4 @@ export interface VisitsPagedResponse {
   totalCount: number;
   totalPages: number;
 }
+
