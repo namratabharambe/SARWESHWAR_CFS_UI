@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRepository } from 'core/data/admin.repository';
 import { Role } from 'core/models/admin.models';
 import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
-import { ButtonComponent } from 'shared/components/atoms/button/button.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
 import { FocusInvalidFieldDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
@@ -13,10 +13,10 @@ import { TranslatePipe } from 'shared/pipes';
   selector: 'app-roles',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     PageHeaderComponent,
     ModalComponent,
-    ButtonComponent,
     FormFieldComponent,
     FocusInvalidFieldDirective,
     TranslatePipe,
@@ -49,6 +49,10 @@ export class RolesComponent {
   public open(x?: Role): void {
     this.editing.set(x ?? null);
     this.form.reset(x ?? { name: '', description: '', level: 'Site' });
+  }
+
+  public setScope(level: 'Client' | 'Site'): void {
+    this.form.controls.level.setValue(level);
   }
 
   public save(): void {

@@ -1,7 +1,7 @@
 <div class="task-queue-board flex gap-4 overflow-x-auto pb-4 pt-1">
   @for (lane of lanes(); track lane.status) {
     <div
-      class="queue-lane flex w-80 shrink-0 flex-col rounded-2xl border border-gray-200/80 bg-gray-50/70 p-3.5 dark:border-gray-800 dark:bg-gray-850/50">
+      class="queue-lane dark:bg-gray-850/50 flex w-80 shrink-0 flex-col rounded-2xl border border-gray-200/80 bg-gray-50/70 p-3.5 dark:border-gray-800">
       <!-- Lane Header -->
       <div class="mb-3 flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -30,7 +30,7 @@
             class="group cursor-pointer rounded-xl border bg-white p-3.5 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800"
             [ngClass]="{
               'border-blue-500 ring-2 ring-blue-500/20 dark:border-blue-400': task.id === selectedTaskId(),
-              'border-gray-200/80 dark:border-gray-750': task.id !== selectedTaskId(),
+              'dark:border-gray-750 border-gray-200/80': task.id !== selectedTaskId(),
             }">
             <!-- Card Top: Task No & Priority -->
             <div class="flex items-center justify-between">

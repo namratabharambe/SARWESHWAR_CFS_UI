@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { GateEventItem, GateContainerRecord } from '../gate-events.component';
 import { TranslatePipe } from 'shared/pipes';
+import type { GateEventItem, GateContainerRecord } from '../../gate-events.component';
 
 export interface ContainerDetailInfo {
   index: number;
@@ -89,6 +89,7 @@ export interface GateEventDetailData {
     title: string;
     timestamp: string;
     url: string;
+    tag?: string;
   }>;
   timelineSteps: Array<{
     label: string;
@@ -106,7 +107,7 @@ export interface GateEventDetailData {
 @Component({
   selector: 'app-gate-event-detail',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule],
   templateUrl: './gate-event-detail.component.html',
   styleUrls: ['./gate-event-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -14,11 +14,7 @@ import {
 } from 'shared/types/gate-event/gate-event.interface';
 
 @Injectable({ providedIn: 'root' })
-export class GateEventService extends BaseApiService<
-  GateEventsResponse,
-  GateEventDetailDto,
-  GateEventCaptureRequest
-> {
+export class GateEventService extends BaseApiService<GateEventsResponse, GateEventDetailDto, GateEventCaptureRequest> {
   private readonly gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
 
   constructor(http: HttpClient) {
@@ -48,9 +44,7 @@ export class GateEventService extends BaseApiService<
     userId?: string;
     eventType?: string;
   }): Observable<VisitsPagedResponse> {
-    let params = new HttpParams()
-      .set('page', options?.page ?? 1)
-      .set('pageSize', options?.pageSize ?? 25);
+    let params = new HttpParams().set('page', options?.page ?? 1).set('pageSize', options?.pageSize ?? 25);
 
     if (options?.eventType) {
       params = params.set('eventType', options.eventType);
@@ -104,9 +98,7 @@ export class GateEventService extends BaseApiService<
 
   public getVisitById(visitId: string): Observable<VisitListItemDto | null> {
     const url = `${this.gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}`;
-    return this.http.get<VisitListItemDto>(url).pipe(
-      catchError(() => of(null as any)),
-    );
+    return this.http.get<VisitListItemDto>(url).pipe(catchError(() => of(null as any)));
   }
 
   public getGateEvents(options?: {
@@ -117,9 +109,7 @@ export class GateEventService extends BaseApiService<
     page?: number;
     pageSize?: number;
   }): Observable<GateEventsResponse> {
-    let params = new HttpParams()
-      .set('Page', options?.page ?? 1)
-      .set('PageSize', options?.pageSize ?? 20);
+    let params = new HttpParams().set('Page', options?.page ?? 1).set('PageSize', options?.pageSize ?? 20);
 
     if (options?.visitId) {
       params = params.set('VisitId', options.visitId);

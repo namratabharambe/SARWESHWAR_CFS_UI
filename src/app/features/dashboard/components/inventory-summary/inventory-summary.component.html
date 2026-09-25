@@ -1,11 +1,15 @@
-<div class="flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+<div
+  class="dashboard-card flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
   <!-- Header -->
   <div class="mb-3 flex items-center justify-between">
-    <h3 class="text-base font-semibold text-slate-900 dark:text-white">{{ 'DASHBOARD.INVENTORY_SUMMARY' | translate }}</h3>
+    <h3 class="text-base font-semibold text-slate-900 dark:text-white">
+      {{ 'DASHBOARD.INVENTORY_SUMMARY' | translate }}
+    </h3>
     <a
       routerLink="/inventory"
-      class="inline-flex items-center text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400">
-      {{ 'COMMON.VIEW_ALL' | translate }} →
+      class="view-all-link inline-flex items-center gap-1 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+      <span>{{ 'COMMON.VIEW_ALL' | translate }}</span>
+      <span class="view-all-arrow">→</span>
     </a>
   </div>
 
@@ -13,18 +17,22 @@
   <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
     @for (cat of data().categories; track cat.category) {
       <div
-        class="flex items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 transition-colors dark:border-gray-800"
+        class="category-metric-box group flex cursor-pointer items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 transition-all dark:border-gray-800"
+        [class.theme-blue]="cat.colorTheme === 'blue'"
         [class.bg-blue-50/50]="cat.colorTheme === 'blue'"
         [class.dark:bg-blue-950/20]="cat.colorTheme === 'blue'"
+        [class.theme-green]="cat.colorTheme === 'green'"
         [class.bg-emerald-50/50]="cat.colorTheme === 'green'"
         [class.dark:bg-emerald-950/20]="cat.colorTheme === 'green'"
+        [class.theme-sky]="cat.colorTheme === 'sky'"
         [class.bg-sky-50/50]="cat.colorTheme === 'sky'"
         [class.dark:bg-sky-950/20]="cat.colorTheme === 'sky'"
+        [class.theme-red]="cat.colorTheme === 'red'"
         [class.bg-rose-50/50]="cat.colorTheme === 'red'"
         [class.dark:bg-rose-950/20]="cat.colorTheme === 'red'">
         <!-- Icon -->
         <div
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
+          class="cat-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110"
           [class.bg-blue-100]="cat.colorTheme === 'blue'"
           [class.text-blue-700]="cat.colorTheme === 'blue'"
           [class.dark:bg-blue-900/60]="cat.colorTheme === 'blue'"
@@ -70,15 +78,16 @@
       <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200"
         >Top 5 Container Types</span
       >
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-1.5">
         @for (item of data().topContainerTypes; track item.typeName) {
-          <div class="flex items-center justify-between gap-2.5 text-xs">
+          <div
+            class="type-progress-row flex cursor-pointer items-center justify-between gap-2.5 rounded-md px-1.5 py-1 text-xs transition-colors hover:bg-slate-100/70 dark:hover:bg-slate-800/50">
             <span class="w-28 shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-300">
               {{ item.typeName }}
             </span>
             <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
               <div
-                class="h-full rounded-full bg-blue-600 transition-all duration-700"
+                class="type-bar h-full rounded-full bg-blue-600 transition-all duration-700"
                 [style.width.%]="item.percentage"></div>
             </div>
             <span class="w-16 shrink-0 text-right text-xs font-bold text-slate-800 dark:text-slate-200">
@@ -94,7 +103,8 @@
     </div>
 
     <!-- Utilization Radial Gauge -->
-    <div class="flex flex-col items-center justify-center pl-2">
+    <div
+      class="util-gauge-box flex cursor-pointer flex-col items-center justify-center pl-2 transition-transform duration-200 hover:scale-105">
       <span class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
         >Utilization</span
       >

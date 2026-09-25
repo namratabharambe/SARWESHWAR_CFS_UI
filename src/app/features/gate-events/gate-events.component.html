@@ -1,7 +1,9 @@
 <div class="gate-events-page flex flex-col gap-5">
   <!-- Toast Notification Alert -->
   @if (alertMessage()) {
-    <div class="gate-toast-alert fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-2xl backdrop-blur-md dark:bg-white/95 dark:text-slate-900" role="status">
+    <div
+      class="gate-toast-alert fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-2xl backdrop-blur-md dark:bg-white/95 dark:text-slate-900"
+      role="status">
       <span class="toast-icon">ℹ️</span>
       <span>{{ alertMessage() }}</span>
       <button type="button" class="btn-close-toast ml-2 hover:opacity-80" (click)="alertMessage.set('')">✕</button>
@@ -9,9 +11,15 @@
   }
 
   <!-- ========================================================================= -->
-  <!-- 1. GATE EVENT DETAIL VIEW (Modular Component)                              -->
+  <!-- 1. NON ERP CONTAINER VIEW (Modular Component)                              -->
   <!-- ========================================================================= -->
-  @if (selectedEventForDetails(); as selectedEvent) {
+  @if (isNonErpView()) {
+    <app-non-erp-container [gateMode]="gateMode()" (back)="closeNonErpView()" (toast)="handleNonErpToast($event)">
+    </app-non-erp-container>
+  } @else if (selectedEventForDetails(); as selectedEvent) {
+    <!-- ========================================================================= -->
+    <!-- 2. GATE EVENT DETAIL VIEW (Modular Component)                              -->
+    <!-- ========================================================================= -->
     <app-gate-event-detail
       [event]="selectedEvent"
       (back)="closeDetails()"
@@ -23,102 +31,173 @@
     </app-gate-event-detail>
   } @else {
     <!-- ========================================================================= -->
-    <!-- 2. GATE EVENTS TABLE VIEW                                                 -->
+    <!-- 3. GATE EVENTS TABLE VIEW                                                 -->
     <!-- ========================================================================= -->
-    <!-- Page Header with Dynamic Action Button: Manual Gate Entry for Gate In, Non ERP Container for Gate Out -->
+    <!-- Page Header with Action Buttons: Non ERP Container & Manual Gate Entry -->
     <header class="page-title-header flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div class="header-title-content">
         <h1 class="page-title text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-          {{ gateMode() === 'out' ? 'Gate Out' : ('GATE_EVENTS.TITLE' | translate) }}
+          {{ gateMode() === 'out' ? 'Gate Out' : 'Gate In' }}
         </h1>
         <p class="page-subtitle mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-          {{ gateMode() === 'out' ? 'Real-time OCR event monitoring & Gate Out verification' : ('GATE_EVENTS.SUBTITLE' | translate) }}
+          {{
+            gateMode() === 'out'
+              ? 'Real-time OCR event monitoring & Gate Out verification'
+              : 'Real-time OCR event monitoring & Gate In verification'
+          }}
         </p>
       </div>
-      <div class="header-actions flex items-center gap-2.5">
+      <div class="header-actions flex flex-wrap items-center gap-2.5">
+        <!-- Non ERP Container Button (Available in both Gate In and Gate Out) -->
+        <button
+          type="button"
+          class="btn-non-erp-container flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95"
+          (click)="openNonErpContainerModal()"
+          title="Non ERP Container">
+          <svg class="btn-non-erp-svg h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+          <span>Non ERP Container</span>
+        </button>
+
+        <!-- Manual Gate Entry (Gate In only) -->
         @if (gateMode() === 'in') {
-          <button type="button" class="btn-manual-gate-entry flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="openGateInModal()" title="Manual Gate Entry">
+          <button
+            type="button"
+            class="btn-manual-gate-entry flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95"
+            (click)="openGateInModal()"
+            title="Manual Gate Entry">
             <svg class="btn-entry-svg h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
             </svg>
             <span>{{ 'GATE_EVENTS.MANUAL_GATE_ENTRY' | translate }}</span>
           </button>
-        } @else {
-          <button type="button" class="btn-non-erp-container flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="openNonErpContainerModal()" title="Non ERP Container">
-            <svg class="btn-non-erp-svg h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-              <line x1="12" y1="22.08" x2="12" y2="12" />
-            </svg>
-            <span>Non ERP Container</span>
-          </button>
         }
       </div>
     </header>
 
     <!-- 4 KPI Metrics Cards Grid -->
-    <section class="kpi-metrics-grid grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Gate KPI Summary">
+    <section
+      class="kpi-metrics-grid grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+      aria-label="Gate KPI Summary">
       <!-- Card 1: Today's Arrivals (Gate In) / Today's Departures (Gate Out) -->
-      <div class="kpi-card card-arrivals rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div
+        class="kpi-card card-arrivals rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
-          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
-            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
+            [ngClass]="
+              gateMode() === 'out'
+                ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400'
+                : 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400'
+            ">
+            @if (gateMode() === 'out') {
+              <!-- Departure Symbol (Gate Out / Outbound Exit) -->
+              <svg
+                class="kpi-svg h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            } @else {
+              <!-- Arrival Symbol (Gate In / Inbound Entry) -->
+              <svg
+                class="kpi-svg h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            }
           </div>
           <div class="kpi-content overflow-hidden">
             <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
-              {{ gateMode() === 'out' ? 'Today\'s Departures' : ('GATE_EVENTS.TODAYS_ARRIVALS' | translate) }}
+              {{ gateMode() === 'out' ? "Today's Departures" : ('GATE_EVENTS.TODAYS_ARRIVALS' | translate) }}
             </span>
             <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               {{ gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals }}
             </strong>
           </div>
         </div>
-        <div class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
           ↑ {{ gateMode() === 'out' ? metrics().departuresTrend : metrics().arrivalsTrend }}
         </div>
       </div>
 
       <!-- Card 2: OCR Verified -->
-      <div class="kpi-card card-ocr rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div
+        class="kpi-card card-ocr rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
-          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
             <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               <polyline points="9 12 11 14 15 10" />
             </svg>
           </div>
           <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}</span>
-            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().ocrVerified }}</strong>
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+              'GATE_EVENTS.OCR_VERIFIED' | translate
+            }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{
+              metrics().ocrVerified
+            }}</strong>
           </div>
         </div>
-        <div class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">{{ metrics().ocrVerifiedPercent }}</div>
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+          {{ metrics().ocrVerifiedPercent }}
+        </div>
       </div>
 
       <!-- Card 3: Pending Review -->
-      <div class="kpi-card card-review rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div
+        class="kpi-card card-review rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
-          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
             <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10" />
               <polyline points="12 6 12 12 16 14" />
             </svg>
           </div>
           <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}</span>
-            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().pendingReview }}</strong>
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+              'GATE_EVENTS.PENDING_REVIEW' | translate
+            }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{
+              metrics().pendingReview
+            }}</strong>
           </div>
         </div>
-        <div class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">↓ {{ metrics().pendingReviewTrend }}</div>
+        <div
+          class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">
+          ↓ {{ metrics().pendingReviewTrend }}
+        </div>
       </div>
 
       <!-- Card 4: Damaged Captures -->
-      <div class="kpi-card card-damaged rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      <div
+        class="kpi-card card-damaged rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
-          <div class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
             <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
               <line x1="12" y1="9" x2="12" y2="13" />
@@ -126,31 +205,43 @@
             </svg>
           </div>
           <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'GATE_EVENTS.DAMAGED_CAPTURES' | translate }}</span>
-            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ metrics().damagedCaptures }}</strong>
+            <span class="kpi-label block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+              'GATE_EVENTS.DAMAGED_CAPTURES' | translate
+            }}</span>
+            <strong class="kpi-value text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{
+              metrics().damagedCaptures
+            }}</strong>
           </div>
         </div>
-        <div class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">↓ {{ metrics().damagedTrend }}</div>
+        <div
+          class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">
+          ↓ {{ metrics().damagedTrend }}
+        </div>
       </div>
     </section>
 
     <!-- Main Table Card Container -->
-    <div class="gate-events-card rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="gate-events-card rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
       <!-- Streamlined Toolbar: Date + Confidence + Search + Export -->
-      <div class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+      <div
+        class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
         <div class="filter-controls-left flex flex-wrap items-center gap-3">
           <!-- Date Selector -->
           <div class="filter-item relative z-20 flex flex-col">
-            <span class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'GATE_EVENTS.FILTER_DATE' | translate }}</span>
-            <app-date-picker
-              [value]="dateFilter()"
-              (valueChange)="dateFilter.set($event)"
-              placeholder="Select Date" />
+            <span
+              class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500"
+              >{{ 'GATE_EVENTS.FILTER_DATE' | translate }}</span
+            >
+            <app-date-picker [value]="dateFilter()" (valueChange)="dateFilter.set($event)" placeholder="Select Date" />
           </div>
 
           <!-- OCR Confidence Dropdown -->
           <div class="filter-item flex flex-col">
-            <span class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'GATE_EVENTS.FILTER_CONFIDENCE' | translate }}</span>
+            <span
+              class="filter-caption px-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500"
+              >{{ 'GATE_EVENTS.FILTER_CONFIDENCE' | translate }}</span
+            >
             <app-dropdown
               [options]="confidenceOptions"
               [value]="confidenceFilter()"
@@ -162,7 +253,10 @@
         <div class="filter-controls-right flex items-center gap-2.5">
           <!-- Live Search Box -->
           <div class="search-field-wrapper relative flex items-center">
-            <svg class="search-lens-svg pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              class="search-lens-svg pointer-events-none absolute left-2.5 h-4 w-4 text-slate-400"
+              viewBox="0 0 20 20"
+              fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -175,12 +269,21 @@
               [ngModel]="searchQuery()"
               (ngModelChange)="searchQuery.set($event)" />
             @if (searchQuery()) {
-              <button type="button" class="btn-clear-gate-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" (click)="searchQuery.set('')">✕</button>
+              <button
+                type="button"
+                class="btn-clear-gate-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                (click)="searchQuery.set('')">
+                ✕
+              </button>
             }
           </div>
 
           <!-- Export Button (Prominent, replaces Filters/Approved/Reprocess) -->
-          <button type="button" class="btn-export-main flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95" (click)="exportData()" title="Export gate events as CSV">
+          <button
+            type="button"
+            class="btn-export-main flex h-9 items-center gap-2 rounded-lg bg-blue-600 px-4 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95"
+            (click)="exportData()"
+            title="Export gate events as CSV">
             <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
@@ -195,7 +298,8 @@
       <!-- Data Table (Gate column removed, Clicking any record opens the detail screen) -->
       <div class="table-responsive-wrapper overflow-x-auto">
         <table class="gate-events-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
-          <thead class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
+          <thead
+            class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
             <tr>
               <th class="col-checkbox px-4 py-3.5">
                 <input
@@ -224,7 +328,7 @@
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
             @for (event of paginatedEvents(); track event.id) {
               <tr
-                class="gate-event-row hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors cursor-pointer"
+                class="gate-event-row cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
                 [class.bg-blue-50/40]="isSelected(event.id)"
                 [class.dark:bg-blue-950/20]="isSelected(event.id)"
                 (click)="openDetails(event)"
@@ -240,12 +344,15 @@
 
                 <!-- Event Time -->
                 <td class="col-time px-4 py-3.5">
-                  <span class="cell-event-time font-medium text-slate-600 dark:text-slate-300">{{ event.eventTime }}</span>
+                  <span class="cell-event-time font-medium text-slate-600 dark:text-slate-300">{{
+                    event.eventTime
+                  }}</span>
                 </td>
 
                 <!-- Cycle (Replaces Gate column) -->
                 <td class="col-cycle px-4 py-3.5">
-                  <span class="cycle-tag inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+                  <span
+                    class="cycle-tag inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
                     [class.border-blue-200]="event.direction === 'IN'"
                     [class.bg-blue-50]="event.direction === 'IN'"
                     [class.text-blue-700]="event.direction === 'IN'"
@@ -260,9 +367,15 @@
                     [class.dark:text-emerald-300]="event.direction === 'OUT'">
                     <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                       @if (event.direction === 'IN') {
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                          clip-rule="evenodd" />
                       } @else {
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                          clip-rule="evenodd" />
                       }
                     </svg>
                     {{ event.direction === 'IN' ? 'Gate In' : 'Gate Out' }}
@@ -290,7 +403,9 @@
 
                 <!-- Truck No -->
                 <td class="col-truck px-4 py-3.5">
-                  <span class="truck-plate font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ event.truckNo }}</span>
+                  <span class="truck-plate font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{
+                    event.truckNo
+                  }}</span>
                 </td>
 
                 <!-- Container No -->
@@ -336,18 +451,27 @@
                 <!-- Confidence Rating -->
                 <td class="col-confidence px-4 py-3.5">
                   <div class="confidence-pill-wrap flex items-center gap-1.5">
-                    <span class="confidence-percent text-xs font-bold"
+                    <span
+                      class="confidence-percent text-xs font-bold"
                       [class.text-emerald-600]="event.confidence >= 95"
                       [class.text-amber-600]="event.confidence >= 90 && event.confidence < 95"
-                      [class.text-rose-600]="event.confidence < 90">{{ event.confidence }}%</span>
+                      [class.text-rose-600]="event.confidence < 90"
+                      >{{ event.confidence }}%</span
+                    >
                     <div
-                      class="signal-bars-icon flex items-end gap-0.5 h-3"
+                      class="signal-bars-icon flex h-3 items-end gap-0.5"
                       [class.high]="event.confidence >= 95"
                       [class.med]="event.confidence >= 90 && event.confidence < 95"
                       [class.low]="event.confidence < 90">
-                      <span class="bar bar-1 w-1 rounded-sm bg-slate-300 h-1.5" [class.bg-emerald-500]="event.confidence >= 90"></span>
-                      <span class="bar bar-2 w-1 rounded-sm bg-slate-300 h-2.5" [class.bg-emerald-500]="event.confidence >= 90"></span>
-                      <span class="bar bar-3 w-1 rounded-sm bg-slate-300 h-3" [class.bg-emerald-500]="event.confidence >= 95"></span>
+                      <span
+                        class="bar bar-1 h-1.5 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span
+                        class="bar bar-2 h-2.5 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span
+                        class="bar bar-3 h-3 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 95"></span>
                     </div>
                   </div>
                 </td>
@@ -364,7 +488,8 @@
 
                 <!-- Damage Flag -->
                 <td class="col-damage px-4 py-3.5">
-                  <span class="damage-tag inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
+                  <span
+                    class="damage-tag inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
                     [class.bg-slate-100]="!event.damageFlag"
                     [class.text-slate-600]="!event.damageFlag"
                     [class.bg-rose-100]="event.damageFlag"
@@ -380,7 +505,7 @@
                   <div class="camera-thumbnails-row flex items-center gap-1.5">
                     @for (photo of event.photos; track photo.label) {
                       <div
-                        class="camera-photo-thumb relative h-8 w-10 overflow-hidden rounded-md border border-slate-200 shadow-xs cursor-pointer hover:scale-105 transition-transform dark:border-slate-700"
+                        class="camera-photo-thumb group/thumb shadow-xs relative h-8 w-11 cursor-pointer overflow-hidden rounded-md border border-slate-200 transition-all hover:scale-110 hover:border-blue-500 hover:shadow-md dark:border-slate-700"
                         [style.background-color]="photo.color"
                         [title]="photo.label"
                         (click)="photo.url ? openLightbox(photo.label, photo.url, $event) : null">
@@ -390,6 +515,8 @@
                             [alt]="photo.label"
                             class="h-full w-full object-cover"
                             loading="lazy" />
+                          <div
+                            class="absolute inset-0 bg-blue-600/10 opacity-0 transition-opacity group-hover/thumb:opacity-100"></div>
                         } @else {
                           <div class="thumb-container-ribs flex h-full items-center justify-center">
                             <span class="text-[9px] font-bold text-white/80">{{ photo.tag }}</span>
@@ -405,8 +532,12 @@
                 <td colspan="12" class="empty-state-cell p-8 text-center">
                   <div class="empty-message-box flex flex-col items-center justify-center gap-2">
                     <span class="empty-icon text-3xl">🔍</span>
-                    <strong class="text-sm font-semibold text-slate-900 dark:text-white">No gate events match your filter criteria</strong>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Try adjusting the cycle or search term to see records.</p>
+                    <strong class="text-sm font-semibold text-slate-900 dark:text-white"
+                      >No gate events match your filter criteria</strong
+                    >
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Try adjusting the cycle or search term to see records.
+                    </p>
                   </div>
                 </td>
               </tr>
@@ -416,7 +547,8 @@
       </div>
 
       <!-- Pagination Footer -->
-      <div class="table-pagination-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+      <div
+        class="table-pagination-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
         <div class="pagination-info">
           <span>Showing 1 to {{ paginatedEvents().length }} of {{ totalCount() }} events</span>
         </div>
@@ -498,8 +630,18 @@
             5
           </button>
           <span class="page-ellipsis px-1 text-slate-400">...</span>
-          <button type="button" class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="currentPage.set(7)">7</button>
-          <button type="button" class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" title="Next page">&gt;</button>
+          <button
+            type="button"
+            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            (click)="currentPage.set(7)">
+            7
+          </button>
+          <button
+            type="button"
+            class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            title="Next page">
+            &gt;
+          </button>
         </div>
 
         <div class="items-per-page-select-wrap">
@@ -513,7 +655,73 @@
     </div>
   }
 
-  <!-- Import Gate In Popup Modal (Manual Gate Entry) -->
-  <app-gate-in-modal [isOpen]="isGateInModalOpen()" (close)="closeGateInModal()" (save)="handleGateInSave($event)">
-  </app-gate-in-modal>
+  <!-- Full-Resolution Lightbox Modal (For List & Table View Click) -->
+  @if (activeLightboxPhoto(); as lightbox) {
+    <div
+      class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md transition-all"
+      (click)="closeLightbox()">
+      <div
+        class="lightbox-dialog relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl"
+        (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div
+          class="lightbox-header flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-5 py-3.5 backdrop-blur-sm">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600/20 text-blue-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
+              <p class="text-[11px] text-slate-400">Gate Optical Inspection Capture • High Resolution</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            @if (lightbox.url) {
+              <a
+                [href]="lightbox.url"
+                target="_blank"
+                download
+                class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 text-xs font-semibold text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+                title="Open full resolution in new tab">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                <span>Full Size</span>
+              </a>
+            }
+            <button
+              type="button"
+              class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+              (click)="closeLightbox()"
+              title="Close image preview (Esc)">
+              ✕
+            </button>
+          </div>
+        </div>
+        <!-- Image Viewport -->
+        <div class="lightbox-body flex min-h-[360px] items-center justify-center overflow-auto bg-slate-950 p-4">
+          @if (lightbox.url) {
+            <img
+              [src]="lightbox.url"
+              [alt]="lightbox.title"
+              class="lightbox-img max-h-[75vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-transform" />
+          } @else {
+            <div class="flex flex-col items-center justify-center gap-2 py-16 text-slate-400">
+              <span class="text-4xl">📷</span>
+              <p class="text-xs font-medium">No optical image stream available for this camera angle.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Manual Gate Entry Modal -->
+  <app-manual-gate-entry [isOpen]="isGateInModalOpen()" (close)="closeGateInModal()" (save)="handleGateInSave($event)">
+  </app-manual-gate-entry>
 </div>

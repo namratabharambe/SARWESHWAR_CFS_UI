@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { GateInModalComponent } from './gate-in-modal.component';
+import { ManualGateEntryComponent } from './manual-gate-entry.component';
 
-describe('GateInModalComponent', () => {
-  let component: GateInModalComponent;
-  let fixture: ComponentFixture<GateInModalComponent>;
+describe('ManualGateEntryComponent', () => {
+  let component: ManualGateEntryComponent;
+  let fixture: ComponentFixture<ManualGateEntryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GateInModalComponent],
+      imports: [ManualGateEntryComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GateInModalComponent);
+    fixture = TestBed.createComponent(ManualGateEntryComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('isOpen', true);
     fixture.detectChanges();

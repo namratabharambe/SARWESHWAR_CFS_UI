@@ -30,9 +30,7 @@ export class UserService extends BaseApiService<User[], User, CreateUserRequest 
       params = params.set('SiteId', siteId.trim());
     }
     const options = params.keys().length > 0 ? { params } : undefined;
-    return this.get(options).pipe(
-      catchError(() => of([])),
-    );
+    return this.get(options).pipe(catchError(() => of([])));
   }
 
   public getUserById(id: string): Observable<User> {
@@ -105,9 +103,7 @@ export class UserService extends BaseApiService<User[], User, CreateUserRequest 
   }
 
   public removeClientRole(userId: string, clientId: string, role: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.endpointUrl}/${userId}/client-roles/${clientId}/${encodeURIComponent(role)}`,
-    );
+    return this.http.delete<void>(`${this.endpointUrl}/${userId}/client-roles/${clientId}/${encodeURIComponent(role)}`);
   }
 
   public assignSiteRole(userId: string, request: AssignSiteRoleRequest): Observable<void> {
@@ -119,8 +115,6 @@ export class UserService extends BaseApiService<User[], User, CreateUserRequest 
   }
 
   public removeSiteRole(userId: string, siteId: string, role: string): Observable<void> {
-    return this.http.delete<void>(
-      `${this.endpointUrl}/${userId}/site-roles/${siteId}/${encodeURIComponent(role)}`,
-    );
+    return this.http.delete<void>(`${this.endpointUrl}/${userId}/site-roles/${siteId}/${encodeURIComponent(role)}`);
   }
 }

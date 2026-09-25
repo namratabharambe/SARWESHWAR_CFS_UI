@@ -51,14 +51,14 @@ export interface GateInFormData {
 }
 
 @Component({
-  selector: 'app-gate-in-modal',
+  selector: 'app-manual-gate-entry',
   standalone: true,
   imports: [CommonModule, FormsModule, DatePickerComponent, DropdownComponent, TranslatePipe],
-  templateUrl: './gate-in-modal.component.html',
-  styleUrls: ['./gate-in-modal.component.scss'],
+  templateUrl: './manual-gate-entry.component.html',
+  styleUrls: ['./manual-gate-entry.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GateInModalComponent {
+export class ManualGateEntryComponent {
   public readonly isOpen = input<boolean>(false);
   public readonly close = output<void>();
   public readonly save = output<GateInFormData[]>();
@@ -316,3 +316,6 @@ export class GateInModalComponent {
     this.close.emit();
   }
 }
+
+/** Backwards-compatible export alias */
+export { ManualGateEntryComponent as GateInModalComponent };
