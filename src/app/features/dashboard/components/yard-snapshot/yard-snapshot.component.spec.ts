@@ -11,9 +11,7 @@ describe('YardSnapshotComponent', () => {
   const mockRows: YardBlockRow[] = [
     {
       rowLetter: 'A',
-      bays: [
-        { bayNumber: '01', slots: ['import', 'export', 'empty', 'hazard', 'maintenance', 'vacant'] },
-      ],
+      bays: [{ bayNumber: '01', slots: ['import', 'export', 'empty', 'hazard', 'maintenance', 'vacant'] }],
     },
   ];
 

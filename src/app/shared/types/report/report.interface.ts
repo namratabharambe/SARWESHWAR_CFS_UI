@@ -1,9 +1,5 @@
 export type ReportCategory =
-  | 'gate-operations'
-  | 'container-mismatch'
-  | 'yard-occupancy'
-  | 'equipment-productivity'
-  | 'customs-billing';
+  'gate-operations' | 'container-mismatch' | 'yard-occupancy' | 'equipment-productivity' | 'customs-billing';
 
 export interface ReportDateFilter {
   preset: 'today' | 'yesterday' | 'last7days' | 'last30days' | 'monthToDate' | 'custom';

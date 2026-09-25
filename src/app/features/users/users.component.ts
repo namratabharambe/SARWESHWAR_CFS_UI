@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRepository } from 'core/data/admin.repository';
@@ -7,7 +8,6 @@ import { User, Site, Role } from 'core/models/admin.models';
 import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
 import { StatusBadgeComponent } from 'shared/components/atoms/status-badge/status-badge.component';
 import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component';
-import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
@@ -29,11 +29,11 @@ export interface SiteRoleItem {
   selector: 'app-users',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     PageHeaderComponent,
     StatusBadgeComponent,
     AvatarComponent,
-    CenteredDividerComponent,
     ModalComponent,
     FormFieldComponent,
     DropdownComponent,

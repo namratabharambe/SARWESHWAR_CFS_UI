@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, input, output, signal } from '@angular/core';
 import { TranslatePipe } from 'shared/pipes';
 import { TaskItem, TaskStatus } from 'shared/types/task/task.interface';
 
@@ -11,7 +11,7 @@ import { TaskItem, TaskStatus } from 'shared/types/task/task.interface';
   styleUrls: ['./task-detail-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskDetailPanelComponent {
+export class TaskDetailPanelComponent implements OnDestroy {
   public readonly task = input<TaskItem | null>(null);
   public readonly isCollapsed = signal<boolean>(false);
   public readonly copiedField = signal<string | null>(null);
@@ -43,9 +43,15 @@ export class TaskDetailPanelComponent {
 
   public openFullDetails(): void {
     this.isFullDetailsOpen.set(true);
+    document.body.classList.add('modal-open');
   }
 
   public closeFullDetails(): void {
     this.isFullDetailsOpen.set(false);
+    document.body.classList.remove('modal-open');
+  }
+
+  public ngOnDestroy(): void {
+    document.body.classList.remove('modal-open');
   }
 }

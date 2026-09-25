@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import type { GateEventItem } from '../gate-events.component';
+import { TranslatePipe } from 'shared/pipes';
+import type { GateEventItem } from '../../gate-events.component';
 
 export interface GateEventDetailData {
   eventId: string;
@@ -59,6 +60,7 @@ export interface GateEventDetailData {
     title: string;
     timestamp: string;
     url: string;
+    tag?: string;
   }>;
   timelineSteps: Array<{
     label: string;
@@ -76,7 +78,7 @@ export interface GateEventDetailData {
 @Component({
   selector: 'app-gate-event-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './gate-event-detail.component.html',
   styleUrls: ['./gate-event-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -292,14 +294,49 @@ export class GateEventDetailComponent {
       condition: 'Sound',
       doorToDoor: 'Yes',
 
-      capturedPhotos:
-        event.photos && event.photos.length > 0
-          ? event.photos.map((p, idx) => ({
-              title: `${idx + 1}. ${p.label || 'Camera View'}`,
+      capturedPhotos: (() => {
+        const sampleFeeds = [
+          {
+            label: 'Front Stencil OCR',
+            url: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80',
+            tag: 'CAM 01 • FRONT',
+          },
+          {
+            label: 'Left Flank View',
+            url: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&auto=format&fit=crop&q=80',
+            tag: 'CAM 02 • LEFT',
+          },
+          {
+            label: 'Right Flank View',
+            url: 'https://images.unsplash.com/photo-1512418490979-92798cec1380?w=800&auto=format&fit=crop&q=80',
+            tag: 'CAM 03 • RIGHT',
+          },
+          {
+            label: 'Rear Doors & Plate',
+            url: 'https://images.unsplash.com/photo-1586528116493-ce05bf1246b8?w=800&auto=format&fit=crop&q=80',
+            tag: 'CAM 04 • REAR',
+          },
+        ];
+
+        if (event.photos && event.photos.length > 0) {
+          return event.photos.map((p: any, idx: number) => {
+            const fallback = sampleFeeds[idx % sampleFeeds.length];
+            return {
+              title: `${idx + 1}. ${p.label || fallback.label}`,
               timestamp: eventTime,
-              url: p.url || '',
-            }))
-          : [],
+              url: p.url && String(p.url).trim() !== '' ? p.url : fallback.url,
+              tag: p.tag || fallback.tag,
+            };
+          });
+        }
+
+        return sampleFeeds.map((feed, idx) => ({
+          title: `${idx + 1}. ${feed.label}`,
+          timestamp: eventTime,
+          url: feed.url,
+          tag: feed.tag,
+        }));
+      })(),
       timelineSteps: [
         {
           label: 'Captured',

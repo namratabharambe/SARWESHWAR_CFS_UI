@@ -79,7 +79,7 @@ export class DropdownComponent implements ControlValueAccessor {
 
   // Normalize options to DropdownOption[]
   public readonly normalizedOptions = computed<DropdownOption[]>(() => {
-    return this.options().map(opt => {
+    return this.options().map((opt) => {
       if (typeof opt === 'string' || typeof opt === 'number') {
         return { label: String(opt), value: opt };
       }
@@ -92,7 +92,7 @@ export class DropdownComponent implements ControlValueAccessor {
     const q = this.searchQuery().trim().toLowerCase();
     const opts = this.normalizedOptions();
     if (!q) return opts;
-    return opts.filter(o => o.label.toLowerCase().includes(q));
+    return opts.filter((o) => o.label.toLowerCase().includes(q));
   });
 
   // Active value resolution (prefers internal value or value input)
@@ -106,7 +106,7 @@ export class DropdownComponent implements ControlValueAccessor {
   public readonly selectedOption = computed<DropdownOption | undefined>(() => {
     const val = this.currentValue();
     if (val === undefined || val === null || val === '') return undefined;
-    return this.normalizedOptions().find(o => o.value === val || String(o.value) === String(val));
+    return this.normalizedOptions().find((o) => o.value === val || String(o.value) === String(val));
   });
 
   // Display label

@@ -2,3 +2,21 @@
   display: block;
   height: 100%;
 }
+
+.donut-segment {
+  cursor: pointer;
+  transition:
+    stroke-width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.25s ease;
+
+  &:hover {
+    stroke-width: 13;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25));
+  }
+}
+
+.donut-legend-row {
+  &:hover {
+    transform: translateX(3px);
+  }
+}
