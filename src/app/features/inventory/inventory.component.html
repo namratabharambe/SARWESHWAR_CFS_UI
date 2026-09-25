@@ -17,9 +17,13 @@
       <nav
         class="mt-0.5 flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400"
         aria-label="Breadcrumb">
-        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{ 'BREADCRUMB.HOME' | translate }}</a>
+        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{
+          'BREADCRUMB.HOME' | translate
+        }}</a>
         <span>/</span>
-        <span class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{ 'BREADCRUMB.INVENTORY' | translate }}</span>
+        <span class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{
+          'BREADCRUMB.INVENTORY' | translate
+        }}</span>
         <span>/</span>
         <span class="font-semibold text-slate-800 dark:text-slate-200">{{ 'INVENTORY.TITLE' | translate }}</span>
       </nav>
@@ -40,14 +44,17 @@
   <!-- 6 Glassmorphic Top KPI Metric Cards -->
   <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
     <!-- 1. Total Containers -->
-    <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
           <span class="material-icons-outlined text-xl">domain</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'INVENTORY.TOTAL_CONTAINERS' | translate }}</span>
+          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+            'INVENTORY.TOTAL_CONTAINERS' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">
             {{ inventoryService.kpiMetrics().totalContainers | number }}
           </div>
@@ -59,14 +66,17 @@
     </div>
 
     <!-- 2. Import -->
-    <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
           <span class="material-icons-outlined text-xl">local_shipping</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'INVENTORY.IMPORT' | translate }}</span>
+          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+            'INVENTORY.IMPORT' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">
             {{ inventoryService.kpiMetrics().importCount | number }}
           </div>
@@ -78,14 +88,17 @@
     </div>
 
     <!-- 3. Export -->
-    <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400">
           <span class="material-icons-outlined text-xl">account_balance</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'INVENTORY.EXPORT' | translate }}</span>
+          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+            'INVENTORY.EXPORT' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">
             {{ inventoryService.kpiMetrics().exportCount | number }}
           </div>
@@ -97,14 +110,17 @@
     </div>
 
     <!-- 4. Empty -->
-    <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
           <span class="material-icons-outlined text-xl">check_box</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{ 'INVENTORY.EMPTY' | translate }}</span>
+          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+            'INVENTORY.EMPTY' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">
             {{ inventoryService.kpiMetrics().emptyCount | number }}
           </div>
@@ -117,14 +133,16 @@
 
     <!-- 5. Hazardous -->
     <div
-      class="rounded-xl border border-rose-200/70 bg-rose-50/20 p-3.5 shadow-sm transition-all hover:shadow-md dark:border-rose-900/60 dark:bg-rose-950/20">
+      class="kpi-card rounded-xl border border-rose-200/70 bg-rose-50/20 p-3.5 shadow-sm transition-all hover:shadow-md dark:border-rose-900/60 dark:bg-rose-950/20">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
           <span class="material-icons-outlined text-xl">warning</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-rose-700 dark:text-rose-300">{{ 'INVENTORY.HAZARDOUS' | translate }}</span>
+          <span class="block truncate text-xs font-medium text-rose-700 dark:text-rose-300">{{
+            'INVENTORY.HAZARDOUS' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-rose-700 dark:text-rose-300">
             {{ inventoryService.kpiMetrics().hazardousCount }}
           </div>
@@ -136,16 +154,17 @@
     </div>
 
     <!-- 6. Overstay (>7 Days) -->
-    <div class="rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-2.5">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
           <span class="material-icons-outlined text-xl">schedule</span>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400"
-            >{{ 'INVENTORY.OVERSTAY' | translate }}</span
-          >
+          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">{{
+            'INVENTORY.OVERSTAY' | translate
+          }}</span>
           <div class="text-xl font-extrabold leading-tight text-slate-900 dark:text-white">
             {{ inventoryService.kpiMetrics().overstayCount }}
           </div>
@@ -158,7 +177,8 @@
   </section>
 
   <!-- Filter Card with 5-Column Grid -->
-  <section class="relative z-30 space-y-3.5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  <section
+    class="relative z-20 space-y-3.5 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
     <!-- Top Filter Header Row -->
     <div class="flex flex-wrap items-center justify-between gap-3">
       <!-- Search Input -->
@@ -201,18 +221,38 @@
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
       <!-- 1. Container No -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'TABLE.CONTAINER_NO' | translate }}</label>
-        <input
-          type="text"
-          [value]="inventoryService.filter().containerNo"
-          (input)="inventoryService.updateFilter('containerNo', $any($event.target).value)"
-          [placeholder]="'INVENTORY.ENTER_CONTAINER_NO' | translate"
-          class="h-8.5 w-full rounded-lg border border-slate-200 bg-slate-50/50 px-2.5 text-xs text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'TABLE.CONTAINER_NO' | translate
+        }}</label>
+        <div class="relative flex items-center">
+          <span
+            class="material-icons-outlined pointer-events-none absolute left-2.5 text-sm text-slate-400 transition-colors dark:text-slate-500">
+            inventory_2
+          </span>
+          <input
+            type="text"
+            [value]="inventoryService.filter().containerNo"
+            (input)="inventoryService.updateFilter('containerNo', $any($event.target).value)"
+            [placeholder]="'INVENTORY.ENTER_CONTAINER_NO' | translate"
+            class="h-8 w-full rounded-lg border border-slate-300 bg-white pl-8 pr-7 text-xs font-semibold text-slate-700 placeholder-slate-400 transition-all duration-150 placeholder:font-normal hover:border-slate-400 hover:bg-[#f8fafc] focus:border-blue-600 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-blue-500/25 dark:bg-[#111a2d]/85 dark:text-slate-200 dark:placeholder-slate-500 dark:hover:border-blue-400/50 dark:hover:bg-[#1e2b44]/90 dark:focus:border-sky-400 dark:focus:bg-[#111a2d] dark:focus:ring-2 dark:focus:ring-sky-400/20" />
+          @if (inventoryService.filter().containerNo) {
+            <button
+              type="button"
+              (click)="inventoryService.updateFilter('containerNo', '')"
+              class="absolute right-2 flex h-4 w-4 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              title="Clear container number"
+              aria-label="Clear container number">
+              <span class="text-xs leading-none">&times;</span>
+            </button>
+          }
+        </div>
       </div>
 
       <!-- 2. Shipping Line -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.LINE' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.LINE' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -225,7 +265,9 @@
 
       <!-- 3. Block -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.BLOCK' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.BLOCK' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -237,7 +279,9 @@
 
       <!-- 4. Row -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.ROW' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.ROW' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -249,7 +293,9 @@
 
       <!-- 5. Bay -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.BAY' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.BAY' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -264,7 +310,9 @@
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
       <!-- 6. Tier -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.TIER' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.TIER' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -276,7 +324,9 @@
 
       <!-- 7. Size -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.SIZE' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.SIZE' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -288,7 +338,9 @@
 
       <!-- 8. Type -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.TYPE' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.TYPE' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -300,7 +352,9 @@
 
       <!-- 9. Status -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.STATUS' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.STATUS' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -312,7 +366,9 @@
 
       <!-- 10. Full / Empty -->
       <div>
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.FULL_EMPTY' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.FULL_EMPTY' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -326,7 +382,9 @@
     <!-- Filter Form Row 3: Customer + More Filters Button -->
     <div class="flex flex-wrap items-end gap-3 pt-1">
       <div class="w-full sm:w-64">
-        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ 'FILTER.CUSTOMER' | translate }}</label>
+        <label class="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{{
+          'FILTER.CUSTOMER' | translate
+        }}</label>
         <app-dropdown
           [fullWidth]="true"
           size="sm"
@@ -340,7 +398,7 @@
       <button
         type="button"
         (click)="isAdvancedFiltersOpen.set(!isAdvancedFiltersOpen())"
-        class="h-8.5 flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white/80 px-3 text-xs font-semibold text-blue-600 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/80 dark:text-blue-400">
+        class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white/80 px-3 text-xs font-semibold text-blue-600 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/80 dark:text-blue-400">
         <span>{{ 'FILTER.MORE' | translate }}</span>
         <span class="text-[10px]">⌄</span>
       </button>
@@ -351,7 +409,8 @@
   <div class="xl:grid-cols-12 grid grid-cols-1 gap-3.5">
     <!-- Left: Container Inventory Table Container (9 Columns) -->
     <div class="xl:col-span-9 flex flex-col">
-      <div class="flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+      <div
+        class="flex flex-1 flex-col justify-between overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
         <!-- Table Subheader Bar -->
         <div
           class="flex items-center justify-between border-b border-slate-200/70 px-4 py-2.5 text-xs dark:border-slate-800/80">
@@ -390,8 +449,11 @@
               </button>
 
               @if (isColumnsDropdownOpen()) {
-                <div class="absolute right-0 top-full z-30 mt-1.5 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl dark:border-slate-800 dark:bg-[#111a2e]">
-                  <div class="mb-1 text-[11px] font-bold text-slate-400">{{ 'COMMON.VISIBLE_COLUMNS' | translate }}</div>
+                <div
+                  class="absolute right-0 top-full z-30 mt-1.5 w-44 rounded-xl border border-slate-200 bg-white p-2.5 shadow-xl dark:border-slate-800 dark:bg-[#111a2e]">
+                  <div class="mb-1 text-[11px] font-bold text-slate-400">
+                    {{ 'COMMON.VISIBLE_COLUMNS' | translate }}
+                  </div>
                   <label class="flex items-center gap-2 py-1 text-xs text-slate-700 dark:text-slate-200">
                     <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.CONTAINER_NO' | translate }}
                   </label>

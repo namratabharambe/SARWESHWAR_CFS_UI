@@ -12,13 +12,17 @@
   <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
       <nav class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
-        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{ 'BREADCRUMB.DASHBOARD' | translate }}</a>
+        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{
+          'BREADCRUMB.DASHBOARD' | translate
+        }}</a>
         <span>›</span>
         <span class="font-medium text-gray-800 dark:text-gray-200">{{ 'BREADCRUMB.ALERTS' | translate }}</span>
       </nav>
 
       <div class="mt-1 flex items-center gap-2">
-        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ 'ALERTS.TITLE' | translate }}</h1>
+        <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          {{ 'ALERTS.TITLE' | translate }}
+        </h1>
         <span
           class="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-bold text-rose-700 dark:bg-rose-950 dark:text-rose-300">
           <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-rose-500"></span>
@@ -52,7 +56,8 @@
   <!-- KPI Cards -->
   <section class="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5">
     <!-- Total Active Alerts -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-3">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400">
@@ -72,7 +77,7 @@
 
     <!-- Critical Mismatches -->
     <div
-      class="rounded-xl border border-rose-200 bg-rose-50/40 p-4 shadow-sm transition-all hover:shadow-md dark:border-rose-900/60 dark:bg-rose-950/20">
+      class="kpi-card rounded-xl border border-rose-200 bg-rose-50/40 p-4 shadow-sm transition-all dark:border-rose-900/60 dark:bg-rose-950/20">
       <div class="flex items-center gap-3">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400">
@@ -91,7 +96,8 @@
     </div>
 
     <!-- OCR Number Mismatches -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-3">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400">
@@ -110,7 +116,8 @@
     </div>
 
     <!-- Under Review -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-3">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400">
@@ -129,7 +136,8 @@
     </div>
 
     <!-- Resolved Today -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <div class="flex items-center gap-3">
         <div
           class="flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400">
@@ -149,11 +157,14 @@
   </section>
 
   <!-- Filter Bar -->
-  <section class="relative z-30 flex flex-wrap items-center justify-between gap-3.5 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  <section
+    class="relative z-20 flex flex-wrap items-center justify-between gap-3.5 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
     <div class="flex flex-1 flex-wrap items-center gap-2.5">
       <!-- Severity Filter -->
       <div class="flex flex-col">
-        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'FILTER.SEVERITY' | translate }}</span>
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{
+          'FILTER.SEVERITY' | translate
+        }}</span>
         <app-dropdown
           [options]="severityOptions"
           [value]="alertService.severityFilter()"
@@ -163,9 +174,9 @@
 
       <!-- Type Filter -->
       <div class="flex flex-col">
-        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500"
-          >{{ 'TABLE.TYPE' | translate }}</span
-        >
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{
+          'TABLE.TYPE' | translate
+        }}</span>
         <app-dropdown
           [options]="typeOptions"
           [value]="alertService.typeFilter()"
@@ -176,7 +187,9 @@
 
       <!-- Status Filter -->
       <div class="flex flex-col">
-        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ 'FILTER.STATUS' | translate }}</span>
+        <span class="px-1 text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{
+          'FILTER.STATUS' | translate
+        }}</span>
         <app-dropdown
           [options]="statusOptions"
           [value]="alertService.statusFilter()"
@@ -207,7 +220,8 @@
   </section>
 
   <!-- Alerts Table List -->
-  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  <section
+    class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
     <div class="overflow-x-auto">
       <table class="w-full text-left text-xs text-gray-700 dark:text-gray-300">
         <thead
@@ -250,21 +264,21 @@
               <td class="whitespace-nowrap px-4 py-3">
                 <span
                   class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
-                  [class.bg-rose-50]="alert.severity === 'Critical'"
-                  [class.text-rose-700]="alert.severity === 'Critical'"
-                  [class.border]="alert.severity === 'Critical'"
-                  [class.border-rose-200]="alert.severity === 'Critical'"
-                  [class.dark:bg-rose-950/60]="alert.severity === 'Critical'"
-                  [class.dark:text-rose-300]="alert.severity === 'Critical'"
-                  [class.bg-amber-50]="alert.severity === 'High'"
-                  [class.text-amber-700]="alert.severity === 'High'"
-                  [class.bg-blue-50]="alert.severity === 'Medium'"
-                  [class.text-blue-700]="alert.severity === 'Medium'">
+                  [ngClass]="{
+                    'border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-900/50 dark:bg-rose-950/60 dark:text-rose-300':
+                      alert.severity === 'Critical',
+                    'border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/50 dark:bg-amber-950/60 dark:text-amber-300':
+                      alert.severity === 'High',
+                    'border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/50 dark:bg-blue-950/60 dark:text-blue-300':
+                      alert.severity === 'Medium',
+                  }">
                   <span
                     class="h-1.5 w-1.5 rounded-full"
-                    [class.bg-rose-500]="alert.severity === 'Critical'"
-                    [class.bg-amber-500]="alert.severity === 'High'"
-                    [class.bg-blue-500]="alert.severity === 'Medium'"></span>
+                    [ngClass]="{
+                      'bg-rose-500': alert.severity === 'Critical',
+                      'bg-amber-500': alert.severity === 'High',
+                      'bg-blue-500': alert.severity === 'Medium',
+                    }"></span>
                   {{ alert.severity }}
                 </span>
               </td>
@@ -294,14 +308,13 @@
               <td class="whitespace-nowrap px-4 py-3">
                 <span
                   class="rounded-md px-2 py-0.5 text-[11px] font-semibold"
-                  [class.bg-rose-50]="alert.status === 'Active'"
-                  [class.text-rose-700]="alert.status === 'Active'"
-                  [class.dark:bg-rose-950/60]="alert.status === 'Active'"
-                  [class.dark:text-rose-300]="alert.status === 'Active'"
-                  [class.bg-amber-50]="alert.status === 'Under Review'"
-                  [class.text-amber-700]="alert.status === 'Under Review'"
-                  [class.bg-emerald-50]="alert.status === 'Resolved'"
-                  [class.text-emerald-700]="alert.status === 'Resolved'">
+                  [ngClass]="{
+                    'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300': alert.status === 'Active',
+                    'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300':
+                      alert.status === 'Under Review',
+                    'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300':
+                      alert.status === 'Resolved',
+                  }">
                   {{ alert.status }}
                 </span>
               </td>

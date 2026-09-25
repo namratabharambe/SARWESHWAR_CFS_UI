@@ -3,7 +3,7 @@
     class="modal-backdrop animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm"
     (click)="onBackdropClick($event)">
     <div
-      class="modal-container relative flex max-h-[92vh] w-full max-w-3xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-850"
+      class="modal-container dark:bg-gray-850 relative flex max-h-[92vh] w-full max-w-3xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800"
       (click)="$event.stopPropagation()">
       <!-- Modal Header -->
       <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
@@ -13,7 +13,9 @@
             <span class="material-icons-outlined text-2xl">add_task</span>
           </div>
           <div>
-            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">{{ 'TASKS.MODAL_TITLE' | translate }}</h2>
+            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+              {{ 'TASKS.MODAL_TITLE' | translate }}
+            </h2>
             <p class="text-xs text-gray-500 dark:text-gray-400">{{ 'TASKS.MODAL_SUBTITLE' | translate }}</p>
           </div>
         </div>

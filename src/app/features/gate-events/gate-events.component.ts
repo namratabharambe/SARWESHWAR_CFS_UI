@@ -4,14 +4,21 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
-import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent, StatusBadgeComponent } from 'shared/components';
+import {
+  GatePhotoStripComponent,
+  GateCameraPhoto,
+  ConfidenceBadgeComponent,
+  StatusBadgeComponent,
+} from 'shared/components';
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
-import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.component';
-import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
+import { GateEventDetailComponent } from './components/gate-event-detail/gate-event-detail.component';
+import { ManualGateEntryComponent } from './components/manual-gate-entry/manual-gate-entry.component';
+import { NonErpContainerComponent } from './components/non-erp-container/non-erp-container.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import { GateEventDetailDto,
+import {
+  GateEventDetailDto,
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
@@ -49,7 +56,8 @@ export interface GateEventItem {
     FormsModule,
     TranslatePipe,
     GateEventDetailComponent,
-    GateInModalComponent,
+    ManualGateEntryComponent,
+    NonErpContainerComponent,
     DatePickerComponent,
     DropdownComponent,
     StatusBadgeComponent,
@@ -66,6 +74,7 @@ export class GateEventsComponent implements OnInit {
   private readonly router = inject(Router, { optional: true });
 
   public readonly gateMode = signal<'in' | 'out'>('in');
+  public readonly isNonErpView = signal<boolean>(false);
   public readonly events = signal<GateEventItem[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly activeTab = signal<'all' | 'arrivals' | 'departures'>('all');
@@ -150,6 +159,8 @@ export class GateEventsComponent implements OnInit {
     this.gateMode.set(isOut ? 'out' : 'in');
     this.cycleFilter.set(isOut ? 'OUT' : 'IN');
     this.currentPage.set(1);
+    this.isNonErpView.set(false);
+    this.selectedEventForDetails.set(null);
   }
 
   public ngOnInit(): void {
@@ -827,7 +838,15 @@ export class GateEventsComponent implements OnInit {
   }
 
   public openNonErpContainerModal(): void {
-    this.showToast('Non ERP Container workflow triggered.');
+    this.isNonErpView.set(true);
+  }
+
+  public closeNonErpView(): void {
+    this.isNonErpView.set(false);
+  }
+
+  public handleNonErpToast(message: string): void {
+    this.showToast(message);
   }
 
   public closeGateInModal(): void {

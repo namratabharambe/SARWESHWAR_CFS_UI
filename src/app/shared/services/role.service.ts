@@ -16,8 +16,6 @@ export class RoleService extends BaseApiService<Role[], Role, Role> {
   }
 
   public listRoles(): Observable<Role[]> {
-    return this.get().pipe(
-      catchError(() => of([])),
-    );
+    return this.get().pipe(catchError(() => of([])));
   }
 }

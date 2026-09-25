@@ -3,7 +3,7 @@
     class="modal-backdrop animate-fadeIn fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-sm"
     (click)="onBackdropClick($event)">
     <div
-      class="modal-container relative flex max-h-[92vh] w-full max-w-2xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800 dark:bg-gray-850"
+      class="modal-container dark:bg-gray-850 relative flex max-h-[92vh] w-full max-w-2xl flex-col rounded-3xl border border-gray-200 bg-white shadow-2xl dark:border-gray-800"
       (click)="$event.stopPropagation()">
       <!-- Header -->
       <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
@@ -13,7 +13,9 @@
             <span class="material-icons-outlined text-2xl">add_box</span>
           </div>
           <div>
-            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">{{ 'DIALOG.ADD_INVENTORY' | translate }}</h2>
+            <h2 class="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+              {{ 'DIALOG.ADD_INVENTORY' | translate }}
+            </h2>
             <p class="text-xs text-gray-500 dark:text-gray-400">
               {{ 'INVENTORY.SUBTITLE' | translate }}
             </p>
@@ -53,7 +55,9 @@
 
           <!-- Size Type -->
           <div>
-            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'TABLE.SIZE_TYPE' | translate }}</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{
+              'TABLE.SIZE_TYPE' | translate
+            }}</label>
             <app-dropdown
               [value]="sizeType()"
               (valueChange)="sizeType.set($event)"
@@ -66,7 +70,9 @@
 
           <!-- Shipping Line -->
           <div>
-            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.LINE' | translate }}</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{
+              'FILTER.LINE' | translate
+            }}</label>
             <app-dropdown
               [value]="line()"
               (valueChange)="line.set($event)"
@@ -79,7 +85,9 @@
 
           <!-- Full / Empty -->
           <div>
-            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.FULL_EMPTY' | translate }}</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{
+              'FILTER.FULL_EMPTY' | translate
+            }}</label>
             <app-dropdown
               [value]="fullEmpty()"
               (valueChange)="fullEmpty.set($event)"
@@ -91,7 +99,9 @@
 
           <!-- Yard Status -->
           <div>
-            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'TABLE.YARD_STATUS' | translate }}</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{
+              'TABLE.YARD_STATUS' | translate
+            }}</label>
             <app-dropdown
               [value]="yardStatus()"
               (valueChange)="yardStatus.set($event)"
@@ -109,7 +119,9 @@
           </label>
           <div class="grid grid-cols-4 gap-2.5 text-xs">
             <div>
-              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.BLOCK' | translate }}</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{
+                'FILTER.BLOCK' | translate
+              }}</label>
               <app-dropdown
                 [value]="block()"
                 (valueChange)="block.set($event)"
@@ -118,7 +130,9 @@
                 [fullWidth]="true" />
             </div>
             <div>
-              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.ROW' | translate }}</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{
+                'FILTER.ROW' | translate
+              }}</label>
               <input
                 type="text"
                 [ngModel]="row()"
@@ -127,7 +141,9 @@
                 class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
             <div>
-              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.BAY' | translate }}</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{
+                'FILTER.BAY' | translate
+              }}</label>
               <input
                 type="text"
                 [ngModel]="bay()"
@@ -136,7 +152,9 @@
                 class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono font-bold text-gray-900 shadow-sm focus:border-blue-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
             <div>
-              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{ 'FILTER.TIER' | translate }}</label>
+              <label class="mb-1 block text-[11px] text-gray-500 dark:text-gray-400">{{
+                'FILTER.TIER' | translate
+              }}</label>
               <input
                 type="text"
                 [ngModel]="tier()"
@@ -150,7 +168,9 @@
         <!-- Customer & Additional Details -->
         <div class="grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2">
           <div>
-            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{ 'FILTER.CUSTOMER' | translate }}</label>
+            <label class="mb-1 block font-semibold text-gray-700 dark:text-gray-300">{{
+              'FILTER.CUSTOMER' | translate
+            }}</label>
             <input
               type="text"
               [ngModel]="customerName()"
