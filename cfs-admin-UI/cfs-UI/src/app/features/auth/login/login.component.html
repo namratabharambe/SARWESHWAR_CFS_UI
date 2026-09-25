@@ -1,48 +1,130 @@
-<div class="login-layout">
-  <!-- Background Overlay -->
-  <div class="login-bg-overlay"></div>
+<div
+  class="login-layout animate-bg-fade relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#060e1a] bg-[url('/cfs-terminal-bg.jpg')] bg-cover bg-center bg-no-repeat">
+  <!-- Layered Background Overlays for Dramatic Visual Contrast -->
+  <div
+    class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-r from-[#040811]/95 via-[#060e1a]/85 to-[#060e1a]/70"></div>
+  <div
+    class="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top_left,rgba(37,99,235,0.18),transparent_55%)]"></div>
 
-  <!-- Top Left Brand Header -->
-  <header class="top-brand-header">
-    <div class="brand-logo-box">
+  <!-- Top Left Brand Header: Fade + Slide Down (400ms) -->
+  <header
+    class="animate-logo-slide-down relative z-[2] flex items-center justify-center gap-3.5 px-6 py-6 sm:px-12 sm:py-8 lg:justify-start">
+    <div
+      class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 font-sans text-lg font-extrabold text-white shadow-lg shadow-orange-600/35">
       <span>SL</span>
     </div>
-    <div class="brand-titles">
-      <strong class="brand-name">SARWESHWAR CFS</strong>
-      <span class="brand-sub">Container Terminal Control Tower</span>
+    <div class="flex flex-col">
+      <strong class="font-sans text-lg font-bold leading-tight tracking-wider text-white">SARWESHWAR CFS</strong>
+      <span class="mt-0.5 text-xs font-medium tracking-wide text-slate-300">Container Terminal Control Tower</span>
     </div>
   </header>
 
-  <div class="login-main-container">
-    <!-- Left Hero Section -->
-    <section class="hero-section">
-      <div class="hero-content">
-        <p class="hero-eyebrow">CONTAINER TERMINAL AUTOMATION</p>
-        <h1 class="hero-headline">One control tower for every container movement.</h1>
-        <p class="hero-description">
+  <!-- Main Hero & Login Split View -->
+  <div
+    class="relative z-[2] mx-auto grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-10 px-4 pb-8 sm:px-8 sm:pb-12 lg:grid-cols-[1.2fr_0.8fr] lg:px-12">
+    <!-- Left Hero Section: Fade + Slide Up (500ms) -->
+    <section class="animate-hero-slide-up flex flex-col justify-center pr-0 text-center lg:pr-6 lg:text-left">
+      <div class="mx-auto max-w-xl lg:mx-0">
+        <!-- Eyebrow Pill -->
+        <div
+          class="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-500/10 px-3.5 py-1.5 backdrop-blur-sm">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]"></span>
+          <span class="hero-eyebrow font-bold uppercase tracking-[0.16em]">CONTAINER TERMINAL AUTOMATION</span>
+        </div>
+
+        <!-- Hero Headline -->
+        <h1 class="hero-headline mb-5 font-sans font-bold leading-[1.18] tracking-tight text-white">
+          One control tower for every container movement.
+        </h1>
+
+        <!-- Hero Description -->
+        <p class="hero-description mb-8 text-sm leading-relaxed text-slate-200 sm:text-base">
           Gate OCR, yard inventory, reach-stacker tasks, RTK location intelligence, damage evidence, ERP synchronization
           and complete audit visibility.
         </p>
 
-        <div class="hero-feature-pills">
-          <span class="feature-pill">GateVision OCR</span>
-          <span class="feature-pill">Live Yard Map</span>
-          <span class="feature-pill">Sensor Fusion</span>
+        <!-- Feature Badges: Staggered Fade + Slide (400ms each) with Exact Shared Icons -->
+        <div class="hero-feature-pills flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+          <!-- Badge 1: GateVision OCR (Viewfinder / Scan Icon) -->
+          <div
+            class="feature-pill animate-badge-1 flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs font-medium tracking-wide text-white shadow-lg sm:text-sm">
+            <svg
+              class="h-4 w-4 shrink-0 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+              <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+            </svg>
+            <span>GateVision OCR</span>
+          </div>
+
+          <!-- Badge 2: Live Yard Map (Folded Map Icon) -->
+          <div
+            class="feature-pill animate-badge-2 flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs font-medium tracking-wide text-white shadow-lg sm:text-sm">
+            <svg
+              class="h-4 w-4 shrink-0 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" fill="none" />
+              <line x1="8" y1="2" x2="8" y2="18" />
+              <line x1="16" y1="6" x2="16" y2="22" />
+            </svg>
+            <span>Live Yard Map</span>
+          </div>
+
+          <!-- Badge 3: Sensor Fusion (Signal / Sensor Wave Icon) -->
+          <div
+            class="feature-pill animate-badge-3 flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs font-medium tracking-wide text-white shadow-lg sm:text-sm">
+            <svg
+              class="h-4 w-4 shrink-0 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M4.93 19.07a10 10 0 0 1 0-14.14" />
+              <path d="M7.76 16.24a6 6 0 0 1 0-8.48" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+              <path d="M16.24 7.76a6 6 0 0 1 0 8.48" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+            <span>Sensor Fusion</span>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Right Login Card Section -->
-    <section class="login-card-section">
-      <div class="login-card">
-        <div class="card-header">
-          <h2 class="card-title">{{ 'AUTH.LOGIN_TITLE' | translate }}</h2>
-          <p class="card-subtitle">{{ 'AUTH.LOGIN_SUBTITLE' | translate }}</p>
+    <!-- Right Login Card Section: Fade + Slide Up (450ms) -->
+    <section class="flex w-full items-center justify-center lg:justify-end">
+      <div
+        class="login-card animate-card-slide-up w-full max-w-[430px] rounded-3xl bg-white p-7 text-slate-900 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.55)] ring-1 ring-black/5 transition-colors dark:border dark:border-slate-800 dark:bg-[#111928] dark:text-gray-100 sm:p-9">
+        <!-- Card Header -->
+        <div class="mb-6">
+          <h2 class="card-title font-sans text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+            {{ 'AUTH.LOGIN_TITLE' | translate }}
+          </h2>
+          <p class="card-subtitle mt-1.5 text-xs text-slate-500 dark:text-slate-400 sm:text-sm">
+            {{ 'AUTH.LOGIN_SUBTITLE' | translate }}
+          </p>
         </div>
 
+        <!-- Validation & Error Alert: Fade-in (150ms) -->
         @if (error()) {
-          <div class="login-error-alert" role="alert">
-            <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
+          <div
+            class="animate-validation-fade mb-5 flex items-center gap-2.5 rounded-xl border border-red-200 bg-red-50 p-3 text-xs leading-snug text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 sm:text-sm"
+            role="alert">
+            <svg class="h-4.5 w-4.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -52,39 +134,44 @@
           </div>
         }
 
-        <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
-          <!-- Username / Email Field -->
-          <div class="form-group">
-            <label for="login-username" class="input-label">{{ 'AUTH.EMAIL' | translate }}</label>
+        <!-- Login Form -->
+        <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-4">
+          <!-- Username / Email Field with 180ms Focus Animation -->
+          <div class="flex flex-col gap-1.5">
+            <label for="login-username" class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              {{ 'AUTH.EMAIL' | translate }}
+            </label>
             <input
               id="login-username"
               type="text"
-              class="form-control"
+              class="form-input-control h-11 w-full rounded-xl border border-slate-300/80 bg-slate-50/70 px-3.5 text-sm text-slate-900 placeholder-slate-400 outline-none hover:border-slate-400 hover:bg-white focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 dark:border-slate-700 dark:bg-slate-800/90 dark:text-white dark:placeholder-slate-500 dark:hover:border-slate-600 dark:focus:border-blue-500"
               placeholder="vijay.mahale@sarweshwar.com"
               [formControl]="form.controls.userName"
               data-control-name="userName"
               autocomplete="username" />
           </div>
 
-          <!-- Password Field with Show/Hide Toggle -->
-          <div class="form-group">
-            <label for="login-password" class="input-label">{{ 'AUTH.PASSWORD' | translate }}</label>
-            <div class="password-input-wrapper">
+          <!-- Password Field with 180ms Focus Animation & Toggle -->
+          <div class="flex flex-col gap-1.5">
+            <label for="login-password" class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              {{ 'AUTH.PASSWORD' | translate }}
+            </label>
+            <div class="relative flex items-center">
               <input
                 id="login-password"
                 [type]="showPassword() ? 'text' : 'password'"
-                class="form-control password-control"
+                class="form-input-control h-11 w-full rounded-xl border border-slate-300/80 bg-slate-50/70 pl-3.5 pr-11 text-sm text-slate-900 placeholder-slate-400 outline-none hover:border-slate-400 hover:bg-white focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-600/20 dark:border-slate-700 dark:bg-slate-800/90 dark:text-white dark:placeholder-slate-500 dark:hover:border-slate-600 dark:focus:border-blue-500"
                 placeholder="••••••••••••"
                 [formControl]="form.controls.password"
                 data-control-name="password"
                 autocomplete="current-password" />
               <button
                 type="button"
-                class="btn-toggle-password"
+                class="absolute right-2.5 flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-colors duration-150 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200"
                 (click)="togglePasswordVisibility()"
                 [title]="showPassword() ? ('AUTH.HIDE_PASSWORD' | translate) : ('AUTH.SHOW_PASSWORD' | translate)">
                 @if (showPassword()) {
-                  <svg class="eye-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <svg class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
                     <path
                       fill-rule="evenodd"
@@ -92,7 +179,7 @@
                       clip-rule="evenodd" />
                   </svg>
                 } @else {
-                  <svg class="eye-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <svg class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
@@ -106,22 +193,31 @@
           </div>
 
           <!-- Remember me & Forgot Password -->
-          <div class="form-options-row">
-            <label class="checkbox-container">
-              <input type="checkbox" [formControl]="form.controls.rememberMe" />
-              <span class="checkbox-label">{{ 'AUTH.REMEMBER_DEVICE' | translate }}</span>
+          <div class="flex items-center justify-between text-xs sm:text-sm">
+            <label class="inline-flex cursor-pointer select-none items-center gap-2">
+              <input
+                type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-blue-600 accent-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800"
+                [formControl]="form.controls.rememberMe" />
+              <span class="font-medium text-slate-600 dark:text-slate-300">
+                {{ 'AUTH.REMEMBER_DEVICE' | translate }}
+              </span>
             </label>
-            <a href="javascript:void(0)" class="forgot-password-link">{{ 'AUTH.FORGOT_PASSWORD' | translate }}</a>
+            <a
+              href="javascript:void(0)"
+              class="text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300">
+              {{ 'AUTH.FORGOT_PASSWORD' | translate }}
+            </a>
           </div>
 
-          <!-- Submit Button -->
+          <!-- Primary Submit Button with 180ms Hover Lift & 140ms Click Scale -->
           <button
             type="submit"
-            class="btn-login-submit"
+            class="btn-primary-action flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-600/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-md"
             [appFocusInvalidField]="form"
             [disabled]="form.invalid || auth.loading()">
             @if (auth.loading()) {
-              <span class="btn-spinner"></span>
+              <span class="animate-auth-spinner h-4 w-4 rounded-full border-2 border-white/30 border-t-white"></span>
               <span>{{ 'COMMON.LOADING' | translate }}</span>
             } @else {
               <span>{{ 'AUTH.SUBMIT_BUTTON' | translate }}</span>
@@ -131,9 +227,12 @@
           <!-- Divider -->
           <app-centered-divider label="OR CONTINUE WITH" />
 
-          <!-- Microsoft Entra SSO Button -->
-          <button type="button" class="btn-sso" (click)="handleSso()">
-            <svg class="microsoft-icon" viewBox="0 0 21 21">
+          <!-- Microsoft Entra SSO Button with Hover & Click Scale -->
+          <button
+            type="button"
+            class="flex h-11 w-full items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 shadow-sm transition-all duration-150 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 active:scale-[0.98] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-700 sm:text-sm"
+            (click)="handleSso()">
+            <svg class="h-4 w-4 shrink-0" viewBox="0 0 21 21">
               <rect x="1" y="1" width="9" height="9" fill="#f25022" />
               <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
               <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
@@ -143,9 +242,18 @@
           </button>
 
           <!-- Security Note Box -->
-          <div class="mfa-security-box">
-            <div class="mfa-bar"></div>
-            <p class="mfa-text">{{ 'AUTH.MFA_NOTE' | translate }}</p>
+          <div
+            class="flex items-start gap-2.5 rounded-xl border border-blue-200/80 bg-blue-50/80 p-3 text-xs leading-relaxed text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-300">
+            <svg
+              class="mt-0.5 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400"
+              viewBox="0 0 20 20"
+              fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.649 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.35-.166-2.001A11.954 11.954 0 0110 1.944zM11 14a1 1 0 11-2 0 1 1 0 012 0zm0-7a1 1 0 10-2 0v3a1 1 0 102 0V7z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>{{ 'AUTH.MFA_NOTE' | translate }}</span>
           </div>
         </form>
       </div>

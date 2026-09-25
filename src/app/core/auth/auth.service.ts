@@ -56,7 +56,6 @@ export class AuthService {
     }
   }
 
-
   public readonly sidebarModules = signal<NavigationModuleDto[]>([]);
 
   public readonly isSystemAdmin = computed<boolean>(() => {
@@ -199,17 +198,16 @@ export class AuthService {
     }
 
     // Check client_ids claims
-    const rawCids =
-      claims['client_ids'] ??
-      claims['ClientId'] ??
-      claims['clientId'] ??
-      claims['client_id'];
+    const rawCids = claims['client_ids'] ?? claims['ClientId'] ?? claims['clientId'] ?? claims['client_id'];
     const singleName = claims['ClientName'] ?? claims['clientName'] ?? claims['client'] ?? 'Primary Client';
 
     if (rawCids) {
       const ids = Array.isArray(rawCids)
         ? rawCids.map((id) => String(id).trim()).filter(Boolean)
-        : String(rawCids).split(',').map((id) => id.trim()).filter(Boolean);
+        : String(rawCids)
+            .split(',')
+            .map((id) => id.trim())
+            .filter(Boolean);
 
       ids.forEach((id, index) => {
         if (!clientMap.has(id)) {
@@ -242,12 +240,7 @@ export class AuthService {
       }
     }
 
-    const rawCid =
-      claims['client_ids'] ??
-      claims['ClientId'] ??
-      claims['clientId'] ??
-      claims['client_id'] ??
-      '';
+    const rawCid = claims['client_ids'] ?? claims['ClientId'] ?? claims['clientId'] ?? claims['client_id'] ?? '';
     const primaryCid = Array.isArray(rawCid) ? String(rawCid[0]) : String(rawCid).split(',')[0].trim();
 
     // 1. Check structured sites claims (e.g. sites array or JSON)
@@ -279,11 +272,19 @@ export class AuthService {
         if (typeof item === 'string') {
           const sid = item.trim();
           if (sid && !siteMap.has(sid)) {
-            siteMap.set(sid, { id: sid, siteId: sid, name: `Site (${sid.slice(0, 8)})`, code: '', clientId: primaryCid });
+            siteMap.set(sid, {
+              id: sid,
+              siteId: sid,
+              name: `Site (${sid.slice(0, 8)})`,
+              code: '',
+              clientId: primaryCid,
+            });
           }
         } else if (item && typeof item === 'object') {
           const id = String(item.SiteId ?? item.siteId ?? item.site_ids ?? item.id ?? item.Id ?? '').trim();
-          const name = String(item.SiteName ?? item.siteName ?? item.name ?? item.Name ?? (id ? `Site (${id.slice(0, 8)})` : 'Site'));
+          const name = String(
+            item.SiteName ?? item.siteName ?? item.name ?? item.Name ?? (id ? `Site (${id.slice(0, 8)})` : 'Site'),
+          );
           const code = String(item.Code ?? item.code ?? item.SiteCode ?? item.siteCode ?? '');
           const clientId = String(item.ClientId ?? item.clientId ?? item.client_ids ?? item.client_id ?? primaryCid);
           if (id) {
@@ -293,7 +294,7 @@ export class AuthService {
             } else {
               siteMap.set(id, {
                 ...existing,
-                name: (!existing.name || existing.name.startsWith('Site (')) ? name : existing.name,
+                name: !existing.name || existing.name.startsWith('Site (') ? name : existing.name,
                 code: code || existing.code,
                 clientId: clientId || existing.clientId,
               });
@@ -306,9 +307,7 @@ export class AuthService {
     // 2. Check site_role claim (e.g. "01a07fd0-d69a-7998-bd0c-48b96d3b8a88|SiteAdmin,01a07fd0-d69a-7998-bd0c-48b96d3b8a89|Operator")
     const rawSiteRole = claims['site_role'] ?? claims['SiteRole'];
     if (rawSiteRole) {
-      const entries = Array.isArray(rawSiteRole)
-        ? rawSiteRole
-        : String(rawSiteRole).split(',');
+      const entries = Array.isArray(rawSiteRole) ? rawSiteRole : String(rawSiteRole).split(',');
 
       entries.forEach((entry: any) => {
         const parts = String(entry).trim().split('|');
@@ -331,7 +330,10 @@ export class AuthService {
     if (rawSiteIds) {
       const ids = Array.isArray(rawSiteIds)
         ? rawSiteIds.map((id) => String(id).trim()).filter(Boolean)
-        : String(rawSiteIds).split(',').map((id) => id.trim()).filter(Boolean);
+        : String(rawSiteIds)
+            .split(',')
+            .map((id) => id.trim())
+            .filter(Boolean);
 
       const singleName = claims['SiteName'] ?? claims['siteName'] ?? claims['site'];
 
@@ -356,15 +358,16 @@ export class AuthService {
    */
   public loadMySites(): void {
     if (!this.authenticated() || this.isBypassMode()) return;
-    this.getMySites().pipe(catchError(() => of([]))).subscribe({
-      next: (sites) => {
-        if (sites && sites.length > 0) {
-          this.accessibleUserSites.set(sites);
-        }
-      },
-    });
+    this.getMySites()
+      .pipe(catchError(() => of([])))
+      .subscribe({
+        next: (sites) => {
+          if (sites && sites.length > 0) {
+            this.accessibleUserSites.set(sites);
+          }
+        },
+      });
   }
-
 
   public readonly userName = computed<string>(() => {
     const claims = this.userClaims();
@@ -417,7 +420,11 @@ export class AuthService {
       return tokenClients[0].name;
     }
 
-    return selectedCid ? (selectedCid.length > 8 ? `Client (${selectedCid.slice(0, 8)})` : selectedCid) : 'Primary Client';
+    return selectedCid
+      ? selectedCid.length > 8
+        ? `Client (${selectedCid.slice(0, 8)})`
+        : selectedCid
+      : 'Primary Client';
   });
 
   public readonly siteName = computed<string>(() => {
@@ -625,7 +632,14 @@ export class AuthService {
     const isSite = this.isSiteAdmin();
 
     const modules: NavigationModuleDto[] = [
-      { id: 'dashboard', title: 'Dashboard', transKey: 'NAV.DASHBOARD', icon: 'dashboard', route: '/dashboard', order: 1 },
+      {
+        id: 'dashboard',
+        title: 'Dashboard',
+        transKey: 'NAV.DASHBOARD',
+        icon: 'dashboard',
+        route: '/dashboard',
+        order: 1,
+      },
       {
         id: 'gate-events',
         title: 'Gate Events',
@@ -634,12 +648,33 @@ export class AuthService {
         route: '/gate-events',
         order: 2,
         children: [
-          { id: 'gate-in', title: 'Gate In', transKey: 'NAV.GATE_IN', icon: 'login', route: '/gate-events/in', order: 1 },
-          { id: 'gate-out', title: 'Gate Out', transKey: 'NAV.GATE_OUT', icon: 'logout', route: '/gate-events/out', order: 2 },
+          {
+            id: 'gate-in',
+            title: 'Gate In',
+            transKey: 'NAV.GATE_IN',
+            icon: 'login',
+            route: '/gate-events/in',
+            order: 1,
+          },
+          {
+            id: 'gate-out',
+            title: 'Gate Out',
+            transKey: 'NAV.GATE_OUT',
+            icon: 'logout',
+            route: '/gate-events/out',
+            order: 2,
+          },
         ],
       },
       { id: 'tasks', title: 'Tasks', transKey: 'NAV.TASKS', icon: 'task_alt', route: '/tasks', order: 3 },
-      { id: 'inventory', title: 'Inventory', transKey: 'NAV.INVENTORY', icon: 'inventory_2', route: '/inventory', order: 4 },
+      {
+        id: 'inventory',
+        title: 'Inventory',
+        transKey: 'NAV.INVENTORY',
+        icon: 'inventory_2',
+        route: '/inventory',
+        order: 4,
+      },
       { id: 'reports', title: 'Reports', transKey: 'NAV.REPORTS', icon: 'bar_chart', route: '/reports', order: 5 },
       { id: 'alerts', title: 'Alerts', transKey: 'NAV.ALERTS', icon: 'shield', route: '/alerts', order: 6 },
     ];
@@ -656,7 +691,14 @@ export class AuthService {
           { id: 'clients', title: 'Clients', transKey: 'NAV.CLIENTS', icon: 'business', route: '/clients', order: 1 },
           { id: 'sites', title: 'Sites', transKey: 'NAV.SITES', icon: 'location_on', route: '/sites', order: 2 },
           { id: 'users', title: 'Users', transKey: 'NAV.USERS', icon: 'people', route: '/users', order: 3 },
-          { id: 'roles', title: 'Roles', transKey: 'NAV.ROLES', icon: 'admin_panel_settings', route: '/roles', order: 4 },
+          {
+            id: 'roles',
+            title: 'Roles',
+            transKey: 'NAV.ROLES',
+            icon: 'admin_panel_settings',
+            route: '/roles',
+            order: 4,
+          },
         ],
       });
     } else if (isSite) {
@@ -670,7 +712,14 @@ export class AuthService {
         children: [
           { id: 'sites', title: 'Sites', transKey: 'NAV.SITES', icon: 'location_on', route: '/sites', order: 1 },
           { id: 'users', title: 'Users', transKey: 'NAV.USERS', icon: 'people', route: '/users', order: 2 },
-          { id: 'roles', title: 'Roles', transKey: 'NAV.ROLES', icon: 'admin_panel_settings', route: '/roles', order: 3 },
+          {
+            id: 'roles',
+            title: 'Roles',
+            transKey: 'NAV.ROLES',
+            icon: 'admin_panel_settings',
+            route: '/roles',
+            order: 3,
+          },
         ],
       });
     }
@@ -734,7 +783,10 @@ export class AuthService {
   public logout(): void {
     this.sessionExpired.set(false);
     // Best effort API notification
-    this.http.post(`${this.apiBaseUrl}/auth/logout`, {}).pipe(catchError(() => of(null))).subscribe();
+    this.http
+      .post(`${this.apiBaseUrl}/auth/logout`, {})
+      .pipe(catchError(() => of(null)))
+      .subscribe();
 
     sessionStorage.removeItem(this.tokenKey);
     sessionStorage.removeItem(this.refreshTokenKey);
@@ -842,10 +894,30 @@ export class AuthService {
         { id: '01a07f00-0000-0000-0000-000000000003', name: 'Global Port Terminals', code: 'GPT' },
       ],
       sites: [
-        { id: '01a07f00-0000-0000-0000-000000000011', name: 'Nhava Sheva Terminal (JNPT)', code: 'JNPT-01', clientId: '01a07f00-0000-0000-0000-000000000001' },
-        { id: '01a07f00-0000-0000-0000-000000000012', name: 'Mundra CFS Yard', code: 'MUN-CFS', clientId: '01a07f00-0000-0000-0000-000000000001' },
-        { id: '01a07f00-0000-0000-0000-000000000013', name: 'Chennai Port Yard A', code: 'MAA-01', clientId: '01a07f00-0000-0000-0000-000000000002' },
-        { id: '01a07f00-0000-0000-0000-000000000014', name: 'Kolkata Dock Inland', code: 'CCU-02', clientId: '01a07f00-0000-0000-0000-000000000003' },
+        {
+          id: '01a07f00-0000-0000-0000-000000000011',
+          name: 'Nhava Sheva Terminal (JNPT)',
+          code: 'JNPT-01',
+          clientId: '01a07f00-0000-0000-0000-000000000001',
+        },
+        {
+          id: '01a07f00-0000-0000-0000-000000000012',
+          name: 'Mundra CFS Yard',
+          code: 'MUN-CFS',
+          clientId: '01a07f00-0000-0000-0000-000000000001',
+        },
+        {
+          id: '01a07f00-0000-0000-0000-000000000013',
+          name: 'Chennai Port Yard A',
+          code: 'MAA-01',
+          clientId: '01a07f00-0000-0000-0000-000000000002',
+        },
+        {
+          id: '01a07f00-0000-0000-0000-000000000014',
+          name: 'Kolkata Dock Inland',
+          code: 'CCU-02',
+          clientId: '01a07f00-0000-0000-0000-000000000003',
+        },
       ],
       exp: 253402300799,
     };
@@ -875,11 +947,7 @@ export class AuthService {
   private initContextFromToken(claims: any = this.userClaims()): void {
     if (!claims) return;
     if (!this.selectedClientId()) {
-      const cid =
-        claims['client_ids'] ??
-        claims['ClientId'] ??
-        claims['clientId'] ??
-        claims['client_id'];
+      const cid = claims['client_ids'] ?? claims['ClientId'] ?? claims['clientId'] ?? claims['client_id'];
       let idStr = '';
       if (cid) {
         idStr = Array.isArray(cid) ? String(cid[0]) : String(cid).split(',')[0].trim();
@@ -898,11 +966,7 @@ export class AuthService {
       }
     }
     if (!this.selectedSiteId()) {
-      const sid =
-        claims['site_ids'] ??
-        claims['SiteId'] ??
-        claims['siteId'] ??
-        claims['site_id'];
+      const sid = claims['site_ids'] ?? claims['SiteId'] ?? claims['siteId'] ?? claims['site_id'];
       let idStr = '';
       if (sid) {
         idStr = Array.isArray(sid) ? String(sid[0]) : String(sid).split(',')[0].trim();

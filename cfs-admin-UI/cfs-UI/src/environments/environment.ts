@@ -3,4 +3,3 @@ export const environment = {
   apiBaseUrl: '/api',
   gateApiBaseUrl: '/api/v1',
 };
-

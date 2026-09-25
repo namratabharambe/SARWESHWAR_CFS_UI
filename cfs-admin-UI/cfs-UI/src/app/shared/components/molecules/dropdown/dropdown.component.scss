@@ -112,4 +112,16 @@
 
 .option-item {
   user-select: none;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background-color: #f1f5f9;
+  }
+
+  :host-context(.dark) & {
+    &:hover {
+      background-color: #1e293b;
+      color: #ffffff;
+    }
+  }
 }

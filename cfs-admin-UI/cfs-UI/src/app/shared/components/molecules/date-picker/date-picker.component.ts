@@ -1,14 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  computed,
-  effect,
-  inject,
-  input,
-  model,
-  signal,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, computed, effect, inject, input, model, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -59,13 +49,33 @@ export class DatePickerComponent {
   public readonly selectedPeriod = signal<'AM' | 'PM'>('PM');
 
   public readonly monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   public readonly shortMonthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
   public readonly weekDays = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
@@ -340,7 +350,7 @@ export class DatePickerComponent {
     if (displayMatch) {
       const day = parseInt(displayMatch[1], 10);
       const mStr = displayMatch[2].slice(0, 3).toLowerCase();
-      const mIdx = this.shortMonthNames.findIndex(m => m.toLowerCase() === mStr);
+      const mIdx = this.shortMonthNames.findIndex((m) => m.toLowerCase() === mStr);
       const year = parseInt(displayMatch[3], 10);
       if (mIdx >= 0) {
         return new Date(year, mIdx, day);

@@ -1,3 +1,25 @@
 :host {
   display: block;
 }
+
+/* Scope Toggle Card Transitions */
+.scope-toggle-card {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Role Card on Board Hover */
+.role-card {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}

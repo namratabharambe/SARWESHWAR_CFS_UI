@@ -1,11 +1,88 @@
-@keyframes fadeInUp {
-  from {
+/* ==========================================================================
+   Dashboard Entrance Animations (Coordinated, Staggered, Hardware-Accelerated)
+   Fires smoothly when navigating to the dashboard (e.g., right after login).
+   ========================================================================== */
+
+/* 1. Main Dashboard Container Entrance: Scale, Lift & Soft Glow Fade */
+@keyframes dashboardOpenEntrance {
+  0% {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(28px) scale(0.978);
+    filter: blur(4px);
   }
-  to {
+  60% {
+    filter: blur(0);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* 2. Top Ambient Sheen Laser Line: Smooth sweep across top edge on open */
+@keyframes dashboardSheenPass {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(250%);
+    opacity: 0;
+  }
+}
+
+/* 3. KPI Metric Cards Staggered Pop-In with Spring Effect */
+@keyframes kpiCardPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.92);
+  }
+  75% {
+    transform: translateY(-2px) scale(1.015);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 4. Operations Panel - Activity Log (Smooth slide from left-bottom) */
+@keyframes panelSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-20px, 24px, 0) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 5. Operations Panel - Alerts (Smooth slide from right-bottom) */
+@keyframes panelSlideRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(20px, 24px, 0) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 6. Analytics Cards (Yard, Donut, Inventory) Staggered Slide-Up */
+@keyframes analyticsCardUp {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -15,9 +92,118 @@
 }
 
 .dashboard-page {
-  animation: fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  will-change: transform, opacity, filter;
+  animation: dashboardOpenEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top center;
 
-  section {
-    transition: all 0.2s ease-in-out;
+  /* Top Sheen Line container */
+  .dashboard-sheen-line {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 30;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(59, 130, 246, 0.8),
+        rgba(147, 197, 253, 0.95),
+        rgba(59, 130, 246, 0.8),
+        transparent
+      );
+      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+      animation: dashboardSheenPass 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    }
+  }
+
+  /* Section 1: KPI Metrics Grid with 5-Card Staggered Pop-In */
+  .dashboard-section-kpi {
+    .dashboard-kpi-card {
+      display: block;
+      height: 100%;
+      will-change: transform, opacity;
+      animation: kpiCardPopIn 0.52s cubic-bezier(0.2, 0.9, 0.3, 1.05) both;
+
+      &:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+      &:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      &:nth-child(3) {
+        animation-delay: 0.22s;
+      }
+      &:nth-child(4) {
+        animation-delay: 0.29s;
+      }
+      &:nth-child(5) {
+        animation-delay: 0.36s;
+      }
+    }
+  }
+
+  /* Section 2: Operations (Recent Gate Activity & Exception Alerts) */
+  .dashboard-section-operations {
+    .panel-recent-activity {
+      will-change: transform, opacity;
+      animation: panelSlideLeft 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.32s;
+    }
+
+    .panel-exception-alerts {
+      will-change: transform, opacity;
+      animation: panelSlideRight 0.58s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.4s;
+    }
+  }
+
+  /* Section 3: Analytics (Yard Snapshot, Status Donut, Inventory Summary) */
+  .dashboard-section-analytics {
+    .panel-yard-snapshot {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.46s;
+    }
+
+    .panel-status-donut {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.54s;
+    }
+
+    .panel-inventory-summary {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.62s;
+    }
+  }
+}
+
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page,
+  .dashboard-sheen-line::after,
+  .dashboard-kpi-card,
+  .panel-recent-activity,
+  .panel-exception-alerts,
+  .panel-yard-snapshot,
+  .panel-status-donut,
+  .panel-inventory-summary {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }

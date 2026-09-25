@@ -171,6 +171,83 @@ select {
   }
 }
 
+/* Universal Inputs, Searchbars & Selects Interactive Hover & Focus */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='search'],
+input[type='number'],
+input[type='tel'],
+textarea,
+select,
+.filter-input {
+  transition:
+    border-color 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
+
+  &:hover:not(:disabled):not(:focus) {
+    border-color: #94a3b8 !important;
+  }
+
+  &:focus {
+    outline: none !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  }
+}
+
+.dark {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='number'],
+  input[type='tel'],
+  textarea,
+  select,
+  .filter-input {
+    &:hover:not(:disabled):not(:focus) {
+      border-color: rgba(96, 165, 250, 0.5) !important;
+    }
+
+    &:focus {
+      outline: none !important;
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+    }
+  }
+}
+
+/* Universal Table Row Hover States (Light & Dark Mode) */
+tbody tr {
+  transition: background-color 0.15s ease !important;
+
+  &:hover {
+    background-color: rgba(241, 245, 249, 0.8) !important;
+  }
+}
+
+.dark tbody tr {
+  &:hover {
+    background-color: rgba(30, 41, 59, 0.55) !important;
+  }
+}
+
+/* Universal Interactive Button Hovers */
+button:not(:disabled) {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.14s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 /* Electric Blue Action Button */
 .btn-electric {
   background: #2563eb;
@@ -226,46 +303,198 @@ select {
 
 /* Ensure all table headers and labels are prominent and readable */
 th,
-.th-header {
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.04em !important;
+.th-header,
+.table-header-cell {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.03em !important;
   color: #334155 !important; /* Slate 700 */
 }
 
 .dark th,
-.dark .th-header {
+.dark .th-header,
+.dark .table-header-cell {
   color: #cbd5e1 !important; /* Slate 300 */
 }
 
-/* Enhance all card headers across all pages */
+/* App Shell & Header Scroll Integrity */
+.topbar {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 40 !important;
+}
+
+/* Universal Modal & Dialog Elevation & Body Scroll Lock */
+.modal-backdrop,
+.drawer-backdrop,
+.lightbox-backdrop {
+  z-index: 100 !important;
+}
+
+body:has(.modal-backdrop),
+body:has(.drawer-backdrop),
+body:has(.lightbox-backdrop),
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Universal Dark Mode Badges, Chips & Status Overrides */
+.dark {
+  /* Emerald / Success Badges */
+  .bg-emerald-50,
+  .bg-emerald-100 {
+    background-color: rgba(6, 78, 59, 0.45) !important;
+  }
+  .text-emerald-700,
+  .text-emerald-800 {
+    color: #6ee7b7 !important;
+  }
+  .border-emerald-200,
+  .border-emerald-300 {
+    border-color: rgba(5, 150, 105, 0.35) !important;
+  }
+
+  /* Amber / Warning Badges */
+  .bg-amber-50,
+  .bg-amber-100 {
+    background-color: rgba(120, 53, 15, 0.45) !important;
+  }
+  .text-amber-700,
+  .text-amber-800 {
+    color: #fcd34d !important;
+  }
+  .border-amber-200,
+  .border-amber-300 {
+    border-color: rgba(217, 119, 6, 0.35) !important;
+  }
+
+  /* Rose / Danger / Critical Badges */
+  .bg-rose-50,
+  .bg-rose-100 {
+    background-color: rgba(136, 19, 55, 0.45) !important;
+  }
+  .text-rose-700,
+  .text-rose-800 {
+    color: #fda4af !important;
+  }
+  .border-rose-200,
+  .border-rose-300 {
+    border-color: rgba(225, 29, 72, 0.35) !important;
+  }
+
+  /* Blue / Primary / Inbound Badges */
+  .bg-blue-50,
+  .bg-blue-100 {
+    background-color: rgba(30, 58, 138, 0.45) !important;
+  }
+  .text-blue-700,
+  .text-blue-800 {
+    color: #93c5fd !important;
+  }
+  .border-blue-200,
+  .border-blue-300 {
+    border-color: rgba(37, 99, 235, 0.35) !important;
+  }
+
+  /* Purple / Special Badges */
+  .bg-purple-50,
+  .bg-purple-100 {
+    background-color: rgba(88, 28, 135, 0.45) !important;
+  }
+  .text-purple-700,
+  .text-purple-800 {
+    color: #d8b4fe !important;
+  }
+  .border-purple-200,
+  .border-purple-300 {
+    border-color: rgba(147, 51, 234, 0.35) !important;
+  }
+
+  /* Teal / Outbound Badges */
+  .bg-teal-50,
+  .bg-teal-100 {
+    background-color: rgba(19, 78, 74, 0.45) !important;
+  }
+  .text-teal-700,
+  .text-teal-800 {
+    color: #5eead4 !important;
+  }
+  .border-teal-200,
+  .border-teal-300 {
+    border-color: rgba(13, 148, 136, 0.35) !important;
+  }
+
+  /* Orange / Priority Badges */
+  .bg-orange-50,
+  .bg-orange-100 {
+    background-color: rgba(124, 45, 18, 0.45) !important;
+  }
+  .text-orange-700,
+  .text-orange-800 {
+    color: #fdba74 !important;
+  }
+  .border-orange-200,
+  .border-orange-300 {
+    border-color: rgba(234, 88, 12, 0.35) !important;
+  }
+
+  /* Secondary text contrast inside dark tables */
+  tbody {
+    .text-gray-500,
+    .text-slate-500 {
+      color: #94a3b8 !important;
+    }
+  }
+
+  /* Modals & Panels Dark Background Consistency */
+  .modal-container,
+  .task-detail-card,
+  .queue-lane {
+    background-color: #111a2d !important;
+  }
+}
+
+/* Card Heading (H3): 18px (desktop), 16px (mobile), weight 600, line-height 1.4 */
 .glass-card h2,
 .glass-card h3,
-.card-header-title {
-  font-size: 17px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
+.bento-card h2,
+.bento-card h3,
+.card-header-title,
+.card-title,
+.card-heading {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.005em !important;
   color: #0f172a !important;
 }
 
 .dark .glass-card h2,
 .dark .glass-card h3,
-.dark .card-header-title {
+.dark .bento-card h2,
+.dark .bento-card h3,
+.dark .card-header-title,
+.dark .card-title,
+.dark .card-heading {
   color: #ffffff !important;
 }
 
-/* Enhance form labels and small metadata */
+/* Form labels: 14px, weight 500, line-height 1.4 */
 label,
 .form-label,
-.field-label {
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
+.field-label,
+.input-label {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
   color: #475569 !important; /* Slate 600 */
 }
 
 .dark label,
 .dark .form-label,
-.dark .field-label {
+.dark .field-label,
+.dark .input-label {
   color: #94a3b8 !important; /* Slate 400 */
 }
 
@@ -363,11 +592,13 @@ html.dark {
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22) !important;
 }
 
-/* Modal containers & slide-out drawers */
+/* Modal containers, slide-out drawers, queue lanes & task detail cards */
 .dark .modal-container,
-.dark .drawer-panel {
+.dark .drawer-panel,
+.dark .queue-lane,
+.dark .task-detail-card {
   background-color: #111a2d !important;
-  border-color: rgba(59, 130, 246, 0.25) !important;
+  border-color: rgba(59, 130, 246, 0.22) !important;
   color: #f8fafc !important;
   box-shadow:
     0 25px 60px -12px rgba(0, 0, 0, 0.75),
@@ -398,31 +629,83 @@ html.dark {
 .management-card,
 .gate-events-card,
 .kpi-card {
-  background: #ffffff !important;
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.05),
+    0 1px 2px -1px rgba(0, 0, 0, 0.05);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.kpi-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px -4px rgba(0, 102, 255, 0.12) !important;
-  border-color: rgba(147, 197, 253, 0.8) !important;
+.kpi-card,
+.kpi-metric-card,
+app-kpi-metric-card > div {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer;
+}
+
+.kpi-card:hover,
+.kpi-metric-card:hover,
+app-kpi-metric-card > div:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 10px 24px -4px rgba(0, 102, 255, 0.15),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(147, 197, 253, 0.9) !important;
 }
 
 .dark .management-card,
 .dark .gate-events-card,
 .dark .kpi-card {
-  background: #111a2e !important;
-  border: 1px solid rgba(59, 130, 246, 0.18) !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
+  background: #111a2e;
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
 }
 
-.dark .kpi-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 25px -4px rgba(0, 102, 255, 0.25) !important;
+.dark .kpi-card:hover,
+.dark .kpi-metric-card:hover,
+.dark app-kpi-metric-card > div:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 12px 28px -4px rgba(0, 102, 255, 0.3),
+    0 4px 8px -2px rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Dashboard Cards (Refined Enterprise Elevation & Hover) */
+.dashboard-card {
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 12px 28px -6px rgba(0, 70, 180, 0.1),
+    0 4px 10px -2px rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(147, 197, 253, 0.8) !important;
+}
+
+.dark .dashboard-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 14px 32px -6px rgba(0, 102, 255, 0.22),
+    0 6px 14px -3px rgba(0, 0, 0, 0.5) !important;
   border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+.view-all-link {
+  transition: color 0.18s ease;
+  .view-all-arrow {
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  &:hover .view-all-arrow {
+    transform: translateX(4px);
+  }
 }
 
 /* 2. Unified Primary Action Buttons (Enterprise Blue Standard: #2563EB) */
@@ -447,7 +730,9 @@ html.dark {
 
   &:focus-visible {
     outline: none !important;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6 !important;
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px #3b82f6 !important;
   }
 
   &:active:not(:disabled) {
@@ -486,7 +771,9 @@ html.dark {
 
   &:focus-visible {
     outline: none !important;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6 !important;
+    box-shadow:
+      0 0 0 2px #ffffff,
+      0 0 0 4px #3b82f6 !important;
   }
 }
 
@@ -503,6 +790,32 @@ html.dark {
     background: #334155 !important;
     border-color: rgba(96, 165, 250, 0.5) !important;
     color: #ffffff !important;
+  }
+}
+
+.dark .btn-edit,
+.dark .btn-action.btn-edit {
+  background-color: #1e293b !important;
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  color: #cbd5e1 !important;
+
+  &:hover:not(:disabled) {
+    background-color: #334155 !important;
+    border-color: rgba(96, 165, 250, 0.6) !important;
+    color: #ffffff !important;
+  }
+}
+
+.dark .btn-delete,
+.dark .btn-action.btn-delete {
+  background-color: #1e293b !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  color: #f87171 !important;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(153, 27, 27, 0.3) !important;
+    border-color: rgba(239, 68, 68, 0.6) !important;
+    color: #fca5a5 !important;
   }
 }
 
@@ -624,6 +937,116 @@ html.dark {
   gap: 6px !important;
 }
 
+.dark .status-badge-success,
+.dark .badge-status-success {
+  background-color: rgba(22, 101, 52, 0.25) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(74, 222, 128, 0.3) !important;
+}
+
+.dark .status-badge-pending,
+.dark .badge-status-pending {
+  background-color: rgba(146, 64, 14, 0.25) !important;
+  color: #fcd34d !important;
+  border: 1px solid rgba(251, 191, 36, 0.3) !important;
+}
+
+.dark .status-badge-error,
+.dark .badge-status-error,
+.dark .status-badge-cancelled {
+  background-color: rgba(153, 27, 27, 0.25) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(248, 113, 113, 0.3) !important;
+}
+
+.dark .status-badge-processing,
+.dark .badge-status-processing,
+.dark .status-badge-inprogress {
+  background-color: rgba(30, 64, 175, 0.25) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(96, 165, 250, 0.3) !important;
+}
+
+.dark .status-badge-inactive,
+.dark .badge-status-inactive {
+  background-color: rgba(71, 85, 105, 0.25) !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+}
+
+/* Universal Dark Mode Utility Badge & Chip Harmonization */
+.dark {
+  .bg-emerald-50,
+  .bg-emerald-100 {
+    background-color: rgba(16, 185, 129, 0.18) !important;
+    border: 1px solid rgba(52, 211, 153, 0.3) !important;
+  }
+  .text-emerald-700,
+  .text-emerald-800 {
+    color: #6ee7b7 !important;
+  }
+
+  .bg-amber-50,
+  .bg-amber-100 {
+    background-color: rgba(245, 158, 11, 0.18) !important;
+    border: 1px solid rgba(251, 191, 36, 0.3) !important;
+  }
+  .text-amber-700,
+  .text-amber-800 {
+    color: #fcd34d !important;
+  }
+
+  .bg-rose-50,
+  .bg-rose-100 {
+    background-color: rgba(244, 63, 94, 0.18) !important;
+    border: 1px solid rgba(251, 113, 133, 0.3) !important;
+  }
+  .text-rose-700,
+  .text-rose-800 {
+    color: #fda4af !important;
+  }
+
+  .bg-blue-50,
+  .bg-blue-100 {
+    background-color: rgba(59, 130, 246, 0.18) !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+  }
+  .text-blue-700,
+  .text-blue-800 {
+    color: #93c5fd !important;
+  }
+
+  .bg-teal-50,
+  .bg-teal-100 {
+    background-color: rgba(20, 184, 166, 0.18) !important;
+    border: 1px solid rgba(45, 212, 191, 0.3) !important;
+  }
+  .text-teal-700,
+  .text-teal-800 {
+    color: #5eead4 !important;
+  }
+
+  .bg-purple-50,
+  .bg-purple-100 {
+    background-color: rgba(168, 85, 247, 0.18) !important;
+    border: 1px solid rgba(192, 132, 252, 0.3) !important;
+  }
+  .text-purple-700,
+  .text-purple-800 {
+    color: #d8b4fe !important;
+  }
+
+  .bg-orange-50,
+  .bg-orange-100 {
+    background-color: rgba(249, 115, 22, 0.18) !important;
+    border: 1px solid rgba(251, 146, 60, 0.3) !important;
+  }
+  .text-orange-700,
+  .text-orange-800 {
+    color: #fdba74 !important;
+  }
+}
+
 /* 5. Unified Data Tables Across All Modules */
 .data-table,
 .gate-events-table-wrapper table {
@@ -635,10 +1058,11 @@ html.dark {
 .data-table th,
 .gate-events-table-wrapper th,
 .table-header-cell {
-  font-size: 11.5px !important;
-  font-weight: 700 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.05em !important;
+  letter-spacing: 0.04em !important;
   color: #475569 !important;
   padding: 12px 14px !important;
   background: #f8fafc !important;
@@ -648,7 +1072,7 @@ html.dark {
 .dark .data-table th,
 .dark .gate-events-table-wrapper th,
 .dark .table-header-cell {
-  color: #94a3b8 !important;
+  color: #cbd5e1 !important;
   background: #0f172a !important;
   border-bottom: 1px solid rgba(59, 130, 246, 0.16) !important;
 }
@@ -657,7 +1081,9 @@ html.dark {
 .gate-events-table-wrapper td,
 .table-data-cell {
   padding: 12px 14px !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
   color: #1e293b !important;
   background: #ffffff;
   border-bottom: 1px solid rgba(241, 245, 249, 0.9) !important;
@@ -681,34 +1107,364 @@ html.dark {
   background-color: rgba(30, 58, 102, 0.25) !important;
 }
 
-/* 6. Page Titles & Breadcrumbs Harmony */
+/* ==========================================================================
+   6. CFS Enterprise Standardized Typography System (Exact Specification)
+   ========================================================================== */
+
+/* 1. Dashboard Hero Title: Desktop 30px, Mobile 24px, Weight 700, Line-height 1.25 */
+.dashboard-hero-title,
+h1.dashboard-title,
+.hero-title {
+  font-family: 'Lexend', 'Inter', sans-serif !important;
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Login Hero Headline */
+.login-layout .hero-headline,
+.hero-headline,
+app-login h1 {
+  font-family: 'Lexend', sans-serif !important;
+  font-size: 40px !important;
+  font-weight: 700 !important;
+  line-height: 1.18 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.02em !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+@media (min-width: 1024px) {
+  .login-layout .hero-headline,
+  .hero-headline,
+  app-login h1 {
+    font-size: 44px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .login-layout .hero-headline,
+  .hero-headline,
+  app-login h1 {
+    font-size: 26px !important;
+  }
+}
+
+/* 2. Page Heading (H1): Desktop 24px, Mobile 20px, Weight 600, Line-height 1.3 */
+h1:not(.hero-headline):not(.login-layout *):not(app-login *),
 .page-title,
-h1.text-2xl,
-h1.text-3xl {
+.page-title-header h1,
+h1.text-2xl:not(.hero-headline):not(.login-layout *):not(app-login *),
+h1.text-3xl:not(.hero-headline):not(.login-layout *):not(app-login *) {
   font-family: 'Inter', system-ui, sans-serif !important;
   font-size: 24px !important;
   font-weight: 600 !important;
+  line-height: 1.3 !important;
   letter-spacing: -0.01em !important;
   color: #0f172a !important;
 }
 
+.dark h1:not(.hero-headline):not(.login-layout *):not(app-login *),
 .dark .page-title,
-.dark h1.text-2xl,
-.dark h1.text-3xl {
+.dark .page-title-header h1,
+.dark h1.text-2xl:not(.hero-headline):not(.login-layout *):not(app-login *),
+.dark h1.text-3xl:not(.hero-headline):not(.login-layout *):not(app-login *) {
   color: #ffffff !important;
 }
 
+/* 3. Section Heading (H2): Desktop 20px, Mobile 18px, Weight 600, Line-height 1.4 */
+h2,
+.section-heading,
+.section-title,
+.modal-title,
+h2.text-xl {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.01em !important;
+  color: #0f172a !important;
+}
+
+.dark h2,
+.dark .section-heading,
+.dark .section-title,
+.dark .modal-title,
+.dark h2.text-xl {
+  color: #ffffff !important;
+}
+
+/* 4. Card Heading (H3): Desktop 18px, Mobile 16px, Weight 600, Line-height 1.4 */
+h3,
+.card-heading,
+.card-title,
+.card-header-title,
+.glass-card h2,
+.glass-card h3,
+.bento-card h2,
+.bento-card h3,
+.management-card h2,
+.management-card h3,
+h3.text-lg {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.005em !important;
+  color: #0f172a !important;
+}
+
+.dark h3,
+.dark .card-heading,
+.dark .card-title,
+.dark .card-header-title,
+.dark .glass-card h2,
+.dark .glass-card h3,
+.dark .bento-card h2,
+.dark .bento-card h3,
+.dark .management-card h2,
+.dark .management-card h3,
+.dark h3.text-lg {
+  color: #ffffff !important;
+}
+
+/* 5. Subheading (H4): Desktop 16px, Mobile 16px, Weight 500, Line-height 1.5 */
+h4,
+.subheading,
+.section-subheading,
+h4.text-base {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  color: #334155 !important;
+}
+
+.dark h4,
+.dark .subheading,
+.dark .section-subheading,
+.dark h4.text-base {
+  color: #e2e8f0 !important;
+}
+
+/* 6. Body Text: Desktop 14px, Mobile 14px, Weight 400, Line-height 1.5 */
+body,
+p.body-text,
+.text-body {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+.dark body,
+.dark p.body-text,
+.dark .text-body {
+  color: #f8fafc;
+}
+
+/* 7. Form Labels: Desktop 14px, Mobile 14px, Weight 500, Line-height 1.4 */
+label,
+.form-label,
+.field-label,
+.input-label {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* 8. Input Values: Desktop 14px, Mobile 16px, Weight 400, Line-height 1.5 */
+input,
+select,
+textarea,
+.form-control,
+.cfs-input,
+.cfs-select,
+.filter-input,
+.filter-select,
+.glass-input,
+.glass-select {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}
+
+/* 9. Table Headers: Desktop 13px, Mobile 13px, Weight 600, Line-height 1.4 */
+th,
+.th-header,
+.table-header-cell,
+.data-table th,
+.gate-events-table-wrapper th {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+
+/* 10. Table Content: Desktop 14px, Mobile 14px, Weight 400, Line-height 1.5 */
+td,
+.table-data-cell,
+.data-table td,
+.gate-events-table-wrapper td {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+}
+
+/* 11. Buttons: Desktop 14px, Mobile 14px, Weight 500, Line-height 1.4 */
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-electric,
+.btn-modal-submit,
+.btn-modal-cancel,
+.btn-action,
+.btn-login-submit,
+.btn-manual-gate-entry,
+.btn-refresh,
+.btn-extra-filters {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* 12. Sidebar Menu: Desktop 14px, Mobile 14px, Weight 500, Line-height 1.5 */
+.sidebar .nav-item,
+.sidebar .nav-label-text,
+.sidebar .sub-nav-item,
+.sidebar .sub-nav-label {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+}
+
+/* 13. Helper Text: Desktop 12px, Mobile 12-14px, Weight 400, Line-height 1.5 */
+small,
+.helper-text,
+.field-hint,
+.form-hint,
 .page-subtitle,
+.modal-subtitle,
+.card-subtitle,
 header p.text-xs,
 header p.text-sm {
-  font-family: 'Inter', system-ui, sans-serif !important;
-  font-size: 13px !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
   color: #64748b !important;
 }
 
+.dark small,
+.dark .helper-text,
+.dark .field-hint,
+.dark .form-hint,
 .dark .page-subtitle,
+.dark .modal-subtitle,
+.dark .card-subtitle,
 .dark header p.text-xs,
 .dark header p.text-sm {
   color: #94a3b8 !important;
 }
 
+/* 14. KPI Values: Desktop 28px, Mobile 24px, Weight 700, Line-height 1.2 */
+.kpi-value,
+.kpi-number,
+.metric-value,
+.metric-kpi-value,
+.kpi-card strong,
+.card-arrivals strong,
+.card-ocr strong {
+  font-family: 'Lexend', 'Inter', sans-serif !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.015em !important;
+}
+
+/* ==========================================================================
+   Responsive Mobile Overrides (<640px)
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* Dashboard hero title: 24px */
+  .dashboard-hero-title,
+  .hero-headline,
+  h1.dashboard-title,
+  .hero-title {
+    font-size: 24px !important;
+  }
+
+  /* Page heading (H1): 20px */
+  h1,
+  .page-title,
+  .page-title-header h1,
+  h1.text-2xl,
+  h1.text-3xl {
+    font-size: 20px !important;
+  }
+
+  /* Section heading (H2): 18px */
+  h2,
+  .section-heading,
+  .section-title,
+  .modal-title,
+  h2.text-xl {
+    font-size: 18px !important;
+  }
+
+  /* Card heading (H3): 16px */
+  h3,
+  .card-heading,
+  .card-title,
+  .card-header-title,
+  .glass-card h2,
+  .glass-card h3,
+  .bento-card h2,
+  .bento-card h3,
+  .management-card h2,
+  .management-card h3,
+  h3.text-lg {
+    font-size: 16px !important;
+  }
+
+  /* Subheading (H4): 16px */
+  h4,
+  .subheading,
+  .section-subheading,
+  h4.text-base {
+    font-size: 16px !important;
+  }
+
+  /* Input values: 16px on mobile (prevents iOS browser zoom) */
+  input,
+  select,
+  textarea,
+  .form-control,
+  .cfs-input,
+  .cfs-select,
+  .filter-input,
+  .filter-select,
+  .glass-input,
+  .glass-select {
+    font-size: 16px !important;
+  }
+
+  /* Helper text: 12-14px on mobile */
+  small,
+  .helper-text,
+  .field-hint,
+  .form-hint {
+    font-size: 13px !important;
+  }
+
+  /* KPI values: 24px on mobile */
+  .kpi-value,
+  .kpi-number,
+  .metric-value,
+  .metric-kpi-value,
+  .kpi-card strong,
+  .card-arrivals strong,
+  .card-ocr strong {
+    font-size: 24px !important;
+  }
+}

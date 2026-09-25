@@ -12,7 +12,9 @@
   <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
     <div>
       <nav class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
-        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{ 'BREADCRUMB.DASHBOARD' | translate }}</a>
+        <a routerLink="/dashboard" class="transition-colors hover:text-blue-600 dark:hover:text-blue-400">{{
+          'BREADCRUMB.DASHBOARD' | translate
+        }}</a>
         <span>›</span>
         <span class="font-medium text-gray-800 dark:text-gray-200">{{ 'BREADCRUMB.REPORTS' | translate }}</span>
       </nav>
@@ -35,13 +37,11 @@
             type="button"
             (click)="setDatePreset(dp.value)"
             class="rounded-lg px-2.5 py-1 text-xs font-semibold transition-all"
-            [class.bg-white]="reportService.filter().preset === dp.value"
-            [class.text-blue-600]="reportService.filter().preset === dp.value"
-            [class.shadow-sm]="reportService.filter().preset === dp.value"
-            [class.dark:bg-gray-800]="reportService.filter().preset === dp.value"
-            [class.dark:text-blue-400]="reportService.filter().preset === dp.value"
-            [class.text-gray-600]="reportService.filter().preset !== dp.value"
-            [class.dark:text-gray-400]="reportService.filter().preset !== dp.value">
+            [ngClass]="
+              reportService.filter().preset === dp.value
+                ? 'bg-white text-blue-600 shadow-sm dark:bg-gray-800 dark:text-blue-400'
+                : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+            ">
             {{ dp.label }}
           </button>
         }
@@ -74,30 +74,21 @@
         type="button"
         (click)="setCategory(cat.id)"
         class="flex shrink-0 items-center gap-2 rounded-2xl px-4 py-3 text-xs font-bold transition-all duration-150"
-        [class.border-blue-500]="reportService.selectedCategory() === cat.id"
-        [class.bg-blue-600]="reportService.selectedCategory() === cat.id"
-        [class.text-white]="reportService.selectedCategory() === cat.id"
-        [class.shadow-lg]="reportService.selectedCategory() === cat.id"
-        [class.shadow-blue-500/30]="reportService.selectedCategory() === cat.id"
-        [class.border]="reportService.selectedCategory() !== cat.id"
-        [class.border-slate-200]="reportService.selectedCategory() !== cat.id"
-        [class.bg-white]="reportService.selectedCategory() !== cat.id"
-        [class.shadow-sm]="reportService.selectedCategory() !== cat.id"
-        [class.dark:border-slate-800]="reportService.selectedCategory() !== cat.id"
-        [class.dark:bg-[#111a2e]]="reportService.selectedCategory() !== cat.id"
-        [class.text-slate-700]="reportService.selectedCategory() !== cat.id"
-        [class.dark:text-slate-300]="reportService.selectedCategory() !== cat.id">
+        [ngClass]="
+          reportService.selectedCategory() === cat.id
+            ? 'border border-blue-500 bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+            : 'border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 dark:border-slate-800 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-slate-800/80'
+        ">
         <span class="material-icons-outlined text-lg">{{ cat.icon }}</span>
         <span>{{ cat.transKey | translate }}</span>
         @if (cat.countBadge) {
           <span
             class="rounded-full px-2 py-0.5 text-[10px]"
-            [class.bg-white/20]="reportService.selectedCategory() === cat.id"
-            [class.text-white]="reportService.selectedCategory() === cat.id"
-            [class.bg-slate-200/80]="reportService.selectedCategory() !== cat.id"
-            [class.text-slate-700]="reportService.selectedCategory() !== cat.id"
-            [class.dark:bg-slate-700]="reportService.selectedCategory() !== cat.id"
-            [class.dark:text-slate-300]="reportService.selectedCategory() !== cat.id">
+            [ngClass]="
+              reportService.selectedCategory() === cat.id
+                ? 'bg-white/20 text-white'
+                : 'bg-slate-200/80 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
+            ">
             {{ cat.countBadge }}
           </span>
         }
@@ -108,7 +99,8 @@
   <!-- Dynamic KPI Summary Strip for Active Category -->
   <section class="grid grid-cols-2 gap-3.5 sm:grid-cols-4">
     <!-- Metric 1 -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
         {{ reportService.activeKpis().metric1Label }}
       </span>
@@ -125,7 +117,8 @@
     </div>
 
     <!-- Metric 2 -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
         {{ reportService.activeKpis().metric2Label }}
       </span>
@@ -142,7 +135,8 @@
     </div>
 
     <!-- Metric 3 -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
         {{ reportService.activeKpis().metric3Label }}
       </span>
@@ -159,7 +153,8 @@
     </div>
 
     <!-- Metric 4 -->
-    <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+    <div
+      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-slate-800 dark:bg-[#111a2e]">
       <span class="text-xs font-medium text-slate-500 dark:text-slate-400">
         {{ reportService.activeKpis().metric4Label }}
       </span>
@@ -177,7 +172,8 @@
   </section>
 
   <!-- Filter Controls Section -->
-  <section class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  <section
+    class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
     <div class="relative max-w-lg flex-1">
       <span class="material-icons-outlined absolute left-3 top-2.5 text-base text-gray-400">search</span>
       <input
@@ -207,7 +203,8 @@
   </section>
 
   <!-- Report Data Tables (Switched by active category) -->
-  <section class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  <section
+    class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
     <div class="overflow-x-auto">
       <!-- 1. Gate Operations Table -->
       @if (reportService.selectedCategory() === 'gate-operations') {

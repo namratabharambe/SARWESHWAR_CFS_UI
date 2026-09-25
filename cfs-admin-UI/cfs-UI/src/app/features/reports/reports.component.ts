@@ -18,10 +18,34 @@ import { TranslatePipe } from 'shared/pipes';
 export class ReportsComponent {
   public readonly reportService = inject(ReportService);
 
-  public readonly categories: { id: ReportCategory; transKey: string; label: string; icon: string; countBadge?: string }[] = [
-    { id: 'gate-operations', transKey: 'REPORTS.GATE_OPERATIONS', label: 'Gate Operations & Turnaround', icon: 'sensor_occupied', countBadge: '7' },
-    { id: 'container-mismatch', transKey: 'REPORTS.CONTAINER_MISMATCH', label: 'Container Mismatch & OCR Audit', icon: 'gpp_maybe', countBadge: '5' },
-    { id: 'yard-occupancy', transKey: 'REPORTS.YARD_OCCUPANCY', label: 'Yard Occupancy & Dwell Time', icon: 'grid_view', countBadge: '5' },
+  public readonly categories: {
+    id: ReportCategory;
+    transKey: string;
+    label: string;
+    icon: string;
+    countBadge?: string;
+  }[] = [
+    {
+      id: 'gate-operations',
+      transKey: 'REPORTS.GATE_OPERATIONS',
+      label: 'Gate Operations & Turnaround',
+      icon: 'sensor_occupied',
+      countBadge: '7',
+    },
+    {
+      id: 'container-mismatch',
+      transKey: 'REPORTS.CONTAINER_MISMATCH',
+      label: 'Container Mismatch & OCR Audit',
+      icon: 'gpp_maybe',
+      countBadge: '5',
+    },
+    {
+      id: 'yard-occupancy',
+      transKey: 'REPORTS.YARD_OCCUPANCY',
+      label: 'Yard Occupancy & Dwell Time',
+      icon: 'grid_view',
+      countBadge: '5',
+    },
     {
       id: 'equipment-productivity',
       transKey: 'REPORTS.EQUIPMENT_PRODUCTIVITY',
@@ -29,7 +53,13 @@ export class ReportsComponent {
       icon: 'precision_manufacturing',
       countBadge: '5',
     },
-    { id: 'customs-billing', transKey: 'REPORTS.CUSTOMS_BILLING', label: 'Customs & Billing Dossier', icon: 'receipt_long', countBadge: '5' },
+    {
+      id: 'customs-billing',
+      transKey: 'REPORTS.CUSTOMS_BILLING',
+      label: 'Customs & Billing Dossier',
+      icon: 'receipt_long',
+      countBadge: '5',
+    },
   ];
 
   public readonly datePresets = [

@@ -278,14 +278,14 @@ export class ShellComponent {
   }
 
   public readonly clientDropdownOptions = computed<DropdownOption[]>(() => {
-    return this.availableClients().map(c => ({
+    return this.availableClients().map((c) => ({
       value: c.id,
       label: c.name,
     }));
   });
 
   public readonly siteDropdownOptions = computed<DropdownOption[]>(() => {
-    return this.sitesForSelectedClient().map(s => ({
+    return this.sitesForSelectedClient().map((s) => ({
       value: s.id,
       label: s.name,
     }));

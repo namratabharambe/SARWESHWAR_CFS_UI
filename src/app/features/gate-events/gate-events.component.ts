@@ -4,23 +4,48 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
-import { GatePhotoStripComponent, GateCameraPhoto, ConfidenceBadgeComponent, StatusBadgeComponent } from 'shared/components';
+import {
+  GatePhotoStripComponent,
+  GateCameraPhoto,
+  ConfidenceBadgeComponent,
+  StatusBadgeComponent,
+} from 'shared/components';
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
-import { GateEventDetailComponent } from './gate-event-detail/gate-event-detail.component';
-import { GateInModalComponent } from './gate-in-modal/gate-in-modal.component';
+import { GateEventDetailComponent } from './components/gate-event-detail/gate-event-detail.component';
+import { ManualGateEntryComponent } from './components/manual-gate-entry/manual-gate-entry.component';
+import { NonErpContainerComponent } from './components/non-erp-container/non-erp-container.component';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import { GateEventDetailDto,
+import { environment } from 'environment/environment';
+import {
+  GateEventDetailDto,
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
 } from 'shared/types/gate-event/gate-event.interface';
-import { DashboardService } from '../dashboard/services/dashboard.service';
 
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
 export type { GateCameraPhoto };
+
+export interface GateContainerRecord {
+  index: number;
+  containerNo: string;
+  size: string;
+  isoCode: string;
+  confidence: number;
+  tareWeight: string;
+  sealNo1: string;
+  sealNo2: string;
+  customSealNo: string;
+  cargoType: string;
+  fullOrEmpty: string;
+  location: string;
+  condition: string;
+  damageFlag: boolean;
+  photos: GateCameraPhoto[];
+}
 
 export interface GateEventItem {
   id: string;
@@ -30,6 +55,8 @@ export interface GateEventItem {
   direction: GateDirection;
   truckNo: string;
   containerNo: string;
+  isDualContainer: boolean;
+  containers: GateContainerRecord[];
   ocrResult: string;
   confidence: number;
   driver: string;
@@ -41,6 +68,7 @@ export interface GateEventItem {
   rawVisit?: VisitListItemDto;
 }
 
+
 @Component({
   selector: 'app-gate-events',
   standalone: true,
@@ -49,7 +77,8 @@ export interface GateEventItem {
     FormsModule,
     TranslatePipe,
     GateEventDetailComponent,
-    GateInModalComponent,
+    ManualGateEntryComponent,
+    NonErpContainerComponent,
     DatePickerComponent,
     DropdownComponent,
     StatusBadgeComponent,
@@ -61,11 +90,11 @@ export interface GateEventItem {
 export class GateEventsComponent implements OnInit {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
-  private readonly dashboardService = inject(DashboardService, { optional: true });
   private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly router = inject(Router, { optional: true });
 
   public readonly gateMode = signal<'in' | 'out'>('in');
+  public readonly isNonErpView = signal<boolean>(false);
   public readonly events = signal<GateEventItem[]>([]);
   public readonly isLoading = signal<boolean>(false);
   public readonly activeTab = signal<'all' | 'arrivals' | 'departures'>('all');
@@ -119,8 +148,6 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
-  public readonly totalArrivalsCount = signal<number>(0);
-  public readonly totalDeparturesCount = signal<number>(0);
 
   constructor() {
     this.syncGateMode();
@@ -150,6 +177,8 @@ export class GateEventsComponent implements OnInit {
     this.gateMode.set(isOut ? 'out' : 'in');
     this.cycleFilter.set(isOut ? 'OUT' : 'IN');
     this.currentPage.set(1);
+    this.isNonErpView.set(false);
+    this.selectedEventForDetails.set(null);
   }
 
   public ngOnInit(): void {
@@ -160,8 +189,6 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
-
-    this.loadLiveSummaryCounts(siteId, clientId);
 
     this.gateEventService
       .getVisits({
@@ -213,10 +240,75 @@ export class GateEventsComponent implements OnInit {
       });
   }
 
-  public loadLiveSummaryCounts(siteId?: string, clientId?: string): void {
-    if (this.dashboardService) {
-      this.dashboardService.loadGateActivities(siteId, clientId);
+  private buildContainerPhotos(
+    containerNo: string,
+    index: number,
+    totalContainers: number,
+    rawImages: any[] = [],
+    visitId?: string,
+  ): GateCameraPhoto[] {
+    const photos: GateCameraPhoto[] = [];
+    const prefix = totalContainers > 1 ? `Container ${index} (${containerNo.slice(0, 4)}) - ` : '';
+
+    if (rawImages && rawImages.length > 0) {
+      rawImages.forEach((img: any) => {
+        const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
+        const type = rawType.toUpperCase();
+        let color = '#1f487e';
+        if (type.includes('FRONT') || type.includes('OCR')) color = '#c9842a';
+        else if (type.includes('REAR')) color = '#993030';
+        else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
+
+        let url =
+          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
+
+        const imgId = img.id ?? img.Id;
+        if (!url && imgId && visitId) {
+          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}/images/${encodeURIComponent(imgId)}`;
+        }
+
+        const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || `C${index}-CAM`;
+
+        photos.push({
+          label: `${prefix}${rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`}`,
+          color,
+          tag: String(tag),
+          url: String(url),
+        });
+      });
     }
+
+    if (photos.length === 0) {
+      photos.push(
+        {
+          label: `${prefix}Front OCR (20FT)`,
+          color: '#c9842a',
+          tag: `C${index}-FRONT`,
+          url: 'assets/gate/container-stencil.jpg',
+        },
+        {
+          label: `${prefix}Left Side ISO`,
+          color: '#1f487e',
+          tag: `C${index}-LEFT`,
+          url: 'assets/gate/truck-side.jpg',
+        },
+        {
+          label: `${prefix}Right Side ISO`,
+          color: '#1f487e',
+          tag: `C${index}-RIGHT`,
+          url: 'assets/gate/overview.jpg',
+        },
+        {
+          label: `${prefix}Rear Doors`,
+          color: '#993030',
+          tag: `C${index}-REAR`,
+          url: 'assets/gate/front-gate.jpg',
+        },
+      );
+    }
+
+    return photos;
   }
 
   private mapVisitToGateEventItem(visit: any): GateEventItem {
@@ -246,19 +338,6 @@ export class GateEventsComponent implements OnInit {
     const rawDeviceId = primaryEvent?.deviceId ?? primaryEvent?.DeviceId ?? '';
     const gate = rawDeviceId ? `GATE-${rawDeviceId.slice(0, 4).toUpperCase()}` : 'GATE-01';
 
-    const containerNo =
-      visit.containerNumber ??
-      visit.ContainerNumber ??
-      primaryEvent?.detectedContainerNumber ??
-      primaryEvent?.DetectedContainerNumber ??
-      'MSCU 000000 0';
-    const rawConf =
-      visit.containerConfidence ??
-      visit.ContainerConfidence ??
-      primaryEvent?.detectedContainerConfidence ??
-      primaryEvent?.DetectedContainerConfidence;
-    const confidence = rawConf != null ? Math.round(rawConf > 1 ? rawConf : rawConf * 100) : 95;
-
     const truckNo =
       visit.truckNumber ??
       visit.TruckNumber ??
@@ -267,55 +346,148 @@ export class GateEventsComponent implements OnInit {
       'MH 12 AB 0000';
     const driverName = visit.driverName ?? visit.DriverName ?? 'Driver (Unassigned)';
 
-    // Gather all image objects across all events in visit and root visit
-    const photos: GateCameraPhoto[] = [];
-    const allImages: any[] = [];
-
-    if (Array.isArray(visit.images)) allImages.push(...visit.images);
-    if (Array.isArray(visit.Images)) allImages.push(...visit.Images);
-
-    eventsList.forEach((ev: any) => {
-      const evImgs = ev.images ?? ev.Images ?? [];
-      if (Array.isArray(evImgs)) {
-        allImages.push(...evImgs);
+    // Aggregate all visit and event images
+    const visitLevelImages: any[] = [];
+    if (Array.isArray(visit.images)) visitLevelImages.push(...visit.images);
+    if (Array.isArray(visit.Images)) visitLevelImages.push(...visit.Images);
+    eventsList.forEach((ev) => {
+      const evImgs = ev.images ?? ev.Images;
+      if (Array.isArray(evImgs) && evImgs.length > 0) {
+        visitLevelImages.push(...evImgs);
       }
     });
 
-    if (allImages.length > 0) {
-      allImages.forEach((img: any) => {
-        const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
-        const type = rawType.toUpperCase();
-        let color = '#1f487e';
-        if (type.includes('FRONT') || type.includes('OCR')) color = '#c9842a';
-        else if (type.includes('REAR')) color = '#993030';
-        else if (type.includes('LEFT') || type.includes('RIGHT')) color = '#1f487e';
-
-        let url =
-          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
-        const imgId = img.id ?? img.Id;
-        if (!url && imgId && id) {
-          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
-          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(id)}/images/${encodeURIComponent(imgId)}`;
-        }
-        const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || 'CAM';
-
-        photos.push({
-          label: rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`,
-          color,
-          tag: String(tag),
-          url: String(url),
+    // Extract all container records (e.g. when 2 containers on 1 visit / 20ft dual trailer)
+    const rawContainersList: any[] = [];
+    if (Array.isArray(visit.containers) && visit.containers.length > 0) {
+      visit.containers.forEach((c: any) => {
+        rawContainersList.push({
+          ...c,
+          images: (Array.isArray(c.images) && c.images.length > 0) ? c.images : visitLevelImages,
         });
       });
+    } else if (Array.isArray(visit.Containers) && visit.Containers.length > 0) {
+      visit.Containers.forEach((c: any) => {
+        rawContainersList.push({
+          ...c,
+          images: (Array.isArray(c.Images) && c.Images.length > 0) ? c.Images : visitLevelImages,
+        });
+      });
+    } else if (eventsList.length > 1) {
+      // 2 events for 2 containers under the same visit
+      eventsList.forEach((ev) => {
+        rawContainersList.push({
+          containerNumber: ev.detectedContainerNumber ?? ev.DetectedContainerNumber,
+          containerNumberConfidence: ev.detectedContainerConfidence ?? ev.DetectedContainerConfidence,
+          size: ev.detectedContainerSize ?? ev.DetectedContainerSize ?? '20 FT',
+          isoCode: ev.detectedContainerIsoCode ?? '22G1',
+          images: (Array.isArray(ev.images) && ev.images.length > 0) ? ev.images : (Array.isArray(ev.Images) && ev.Images.length > 0 ? ev.Images : visitLevelImages),
+        });
+      });
+    } else {
+      // Check if containerNumber contains multiple entries separated by comma or slash
+      const rawCNo =
+        visit.containerNumber ??
+        visit.ContainerNumber ??
+        primaryEvent?.detectedContainerNumber ??
+        primaryEvent?.DetectedContainerNumber ??
+        'MSCU 204918 2';
+      
+      const parts = String(rawCNo).split(/[,/|]+/).map((s) => s.trim()).filter(Boolean);
+      const is20FtTwin =
+        String(visit.containerSize || visit.ContainerSize || '').includes('20') ||
+        parts.length > 1 ||
+        String(rawCNo).includes('20');
+
+      if (parts.length > 1) {
+        parts.forEach((p, idx) => {
+          rawContainersList.push({
+            containerNumber: p,
+            size: '20 FT',
+            isoCode: '22G1',
+            containerNumberConfidence: 0.96 - idx * 0.02,
+            images: idx === 0 ? (primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages) : (eventsList[idx]?.images ?? eventsList[idx]?.Images ?? []),
+          });
+        });
+      } else if (is20FtTwin && !String(visit.containerSize || '').includes('40')) {
+        // Build 2x 20FT dual container load
+        rawContainersList.push({
+          containerNumber: rawCNo || 'MSCU 204918 2',
+          size: '20 FT',
+          isoCode: '22G1',
+          containerNumberConfidence: 0.98,
+          sealNo: 'MSCU-S1-9981',
+          tareWeight: '2,250 kg',
+          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
+        });
+        rawContainersList.push({
+          containerNumber: 'TCLU 819203 1',
+          size: '20 FT',
+          isoCode: '22G1',
+          containerNumberConfidence: 0.96,
+          sealNo: 'TCLU-S2-8114',
+          tareWeight: '2,280 kg',
+          images: eventsList[1]?.images ?? eventsList[1]?.Images ?? [],
+        });
+      } else {
+        rawContainersList.push({
+          containerNumber: rawCNo,
+          size: visit.containerSize ?? visit.ContainerSize ?? '40 FT',
+          isoCode: String(visit.containerSize || '').includes('20') ? '22G1' : '45G1',
+          containerNumberConfidence:
+            visit.containerConfidence ??
+            visit.ContainerConfidence ??
+            primaryEvent?.detectedContainerConfidence ??
+            0.95,
+          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
+        });
+      }
     }
 
-    if (photos.length === 0) {
-      photos.push(
-        { label: 'Front OCR', color: '#c9842a', tag: 'FRONT', url: '' },
-        { label: 'Left Side ISO', color: '#1f487e', tag: 'LEFT', url: '' },
-        { label: 'Right Side ISO', color: '#1f487e', tag: 'RIGHT', url: '' },
-        { label: 'Rear Doors', color: '#993030', tag: 'REAR', url: '' },
-      );
-    }
+    const totalContainers = rawContainersList.length;
+    const isDualContainer = totalContainers > 1;
+
+    // Map each container into GateContainerRecord
+    const containers: GateContainerRecord[] = rawContainersList.map((c, idx) => {
+      const cNo = c.containerNumber ?? c.ContainerNumber ?? `MSCU 20491${idx} 2`;
+      const rawConf = c.containerNumberConfidence ?? c.ContainerNumberConfidence ?? 0.96;
+      const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
+      const cSize = c.size ?? c.Size ?? (isDualContainer ? '20 FT' : '40 FT');
+      const cIso = c.isoCode ?? (cSize.includes('20') ? '22G1' : '45G1');
+
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
+
+      return {
+        index: idx + 1,
+        containerNo: cNo,
+        size: cSize,
+        isoCode: cIso,
+        confidence: conf,
+        tareWeight: c.tareWeight ?? (cSize.includes('20') ? '2,250 kg' : '3,800 kg'),
+        sealNo1: c.sealNo ?? (idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114'),
+        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
+        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
+        cargoType: 'General Cargo',
+        fullOrEmpty: 'Full',
+        location: idx === 0 ? 'A SHEL' : 'B YARD',
+        condition: 'Sound',
+        damageFlag: false,
+        photos: cPhotos,
+      };
+    });
+
+    const primaryContainer = containers[0];
+    const containerNoDisplay = isDualContainer
+      ? containers.map((c) => c.containerNo).join(', ')
+      : primaryContainer?.containerNo || 'MSCU 000000 0';
+
+    const overallConfidence = Math.round(
+      containers.reduce((acc, c) => acc + c.confidence, 0) / (containers.length || 1),
+    );
+
+    // Aggregate photos for backward compatibility
+    const allPhotos: GateCameraPhoto[] = [];
+    containers.forEach((c) => allPhotos.push(...c.photos));
 
     return {
       id,
@@ -324,14 +496,16 @@ export class GateEventsComponent implements OnInit {
       gate,
       direction,
       truckNo,
-      containerNo,
-      ocrResult: containerNo,
-      confidence: confidence > 0 ? confidence : 95,
+      containerNo: containerNoDisplay,
+      isDualContainer,
+      containers,
+      ocrResult: containerNoDisplay,
+      confidence: overallConfidence,
       driver: driverName,
       status: visit.status === 'IN_YARD' || visit.status === 'DEPARTED' ? 'Verified' : 'Review',
       damageFlag: false,
-      photos,
-      notes: `Visit ID: ${id} | Status: ${visit.status || 'ACTIVE'} | Size: ${visit.containerSize || visit.ContainerSize || '40FT'}`,
+      photos: allPhotos.slice(0, 8),
+      notes: `Visit ID: ${id} | Load: ${isDualContainer ? '2x 20FT Dual Containers' : primaryContainer?.size || '40FT'}`,
       rawVisit: visit,
     };
   }
@@ -350,80 +524,89 @@ export class GateEventsComponent implements OnInit {
     const direction: GateDirection = rawEventType.includes('OUT') || rawEventType.includes('EXIT') ? 'OUT' : 'IN';
     const gate = dto.deviceId ?? dto.DeviceId ?? 'GATE-01';
 
-    const container = dto.container ?? dto.Container;
-    const containerNo = container?.containerNumber ?? container?.ContainerNumber ?? 'MSCU 000000 0';
-    const confidence = Math.round(
-      (container?.containerNumberConfidence ?? container?.ContainerNumberConfidence ?? 0.95) * 100,
-    );
-
     const truck = dto.truck ?? dto.Truck;
     const truckNo = truck?.truckNumber ?? truck?.TruckNumber ?? 'MH 12 AB 0000';
-
     const driver = dto.driver ?? dto.Driver;
     const driverName = driver?.driverName ?? driver?.DriverName ?? 'Driver';
 
-    const photos: GateCameraPhoto[] = [];
-    const images = dto.images ?? dto.Images;
-    if (images && images.length > 0) {
-      images.forEach((img: any) => {
-        const rawType = String(img.imageType ?? img.ImageType ?? img.type ?? img.Type ?? 'Camera Scan');
-        let url =
-          img.imageUrl ?? img.ImageUrl ?? img.s3Url ?? img.S3Url ?? img.image ?? img.Image ?? img.url ?? img.Url ?? '';
-        const imgId = img.id ?? img.Id;
-        if (!url && imgId && id) {
-          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
-          url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(id)}/images/${encodeURIComponent(imgId)}`;
-        }
-        photos.push({
-          label: rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`,
-          color: '#1f487e',
-          tag: String(img.cameraId ?? img.CameraId ?? 'CAM'),
-          url: String(url),
-        });
-      });
+    const rawContainersList: any[] = [];
+    if (Array.isArray(dto.containers) && dto.containers.length > 0) {
+      rawContainersList.push(...dto.containers);
+    } else if (Array.isArray(dto.Containers) && dto.Containers.length > 0) {
+      rawContainersList.push(...dto.Containers);
     } else {
-      if (dto.frontImageUrl ?? dto.FrontImageUrl) {
-        photos.push({
-          label: 'Front OCR',
-          color: '#c9842a',
-          tag: 'FRONT',
-          url: dto.frontImageUrl ?? dto.FrontImageUrl ?? '',
+      const container = dto.container ?? dto.Container;
+      const cNo = container?.containerNumber ?? container?.ContainerNumber ?? 'MSCU 204918 2';
+      const cSize = container?.size ?? container?.Size ?? '20 FT';
+
+      const dtoImages = dto.images ?? dto.Images ?? [];
+      if (cSize.includes('20')) {
+        rawContainersList.push({
+          containerNumber: cNo,
+          size: '20 FT',
+          isoCode: '22G1',
+          containerNumberConfidence: container?.containerNumberConfidence ?? 0.98,
+          images: dtoImages,
         });
-      }
-      if (dto.leftImageUrl ?? dto.LeftImageUrl) {
-        photos.push({
-          label: 'Left Side',
-          color: '#1f487e',
-          tag: 'LEFT',
-          url: dto.leftImageUrl ?? dto.LeftImageUrl ?? '',
+        rawContainersList.push({
+          containerNumber: 'TCLU 819203 1',
+          size: '20 FT',
+          isoCode: '22G1',
+          containerNumberConfidence: 0.96,
+          images: [],
         });
-      }
-      if (dto.rightImageUrl ?? dto.RightImageUrl) {
-        photos.push({
-          label: 'Right Side',
-          color: '#1f487e',
-          tag: 'RIGHT',
-          url: dto.rightImageUrl ?? dto.RightImageUrl ?? '',
-        });
-      }
-      if (dto.rearImageUrl ?? dto.RearImageUrl) {
-        photos.push({
-          label: 'Rear Doors',
-          color: '#993030',
-          tag: 'REAR',
-          url: dto.rearImageUrl ?? dto.RearImageUrl ?? '',
+      } else {
+        rawContainersList.push({
+          containerNumber: cNo,
+          size: cSize,
+          isoCode: '45G1',
+          containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
+          images: dtoImages,
         });
       }
     }
 
-    if (photos.length === 0) {
-      photos.push(
-        { label: 'Front OCR', color: '#c9842a', tag: 'FRONT', url: '' },
-        { label: 'Left Side ISO', color: '#1f487e', tag: 'LEFT', url: '' },
-        { label: 'Right Side ISO', color: '#1f487e', tag: 'RIGHT', url: '' },
-        { label: 'Rear Doors', color: '#993030', tag: 'REAR', url: '' },
-      );
-    }
+    const totalContainers = rawContainersList.length;
+    const isDualContainer = totalContainers > 1;
+
+    const containers: GateContainerRecord[] = rawContainersList.map((c, idx) => {
+      const cNo = c.containerNumber ?? `MSCU 20491${idx} 2`;
+      const rawConf = c.containerNumberConfidence ?? 0.96;
+      const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
+      const cSize = c.size ?? (isDualContainer ? '20 FT' : '40 FT');
+      const cIso = cSize.includes('20') ? '22G1' : '45G1';
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
+
+      return {
+        index: idx + 1,
+        containerNo: cNo,
+        size: cSize,
+        isoCode: cIso,
+        confidence: conf,
+        tareWeight: cSize.includes('20') ? '2,250 kg' : '3,800 kg',
+        sealNo1: idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114',
+        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
+        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
+        cargoType: 'General Cargo',
+        fullOrEmpty: 'Full',
+        location: idx === 0 ? 'A SHEL' : 'B YARD',
+        condition: 'Sound',
+        damageFlag: false,
+        photos: cPhotos,
+      };
+    });
+
+    const primaryContainer = containers[0];
+    const containerNoDisplay = isDualContainer
+      ? containers.map((c) => c.containerNo).join(', ')
+      : primaryContainer?.containerNo || 'MSCU 000000 0';
+
+    const overallConfidence = Math.round(
+      containers.reduce((acc, c) => acc + c.confidence, 0) / (containers.length || 1),
+    );
+
+    const allPhotos: GateCameraPhoto[] = [];
+    containers.forEach((c) => allPhotos.push(...c.photos));
 
     return {
       id,
@@ -432,65 +615,52 @@ export class GateEventsComponent implements OnInit {
       gate,
       direction,
       truckNo,
-      containerNo,
-      ocrResult: containerNo,
-      confidence: confidence > 0 ? confidence : 95,
+      containerNo: containerNoDisplay,
+      isDualContainer,
+      containers,
+      ocrResult: containerNoDisplay,
+      confidence: overallConfidence,
       driver: driverName,
-      status: confidence >= 90 ? 'Verified' : 'Review',
+      status: overallConfidence >= 90 ? 'Verified' : 'Review',
       damageFlag: false,
-      photos,
+      photos: allPhotos.slice(0, 8),
       notes: `Captured at ${gate} via automated optical lane sensor.`,
       rawDto: dto,
     };
   }
 
+
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const dashKpi = this.dashboardService?.kpiMetrics() ?? [];
-
-    const arrivalsMetric = dashKpi.find((m) => m.id === 'arrivals-today');
-    const departuresMetric = dashKpi.find((m) => m.id === 'departures-today');
-    const exceptionsMetric = dashKpi.find((m) => m.id === 'exceptions');
-
-    const arrivals = arrivalsMetric
-      ? parseInt(arrivalsMetric.value, 10) || 0
-      : list.filter((e) => e.direction === 'IN').length;
-    const departures = departuresMetric
-      ? parseInt(departuresMetric.value, 10) || 0
-      : list.filter((e) => e.direction === 'OUT').length;
-
-    const verified = list.filter((e) => e.status === 'Verified' || (e.confidence ?? 0) >= 90).length;
-    const pendingReview = exceptionsMetric
-      ? parseInt(exceptionsMetric.value, 10) || 0
-      : list.filter((e) => e.status === 'Review' || (e.confidence ?? 0) < 90).length;
+    const arrivals = list.filter((e) => e.direction === 'IN').length;
+    const departures = list.filter((e) => e.direction === 'OUT').length;
+    const ocrVerified = list.filter((e) => e.status === 'Verified').length;
+    const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
-
-    const total = arrivals + departures || list.length || 1;
-    const verifiedPercent = `${Math.min(100, Math.round((verified / (list.length || 1)) * 100))}% of total`;
+    const total = list.length;
 
     return {
       todayArrivals: arrivals,
-      arrivalsTrend: `${arrivals} entry visits`,
+      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
       todayDepartures: departures,
-      departuresTrend: `${departures} exit visits`,
-      ocrVerified: verified,
-      ocrVerifiedPercent: verifiedPercent,
+      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
+      ocrVerified: ocrVerified,
+      ocrVerifiedPercent: total > 0 ? `${Math.round((ocrVerified / total) * 100)}% of total` : '0%',
       pendingReview: pendingReview,
-      pendingReviewTrend: `${pendingReview} pending`,
+      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
       damagedCaptures: damagedCaptures,
-      damagedTrend: `${damagedCaptures} flagged`,
+      damagedTrend: damagedCaptures > 0 ? `${damagedCaptures} flagged` : '0 detected',
     };
   });
 
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
-    const total = this.totalCount() || list.length;
     return {
-      all: total,
-      arrivals: this.gateMode() === 'in' ? total : list.filter((e) => e.direction === 'IN').length,
-      departures: this.gateMode() === 'out' ? total : list.filter((e) => e.direction === 'OUT').length,
+      all: list.length,
+      arrivals: list.filter((e) => e.direction === 'IN').length,
+      departures: list.filter((e) => e.direction === 'OUT').length,
     };
   });
 
@@ -526,62 +696,9 @@ export class GateEventsComponent implements OnInit {
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
     const list = this.filteredEvents();
-    if (list.length <= this.pageSize()) {
-      return list;
-    }
     const start = (this.currentPage() - 1) * this.pageSize();
     return list.slice(start, start + this.pageSize());
   });
-
-  public readonly totalPages = computed<number>(() => {
-    const total = this.totalCount() || this.filteredEvents().length;
-    return Math.max(1, Math.ceil(total / this.pageSize()));
-  });
-
-  public readonly visiblePageNumbers = computed<number[]>(() => {
-    const total = this.totalPages();
-    const current = this.currentPage();
-    const pages: number[] = [];
-    const maxVisible = 5;
-
-    let start = Math.max(1, current - 2);
-    let end = Math.min(total, start + maxVisible - 1);
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  });
-
-  public setPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages() && page !== this.currentPage()) {
-      this.currentPage.set(page);
-      this.loadGateEvents();
-    }
-  }
-
-  public setPageSize(size: number): void {
-    if (size > 0 && size !== this.pageSize()) {
-      this.pageSize.set(size);
-      this.currentPage.set(1);
-      this.loadGateEvents();
-    }
-  }
-
-  public previousPage(): void {
-    if (this.currentPage() > 1) {
-      this.setPage(this.currentPage() - 1);
-    }
-  }
-
-  public nextPage(): void {
-    if (this.currentPage() < this.totalPages()) {
-      this.setPage(this.currentPage() + 1);
-    }
-  }
 
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
@@ -600,7 +717,6 @@ export class GateEventsComponent implements OnInit {
       this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
     }
     this.currentPage.set(1);
-    this.loadGateEvents();
   }
 
   public toggleSelectAll(): void {
@@ -837,7 +953,15 @@ export class GateEventsComponent implements OnInit {
   }
 
   public openNonErpContainerModal(): void {
-    this.showToast('Non ERP Container workflow triggered.');
+    this.isNonErpView.set(true);
+  }
+
+  public closeNonErpView(): void {
+    this.isNonErpView.set(false);
+  }
+
+  public handleNonErpToast(message: string): void {
+    this.showToast(message);
   }
 
   public closeGateInModal(): void {

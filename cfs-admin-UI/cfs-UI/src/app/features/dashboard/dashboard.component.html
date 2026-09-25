@@ -1,15 +1,18 @@
-<div class="dashboard-page flex flex-col gap-4">
-  <!-- Top Row: 5 KPI Metric Cards -->
-  <section class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+<div class="dashboard-page relative flex flex-col gap-4">
+  <!-- Top Ambient Sheen Laser Line on Dashboard Open -->
+  <div class="dashboard-sheen-line" aria-hidden="true"></div>
+
+  <!-- Top Row: 5 KPI Metric Cards with Staggered Pop-In -->
+  <section class="dashboard-section-kpi grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
     @for (metric of dashboardService.kpiMetrics(); track metric.id) {
-      <app-kpi-metric-card [metric]="metric" />
+      <app-kpi-metric-card [metric]="metric" class="dashboard-kpi-card" />
     }
   </section>
 
   <!-- Middle Row: Recent Gate Activity (8 cols) & Exceptions / Alerts (4 cols) -->
-  <section class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+  <section class="dashboard-section-operations grid grid-cols-1 gap-4 lg:grid-cols-12">
     <!-- Recent Gate Activity (Primary Operations Log) -->
-    <div class="lg:col-span-8">
+    <div class="dashboard-panel-card panel-recent-activity lg:col-span-8">
       <app-recent-gate-activity
         [activities]="dashboardService.paginatedGateActivities()"
         [totalEntries]="dashboardService.totalGateEntries()"
@@ -19,25 +22,25 @@
     </div>
 
     <!-- Exceptions / Alerts -->
-    <div class="lg:col-span-4">
+    <div class="dashboard-panel-card panel-exception-alerts lg:col-span-4">
       <app-exception-alerts [alerts]="dashboardService.exceptionAlerts()" />
     </div>
   </section>
 
   <!-- Bottom Row: Yard Snapshot (4 cols), Gate Status Donut (4 cols), Inventory Summary (4 cols) -->
-  <section class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+  <section class="dashboard-section-analytics grid grid-cols-1 gap-4 lg:grid-cols-12">
     <!-- Yard Snapshot (Live) -->
-    <div class="lg:col-span-4">
+    <div class="dashboard-panel-card panel-yard-snapshot lg:col-span-4">
       <app-yard-snapshot [rows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()" />
     </div>
 
     <!-- Task & Gate Status Donut -->
-    <div class="lg:col-span-4">
+    <div class="dashboard-panel-card panel-status-donut lg:col-span-4">
       <app-status-donut-chart [chartData]="dashboardService.taskStatusData()" />
     </div>
 
     <!-- Inventory Summary -->
-    <div class="lg:col-span-4">
+    <div class="dashboard-panel-card panel-inventory-summary lg:col-span-4">
       <app-inventory-summary [data]="dashboardService.inventorySummary()" />
     </div>
   </section>

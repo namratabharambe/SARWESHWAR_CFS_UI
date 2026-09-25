@@ -84,4 +84,3 @@ export interface NavigationModuleDto {
   order?: number;
   children?: NavigationModuleDto[] | null;
 }
-
