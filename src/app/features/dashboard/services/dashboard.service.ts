@@ -110,7 +110,7 @@ export class DashboardService {
         item.truckNo.toLowerCase().includes(query) ||
         item.containerNo.toLowerCase().includes(query) ||
         item.ocrResult.toLowerCase().includes(query) ||
-        item.sizeType.toLowerCase().includes(query),
+        item.sizeType.toLowerCase().includes(query)
     );
   });
 
@@ -187,17 +187,35 @@ export class DashboardService {
     if (!this.gateEventService) return;
     const activeSiteId = siteId || this.auth?.getActiveSiteId() || undefined;
     const activeClientId = clientId || this.auth?.getActiveClientId() || undefined;
+    const activeUserId = this.auth?.getUserId() || undefined;
+    const isElevated = this.auth?.hasRole(['SystemAdmin', 'ClientAdmin', 'SiteAdmin']) ?? false;
 
     this.gateEventService
       .getVisits({
         page: 1,
-        pageSize: 25,
+        pageSize: 100,
         siteId: activeSiteId,
         clientId: activeClientId,
+        createdByUserId: !isElevated ? activeUserId : undefined,
+        userId: !isElevated ? activeUserId : undefined,
       })
       .subscribe({
         next: (response) => {
-          const items: VisitListItemDto[] = response?.items ?? (Array.isArray(response) ? (response as any) : []);
+          const rawItems: any[] = response?.items ?? (Array.isArray(response) ? (response as any) : []);
+          const items: VisitListItemDto[] = (!isElevated && activeUserId)
+            ? rawItems.filter((visit: any) => {
+                const events: any[] = Array.isArray(visit.events) ? visit.events : Array.isArray(visit.Events) ? visit.Events : [];
+                if (events.length > 0) {
+                  return events.some((e) => {
+                    const creator = e.createdByUserId ?? e.CreatedByUserId ?? e.userId ?? e.UserId;
+                    return !creator || String(creator).toLowerCase() === activeUserId.toLowerCase();
+                  });
+                }
+                const visitCreator = visit.createdByUserId ?? visit.CreatedByUserId ?? visit.userId ?? visit.UserId;
+                return !visitCreator || String(visitCreator).toLowerCase() === activeUserId.toLowerCase();
+              })
+            : rawItems;
+
           if (items && items.length > 0) {
             const mapped: GateActivityItem[] = items.map((visit) => {
               const primaryEvent = visit.events?.[0];
@@ -330,7 +348,7 @@ export class DashboardService {
             const exportTeu = departures * 2;
             const inYardTeu = inYard * 2;
             const reviewTeu = review * 2;
-            const totalTeu = (arrivals + departures) * 2 || inYard * 2 || 1;
+            const totalTeu = (arrivals + departures) * 2 || (inYard * 2) || 1;
             const maxTeuCapacity = 200;
             const currentTeuCount = inYard * 2 || arrivals * 2;
             const utilPct = Math.min(100, Math.round((currentTeuCount / maxTeuCapacity) * 100));
@@ -374,10 +392,9 @@ export class DashboardService {
                   colorTheme: 'red',
                 },
               ],
-              topContainerTypes:
-                topContainerTypes.length > 0
-                  ? topContainerTypes
-                  : [{ typeName: "40' Standard", count: totalVisits, percentage: 100 }],
+              topContainerTypes: topContainerTypes.length > 0 ? topContainerTypes : [
+                { typeName: "40' Standard", count: totalVisits, percentage: 100 },
+              ],
               currentTeu: currentTeuCount,
               maxTeu: maxTeuCapacity,
               utilizationPercentage: utilPct,

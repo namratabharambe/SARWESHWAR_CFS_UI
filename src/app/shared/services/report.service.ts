@@ -470,9 +470,7 @@ export class ReportService {
       };
     } else if (cat === 'container-mismatch') {
       const rows = this.containerMismatchData();
-      const resolved = rows.filter(
-        (r) => r.resolutionStatus === 'Resolved' || r.resolutionStatus === 'Overridden',
-      ).length;
+      const resolved = rows.filter((r) => r.resolutionStatus === 'Resolved' || r.resolutionStatus === 'Overridden').length;
       const rate = ((resolved / rows.length) * 100).toFixed(0);
       return {
         metric1Label: 'Total Mismatch Incidents',
@@ -573,7 +571,7 @@ export class ReportService {
         r.containerNo.toLowerCase().includes(q) ||
         r.truckNo.toLowerCase().includes(q) ||
         r.driverName.toLowerCase().includes(q) ||
-        r.shippingLine.toLowerCase().includes(q),
+        r.shippingLine.toLowerCase().includes(q)
     );
   });
 
@@ -586,7 +584,7 @@ export class ReportService {
         r.scannedContainerNo.toLowerCase().includes(q) ||
         r.manifestContainerNo.toLowerCase().includes(q) ||
         r.shippingLine.toLowerCase().includes(q) ||
-        r.discrepancyType.toLowerCase().includes(q),
+        r.discrepancyType.toLowerCase().includes(q)
     );
   });
 
@@ -594,7 +592,7 @@ export class ReportService {
     const q = this.filter().searchQuery.toLowerCase().trim();
     if (!q) return this.yardOccupancyData();
     return this.yardOccupancyData().filter(
-      (r) => r.blockName.toLowerCase().includes(q) || r.yardZone.toLowerCase().includes(q),
+      (r) => r.blockName.toLowerCase().includes(q) || r.yardZone.toLowerCase().includes(q)
     );
   });
 
@@ -605,7 +603,7 @@ export class ReportService {
       (r) =>
         r.equipmentCode.toLowerCase().includes(q) ||
         r.assignedOperator.toLowerCase().includes(q) ||
-        r.equipmentType.toLowerCase().includes(q),
+        r.equipmentType.toLowerCase().includes(q)
     );
   });
 
@@ -618,7 +616,7 @@ export class ReportService {
         r.containerNo.toLowerCase().includes(q) ||
         r.blNumber.toLowerCase().includes(q) ||
         r.importerExporterName.toLowerCase().includes(q) ||
-        r.cargoDescription.toLowerCase().includes(q),
+        r.cargoDescription.toLowerCase().includes(q)
     );
   });
 
@@ -642,17 +640,6 @@ export class ReportService {
     this.showToast(`Report updated for ${preset.toUpperCase()}`);
   }
 
-  public setCustomDate(date: string): void {
-    if (!date) return;
-    this.filter.update((f) => ({
-      ...f,
-      preset: 'custom',
-      startDate: date,
-      endDate: date,
-    }));
-    this.showToast(`Report date set to ${date}`);
-  }
-
   public showToast(msg: string): void {
     this.toastMessage.set(msg);
     setTimeout(() => {
@@ -672,21 +659,7 @@ export class ReportService {
     let filename = `CFS-Report-${cat}-${new Date().toISOString().slice(0, 10)}.csv`;
 
     if (cat === 'gate-operations') {
-      const headers = [
-        'Visit No',
-        'Timestamp',
-        'Gate Lane',
-        'Direction',
-        'Truck No',
-        'Driver Name',
-        'Container No',
-        'ISO Type',
-        'Shipping Line',
-        'OCR Status',
-        'Turnaround (Mins)',
-        'Weighbridge (KG)',
-        'Status',
-      ];
+      const headers = ['Visit No', 'Timestamp', 'Gate Lane', 'Direction', 'Truck No', 'Driver Name', 'Container No', 'ISO Type', 'Shipping Line', 'OCR Status', 'Turnaround (Mins)', 'Weighbridge (KG)', 'Status'];
       const rows = this.filteredGateRows().map((r) => [
         r.visitNo,
         r.timestamp,
@@ -704,21 +677,7 @@ export class ReportService {
       ]);
       csvData = [headers.join(','), ...rows.map((e) => e.map((v) => `"${v}"`).join(','))].join('\n');
     } else if (cat === 'container-mismatch') {
-      const headers = [
-        'Alert Code',
-        'Timestamp',
-        'Gate Lane',
-        'Scanned Container',
-        'Manifest Container',
-        'Discrepancy Type',
-        'Variance Description',
-        'OCR Confidence',
-        'Shipping Line',
-        'Booking No',
-        'Resolution Status',
-        'Resolved By',
-        'Resolution Mins',
-      ];
+      const headers = ['Alert Code', 'Timestamp', 'Gate Lane', 'Scanned Container', 'Manifest Container', 'Discrepancy Type', 'Variance Description', 'OCR Confidence', 'Shipping Line', 'Booking No', 'Resolution Status', 'Resolved By', 'Resolution Mins'];
       const rows = this.filteredMismatchRows().map((r) => [
         r.alertCode,
         r.timestamp,
@@ -736,19 +695,7 @@ export class ReportService {
       ]);
       csvData = [headers.join(','), ...rows.map((e) => e.map((v) => `"${v}"`).join(','))].join('\n');
     } else if (cat === 'yard-occupancy') {
-      const headers = [
-        'Block Name',
-        'Yard Zone',
-        'Total Capacity (TEU)',
-        'Occupied (TEU)',
-        'Occupancy %',
-        'Reefer Slots Total',
-        'Reefer Occupied',
-        'Avg Dwell Days',
-        'Long Stay (>30d)',
-        'Critical Alerts',
-        'Last Audit',
-      ];
+      const headers = ['Block Name', 'Yard Zone', 'Total Capacity (TEU)', 'Occupied (TEU)', 'Occupancy %', 'Reefer Slots Total', 'Reefer Occupied', 'Avg Dwell Days', 'Long Stay (>30d)', 'Critical Alerts', 'Last Audit'];
       const rows = this.filteredYardRows().map((r) => [
         r.blockName,
         r.yardZone,
@@ -764,18 +711,7 @@ export class ReportService {
       ]);
       csvData = [headers.join(','), ...rows.map((e) => e.map((v) => `"${v}"`).join(','))].join('\n');
     } else if (cat === 'equipment-productivity') {
-      const headers = [
-        'Equipment Code',
-        'Type',
-        'Operator',
-        'Shift',
-        'Total Moves',
-        'Moves / Hour',
-        'Operating Hours',
-        'Idle Hours',
-        'Fuel (L)',
-        'Efficiency Rating',
-      ];
+      const headers = ['Equipment Code', 'Type', 'Operator', 'Shift', 'Total Moves', 'Moves / Hour', 'Operating Hours', 'Idle Hours', 'Fuel (L)', 'Efficiency Rating'];
       const rows = this.filteredEquipmentRows().map((r) => [
         r.equipmentCode,
         r.equipmentType,
@@ -790,19 +726,7 @@ export class ReportService {
       ]);
       csvData = [headers.join(','), ...rows.map((e) => e.map((v) => `"${v}"`).join(','))].join('\n');
     } else {
-      const headers = [
-        'Dossier No',
-        'Container No',
-        'BL Number',
-        'Importer/Exporter',
-        'Cargo Description',
-        'Gross Weight (KG)',
-        'Customs Status',
-        'Bonded Days',
-        'Demurrage (INR)',
-        'Clearance Time',
-        'Exam Bay',
-      ];
+      const headers = ['Dossier No', 'Container No', 'BL Number', 'Importer/Exporter', 'Cargo Description', 'Gross Weight (KG)', 'Customs Status', 'Bonded Days', 'Demurrage (INR)', 'Clearance Time', 'Exam Bay'];
       const rows = this.filteredCustomsRows().map((r) => [
         r.dossierNo,
         r.containerNo,
@@ -849,7 +773,7 @@ export class ReportService {
           (r, idx) => `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
           <td>${r.visitNo}</td><td>${r.timestamp}</td><td>${r.gateLane}</td><td>${r.direction}</td><td>${r.truckNo}</td><td>${r.driverName}</td><td><b>${r.containerNo}</b></td><td>${r.isoType}</td><td>${r.shippingLine}</td><td>${r.ocrStatus}</td><td>${r.turnaroundMinutes}</td><td>${r.weighbridgeKg}</td><td>${r.status}</td>
-        </tr>`,
+        </tr>`
         )
         .join('');
     } else if (cat === 'container-mismatch') {
@@ -862,7 +786,7 @@ export class ReportService {
           (r, idx) => `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#fff1f2'};">
           <td>${r.alertCode}</td><td>${r.timestamp}</td><td>${r.gateLane}</td><td style="color: #be123c; font-weight: bold;">${r.scannedContainerNo}</td><td style="color: #047857; font-weight: bold;">${r.manifestContainerNo}</td><td>${r.discrepancyType}</td><td>${r.varianceDescription}</td><td>${r.ocrConfidence}%</td><td>${r.shippingLine}</td><td>${r.bookingNo}</td><td>${r.resolutionStatus}</td><td>${r.resolvedBy}</td><td>${r.resolutionDurationMins}</td>
-        </tr>`,
+        </tr>`
         )
         .join('');
     } else if (cat === 'yard-occupancy') {
@@ -875,7 +799,7 @@ export class ReportService {
           (r, idx) => `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#f0fdf4'};">
           <td><b>${r.blockName}</b></td><td>${r.yardZone}</td><td>${r.totalCapacityTeu}</td><td>${r.occupiedTeu}</td><td><b>${r.occupancyRatePercent}%</b></td><td>${r.reeferSlotsTotal}</td><td>${r.reeferSlotsOccupied}</td><td>${r.averageDwellDays}</td><td>${r.longStayOver30DaysCount}</td><td>${r.criticalStackAlerts}</td><td>${r.lastAuditedTime}</td>
-        </tr>`,
+        </tr>`
         )
         .join('');
     } else if (cat === 'equipment-productivity') {
@@ -888,7 +812,7 @@ export class ReportService {
           (r, idx) => `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#eef2ff'};">
           <td><b>${r.equipmentCode}</b></td><td>${r.equipmentType}</td><td>${r.assignedOperator}</td><td>${r.shift}</td><td><b>${r.totalMoves}</b></td><td>${r.movesPerHour}</td><td>${r.operatingHours}</td><td>${r.idleHours}</td><td>${r.fuelConsumptionLitres}</td><td>${r.efficiencyRating}</td>
-        </tr>`,
+        </tr>`
         )
         .join('');
     } else {
@@ -901,7 +825,7 @@ export class ReportService {
           (r, idx) => `
         <tr style="background-color: ${idx % 2 === 0 ? '#ffffff' : '#fffbeb'};">
           <td>${r.dossierNo}</td><td><b>${r.containerNo}</b></td><td>${r.blNumber}</td><td>${r.importerExporterName}</td><td>${r.cargoDescription}</td><td>${r.grossWeightKg}</td><td><b>${r.customsStatus}</b></td><td>${r.bondedWarehouseDays}</td><td style="color: #b45309; font-weight: bold;">₹${r.demurrageAccruedInr}</td><td>${r.clearanceTimestamp}</td><td>${r.examBayNo || 'N/A'}</td>
-        </tr>`,
+        </tr>`
         )
         .join('');
     }

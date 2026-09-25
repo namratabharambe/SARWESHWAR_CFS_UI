@@ -54,6 +54,10 @@ export class MockAuthService {
     return this.selectedSiteId();
   }
 
+  public getUserId(): string {
+    return 'mock-user-1';
+  }
+
   public isTokenExpired(): boolean {
     return false;
   }

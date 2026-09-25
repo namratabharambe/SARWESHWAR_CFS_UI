@@ -22,14 +22,8 @@ type Envelope<T> = T | { data?: T; items?: T; value?: T; result?: T };
 
 export function matchIds(a?: string | null, b?: string | null): boolean {
   if (!a || !b) return false;
-  const cleanA = a
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
-  const cleanB = b
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
+  const cleanA = a.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cleanB = b.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   return cleanA === cleanB;
 }
 
@@ -57,13 +51,13 @@ export class AdminRepository {
 
     const clients$ = this.auth.canManageClients()
       ? this.listClients().pipe(catchError(() => of([])))
-      : targetCid
-        ? this.clientService.getById(targetCid).pipe(
-            map((res) => this.unwrap(res)),
-            map((raw) => (raw ? [this.normalizeClient(raw)] : [])),
-            catchError(() => of([])),
-          )
-        : of([]);
+      : (targetCid
+          ? this.clientService.getById(targetCid).pipe(
+              map((res) => this.unwrap(res)),
+              map((raw) => (raw ? [this.normalizeClient(raw)] : [])),
+              catchError(() => of([])),
+            )
+          : of([]));
 
     forkJoin({
       clients: clients$,
@@ -87,30 +81,27 @@ export class AdminRepository {
 
         // If user is client admin or operator, merge their accessible sites
         if (!this.auth.isSystemAdmin()) {
-          this.auth
-            .getMySites()
-            .pipe(catchError(() => of([])))
-            .subscribe({
-              next: (userSites) => {
-                if (userSites && userSites.length > 0) {
-                  const mappedSites: Site[] = userSites.map((us) => ({
-                    id: us.id || us.siteId || '',
-                    clientId: us.clientId || targetCid,
-                    name: us.name,
-                    code: us.code,
-                    status: 'Active',
-                    active: true,
-                    isActive: true,
-                  }));
-                  this.sites.update((existing) => {
-                    const map = new Map<string, Site>();
-                    existing.forEach((s) => map.set(s.id, s));
-                    mappedSites.forEach((s) => map.set(s.id, s));
-                    return Array.from(map.values());
-                  });
-                }
-              },
-            });
+          this.auth.getMySites().pipe(catchError(() => of([]))).subscribe({
+            next: (userSites) => {
+              if (userSites && userSites.length > 0) {
+                const mappedSites: Site[] = userSites.map((us) => ({
+                  id: us.id || us.siteId || '',
+                  clientId: us.clientId || targetCid,
+                  name: us.name,
+                  code: us.code,
+                  status: 'Active',
+                  active: true,
+                  isActive: true,
+                }));
+                this.sites.update((existing) => {
+                  const map = new Map<string, Site>();
+                  existing.forEach((s) => map.set(s.id, s));
+                  mappedSites.forEach((s) => map.set(s.id, s));
+                  return Array.from(map.values());
+                });
+              }
+            },
+          });
         }
       },
       error: (err) => {
@@ -196,7 +187,7 @@ export class AdminRepository {
     return this.listSites(targetCid).pipe(
       map((items) => {
         const matching = targetCid ? items.filter((s) => matchIds(s.clientId, targetCid)) : items;
-        const result = matching.length > 0 ? matching : items.length > 0 ? items : this.sites();
+        const result = matching.length > 0 ? matching : (items.length > 0 ? items : this.sites());
         if (result.length > 0) {
           this.sites.update((existing) => {
             const map = new Map<string, Site>();
@@ -531,13 +522,13 @@ export class AdminRepository {
     const id = String(raw.id ?? raw.siteId ?? raw.SiteId ?? crypto.randomUUID());
     const clientId = String(
       raw.clientId ??
-        raw.ClientId ??
-        raw.client_id ??
-        raw.client?.id ??
-        raw.Client?.Id ??
-        raw.client?.clientId ??
-        raw.Client?.ClientId ??
-        '',
+      raw.ClientId ??
+      raw.client_id ??
+      raw.client?.id ??
+      raw.Client?.Id ??
+      raw.client?.clientId ??
+      raw.Client?.ClientId ??
+      ''
     );
     const name = String(raw.name ?? raw.Name ?? raw.siteName ?? raw.SiteName ?? 'Unnamed Site');
     const code = String(raw.code ?? raw.Code ?? raw.siteCode ?? raw.SiteCode ?? '');

@@ -33,8 +33,7 @@ export class AlertService {
       shippingLine: 'MSC Mediterranean Shipping',
       bookingNo: 'BKGS2051709',
       isoType: "40' HC (42G1)",
-      systemRecommendation:
-        'Optical OCR scanned digit 3 at index 9 does not match manifest digit 8. Inspect physical door markings and re-verify container serial check digit.',
+      systemRecommendation: 'Optical OCR scanned digit 3 at index 9 does not match manifest digit 8. Inspect physical door markings and re-verify container serial check digit.',
       comparisonFields: [
         {
           fieldName: 'Container ISO Serial',
@@ -86,8 +85,7 @@ export class AlertService {
       shippingLine: 'HMM Ocean Line',
       bookingNo: 'EXP-889021',
       isoType: "40' HC",
-      systemRecommendation:
-        'Weighbridge gross weight deviates by +35.2% (+8,450 KG) over declared VGM manifest. SOLAS VGM regulation compliance hold triggered.',
+      systemRecommendation: 'Weighbridge gross weight deviates by +35.2% (+8,450 KG) over declared VGM manifest. SOLAS VGM regulation compliance hold triggered.',
       comparisonFields: [
         {
           fieldName: 'Container ISO Serial',
@@ -131,8 +129,7 @@ export class AlertService {
       shippingLine: 'Maersk Line',
       bookingNo: 'EXP-332910',
       isoType: "40' HC",
-      systemRecommendation:
-        'Line seal on rear right door does not match customs shipping bill manifest. Possible seal tampering or documentation error. Physical inspection mandatory.',
+      systemRecommendation: 'Line seal on rear right door does not match customs shipping bill manifest. Possible seal tampering or documentation error. Physical inspection mandatory.',
       comparisonFields: [
         {
           fieldName: 'Container ISO Serial',
@@ -176,8 +173,7 @@ export class AlertService {
       bookingNo: 'RF-991048',
       isoType: "40' HC Reefer",
       detectedDamage: 'Top right corner casting dent and reefer unit cable sheath puncture detected by AI vision.',
-      systemRecommendation:
-        'AI Vision camera detected structural puncture on upper front corner. Initiate EIR Damage Assessment before admitting to reefer rack.',
+      systemRecommendation: 'AI Vision camera detected structural puncture on upper front corner. Initiate EIR Damage Assessment before admitting to reefer rack.',
       comparisonFields: [
         {
           fieldName: 'Container ISO Serial',
@@ -212,8 +208,7 @@ export class AlertService {
       shippingLine: 'CMA CGM',
       bookingNo: 'YRD-104922',
       isoType: "20' GP",
-      systemRecommendation:
-        'Assigned tier slot Block D/01-04 was occupied by holding chassis. Slot reallocated to Block D/02-05.',
+      systemRecommendation: 'Assigned tier slot Block D/01-04 was occupied by holding chassis. Slot reallocated to Block D/02-05.',
       resolutionNotes: 'Operator verified slot clearance and updated TOS grid coordinates.',
       resolvedBy: 'Ramesh Kumar',
       resolvedAt: '2025-05-17T07:45:00Z',
@@ -281,7 +276,7 @@ export class AlertService {
           a.truckNo.toLowerCase().includes(q) ||
           a.shippingLine.toLowerCase().includes(q) ||
           a.bookingNo.toLowerCase().includes(q) ||
-          a.gateLocation.toLowerCase().includes(q),
+          a.gateLocation.toLowerCase().includes(q)
       );
     }
 
@@ -293,9 +288,7 @@ export class AlertService {
     const list = this.alerts();
     const total = list.length;
     const critical = list.filter((a) => a.severity === 'Critical' && a.status !== 'Resolved').length;
-    const mismatches = list.filter(
-      (a) => a.alertType === 'Container Number Mismatch' && a.status !== 'Resolved',
-    ).length;
+    const mismatches = list.filter((a) => a.alertType === 'Container Number Mismatch' && a.status !== 'Resolved').length;
     const underReview = list.filter((a) => a.status === 'Under Review').length;
     const resolvedToday = list.filter((a) => a.status === 'Resolved').length;
 
@@ -373,8 +366,8 @@ export class AlertService {
               resolvedBy: req.operatorName || 'Ramesh Kumar (Yard Operator)',
               resolvedAt: now,
             }
-          : item,
-      ),
+          : item
+      )
     );
 
     const currentSelected = this.selectedAlert();

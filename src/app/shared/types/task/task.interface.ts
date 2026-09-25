@@ -1,8 +1,21 @@
-export type TaskType = 'Import' | 'Export' | 'Yard Move' | 'Stack' | 'Gate Out' | 'De-stack' | 'Inspection';
+export type TaskType =
+  | 'Import'
+  | 'Export'
+  | 'Yard Move'
+  | 'Stack'
+  | 'Gate Out'
+  | 'De-stack'
+  | 'Inspection';
 
 export type TaskPriority = 'High' | 'Medium' | 'Low' | 'Critical';
 
-export type TaskStatus = 'New' | 'Assigned' | 'In Progress' | 'Awaiting Confirmation' | 'Completed' | 'Exception';
+export type TaskStatus =
+  | 'New'
+  | 'Assigned'
+  | 'In Progress'
+  | 'Awaiting Confirmation'
+  | 'Completed'
+  | 'Exception';
 
 export interface TaskItem {
   id: string;

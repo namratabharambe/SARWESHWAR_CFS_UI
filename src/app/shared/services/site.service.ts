@@ -16,11 +16,15 @@ export class SiteService extends BaseApiService<Site[], Site, CreateSiteRequest 
   }
 
   public listSites(clientId?: string): Observable<Site[]> {
-    if (clientId) {
-      const params = new HttpParams().set('clientId', clientId);
-      return this.get({ params }).pipe(catchError(() => this.get()));
+    if (clientId && clientId.trim().length > 0) {
+      const params = new HttpParams().set('ClientId', clientId.trim());
+      return this.get({ params }).pipe(
+        catchError(() => this.get().pipe(catchError(() => of([])))),
+      );
     }
-    return this.get();
+    return this.get().pipe(
+      catchError(() => of([])),
+    );
   }
 
   public createSite(request: CreateSiteRequest): Observable<Site> {

@@ -376,20 +376,21 @@
                 </td>
 
                 <!-- Camera Photos -->
-                <td class="col-photos px-4 py-3.5">
+                <td class="col-photos px-4 py-3.5" (click)="$event.stopPropagation()">
                   <div class="camera-thumbnails-row flex items-center gap-1.5">
                     @for (photo of event.photos; track photo.label) {
                       <div
-                        class="camera-photo-thumb relative h-8 w-10 overflow-hidden rounded-md border border-slate-200 shadow-xs cursor-pointer hover:scale-105 transition-transform dark:border-slate-700"
+                        class="camera-photo-thumb group/thumb relative h-8 w-11 overflow-hidden rounded-md border border-slate-200 shadow-xs cursor-pointer hover:scale-110 hover:border-blue-500 hover:shadow-md transition-all dark:border-slate-700"
                         [style.background-color]="photo.color"
-                        [title]="photo.label"
-                        (click)="photo.url ? openLightbox(photo.label, photo.url, $event) : null">
+                        [title]="'Click to enlarge ' + photo.label"
+                        (click)="openLightbox(photo.label, photo.url || '', $event)">
                         @if (photo.url) {
                           <img
                             [src]="photo.url"
                             [alt]="photo.label"
-                            class="h-full w-full object-cover"
+                            class="h-full w-full object-cover transition-transform group-hover/thumb:scale-105"
                             loading="lazy" />
+                          <div class="absolute inset-0 bg-blue-600/10 opacity-0 group-hover/thumb:opacity-100 transition-opacity"></div>
                         } @else {
                           <div class="thumb-container-ribs flex h-full items-center justify-center">
                             <span class="text-[9px] font-bold text-white/80">{{ photo.tag }}</span>
@@ -418,88 +419,44 @@
       <!-- Pagination Footer -->
       <div class="table-pagination-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
         <div class="pagination-info">
-          <span>Showing 1 to {{ paginatedEvents().length }} of {{ totalCount() }} events</span>
+          <span>Showing {{ (currentPage() - 1) * pageSize() + (paginatedEvents().length > 0 ? 1 : 0) }} to {{ (currentPage() - 1) * pageSize() + paginatedEvents().length }} of {{ totalCount() || filteredEvents().length }} events</span>
         </div>
 
         <div class="pagination-controls-group flex items-center gap-1">
+          <!-- Previous Button -->
           <button
             type="button"
-            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
-            [class.border-blue-600]="currentPage() === 1"
-            [class.bg-blue-600]="currentPage() === 1"
-            [class.text-white]="currentPage() === 1"
-            [class.border-slate-200]="currentPage() !== 1"
-            [class.bg-white]="currentPage() !== 1"
-            [class.text-slate-700]="currentPage() !== 1"
-            [class.dark:border-slate-700]="currentPage() !== 1"
-            [class.dark:bg-slate-800]="currentPage() !== 1"
-            [class.dark:text-slate-300]="currentPage() !== 1"
-            (click)="currentPage.set(1)">
-            1
-          </button>
+            class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            [disabled]="currentPage() <= 1"
+            (click)="previousPage()"
+            title="Previous page">&lt;</button>
+
+          <!-- Dynamic Page Number Buttons -->
+          @for (p of visiblePageNumbers(); track p) {
+            <button
+              type="button"
+              class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+              [class.border-blue-600]="currentPage() === p"
+              [class.bg-blue-600]="currentPage() === p"
+              [class.text-white]="currentPage() === p"
+              [class.border-slate-200]="currentPage() !== p"
+              [class.bg-white]="currentPage() !== p"
+              [class.text-slate-700]="currentPage() !== p"
+              [class.dark:border-slate-700]="currentPage() !== p"
+              [class.dark:bg-slate-800]="currentPage() !== p"
+              [class.dark:text-slate-300]="currentPage() !== p"
+              (click)="setPage(p)">
+              {{ p }}
+            </button>
+          }
+
+          <!-- Next Button -->
           <button
             type="button"
-            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
-            [class.border-blue-600]="currentPage() === 2"
-            [class.bg-blue-600]="currentPage() === 2"
-            [class.text-white]="currentPage() === 2"
-            [class.border-slate-200]="currentPage() !== 2"
-            [class.bg-white]="currentPage() !== 2"
-            [class.text-slate-700]="currentPage() !== 2"
-            [class.dark:border-slate-700]="currentPage() !== 2"
-            [class.dark:bg-slate-800]="currentPage() !== 2"
-            [class.dark:text-slate-300]="currentPage() !== 2"
-            (click)="currentPage.set(2)">
-            2
-          </button>
-          <button
-            type="button"
-            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
-            [class.border-blue-600]="currentPage() === 3"
-            [class.bg-blue-600]="currentPage() === 3"
-            [class.text-white]="currentPage() === 3"
-            [class.border-slate-200]="currentPage() !== 3"
-            [class.bg-white]="currentPage() !== 3"
-            [class.text-slate-700]="currentPage() !== 3"
-            [class.dark:border-slate-700]="currentPage() !== 3"
-            [class.dark:bg-slate-800]="currentPage() !== 3"
-            [class.dark:text-slate-300]="currentPage() !== 3"
-            (click)="currentPage.set(3)">
-            3
-          </button>
-          <button
-            type="button"
-            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
-            [class.border-blue-600]="currentPage() === 4"
-            [class.bg-blue-600]="currentPage() === 4"
-            [class.text-white]="currentPage() === 4"
-            [class.border-slate-200]="currentPage() !== 4"
-            [class.bg-white]="currentPage() !== 4"
-            [class.text-slate-700]="currentPage() !== 4"
-            [class.dark:border-slate-700]="currentPage() !== 4"
-            [class.dark:bg-slate-800]="currentPage() !== 4"
-            [class.dark:text-slate-300]="currentPage() !== 4"
-            (click)="currentPage.set(4)">
-            4
-          </button>
-          <button
-            type="button"
-            class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
-            [class.border-blue-600]="currentPage() === 5"
-            [class.bg-blue-600]="currentPage() === 5"
-            [class.text-white]="currentPage() === 5"
-            [class.border-slate-200]="currentPage() !== 5"
-            [class.bg-white]="currentPage() !== 5"
-            [class.text-slate-700]="currentPage() !== 5"
-            [class.dark:border-slate-700]="currentPage() !== 5"
-            [class.dark:bg-slate-800]="currentPage() !== 5"
-            [class.dark:text-slate-300]="currentPage() !== 5"
-            (click)="currentPage.set(5)">
-            5
-          </button>
-          <span class="page-ellipsis px-1 text-slate-400">...</span>
-          <button type="button" class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" (click)="currentPage.set(7)">7</button>
-          <button type="button" class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300" title="Next page">&gt;</button>
+            class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            [disabled]="currentPage() >= totalPages()"
+            (click)="nextPage()"
+            title="Next page">&gt;</button>
         </div>
 
         <div class="items-per-page-select-wrap">
@@ -507,7 +464,68 @@
             size="sm"
             [options]="pageSizeOptions"
             [value]="pageSize()"
-            (valueChange)="pageSize.set(+$event)" />
+            (valueChange)="setPageSize(+$event)" />
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Full-Resolution Lightbox Modal (For List & Table View Click) -->
+  @if (activeLightboxPhoto(); as lightbox) {
+    <div class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md transition-all" (click)="closeLightbox()">
+      <div class="lightbox-dialog relative flex max-h-[92vh] max-w-5xl w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="lightbox-header flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-5 py-3.5 backdrop-blur-sm">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600/20 text-blue-400">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
+              <p class="text-[11px] text-slate-400">Gate Optical Inspection Capture • High Resolution</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            @if (lightbox.url) {
+              <a
+                [href]="lightbox.url"
+                target="_blank"
+                download
+                class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 text-xs font-semibold text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+                title="Open full resolution in new tab">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                <span>Full Size</span>
+              </a>
+            }
+            <button
+              type="button"
+              class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+              (click)="closeLightbox()"
+              title="Close image preview (Esc)">
+              ✕
+            </button>
+          </div>
+        </div>
+        <!-- Image Viewport -->
+        <div class="lightbox-body flex items-center justify-center overflow-auto bg-slate-950 p-4 min-h-[360px]">
+          @if (lightbox.url) {
+            <img
+              [src]="lightbox.url"
+              [alt]="lightbox.title"
+              class="lightbox-img max-h-[75vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-transform" />
+          } @else {
+            <div class="flex flex-col items-center justify-center gap-2 py-16 text-slate-400">
+              <span class="text-4xl">📷</span>
+              <p class="text-xs font-medium">No optical image stream available for this camera angle.</p>
+            </div>
+          }
         </div>
       </div>
     </div>

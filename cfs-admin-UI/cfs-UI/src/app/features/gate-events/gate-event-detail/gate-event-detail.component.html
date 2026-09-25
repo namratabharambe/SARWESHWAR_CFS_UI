@@ -1,47 +1,35 @@
-<div class="gate-detail-page flex flex-col gap-4">
-  <!-- Top Breadcrumb Bar -->
-  <nav class="detail-breadcrumbs-nav flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400" aria-label="Breadcrumb">
-    <button type="button" class="crumb-link-btn text-slate-500 hover:text-blue-600 hover:underline dark:text-slate-400 dark:hover:text-blue-400" (click)="onBack()">{{ 'GATE_EVENTS.TITLE' | translate }}</button>
-    <span class="crumb-separator text-slate-400">/</span>
-    <span class="crumb-active font-semibold text-slate-900 dark:text-white">{{ 'TABS.DETAILS' | translate }}</span>
-  </nav>
-
-  <!-- Main Title Header Row -->
-  <div class="detail-title-row flex items-center justify-between">
-    <div class="title-with-back flex items-center gap-3">
-      <button type="button" class="btn-back-arrow flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700" (click)="onBack()" title="Back to Gate Events table">
-        <svg class="h-4.5 w-4.5" viewBox="0 0 20 20" fill="currentColor">
+<div class="gate-detail-page flex flex-col gap-2.5">
+  <!-- ========================================================================= -->
+  <!-- 1. COMPACT HERO TOP BAR                                                  -->
+  <!-- ========================================================================= -->
+  <header class="detail-hero-bar flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-200/80 bg-white/95 px-3 py-2 shadow-xs backdrop-blur-md dark:border-slate-800/80 dark:bg-[#0f172a]/95">
+    <!-- Left: Navigation & Identifiers -->
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- Back Button -->
+      <button
+        type="button"
+        class="btn-back group flex h-7 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 text-xs font-semibold text-slate-700 transition-all hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-slate-700"
+        (click)="onBack()"
+        title="Return to Gate Events List">
+        <svg class="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" viewBox="0 0 20 20" fill="currentColor">
           <path
             fill-rule="evenodd"
             d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
             clip-rule="evenodd" />
         </svg>
+        <span>Back</span>
       </button>
-      <div>
-        <h1 class="detail-page-title text-xl font-bold tracking-tight text-slate-900 dark:text-white">{{ 'GATE_EVENTS.TITLE' | translate }} {{ 'TABS.DETAILS' | translate }}</h1>
-        @if (detail().isDualContainer) {
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400">
-            <span class="inline-block h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
-            Dual Container Movement (2x 20 FT Twin Load on Truck {{ detail().truckNo }})
-          </span>
-        }
-      </div>
-    </div>
-  </div>
 
-  <!-- Metadata Pill Bar -->
-  <div class="detail-meta-bar flex flex-wrap items-center justify-between gap-3.5 py-1 text-xs">
-    <div class="meta-items-left flex flex-wrap items-center gap-3">
-      <!-- Event ID with Copy Button -->
-      <div class="meta-item-badge inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-800/60">
-        <span class="meta-label text-slate-500 dark:text-slate-400">Event ID:</span>
-        <strong class="meta-id-text font-mono font-bold text-slate-900 dark:text-white">{{ detail().eventId }}</strong>
+      <!-- Event / Visit ID Chip with Copy -->
+      <div class="flex items-center gap-1.5 rounded-lg border border-slate-200/90 bg-slate-50/80 px-2 py-0.5 text-xs dark:border-slate-700 dark:bg-slate-800/80">
+        <span class="font-medium text-slate-400">ID:</span>
+        <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eventId }}</strong>
         <button
           type="button"
-          class="btn-copy-id inline-flex items-center justify-center rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400"
+          class="rounded p-0.5 text-slate-400 hover:bg-slate-200 hover:text-blue-600 dark:hover:bg-slate-700 dark:hover:text-blue-400"
           (click)="copyEventId(detail().eventId)"
           [title]="copyFeedback() ? 'Copied!' : 'Copy Event ID'">
-          <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+          <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
             <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
             <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
           </svg>
@@ -49,670 +37,447 @@
       </div>
 
       <!-- Direction Badge -->
-      <div class="meta-direction-group inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-800/60">
-        <span
-          class="meta-dir-pill rounded px-2 py-0.5 text-[11px] font-bold text-white"
-          [class.bg-emerald-600]="event().direction === 'IN'"
-          [class.bg-blue-600]="event().direction === 'OUT'">
-          {{ event().direction }}
-        </span>
-        <span class="meta-dir-label font-medium text-slate-700 dark:text-slate-300">
-          {{ event().direction === 'IN' ? 'Arrival' : 'Departure' }}
-        </span>
-      </div>
-
-      <!-- Container Size & Twin Badge -->
-      @if (detail().isDualContainer) {
-        <div class="meta-size-badge inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 py-1.5 shadow-sm dark:border-blue-900/60 dark:bg-blue-950/40">
-          <span class="text-blue-600 dark:text-blue-400">📦</span>
-          <span class="font-bold text-blue-700 dark:text-blue-300">2x 20 FT (Twin Load)</span>
-        </div>
-      } @else {
-        <div class="meta-size-badge inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300">
-          <span class="meta-label text-slate-500 dark:text-slate-400">Size:</span>
-          <strong class="font-semibold">{{ activeContainer().size }}</strong>
-        </div>
-      }
+      <span
+        class="inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-bold text-white shadow-xs"
+        [class.bg-emerald-600]="event().direction === 'IN'"
+        [class.bg-blue-600]="event().direction === 'OUT'">
+        <span>{{ event().direction === 'IN' ? '+ GATE IN' : '↑ GATE OUT' }}</span>
+      </span>
 
       <!-- Status Pill -->
-      <div class="meta-status-pill-wrap inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-slate-800 dark:bg-slate-800/60">
-        <span class="meta-label text-slate-500 dark:text-slate-400">Status:</span>
-        <span
-          class="meta-status-pill rounded-full px-2.5 py-0.5 text-xs font-semibold"
-          [class.bg-emerald-50]="event().status === 'Verified'"
-          [class.text-emerald-700]="event().status === 'Verified'"
-          [class.border]="true"
-          [class.border-emerald-200]="event().status === 'Verified'"
-          [class.dark:bg-emerald-950/50]="event().status === 'Verified'"
-          [class.dark:text-emerald-300]="event().status === 'Verified'"
-          [class.dark:border-emerald-800]="event().status === 'Verified'"
-          [class.bg-amber-50]="event().status === 'Review'"
-          [class.text-amber-700]="event().status === 'Review'"
-          [class.border-amber-200]="event().status === 'Review'"
-          [class.dark:bg-amber-950/50]="event().status === 'Review'"
-          [class.dark:text-amber-300]="event().status === 'Review'"
-          [class.dark:border-amber-800]="event().status === 'Review'">
-          {{ event().status }}
-        </span>
-      </div>
+      <span
+        class="inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[11px] font-semibold"
+        [class.bg-emerald-50]="event().status === 'Verified'"
+        [class.text-emerald-700]="event().status === 'Verified'"
+        [class.border-emerald-200]="event().status === 'Verified'"
+        [class.dark:bg-emerald-950/60]="event().status === 'Verified'"
+        [class.dark:text-emerald-300]="event().status === 'Verified'"
+        [class.dark:border-emerald-800]="event().status === 'Verified'"
+        [class.bg-amber-50]="event().status === 'Review'"
+        [class.text-amber-700]="event().status === 'Review'"
+        [class.border-amber-200]="event().status === 'Review'"
+        [class.dark:bg-amber-950/60]="event().status === 'Review'"
+        [class.dark:text-amber-300]="event().status === 'Review'"
+        [class.dark:border-amber-800]="event().status === 'Review'">
+        <span class="h-1.5 w-1.5 rounded-full" [class.bg-emerald-500]="event().status === 'Verified'" [class.bg-amber-500]="event().status === 'Review'"></span>
+        <span>{{ event().status }}</span>
+      </span>
 
-      <!-- Event Time -->
-      <div class="meta-time-wrap inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-300">
-        <span class="meta-label text-slate-500 dark:text-slate-400">Event Time:</span>
-        <span class="meta-time-val inline-flex items-center gap-1 font-medium">
-          <svg class="calendar-icon h-3.5 w-3.5 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              fill-rule="evenodd"
-              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-              clip-rule="evenodd" />
-          </svg>
-          {{ event().eventTime }}
-        </span>
+      <!-- Live Timestamp -->
+      <div class="hidden items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 sm:flex">
+        <span>{{ event().eventTime }}</span>
       </div>
     </div>
 
-    <!-- Print / Export Dropdown Trigger -->
-    <div class="meta-actions-right relative">
-      <button
-        type="button"
-        class="btn-print-export inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-        (click)="toggleExportDropdown()"
-        aria-haspopup="true"
-        [attr.aria-expanded]="exportDropdownOpen()">
-        <svg class="action-icon h-4 w-4 text-slate-500 dark:text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fill-rule="evenodd"
-            d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z"
-            clip-rule="evenodd" />
-        </svg>
-        <span>Print / Export</span>
-        <span class="dropdown-caret text-[10px] text-slate-400">▼</span>
-      </button>
+    <!-- Right: Header Action Suite -->
+    <div class="flex items-center gap-1.5">
+      <!-- Export Dropdown -->
+      <div class="relative">
+        <button
+          type="button"
+          class="inline-flex h-7 items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 px-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+          (click)="toggleExportDropdown()">
+          <span>Export</span>
+          <span class="text-[8px] text-slate-400">▼</span>
+        </button>
 
-      @if (exportDropdownOpen()) {
-        <div class="export-dropdown-menu absolute right-0 top-11 z-50 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-800">
-          <button type="button" class="dropdown-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="printEvent()">
-            <span>🖨️</span> Print Inspection Sheet
-          </button>
-          <button type="button" class="dropdown-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventJson()">
-            <span>📄</span> Export Record (JSON)
-          </button>
-          <button type="button" class="dropdown-item flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventCsv()">
-            <span>📊</span> Export Record (CSV)
-          </button>
-        </div>
-      }
-    </div>
-  </div>
-
-  <!-- Dual 20 FT Container Switcher Tabs Bar -->
-  @if (detail().isDualContainer && detail().containers.length > 1) {
-    <div class="dual-container-selector-card rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50/90 via-slate-50 to-indigo-50/80 p-3.5 shadow-sm dark:border-blue-900/50 dark:from-[#0f172a] dark:via-[#111a2e] dark:to-[#1e1b4b]">
-      <div class="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
-        <div class="flex items-center gap-2.5">
-          <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white text-xs font-bold">2x</span>
-          <div>
-            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Dual 20 FT Containers Detected</h4>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400">Click a container tab to switch optical photos and OCR inspection details:</p>
-          </div>
-        </div>
-
-        <!-- Tab Buttons for Container 1 & Container 2 -->
-        <div class="flex flex-wrap items-center gap-2">
-          @for (c of detail().containers; track c.index) {
-            <button
-              type="button"
-              class="container-tab-btn flex items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-bold transition-all"
-              [class.bg-blue-600]="selectedContainerIndex() === $index"
-              [class.border-blue-600]="selectedContainerIndex() === $index"
-              [class.text-white]="selectedContainerIndex() === $index"
-              [class.shadow-md]="selectedContainerIndex() === $index"
-              [class.shadow-blue-500/20]="selectedContainerIndex() === $index"
-              [class.bg-white]="selectedContainerIndex() !== $index"
-              [class.border-slate-200]="selectedContainerIndex() !== $index"
-              [class.text-slate-700]="selectedContainerIndex() !== $index"
-              [class.dark:bg-slate-800]="selectedContainerIndex() !== $index"
-              [class.dark:border-slate-700]="selectedContainerIndex() !== $index"
-              [class.dark:text-slate-200]="selectedContainerIndex() !== $index"
-              (click)="selectContainerTab($index)">
-              <span class="inline-block h-2 w-2 rounded-full" [class.bg-white]="selectedContainerIndex() === $index" [class.bg-emerald-500]="selectedContainerIndex() !== $index"></span>
-              <span>Container {{ c.index }} ({{ c.size }}):</span>
-              <strong class="font-mono text-xs">{{ c.containerNo }}</strong>
-              <span
-                class="rounded-full px-2 py-0.5 text-[10px] font-extrabold"
-                [class.bg-white/20]="selectedContainerIndex() === $index"
-                [class.text-white]="selectedContainerIndex() === $index"
-                [class.bg-emerald-100]="selectedContainerIndex() !== $index"
-                [class.text-emerald-800]="selectedContainerIndex() !== $index"
-                [class.dark:bg-emerald-950]="selectedContainerIndex() !== $index"
-                [class.dark:text-emerald-300]="selectedContainerIndex() !== $index">
-                {{ c.confidence }}%
-              </span>
+        @if (exportDropdownOpen()) {
+          <div class="absolute right-0 top-8 z-50 w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-2xl backdrop-blur-md dark:border-slate-700 dark:bg-slate-800">
+            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="printEvent()">
+              <span>🖨️</span> Print Inspection
             </button>
-          }
-        </div>
-      </div>
-    </div>
-  }
-
-  <!-- Main 2-Column Content Grid -->
-  <div class="detail-main-grid grid grid-cols-1 gap-4.5 xl:grid-cols-12">
-    <!-- Left Column: Captured Images (2x2 Grid for Selected 20 FT Container) -->
-    <div class="detail-card captured-images-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e] xl:col-span-6">
-      <div class="card-title-bar mb-3 flex items-center justify-between">
-        <div>
-          <h3 class="card-section-title text-sm font-bold text-slate-900 dark:text-white">
-            Captured Camera Images
-            @if (detail().isDualContainer) {
-              <span class="ml-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                — Container {{ activeContainer().index }} of {{ detail().containers.length }} ({{ activeContainer().size }})
-              </span>
-            }
-          </h3>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">High-resolution optical lane sensor captures from 4 camera angles</p>
-        </div>
-
-        @if (detail().isDualContainer) {
-          <div class="flex items-center gap-1">
-            <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Viewing:</span>
-            <span class="rounded bg-blue-100 px-2 py-0.5 font-mono text-xs font-bold text-blue-800 dark:bg-blue-950 dark:text-blue-300">
-              {{ activeContainer().containerNo }}
-            </span>
+            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventJson()">
+              <span>📄</span> Export JSON
+            </button>
+            <button type="button" class="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700" (click)="exportEventCsv()">
+              <span>📊</span> Export CSV
+            </button>
           </div>
         }
       </div>
 
-      <div class="captured-images-2x2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        @for (photo of activeContainer().capturedPhotos; track photo.title) {
-          <div class="image-box-wrapper flex flex-col rounded-lg border border-slate-100 bg-slate-50/50 p-2 dark:border-slate-800 dark:bg-slate-900/40">
-            <div class="image-box-header flex items-center justify-between">
-              <span class="image-box-title text-xs font-semibold text-slate-800 dark:text-slate-200">{{ photo.title }}</span>
+      <!-- Exception Button -->
+      <button
+        type="button"
+        class="inline-flex h-7 items-center gap-1 rounded-lg border border-rose-200 bg-rose-50 px-2 text-xs font-semibold text-rose-700 transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300"
+        (click)="onMarkException()"
+        title="Flag exception">
+        <span>⚠ Exception</span>
+      </button>
+
+      <!-- Task Button -->
+      <button
+        type="button"
+        class="inline-flex h-7 items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2 text-xs font-semibold text-blue-700 transition-all hover:bg-blue-100 active:scale-95 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-300"
+        (click)="onCreateTask()"
+        title="Create task">
+        <span>📋 Task</span>
+      </button>
+
+      <!-- Approve Button -->
+      <button
+        type="button"
+        class="inline-flex h-7 items-center gap-1 rounded-lg bg-emerald-600 px-3 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-700 active:scale-95"
+        (click)="onApprove()"
+        title="Approve and verify gate event">
+        <span>✓ Approve</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- 2. HIGH-DENSITY TOP ROW: [Fit-to-Images Box] + [Dynamic OCR & Timeline Card] -->
+  <!-- ========================================================================= -->
+  <div class="flex flex-col gap-2.5 lg:flex-row lg:items-stretch">
+    <!-- Box 1: Captured Images Box (Sized Exactly Up to Images Set) -->
+    <div class="flex-none w-fit flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+      <div class="mb-1.5 flex items-center justify-between gap-4 border-b border-slate-100 pb-1.5 dark:border-slate-800">
+        <div class="flex items-center gap-1.5">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">Captured Images</span>
+          <span class="rounded bg-slate-100 px-1 py-0.2 text-[9px] font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+            {{ detail().capturedPhotos.length }}
+          </span>
+        </div>
+        <span class="text-[9px] font-medium text-slate-400">Click to expand</span>
+      </div>
+
+      <!-- Square Image Thumbnails Flex Row (Sized to Images) -->
+      <div class="flex items-center gap-2">
+        @for (photo of detail().capturedPhotos; track photo.title) {
+          <div
+            class="group relative flex flex-col overflow-hidden rounded-lg border border-slate-200/80 bg-slate-950 transition-all hover:border-blue-500 hover:shadow-md dark:border-slate-800 w-28 sm:w-32"
+            (click)="photo.url ? openLightbox(photo.title, photo.url, $event) : null">
+            <!-- 1:1 Square Shape Thumbnail Viewport -->
+            <div class="relative aspect-square w-full cursor-pointer overflow-hidden bg-slate-900">
               @if (photo.url) {
-                <button
-                  type="button"
-                  class="btn-expand-image rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200"
-                  (click)="openLightbox(photo.title, photo.url, $event)"
-                  title="Expand full resolution">
-                  <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fill-rule="evenodd"
-                      d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l3.293 3.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-3.293 3.293a1 1 0 11-1.414-1.414L13.586 5H12a1 1 0 01-1-1z"
-                      clip-rule="evenodd" />
-                  </svg>
-                </button>
-              }
-            </div>
-            <p class="image-box-sub mb-2 text-[11px] text-slate-400">{{ photo.timestamp }}</p>
-            <div class="image-render-frame relative h-40 w-full cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-950 dark:border-slate-800" (click)="photo.url ? openLightbox(photo.title, photo.url) : null">
-              @if (photo.url) {
-                <img [src]="photo.url" [alt]="photo.title" loading="lazy" class="gate-feed-img h-full w-full object-cover transition-transform duration-200 hover:scale-105" />
-                <span class="absolute bottom-2 left-2 rounded bg-black/70 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-xs">
-                  {{ photo.tag || 'CAM-01' }}
-                </span>
+                <img
+                  [src]="photo.url"
+                  [alt]="photo.title"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="absolute right-1 top-1 z-10 flex h-5 w-5 items-center justify-center rounded bg-black/60 text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                  🔍
+                </div>
               } @else {
-                <div
-                  class="no-photo-box flex h-full flex-col items-center justify-center p-4 text-center text-slate-400">
-                  <span class="mb-1 text-2xl">📷</span>
-                  <span class="text-xs font-semibold">{{ photo.title }}</span>
-                  <span class="text-[10px] text-slate-400">No live optical feed</span>
+                <div class="flex h-full flex-col items-center justify-center text-slate-500">
+                  <span class="text-base">📷</span>
                 </div>
               }
+            </div>
+            <!-- Bottom Title Bar -->
+            <div class="flex items-center justify-between bg-slate-900 px-1.5 py-0.5 text-[9px] text-slate-300">
+              <span class="truncate font-semibold">{{ photo.title }}</span>
+              <span class="text-[8px] text-slate-400">{{ photo.timestamp ? photo.timestamp.slice(-8) : '' }}</span>
             </div>
           </div>
         } @empty {
-          <div class="col-span-2 py-8 text-center text-xs text-slate-400">
-            No camera captures recorded for this container.
-          </div>
+          <div class="py-4 px-6 text-center text-[10px] text-slate-400">No photos available</div>
         }
       </div>
+    </div>
 
-      <!-- Quick switcher footer when 2 containers exist -->
-      @if (detail().isDualContainer && detail().containers.length > 1) {
-        <div class="mt-4 flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs dark:border-slate-800 dark:bg-slate-800/40">
-          <span class="text-slate-600 dark:text-slate-300">
-            Also inspect:
-            @for (c of detail().containers; track c.index) {
-              @if ($index !== selectedContainerIndex()) {
-                <strong class="font-mono text-blue-600 dark:text-blue-400">Container {{ c.index }} ({{ c.containerNo }})</strong>
-              }
-            }
+    <!-- Box 2: OCR Extracted Details (Dynamically Fills the Rest of the Row) -->
+    <div class="flex-1 min-w-0 flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-2.5 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+      <div>
+        <!-- Header -->
+        <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-800 dark:text-white">OCR Extracted Details</span>
+          </div>
+          <span class="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.2 text-[10px] font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            Overall: {{ detail().overallConfidence }}% Verified
           </span>
-          <button
-            type="button"
-            class="rounded-md bg-white border border-slate-200 px-2.5 py-1 font-semibold text-blue-600 hover:bg-blue-50 dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400"
-            (click)="selectContainerTab(selectedContainerIndex() === 0 ? 1 : 0)">
-            Switch Container Feed ➔
-          </button>
-        </div>
-      }
-    </div>
-
-    <!-- Right Column Stack: OCR Details + Event Information -->
-    <div class="detail-right-stack flex flex-col gap-4.5 xl:col-span-6">
-      <!-- OCR Extracted Details Card (Strictly 4 Requested Fields with 20FT & Twin Support) -->
-      <div class="detail-card ocr-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-        <div class="ocr-card-header mb-3 flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3 dark:border-slate-800">
-          <div>
-            <h3 class="card-section-title text-sm font-bold text-slate-900 dark:text-white">
-              OCR Extracted Details
-              @if (detail().isDualContainer) {
-                <span class="ml-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                  (Container {{ activeContainer().index }}: {{ activeContainer().containerNo }})
-                </span>
-              }
-            </h3>
-            <p class="text-[11px] text-slate-400">Verified neural OCR readings</p>
-          </div>
-          <div class="overall-confidence-pill inline-flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-            <span>Confidence</span>
-            <strong class="confidence-number text-base font-bold text-emerald-600 dark:text-emerald-400">{{ activeContainer().confidence }}%</strong>
-          </div>
         </div>
 
-        <div class="ocr-fields-table divide-y divide-slate-100 dark:divide-slate-800/60">
-          <div class="ocr-row flex items-center justify-between py-2.5 text-xs">
-            <span class="ocr-label font-medium text-slate-500 dark:text-slate-400">Container No <span class="required-star text-rose-500">*</span></span>
-            <strong class="ocr-value font-mono font-bold text-slate-900 dark:text-white">{{ activeContainer().containerNo }}</strong>
-            <span class="ocr-pct font-bold text-emerald-600 dark:text-emerald-400">{{ activeContainer().confidence }}%</span>
-            <span class="badge-verified-pill rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Verified</span>
-          </div>
-
-          <div class="ocr-row flex items-center justify-between py-2.5 text-xs">
-            <span class="ocr-label font-medium text-slate-500 dark:text-slate-400">ISO Code <span class="required-star text-rose-500">*</span></span>
-            <strong class="ocr-value font-mono font-bold text-slate-900 dark:text-white">{{ activeContainer().isoCode }}</strong>
-            <span class="ocr-pct font-bold text-emerald-600 dark:text-emerald-400">{{ activeContainer().typeConfidence }}%</span>
-            <span class="badge-verified-pill rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Verified</span>
-          </div>
-
-          <div class="ocr-row flex items-center justify-between py-2.5 text-xs">
-            <span class="ocr-label font-medium text-slate-500 dark:text-slate-400">Size</span>
-            <strong class="ocr-value font-mono font-bold text-slate-900 dark:text-white">{{ activeContainer().size }}</strong>
-            <span class="ocr-pct font-bold text-emerald-600 dark:text-emerald-400">{{ activeContainer().fullEmptyConfidence }}%</span>
-            <span class="badge-verified-pill rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Verified</span>
-          </div>
-
-          <div class="ocr-row flex items-center justify-between py-2.5 text-xs">
-            <span class="ocr-label font-medium text-slate-500 dark:text-slate-400">Truck Number</span>
-            <strong class="ocr-value font-mono font-bold text-slate-900 dark:text-white">{{ detail().truckNo }}</strong>
-            <span class="ocr-pct font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
-            <span class="badge-verified-pill rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">Verified</span>
-          </div>
-        </div>
-
-        <!-- Multi-Container Dual OCR Summary Strip (Visible When 2 Containers Present) -->
-        @if (detail().isDualContainer && detail().containers.length > 1) {
-          <div class="mt-4 rounded-lg border border-slate-200 bg-slate-50/70 p-3 dark:border-slate-800 dark:bg-slate-900/50">
-            <div class="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-              <span>Both Containers Overview (2x 20FT)</span>
-              <span class="text-blue-600 dark:text-blue-400">2 Units</span>
+        <!-- 4 Key Fields in One Unified Grid Row -->
+        <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <!-- 1. Container Number -->
+          <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
+            <div class="flex items-center justify-between text-[9px] font-semibold text-slate-400">
+              <span>Container No *</span>
+              <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().containerNo, 'Container No')" title="Copy">
+                📋
+              </button>
             </div>
-            <div class="space-y-1.5">
-              @for (c of detail().containers; track c.index) {
-                <div
-                  class="flex items-center justify-between rounded-md p-2 text-xs transition-colors cursor-pointer"
-                  [class.bg-blue-100]="selectedContainerIndex() === $index"
-                  [class.dark:bg-blue-950/60]="selectedContainerIndex() === $index"
-                  [class.bg-white]="selectedContainerIndex() !== $index"
-                  [class.dark:bg-slate-800]="selectedContainerIndex() !== $index"
-                  (click)="selectContainerTab($index)">
-                  <div class="flex items-center gap-2">
-                    <span class="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-200">
-                      C{{ c.index }}
-                    </span>
-                    <strong class="font-mono text-slate-900 dark:text-white">{{ c.containerNo }}</strong>
-                    <span class="text-[11px] text-slate-500 dark:text-slate-400">({{ c.size }} | ISO {{ c.isoCode }})</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <span class="font-mono text-[11px] text-slate-600 dark:text-slate-400">Seal: {{ c.sealNo1 }}</span>
-                    <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ c.confidence }}%</span>
-                  </div>
-                </div>
-              }
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-blue-600 dark:text-blue-400 truncate">
+              {{ detail().containerNo }}
+            </strong>
+            <div class="flex items-center justify-between text-[9px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().containerConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
             </div>
           </div>
-        }
+
+          <!-- 2. ISO Code -->
+          <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[9px] font-semibold text-slate-400">ISO Code *</span>
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
+              {{ detail().isoCode }}
+            </strong>
+            <div class="flex items-center justify-between text-[9px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().typeConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+
+          <!-- 3. Size -->
+          <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[9px] font-semibold text-slate-400">Size</span>
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
+              {{ detail().size }}
+            </strong>
+            <div class="flex items-center justify-between text-[9px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().fullEmptyConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+
+          <!-- 4. Truck Number -->
+          <div class="group relative flex flex-col justify-between rounded-lg border border-slate-100 bg-slate-50/80 p-2 dark:border-slate-800 dark:bg-slate-900/60">
+            <div class="flex items-center justify-between text-[9px] font-semibold text-slate-400">
+              <span>Truck Number</span>
+              <button type="button" class="text-slate-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" (click)="copyText(detail().truckNo, 'Truck No')" title="Copy">
+                📋
+              </button>
+            </div>
+            <strong class="my-0.5 font-mono text-xs font-extrabold tracking-wider text-slate-900 dark:text-white truncate">
+              {{ detail().truckNo }}
+            </strong>
+            <div class="flex items-center justify-between text-[9px]">
+              <span class="font-bold text-emerald-600 dark:text-emerald-400">{{ detail().truckConfidence }}%</span>
+              <span class="font-semibold text-emerald-600 dark:text-emerald-400">✓ Verified</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Comprehensive Event Information Card (Reflects Active 20FT Container) -->
-      <div class="detail-card event-info-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-        <div class="card-title-bar mb-4 flex items-center justify-between">
-          <h3 class="card-section-title text-sm font-bold text-slate-900 dark:text-white">
-            Event Information
-            @if (detail().isDualContainer) {
-              <span class="ml-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
-                (Container {{ activeContainer().index }})
+      <!-- Integrated Slim Timeline Bar -->
+      <div class="mt-2 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-100 pt-1.5 dark:border-slate-800">
+        <div class="flex flex-wrap items-center gap-2 text-[11px]">
+          <span class="text-[9px] font-bold uppercase text-slate-400">Timeline:</span>
+          @for (step of detail().timelineSteps; track step.label) {
+            <div class="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-0.2 dark:bg-slate-900/50">
+              <span
+                class="flex h-3 w-3 items-center justify-center rounded-full text-[7px] font-bold text-white"
+                [class.bg-blue-500]="step.color === 'blue'"
+                [class.bg-purple-500]="step.color === 'purple'"
+                [class.bg-emerald-500]="step.color === 'emerald' || step.color === 'green'"
+                [class.bg-amber-500]="step.color === 'amber'">
+                ✓
               </span>
-            }
-          </h3>
-          <span class="text-[11px] text-slate-400">EIR & Shipping Details</span>
+              <span class="font-semibold text-slate-800 dark:text-slate-200">{{ step.label }}</span>
+              <span class="text-[9px] text-slate-400">({{ step.actor }})</span>
+            </div>
+          }
         </div>
-
-        <div class="event-info-grid grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- Container No * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Container No <span class="required-star text-rose-500">*</span></span>
-            <strong class="field-value font-mono text-xs font-bold text-slate-900 dark:text-white">{{ activeContainer().containerNo }}</strong>
-          </div>
-
-          <!-- ISO Code * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">ISO Code <span class="required-star text-rose-500">*</span></span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ activeContainer().isoCode }}</span>
-            </span>
-          </div>
-
-          <!-- Size -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Size</span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ activeContainer().size }}</span>
-            </span>
-          </div>
-
-          <!-- Tare Weight -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Tare Weight</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ activeContainer().tareWeight }}</span>
-          </div>
-
-          <!-- Type -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Type</span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ detail().type }}</span>
-            </span>
-          </div>
-
-          <!-- Cargo Type -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Cargo Type</span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ activeContainer().cargoType }}</span>
-            </span>
-          </div>
-
-          <!-- JO Type -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">JO Type</span>
-            <span class="field-value-select highlight-select text-xs font-bold text-blue-600 dark:text-blue-400">
-              <span class="val-text">{{ detail().joType }}</span>
-            </span>
-          </div>
-
-          <!-- FCL/LCL -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">FCL/LCL</span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ detail().fclLcl }}</span>
-            </span>
-          </div>
-
-          <!-- Scan Type -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Scan Type</span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ detail().scanType }}</span>
-            </span>
-          </div>
-
-          <!-- OffLoad Location -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">OffLoad Location</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().offLoadLocation }}</span>
-          </div>
-
-          <!-- Gate In Type -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Gate In Type</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().gateInType }}</span>
-          </div>
-
-          <!-- Vessel Name/Via No -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Vessel Name/Via No</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().vesselName }}</span>
-          </div>
-
-          <!-- Port Name -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Port Name</span>
-            <span class="field-value-select highlight-select text-xs font-bold text-blue-600 dark:text-blue-400">
-              <span class="val-text">{{ detail().portName }}</span>
-            </span>
-          </div>
-
-          <!-- Shipping Line -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Shipping Line</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().shippingLine }}</span>
-          </div>
-
-          <!-- IGM Seal -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">IGM Seal</span>
-            <span class="field-value-text font-mono text-xs text-slate-700 dark:text-slate-300">{{ detail().igmSeal }}</span>
-          </div>
-
-          <!-- Seal No. 1 * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Seal No. 1 <span class="required-star text-rose-500">*</span></span>
-            <strong class="field-value font-mono text-xs font-bold text-slate-900 dark:text-white">{{ activeContainer().sealNo1 }}</strong>
-          </div>
-
-          <!-- Seal No. 2 -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Seal No. 2</span>
-            <span class="field-value-text font-mono text-xs text-slate-700 dark:text-slate-300">{{ activeContainer().sealNo2 }}</span>
-          </div>
-
-          <!-- Custom Seal No. -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Custom Seal No.</span>
-            <span class="field-value-text font-mono text-xs text-slate-700 dark:text-slate-300">{{ activeContainer().customSealNo }}</span>
-          </div>
-
-          <!-- Customer Name -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Customer Name</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().customerName }}</span>
-          </div>
-
-          <!-- EIR No. -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">EIR No.</span>
-            <span class="field-value-text font-mono text-xs text-slate-700 dark:text-slate-300">{{ detail().eirNo }}</span>
-          </div>
-
-          <!-- EIR Weight * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">EIR Weight <span class="required-star text-rose-500">*</span></span>
-            <strong class="field-value font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eirWeight }}</strong>
-          </div>
-
-          <!-- EIR Date & Time * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">EIR Date & Time <span class="required-star text-rose-500">*</span></span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().eirDateTime }}</span>
-          </div>
-
-          <!-- Location -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location</span>
-            <span class="field-value-select highlight-select text-xs font-bold text-blue-600 dark:text-blue-400">
-              <span class="val-text">{{ activeContainer().location }}</span>
-            </span>
-          </div>
-
-          <!-- Condition * -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Condition <span class="required-star text-rose-500">*</span></span>
-            <span class="field-value-select text-xs font-semibold text-slate-800 dark:text-slate-200">
-              <span class="val-text">{{ activeContainer().condition }}</span>
-            </span>
-          </div>
-
-          <!-- Door To Door -->
-          <div class="info-field-item flex flex-col gap-0.5">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Door To Door</span>
-            <span class="field-value-badge inline-block rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">{{ detail().doorToDoor }}</span>
-          </div>
-
-          <!-- Remarks -->
-          <div class="info-field-item col-span-full flex flex-col gap-0.5 border-t border-slate-100 pt-2 dark:border-slate-800">
-            <span class="field-label text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Remarks</span>
-            <span class="field-value-text text-xs text-slate-700 dark:text-slate-300">{{ detail().remarks || 'No remarks recorded' }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Section: Event Timeline (Left) & System Notes (Right) -->
-  <div class="detail-bottom-grid grid grid-cols-1 gap-4.5 lg:grid-cols-2">
-    <!-- Event Timeline Card -->
-    <div class="detail-card timeline-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-      <div class="card-title-bar mb-4">
-        <h3 class="card-section-title text-sm font-bold text-slate-900 dark:text-white">Event Timeline</h3>
-      </div>
-
-      <div class="timeline-stepper space-y-4">
-        @for (step of detail().timelineSteps; track step.label; let idx = $index; let isLast = $last) {
-          <div class="timeline-step flex items-start gap-3.5">
-            <div
-              class="step-icon-wrap flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-4 text-xs font-bold"
-              [class.bg-blue-50]="step.color === 'blue'"
-              [class.text-blue-600]="step.color === 'blue'"
-              [class.ring-blue-100]="step.color === 'blue'"
-              [class.dark:bg-blue-950]="step.color === 'blue'"
-              [class.dark:text-blue-400]="step.color === 'blue'"
-              [class.dark:ring-blue-900/50]="step.color === 'blue'"
-              [class.bg-purple-50]="step.color === 'purple'"
-              [class.text-purple-600]="step.color === 'purple'"
-              [class.ring-purple-100]="step.color === 'purple'"
-              [class.dark:bg-purple-950]="step.color === 'purple'"
-              [class.dark:text-purple-400]="step.color === 'purple'"
-              [class.dark:ring-purple-900/50]="step.color === 'purple'"
-              [class.bg-emerald-50]="step.color === 'emerald' || step.color === 'green'"
-              [class.text-emerald-600]="step.color === 'emerald' || step.color === 'green'"
-              [class.ring-emerald-100]="step.color === 'emerald' || step.color === 'green'"
-              [class.dark:bg-emerald-950]="step.color === 'emerald' || step.color === 'green'"
-              [class.dark:text-emerald-400]="step.color === 'emerald' || step.color === 'green'"
-              [class.dark:ring-emerald-900/50]="step.color === 'emerald' || step.color === 'green'"
-              [class.bg-amber-50]="step.color === 'amber'"
-              [class.text-amber-600]="step.color === 'amber'"
-              [class.ring-amber-100]="step.color === 'amber'"
-              [class.dark:bg-amber-950]="step.color === 'amber'"
-              [class.dark:text-amber-400]="step.color === 'amber'"
-              [class.dark:ring-amber-900/50]="step.color === 'amber'">
-              @if (step.icon === 'camera') {
-                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fill-rule="evenodd"
-                    d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"
-                    clip-rule="evenodd" />
-                </svg>
-              } @else if (step.icon === 'target') {
-                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                    clip-rule="evenodd" />
-                </svg>
-              } @else if (step.icon === 'shield') {
-                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fill-rule="evenodd"
-                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clip-rule="evenodd" />
-                </svg>
-              } @else {
-                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                    clip-rule="evenodd" />
-                </svg>
-              }
-            </div>
-
-            <div class="step-info flex flex-1 flex-col">
-              <strong class="step-label text-xs font-bold text-slate-900 dark:text-white">{{ step.label }}</strong>
-              <span class="step-time text-[11px] text-slate-500 dark:text-slate-400">{{ step.time }}</span>
-              <small class="step-actor text-[10px] text-slate-400 dark:text-slate-500">{{ step.actor }}</small>
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- System Notes Card -->
-    <div class="detail-card notes-card rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-      <div class="card-title-bar mb-4">
-        <h3 class="card-section-title text-sm font-bold text-slate-900 dark:text-white">
-          <span class="notes-icon mr-1.5">📋</span>
-          System Notes
-        </h3>
-      </div>
-
-      <div class="system-notes-list divide-y divide-slate-100 dark:divide-slate-800/60">
-        @for (note of detail().systemNotes; track note.text) {
-          <div class="note-item-row flex items-center justify-between py-2.5 text-xs">
-            <div class="note-left flex items-center gap-2">
-              <span class="note-bullet text-[10px] text-blue-600 dark:text-blue-400">▲</span>
-              <span class="note-text text-slate-700 dark:text-slate-300">{{ note.text }}</span>
-            </div>
-            <span class="note-timestamp text-[11px] text-slate-400">{{ note.time }}</span>
-          </div>
+        @if (detail().systemNotes.length > 0) {
+          <span class="hidden xl:inline-flex text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-xs">
+            💬 {{ detail().systemNotes[0].text }}
+          </span>
         }
       </div>
     </div>
   </div>
 
-  <!-- Bottom Action Bar (Clean Actions - Standardized Buttons) -->
-  <div class="detail-bottom-action-bar flex flex-wrap items-center justify-end gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-    <button type="button" class="btn-detail-action btn-action-exception flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-700 transition-colors hover:bg-rose-100 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-300" (click)="onMarkException()">
-      <svg class="btn-icon h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-          clip-rule="evenodd" />
-      </svg>
-      <span>Mark Exception</span>
-    </button>
+  <!-- ========================================================================= -->
+  <!-- 3. COMPACT EVENT INFORMATION & LOGISTICS ROW                              -->
+  <!-- ========================================================================= -->
+  <section class="rounded-xl border border-slate-200/80 bg-white p-3 shadow-xs dark:border-slate-800/80 dark:bg-[#0f172a]">
+    <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-1.5 dark:border-slate-800">
+      <div class="flex items-center gap-1.5">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-900 dark:text-white">Event Information & Logistics</span>
+      </div>
+      <span class="text-[10px] font-semibold text-slate-400">
+        Gate: <strong class="text-slate-800 dark:text-slate-200">{{ detail().gate }}</strong>
+      </span>
+    </div>
 
-    <button type="button" class="btn-detail-action btn-action-create-task flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:border-blue-900 dark:bg-blue-950/50 dark:text-blue-300" (click)="onCreateTask()">
-      <svg class="btn-icon h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-          clip-rule="evenodd" />
-      </svg>
-      <span>{{ 'TASKS.CREATE_TASK' | translate }}</span>
-    </button>
+    <!-- 6-Column Structured Key-Value Matrix (Zero Space Waste) -->
+    <div class="grid grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 text-xs">
+      <!-- Item 1: Tare Weight -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Tare Weight</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().tareWeight || '—' }}</span>
+      </div>
 
-    <button type="button" class="btn-detail-action btn-action-approve-solid flex items-center gap-1.5 rounded-xl bg-emerald-600 px-5 py-2 text-xs font-semibold text-white shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-700 active:scale-95" (click)="onApprove()">
-      <svg class="btn-icon h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-        <path
-          fill-rule="evenodd"
-          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-          clip-rule="evenodd" />
-      </svg>
-      <span>{{ 'GATE_EVENTS.APPROVE' | translate }}</span>
-    </button>
-  </div>
+      <!-- Item 2: Type -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Type</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().type || '—' }}</span>
+      </div>
 
-  <!-- Full-Resolution Lightbox Modal -->
+      <!-- Item 3: Cargo Type -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Cargo Type</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().cargoType || '—' }}</span>
+      </div>
+
+      <!-- Item 4: JO Type -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">JO Type</span>
+        <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().joType || '—' }}</span>
+      </div>
+
+      <!-- Item 5: FCL / LCL -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">FCL / LCL</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().fclLcl || '—' }}</span>
+      </div>
+
+      <!-- Item 6: Scan Type -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Scan Type</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().scanType || '—' }}</span>
+      </div>
+
+      <!-- Item 7: Offload Location -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Offload Location</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().offLoadLocation || '—' }}</span>
+      </div>
+
+      <!-- Item 8: Gate In Type -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Gate In Type</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().gateInType || '—' }}</span>
+      </div>
+
+      <!-- Item 9: Vessel / Via No -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Vessel / Via No</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().vesselName || '—' }}</span>
+      </div>
+
+      <!-- Item 10: Port Name -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Port Name</span>
+        <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().portName || '—' }}</span>
+      </div>
+
+      <!-- Item 11: Shipping Line -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Shipping Line</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().shippingLine || '—' }}</span>
+      </div>
+
+      <!-- Item 12: IGM Seal -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">IGM Seal</span>
+        <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().igmSeal || '—' }}</span>
+      </div>
+
+      <!-- Item 13: Seal No. 1 -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Seal No. 1 *</span>
+        <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().sealNo1 || '—' }}</strong>
+      </div>
+
+      <!-- Item 14: Seal No. 2 -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Seal No. 2</span>
+        <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().sealNo2 || '—' }}</span>
+      </div>
+
+      <!-- Item 15: Custom Seal -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Custom Seal</span>
+        <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().customSealNo || '—' }}</span>
+      </div>
+
+      <!-- Item 16: Customer -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Customer</span>
+        <span class="truncate text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().customerName || '—' }}</span>
+      </div>
+
+      <!-- Item 17: EIR No. -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">EIR No.</span>
+        <span class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().eirNo || '—' }}</span>
+      </div>
+
+      <!-- Item 18: EIR Weight -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">EIR Weight *</span>
+        <strong class="font-mono text-xs font-bold text-slate-900 dark:text-white">{{ detail().eirWeight || '—' }}</strong>
+      </div>
+
+      <!-- Item 19: EIR Date & Time -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">EIR Date & Time</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().eirDateTime || '—' }}</span>
+      </div>
+
+      <!-- Item 20: Location -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Location</span>
+        <span class="text-xs font-bold text-blue-600 dark:text-blue-400">{{ detail().location || '—' }}</span>
+      </div>
+
+      <!-- Item 21: Condition -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Condition *</span>
+        <span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{{ detail().condition || 'Sound' }}</span>
+      </div>
+
+      <!-- Item 22: Door To Door -->
+      <div class="flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Door To Door</span>
+        <span class="text-xs font-semibold text-slate-800 dark:text-slate-200">{{ detail().doorToDoor || '—' }}</span>
+      </div>
+
+      <!-- Remarks (Span 2) -->
+      <div class="col-span-2 flex flex-col">
+        <span class="text-[9px] font-bold uppercase text-slate-400">Remarks</span>
+        <p class="truncate text-xs text-slate-700 dark:text-slate-300">{{ detail().remarks || 'No remarks recorded' }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 4. FULL-RESOLUTION LIGHTBOX MODAL                                         -->
+  <!-- ========================================================================= -->
   @if (activeLightboxPhoto(); as lightbox) {
-    <div class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md" (click)="closeLightbox()">
-      <div class="lightbox-dialog relative max-h-[92vh] max-w-4xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl" (click)="$event.stopPropagation()">
-        <div class="lightbox-header flex items-center justify-between border-b border-slate-800 px-6 py-4">
-          <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
-          <button type="button" class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white" (click)="closeLightbox()">✕</button>
+    <div class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md transition-all" (click)="closeLightbox()">
+      <div class="lightbox-dialog relative flex max-h-[92vh] max-w-5xl w-full flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl" (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="lightbox-header flex items-center justify-between border-b border-slate-800 bg-slate-900/90 px-4 py-3 backdrop-blur-sm">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-bold text-white">{{ lightbox.title }}</h3>
+            <span class="text-[10px] text-slate-400">• High Resolution</span>
+          </div>
+          <div class="flex items-center gap-2">
+            @if (lightbox.url) {
+              <a
+                [href]="lightbox.url"
+                target="_blank"
+                download
+                class="flex h-7 items-center gap-1 rounded-lg border border-slate-700 bg-slate-800 px-2.5 text-xs font-semibold text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+                title="Open full size">
+                <span>Full Size</span>
+              </a>
+            }
+            <button
+              type="button"
+              class="btn-close-lightbox flex h-7 w-7 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+              (click)="closeLightbox()"
+              title="Close (Esc)">
+              ✕
+            </button>
+          </div>
         </div>
-        <div class="lightbox-body p-4">
-          <img [src]="lightbox.url" [alt]="lightbox.title" class="lightbox-img max-h-[75vh] w-auto rounded-lg object-contain" />
+        <!-- Image Viewport -->
+        <div class="lightbox-body flex items-center justify-center overflow-auto bg-slate-950 p-3 min-h-[300px]">
+          @if (lightbox.url) {
+            <img
+              [src]="lightbox.url"
+              [alt]="lightbox.title"
+              class="lightbox-img max-h-[75vh] w-auto max-w-full rounded-xl object-contain shadow-2xl" />
+          } @else {
+            <div class="py-12 text-center text-xs text-slate-400">No image stream available</div>
+          }
         </div>
       </div>
     </div>

@@ -6,13 +6,10 @@ export class ThemeService {
   public readonly isDarkMode = signal<boolean>(false);
 
   constructor() {
-    let initialDark = false;
-    if (typeof localStorage !== 'undefined') {
-      const saved = localStorage.getItem(this.storageKey);
-      const prefersDark =
-        typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      initialDark = saved ? saved === 'dark' : !!prefersDark;
-    }
+    const saved = localStorage.getItem(this.storageKey);
+    const prefersDark =
+      typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialDark = saved ? saved === 'dark' : prefersDark;
     this.isDarkMode.set(initialDark);
     this.applyTheme(initialDark);
 
@@ -26,25 +23,20 @@ export class ThemeService {
   }
 
   public toggleTheme(): void {
-    const next = !this.isDarkMode();
-    this.isDarkMode.set(next);
-    this.applyTheme(next);
+    this.isDarkMode.update((dark) => !dark);
   }
 
   public setDarkMode(enabled: boolean): void {
     this.isDarkMode.set(enabled);
-    this.applyTheme(enabled);
   }
 
   private applyTheme(dark: boolean): void {
     if (typeof document === 'undefined') return;
     if (dark) {
       document.documentElement.classList.add('dark');
-      document.body?.classList.add('dark');
       document.documentElement.setAttribute('data-mode', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
-      document.body?.classList.remove('dark');
       document.documentElement.setAttribute('data-mode', 'light');
     }
   }
