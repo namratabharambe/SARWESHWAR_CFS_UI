@@ -1,0 +1,143 @@
+/* ==========================================================================
+   SARVESHWAR CFS • CLEAN DARK SHADE HIGH-ACCURACY YARD MAP STYLES
+   ========================================================================== */
+
+/* Dark Shade Single Color Uniform Polygons */
+.dark-slot-polygon {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  &:hover {
+    fill-opacity: 0.98 !important;
+    stroke-width: 3px !important;
+    stroke: #ffffff !important;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.9));
+  }
+}
+
+/* Selected / Filtered Slot Animated Glow */
+.slot-highlight-animated {
+  stroke: #facc15 !important;
+  stroke-width: 4px !important;
+  fill-opacity: 1 !important;
+  filter: drop-shadow(0 0 22px rgba(250, 204, 21, 1)) !important;
+  animation: slot-pulse-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes slot-pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.8));
+  }
+  50% {
+    filter: drop-shadow(0 0 28px rgba(250, 204, 21, 1));
+  }
+}
+
+/* Pulsing highlight circle marker */
+.animated-pulse-marker {
+  animation: beacon-wave 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes beacon-wave {
+  0% {
+    r: 10px;
+    opacity: 1;
+  }
+  100% {
+    r: 45px;
+    opacity: 0;
+  }
+}
+
+/* High-Level Clean Block Cluster Badge (Shown when zoomed out) */
+.cfs-block-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.cfs-block-cluster-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(10, 15, 29, 0.92);
+  border: 1.5px solid rgba(56, 189, 248, 0.7);
+  border-radius: 9999px;
+  padding: 4px 10px;
+  color: #ffffff;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.85), 0 0 10px rgba(56, 189, 248, 0.35);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    transform: scale(1.12);
+    border-color: #facc15;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.8);
+  }
+}
+
+/* Detailed Centroid Badges (Shown only when zoomed in close) */
+.dark-slot-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.dark-slot-centroid-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 1px 3px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: scale(1.35);
+    z-index: 1000;
+  }
+
+  &.occupied {
+    background: rgba(10, 15, 29, 0.92);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.6);
+  }
+
+  &.available {
+    background: rgba(6, 78, 59, 0.92);
+    color: #6ee7b7;
+    border-color: #34d399;
+  }
+
+  &.selected-beacon {
+    background: #facc15;
+    color: #0f172a;
+    font-weight: 900;
+    border-color: #ffffff;
+    box-shadow: 0 0 16px rgba(250, 204, 21, 1);
+  }
+}
+
+/* Dark Glassmorphic Tooltips */
+.dark-leaflet-tooltip {
+  background: rgba(10, 15, 29, 0.96) !important;
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 10px 30px -5px rgba(0, 0, 0, 0.9),
+    0 0 15px rgba(56, 189, 248, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  color: #ffffff !important;
+  padding: 6px 10px !important;
+}

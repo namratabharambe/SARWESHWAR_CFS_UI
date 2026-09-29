@@ -18,6 +18,7 @@ const DEFAULT_TRANSLATIONS: Record<string, any> = {
     INVENTORY: 'Inventory',
     REPORTS: 'Reports',
     ALERTS: 'Alerts',
+    YARD_MAP: 'Yard Map',
     ALL_CLIENTS: 'All Clients',
     ALL_SITES: 'All Sites',
     LOGOUT: 'Sign Out',
