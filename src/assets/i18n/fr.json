@@ -21,7 +21,8 @@
     "TASKS": "Tasks",
     "INVENTORY": "Inventory",
     "REPORTS": "Reports",
-    "ALERTS": "Alerts"
+    "ALERTS": "Alerts",
+    "YARD_MAP": "Plan du Parc"
   },
   "COMMON": {
     "SEARCH": "Rechercher...",

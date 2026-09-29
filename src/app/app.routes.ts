@@ -60,6 +60,10 @@ export const routes: Routes = [
         path: AppRoutes.ALERTS,
         loadChildren: () => import('app/features/alerts/alerts.routes').then((m) => m.ALERTS_ROUTES),
       },
+      {
+        path: AppRoutes.YARD_MAP,
+        loadChildren: () => import('app/features/yard-map/yard-map.routes').then((m) => m.YARD_MAP_ROUTES),
+      },
       { path: '', pathMatch: 'full', redirectTo: AppRoutes.DASHBOARD },
     ],
   },

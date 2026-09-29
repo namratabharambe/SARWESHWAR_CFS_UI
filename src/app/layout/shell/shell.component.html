@@ -69,6 +69,12 @@
         <span class="nav-label-text">{{ 'NAV.INVENTORY' | translate }}</span>
       </a>
 
+      <!-- Yard Map -->
+      <a routerLink="/yard-map" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">map</span>
+        <span class="nav-label-text">{{ 'NAV.YARD_MAP' | translate }}</span>
+      </a>
+
       <!-- Reports -->
       <a routerLink="/reports" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
         <span class="material-icons-outlined text-lg">bar_chart</span>
