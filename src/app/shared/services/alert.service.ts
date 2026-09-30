@@ -392,6 +392,66 @@ export class AlertService {
     this.closeAlertModal();
   }
 
+  public clearAllAlerts(): void {
+    const now = new Date().toISOString();
+    this.alerts.update((items) =>
+      items.map((item) => ({
+        ...item,
+        status: 'Resolved' as AlertStatus,
+        resolutionNotes: 'Cleared by operator via Dashboard Exceptions widget',
+        resolvedBy: 'Control Room Operator',
+        resolvedAt: now,
+      })),
+    );
+    this.showToast('All active exceptions cleared');
+  }
+
+  public restoreSampleAlerts(): void {
+    this.alerts.set([...this.initialAlerts]);
+    this.showToast('Exceptions restored');
+  }
+
+  public simulateNewAlert(): void {
+    const randId = Math.floor(1000 + Math.random() * 9000);
+    const newAlert: ContainerMismatchAlert = {
+      id: `alert-${Date.now()}`,
+      alertCode: `ALT-RT-${randId}`,
+      alertType: 'Container Number Mismatch',
+      severity: 'Critical',
+      status: 'Active',
+      timestamp: new Date().toISOString(),
+      gateLocation: 'GATE-01 (Inbound Main)',
+      truckNo: 'MH-04-GP-8891',
+      driverName: 'Ramdas Shinde',
+      driverLicense: 'DL-0920194812',
+      scannedContainerNo: 'MSCU 556123 4',
+      expectedContainerNo: 'MSCU 556128 4',
+      scannedSealNo: 'ML-IN-982341',
+      expectedSealNo: 'ML-IN-982341',
+      measuredWeightKg: 28450,
+      manifestWeightKg: 28450,
+      weightVariancePercentage: 0,
+      ocrConfidence: 97.4,
+      shippingLine: 'MSC Mediterranean Shipping',
+      bookingNo: 'BKGS2051709',
+      isoType: "40' HC (42G1)",
+      systemRecommendation:
+        'Optical OCR scanned digit 3 does not match manifest digit 8. Inspect physical markings.',
+      comparisonFields: [
+        {
+          fieldName: 'Container ISO Serial',
+          scannedOcrValue: 'MSCU 556123 4',
+          manifestExpectedValue: 'MSCU 556128 4',
+          hasDiscrepancy: true,
+          confidenceScore: 97.4,
+        },
+      ],
+    };
+
+    this.alerts.update((items) => [newAlert, ...items]);
+    this.showToast('New real-time exception alert received');
+  }
+
   public showToast(msg: string): void {
     this.toastMessage.set(msg);
     setTimeout(() => {

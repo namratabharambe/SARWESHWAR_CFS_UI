@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AlertService } from 'shared/services/alert.service';
 import { AlertResolutionRequest, ContainerMismatchAlert } from 'shared/types/alert/alert.interface';
 import { MismatchDetailModalComponent } from './components/mismatch-detail-modal/mismatch-detail-modal.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
-
 import { TranslatePipe } from 'shared/pipes';
 
 @Component({
@@ -17,8 +16,30 @@ import { TranslatePipe } from 'shared/pipes';
   styleUrls: ['./alerts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AlertsComponent {
+export class AlertsComponent implements OnInit {
   public readonly alertService = inject(AlertService);
+  private readonly route = inject(ActivatedRoute);
+
+  public readonly isFilterVisible = signal<boolean>(false);
+
+  public readonly activeFilterCount = computed(() => {
+    let count = 0;
+    if (this.alertService.severityFilter() !== 'All') count++;
+    if (this.alertService.typeFilter() !== 'All') count++;
+    if (this.alertService.statusFilter() !== 'All') count++;
+    if (this.alertService.searchQuery().trim()) count++;
+    return count;
+  });
+
+  public ngOnInit(): void {
+    const alertId = this.route.snapshot.queryParamMap.get('alertId');
+    if (alertId) {
+      const match = this.alertService.alerts().find((a) => a.id === alertId || a.alertCode === alertId);
+      if (match) {
+        this.alertService.selectAlert(match);
+      }
+    }
+  }
 
   public readonly severityOptions = [
     { value: 'All', label: 'All Severities' },

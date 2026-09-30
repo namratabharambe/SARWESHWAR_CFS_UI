@@ -30,8 +30,28 @@ import { TranslatePipe } from 'shared/pipes';
 export class InventoryComponent {
   public readonly inventoryService = inject(InventoryService);
 
+  public readonly isQuickActionsOpen = signal<boolean>(false);
+  public readonly isFilterVisible = signal<boolean>(true);
   public readonly isAdvancedFiltersOpen = signal<boolean>(false);
   public readonly isColumnsDropdownOpen = signal<boolean>(false);
+
+  public readonly activeFilterCount = computed(() => {
+    const f = this.inventoryService.filter();
+    let count = 0;
+    if (f.searchQuery?.trim()) count++;
+    if (f.containerNo?.trim()) count++;
+    if (f.shippingLine && f.shippingLine !== 'All') count++;
+    if (f.block && f.block !== 'All') count++;
+    if (f.row && f.row !== 'All') count++;
+    if (f.bay && f.bay !== 'All') count++;
+    if (f.tier && f.tier !== 'All') count++;
+    if (f.size && f.size !== 'All') count++;
+    if (f.type && f.type !== 'All') count++;
+    if (f.status && f.status !== 'All') count++;
+    if (f.fullEmpty && f.fullEmpty !== 'All') count++;
+    if (f.customer && f.customer !== 'All') count++;
+    return count;
+  });
 
   // Shipping lines
   public readonly shippingLines = [

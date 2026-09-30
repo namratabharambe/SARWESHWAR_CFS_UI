@@ -25,6 +25,10 @@ export const routes: Routes = [
         loadChildren: () => import('app/features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },
       {
+        path: AppRoutes.ADMIN,
+        loadChildren: () => import('app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+      },
+      {
         path: AppRoutes.CLIENTS,
         loadChildren: () => import('app/features/clients/clients.routes').then((m) => m.CLIENTS_ROUTES),
       },

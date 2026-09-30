@@ -3,7 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from 'core/auth/auth.service';
 import { AdminRepository } from 'core/data/admin.repository';
 import { Site } from 'core/models/admin.models';
-import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
+import { RouterLink } from '@angular/router';
 import { StatusBadgeComponent } from 'shared/components/atoms/status-badge/status-badge.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
@@ -16,7 +16,7 @@ import { TranslatePipe } from 'shared/pipes';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    PageHeaderComponent,
+    RouterLink,
     StatusBadgeComponent,
     ModalComponent,
     FormFieldComponent,
@@ -46,8 +46,8 @@ export class SitesComponent {
 
   public readonly breadcrumbs = [
     { label: 'Home', url: '/dashboard' },
-    { label: 'Admin', url: '/sites' },
-    { label: 'Site' },
+    { label: 'Admin', url: '/admin' },
+    { label: 'Sites' },
   ];
 
   constructor() {

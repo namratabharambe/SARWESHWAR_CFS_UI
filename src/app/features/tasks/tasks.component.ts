@@ -18,7 +18,6 @@ import { TranslatePipe } from 'shared/pipes';
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
     TaskDetailPanelComponent,
     CreateTaskModalComponent,
     TaskQueueViewComponent,
@@ -97,6 +96,19 @@ export class TasksComponent {
 
   // Export dropdown open state
   public readonly isExportMenuOpen = signal<boolean>(false);
+
+  // Filter dropdowns collapse/expand toggle
+  public readonly isFilterVisible = signal<boolean>(false);
+
+  // Active filter count
+  public readonly activeFilterCount = computed<number>(() => {
+    let count = 0;
+    if (this.taskService.statusFilter() !== 'All') count++;
+    if (this.taskService.typeFilter() !== 'All') count++;
+    if (this.taskService.priorityFilter() !== 'All') count++;
+    if (this.taskService.equipmentFilter() !== 'All') count++;
+    return count;
+  });
 
   // Active KPI card filter helper
   public selectKpiStatus(status: string): void {

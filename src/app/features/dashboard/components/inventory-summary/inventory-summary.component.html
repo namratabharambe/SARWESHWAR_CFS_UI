@@ -1,38 +1,43 @@
 <div
-  class="dashboard-card flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  class="dashboard-card flex h-full flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
   <!-- Header -->
-  <div class="mb-3 flex items-center justify-between">
-    <h3 class="text-base font-semibold text-slate-900 dark:text-white">
-      {{ 'DASHBOARD.INVENTORY_SUMMARY' | translate }}
-    </h3>
+  <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800/80">
+    <div class="flex items-center gap-2.5">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+        <span class="material-icons-outlined text-lg">inventory_2</span>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">
+          {{ 'DASHBOARD.INVENTORY_SUMMARY' | translate }}
+        </h3>
+        <span class="text-xs font-medium text-slate-500 dark:text-slate-400">TEU volume & container type analytics</span>
+      </div>
+    </div>
+
     <a
       routerLink="/inventory"
-      class="view-all-link inline-flex items-center gap-1 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
+      class="view-all-link inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-blue-600 transition-all hover:border-blue-300 hover:bg-blue-50/50 dark:border-slate-700 dark:text-blue-400 dark:hover:border-blue-600 dark:hover:bg-blue-950/40">
       <span>{{ 'COMMON.VIEW_ALL' | translate }}</span>
-      <span class="view-all-arrow">→</span>
+      <span class="view-all-arrow font-bold">→</span>
     </a>
   </div>
 
   <!-- Top 4 Mini Category Metric Boxes -->
-  <div class="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+  <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
     @for (cat of data().categories; track cat.category) {
       <div
-        class="category-metric-box group flex cursor-pointer items-center gap-2.5 rounded-xl border border-gray-100 p-2.5 transition-all dark:border-gray-800"
-        [class.theme-blue]="cat.colorTheme === 'blue'"
+        class="category-metric-box group flex cursor-pointer items-center gap-2 rounded-xl border border-slate-100 p-2 transition-all hover:border-slate-200 hover:shadow-sm dark:border-slate-800 dark:hover:border-slate-700"
         [class.bg-blue-50/50]="cat.colorTheme === 'blue'"
         [class.dark:bg-blue-950/20]="cat.colorTheme === 'blue'"
-        [class.theme-green]="cat.colorTheme === 'green'"
         [class.bg-emerald-50/50]="cat.colorTheme === 'green'"
         [class.dark:bg-emerald-950/20]="cat.colorTheme === 'green'"
-        [class.theme-sky]="cat.colorTheme === 'sky'"
         [class.bg-sky-50/50]="cat.colorTheme === 'sky'"
         [class.dark:bg-sky-950/20]="cat.colorTheme === 'sky'"
-        [class.theme-red]="cat.colorTheme === 'red'"
         [class.bg-rose-50/50]="cat.colorTheme === 'red'"
         [class.dark:bg-rose-950/20]="cat.colorTheme === 'red'">
         <!-- Icon -->
         <div
-          class="cat-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110"
+          class="cat-icon flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110"
           [class.bg-blue-100]="cat.colorTheme === 'blue'"
           [class.text-blue-700]="cat.colorTheme === 'blue'"
           [class.dark:bg-blue-900/60]="cat.colorTheme === 'blue'"
@@ -50,64 +55,64 @@
           [class.dark:bg-rose-900/60]="cat.colorTheme === 'red'"
           [class.dark:text-rose-300]="cat.colorTheme === 'red'">
           @if (cat.colorTheme === 'red') {
-            <span class="material-icons-outlined text-base">warning</span>
+            <span class="material-icons-outlined text-sm">warning</span>
           } @else {
-            <span class="material-icons-outlined text-base">inventory_2</span>
+            <span class="material-icons-outlined text-sm">inventory_2</span>
           }
         </div>
 
         <div class="flex flex-col overflow-hidden">
-          <span class="text-xs font-bold text-slate-700 dark:text-slate-300">
+          <span class="truncate text-[10px] font-bold text-slate-500 dark:text-slate-400">
             {{ cat.category }}
           </span>
-          <div class="flex items-baseline gap-1.5">
-            <span class="text-sm font-black text-slate-900 dark:text-white">
-              {{ cat.teuCount }} <span class="text-xs font-normal">TEU</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-xs font-black text-slate-900 dark:text-white">
+              {{ cat.teuCount }} <span class="text-[9px] font-normal text-slate-400">TEU</span>
             </span>
-            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400"> {{ cat.percentage }}% </span>
+            <span class="text-[10px] font-semibold text-slate-400">({{ cat.percentage }}%)</span>
           </div>
         </div>
       </div>
     }
   </div>
 
-  <!-- Bottom Details: Top 5 Container Types + Utilization Gauge -->
-  <div class="mt-4 flex items-center justify-between gap-6 border-t border-slate-200 pt-3.5 dark:border-slate-800">
-    <!-- Top 5 Container Types Progress List -->
+  <!-- Bottom Details: Top Container Types Horizontal Bars + Utilization Gauge -->
+  <div class="mt-3 flex items-center justify-between gap-5 border-t border-slate-100 pt-3 dark:border-slate-800">
+    <!-- Top 5 Container Types Horizontal Progress Bars -->
     <div class="flex flex-1 flex-col gap-2">
-      <span class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200"
-        >Top 5 Container Types</span
-      >
+      <span class="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+        Container Types Breakdown
+      </span>
       <div class="flex flex-col gap-1.5">
         @for (item of data().topContainerTypes; track item.typeName) {
           <div
-            class="type-progress-row flex cursor-pointer items-center justify-between gap-2.5 rounded-md px-1.5 py-1 text-xs transition-colors hover:bg-slate-100/70 dark:hover:bg-slate-800/50">
-            <span class="w-28 shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-300">
+            class="type-progress-row flex cursor-pointer items-center justify-between gap-2.5 rounded-md px-1.5 py-1 text-xs transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50">
+            <span class="w-24 shrink-0 truncate text-[11px] font-semibold text-slate-700 dark:text-slate-300">
               {{ item.typeName }}
             </span>
-            <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+            <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
               <div
-                class="type-bar h-full rounded-full bg-blue-600 transition-all duration-700"
+                class="type-bar h-full rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-700"
                 [style.width.%]="item.percentage"></div>
             </div>
-            <span class="w-16 shrink-0 text-right text-xs font-bold text-slate-800 dark:text-slate-200">
+            <span class="w-14 shrink-0 text-right font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200">
               {{ item.count }} ({{ item.percentage }}%)
             </span>
           </div>
         } @empty {
-          <div class="py-3 text-center text-xs font-medium text-slate-400 dark:text-slate-500">
-            No active container inventory recorded.
+          <div class="py-2 text-center text-xs font-medium text-slate-400 dark:text-slate-500">
+            No container inventory data recorded
           </div>
         }
       </div>
     </div>
 
-    <!-- Utilization Radial Gauge -->
+    <!-- Utilization Radial Progress Gauge -->
     <div
       class="util-gauge-box flex cursor-pointer flex-col items-center justify-center pl-2 transition-transform duration-200 hover:scale-105">
-      <span class="mb-1 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400"
-        >Utilization</span
-      >
+      <span class="mb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        Yard Utilization
+      </span>
       <div class="relative flex h-20 w-20 items-center justify-center">
         <svg class="h-full w-full -rotate-90 transform" viewBox="0 0 80 80">
           <!-- Track -->
@@ -116,7 +121,7 @@
             cy="40"
             [attr.r]="gaugeRadius"
             stroke-width="7"
-            class="fill-transparent stroke-slate-200 dark:stroke-slate-800" />
+            class="fill-transparent stroke-slate-100 dark:stroke-slate-800" />
           <!-- Progress -->
           <circle
             cx="40"
@@ -131,11 +136,11 @@
 
         <!-- Center Value -->
         <div class="absolute inset-0 flex items-center justify-center">
-          <span class="text-base font-black text-slate-900 dark:text-white"> {{ data().utilizationPercentage }}% </span>
+          <span class="text-sm font-black text-slate-900 dark:text-white">{{ data().utilizationPercentage }}%</span>
         </div>
       </div>
 
-      <span class="mt-1 text-center font-mono text-xs font-bold text-slate-700 dark:text-slate-300">
+      <span class="mt-1 text-center font-mono text-[10px] font-bold text-slate-600 dark:text-slate-400">
         {{ data().currentTeu | number }} / {{ data().maxTeu | number }} TEU
       </span>
     </div>

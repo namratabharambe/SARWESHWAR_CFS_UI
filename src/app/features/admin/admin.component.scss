@@ -1,0 +1,200 @@
+.admin-management-page {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.admin-module-card {
+  min-height: 180px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .module-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .material-icons-outlined {
+      font-size: 24px;
+      color: inherit;
+      transition: color 0.2s ease;
+    }
+  }
+
+  /* Sites - Blue Accent */
+  &.accent-blue {
+    border-top: 3px solid #2563eb;
+
+    .module-icon-wrap {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+    .module-title {
+      color: #0f172a;
+    }
+    .module-action-link {
+      color: #2563eb;
+    }
+
+    &:hover {
+      border-color: #93c5fd;
+      border-top-color: #2563eb;
+      box-shadow: 0 6px 20px -2px rgba(37, 99, 235, 0.12);
+
+      .module-icon-wrap {
+        background: #2563eb !important;
+        color: #ffffff !important;
+      }
+      .module-title {
+        color: #2563eb;
+      }
+    }
+  }
+
+  /* Users - Teal Accent */
+  &.accent-teal {
+    border-top: 3px solid #0d9488;
+
+    .module-icon-wrap {
+      background: #f0fdfa;
+      color: #0d9488;
+    }
+    .module-title {
+      color: #0f172a;
+    }
+    .module-action-link {
+      color: #0d9488;
+    }
+
+    &:hover {
+      border-color: #99f6e4;
+      border-top-color: #0d9488;
+      box-shadow: 0 6px 20px -2px rgba(13, 148, 136, 0.12);
+
+      .module-icon-wrap {
+        background: #0d9488 !important;
+        color: #ffffff !important;
+      }
+      .module-title {
+        color: #0d9488;
+      }
+    }
+  }
+
+  /* Roles - Purple Accent */
+  &.accent-purple {
+    border-top: 3px solid #7c3aed;
+
+    .module-icon-wrap {
+      background: #faf5ff;
+      color: #7c3aed;
+    }
+    .module-title {
+      color: #0f172a;
+    }
+    .module-action-link {
+      color: #7c3aed;
+    }
+
+    &:hover {
+      border-color: #d8b4fe;
+      border-top-color: #7c3aed;
+      box-shadow: 0 6px 20px -2px rgba(124, 58, 237, 0.12);
+
+      .module-icon-wrap {
+        background: #7c3aed !important;
+        color: #ffffff !important;
+      }
+      .module-title {
+        color: #7c3aed;
+      }
+    }
+  }
+}
+
+:host-context(.dark) {
+  .admin-module-card {
+    .module-title {
+      color: #f1f5f9;
+    }
+
+    &.accent-blue {
+      border-top-color: #3b82f6;
+      .module-icon-wrap {
+        background: rgba(30, 58, 138, 0.35);
+        color: #60a5fa;
+      }
+      .module-action-link {
+        color: #60a5fa;
+      }
+      &:hover {
+        border-color: #1e3a8a;
+        border-top-color: #3b82f6;
+        .module-icon-wrap {
+          background: #2563eb !important;
+          color: #ffffff !important;
+        }
+        .module-title {
+          color: #60a5fa;
+        }
+      }
+    }
+
+    &.accent-teal {
+      border-top-color: #14b8a6;
+      .module-icon-wrap {
+        background: rgba(19, 78, 74, 0.35);
+        color: #2dd4bf;
+      }
+      .module-action-link {
+        color: #2dd4bf;
+      }
+      &:hover {
+        border-color: #134e4a;
+        border-top-color: #14b8a6;
+        .module-icon-wrap {
+          background: #0d9488 !important;
+          color: #ffffff !important;
+        }
+        .module-title {
+          color: #2dd4bf;
+        }
+      }
+    }
+
+    &.accent-purple {
+      border-top-color: #a855f7;
+      .module-icon-wrap {
+        background: rgba(88, 28, 135, 0.35);
+        color: #c084fc;
+      }
+      .module-action-link {
+        color: #c084fc;
+      }
+      &:hover {
+        border-color: #581c87;
+        border-top-color: #a855f7;
+        .module-icon-wrap {
+          background: #7c3aed !important;
+          color: #ffffff !important;
+        }
+        .module-title {
+          color: #c084fc;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
