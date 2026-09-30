@@ -100,22 +100,25 @@
         class="h-full flex flex-col min-w-0" />
     </div>
 
-    <!-- Middle Column: Recent Gate Activity + Gate Operations (Live) (3 columns) -->
-    <div class="lg:col-span-3 flex flex-col gap-3.5 min-w-0 justify-between">
+    <!-- Right 6 Columns: 2x2 Equal Grid for the 4 Operational Cards (Identical Size) -->
+    <div class="dashboard-ops-quad-grid lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 grid-rows-2 gap-3.5 min-w-0 items-stretch">
+      <!-- Row 1, Col 1: Recent Gate Activity -->
       <app-recent-gate-activity [activities]="dashboardService.filteredGateActivities()"
-        class="flex-1 flex flex-col min-w-0" />
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
 
+      <!-- Row 1, Col 2: Yard Capacity & Utilization -->
+      <app-yard-capacity-utilization [yardRows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
+
+      <!-- Row 2, Col 1: Gate Operations (Live) -->
       <app-gate-operations-live [tabs]="dashboardService.gateTabs()" [stages]="dashboardService.gateLiveStages()"
         [nextTruck]="dashboardService.nextTruckInfo()" [selectedGateId]="dashboardService.selectedGateId()"
-        (gateTabChange)="dashboardService.selectGateTab($event)" class="flex-1 flex flex-col min-w-0" />
-    </div>
+        (gateTabChange)="dashboardService.selectGateTab($event)"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
 
-    <!-- Right Column: Yard Capacity & Utilization + Exceptions & Alerts (3 columns) -->
-    <div class="lg:col-span-3 flex flex-col gap-3.5 min-w-0 justify-between">
-      <app-yard-capacity-utilization [yardRows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()"
-        class="flex-1 flex flex-col min-w-0" />
-
-      <app-exception-alerts [alerts]="dashboardService.exceptionAlerts()" class="flex-1 flex flex-col min-w-0" />
+      <!-- Row 2, Col 2: Exceptions & Alerts -->
+      <app-exception-alerts [alerts]="dashboardService.exceptionAlerts()"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
     </div>
   </section>
 </div>

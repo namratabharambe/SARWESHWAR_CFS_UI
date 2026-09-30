@@ -211,10 +211,37 @@
     }
   }
 
-  /* Operational Grid: 3 Clean Columns with Uniform 14px Gaps */
+  /* Operational Grid: Yard Overview (6 cols) + 2x2 Quad Grid (6 cols) */
   .dashboard-section-ops-grid {
     width: 100%;
     min-width: 0;
+  }
+
+  /* 2x2 Operational Quad Grid: Exact Same Card Sizes across all 4 cards */
+  .dashboard-ops-quad-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(295px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+  }
+
+  .dashboard-quad-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+
+    > * {
+      height: 100%;
+      min-height: 0;
+    }
   }
 
 

@@ -35,7 +35,7 @@
           <div
             [routerLink]="['/alerts']"
             [queryParams]="{ alertId: alert.id }"
-            class="alert-item group/item flex items-center justify-between gap-2.5 py-2 px-1 transition-all duration-200 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 rounded-lg cursor-pointer min-w-0">
+            class="alert-item group/item flex items-center justify-between gap-2.5 py-1.5 px-1 transition-all duration-200 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 rounded-lg cursor-pointer min-w-0">
             <div class="flex items-center gap-2.5 overflow-hidden min-w-0 flex-1">
               <!-- Icon Badge -->
               <div
@@ -108,11 +108,11 @@
       <button
         type="button"
         (click)="clearAll($event)"
-        class="all-clear-action-card group/allclear mt-2.5 flex w-full items-center justify-between rounded-xl border border-emerald-200/90 bg-[#ecfdf5] p-2.5 shadow-2xs relative overflow-hidden dark:border-emerald-800/60 dark:bg-emerald-950/40 min-w-0 text-left transition-all duration-200 hover:border-emerald-400 hover:bg-emerald-100/70 hover:shadow-xs active:scale-[0.99] cursor-pointer"
+        class="all-clear-action-card group/allclear mt-1.5 flex w-full items-center justify-between rounded-xl border border-emerald-200/90 bg-[#ecfdf5] p-2 shadow-2xs relative overflow-hidden dark:border-emerald-800/60 dark:bg-emerald-950/40 min-w-0 text-left transition-all duration-200 hover:border-emerald-400 hover:bg-emerald-100/70 hover:shadow-xs active:scale-[0.99] cursor-pointer"
         title="Click to resolve and clear all active exceptions">
-        <div class="flex items-center gap-3 z-10 min-w-0">
+        <div class="flex items-center gap-2.5 z-10 min-w-0">
           <!-- Animated Checkmark Icon Badge -->
-          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/60 dark:text-emerald-400 shadow-2xs group-hover/allclear:scale-105 group-hover/allclear:bg-emerald-500 group-hover/allclear:text-white transition-all duration-200">
+          <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-900/60 dark:text-emerald-400 shadow-2xs group-hover/allclear:scale-105 group-hover/allclear:bg-emerald-500 group-hover/allclear:text-white transition-all duration-200">
             <svg class="w-4.5 h-4.5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>

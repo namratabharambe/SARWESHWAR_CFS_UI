@@ -1,7 +1,7 @@
 <div
   class="dashboard-card gate-operations-card shadow-xs relative flex h-full flex-col justify-between overflow-hidden rounded-[12px] bg-white p-4 dark:bg-[#111a2e]">
   <!-- 1. Card Header with horizontal divider line below -->
-  <div class="mb-4 flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800/80">
+  <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800/80">
     <div class="flex min-w-0 items-center gap-2.5">
       <!-- Blue Double-Door / Gate Icon matching reference -->
       <svg
@@ -37,7 +37,7 @@
   </div>
 
   <!-- 2. Dual Operation Mode Tabs (Gate In vs Gate Out) -->
-  <div class="mb-4 grid grid-cols-2 gap-3">
+  <div class="mb-2.5 grid grid-cols-2 gap-3">
     <!-- Gate In Tab -->
     <button
       type="button"
@@ -116,7 +116,7 @@
   </div>
 
   <!-- 3. Live Operational Stages List -->
-  <div class="my-1 flex min-w-0 flex-1 flex-col justify-between gap-3.5">
+  <div class="my-0.5 flex min-w-0 flex-1 flex-col justify-between gap-2">
     @for (stage of activeStages(); track stage.id) {
       <div class="grid min-w-0 grid-cols-[auto_minmax(80px,105px)_1fr_auto] items-center gap-3">
         <!-- Stage Circle Icon (Same size as Exceptions & Alerts: h-8 w-8, icon h-4 w-4, stroke-width="2") -->
