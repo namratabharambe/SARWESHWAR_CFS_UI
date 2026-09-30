@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminRepository } from 'core/data/admin.repository';
 import { Role } from 'core/models/admin.models';
-import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
+import { RouterLink } from '@angular/router';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
 import { FocusInvalidFieldDirective } from 'shared/directives';
@@ -15,7 +15,7 @@ import { TranslatePipe } from 'shared/pipes';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PageHeaderComponent,
+    RouterLink,
     ModalComponent,
     FormFieldComponent,
     FocusInvalidFieldDirective,
@@ -31,7 +31,7 @@ export class RolesComponent {
 
   public readonly breadcrumbs = [
     { label: 'Home', url: '/dashboard' },
-    { label: 'Admin', url: '/roles' },
+    { label: 'Admin', url: '/admin' },
     { label: 'Roles' },
   ];
 

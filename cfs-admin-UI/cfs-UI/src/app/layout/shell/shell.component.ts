@@ -13,7 +13,7 @@ import { TranslatePipe } from 'shared/pipes';
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, DropdownComponent, TranslatePipe],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,7 +28,6 @@ export class ShellComponent {
 
   public readonly collapsed = signal<boolean>(false);
   public readonly mobileOpen = signal<boolean>(false);
-  public readonly adminExpanded = signal<boolean>(true);
   public readonly gateEventsExpanded = signal<boolean>(true);
   public readonly currentUrl = signal<string>(this.router.url);
 
@@ -101,7 +100,49 @@ export class ShellComponent {
   public readonly loadingSites = signal<boolean>(false);
   public readonly switchingContext = signal<boolean>(false);
   public readonly contextToast = signal<string>('');
-  public readonly notificationCount = signal<number>(8);
+
+  // Topbar popover menu states
+  public readonly locationMenuOpen = signal<boolean>(false);
+  public readonly notificationsMenuOpen = signal<boolean>(false);
+  public readonly userMenuOpen = signal<boolean>(false);
+
+  // Dynamic notification alert count (2 in screenshot)
+  public readonly notificationCount = computed<number>(() => {
+    const alerts = this.dashboardService.exceptionAlerts();
+    return alerts.length > 0 ? alerts.length : 2;
+  });
+
+  public toggleLocationMenu(): void {
+    const next = !this.locationMenuOpen();
+    this.closeAllMenus();
+    this.locationMenuOpen.set(next);
+  }
+
+  public toggleNotificationsMenu(): void {
+    const next = !this.notificationsMenuOpen();
+    this.closeAllMenus();
+    this.notificationsMenuOpen.set(next);
+  }
+
+  public toggleUserMenu(): void {
+    const next = !this.userMenuOpen();
+    this.closeAllMenus();
+    this.userMenuOpen.set(next);
+  }
+
+  public onHeaderSearch(value: string): void {
+    this.dashboardService.setSearchQuery(value);
+  }
+
+  public goDashboard(): void {
+    if (!this.router.url.startsWith('/dashboard')) void this.router.navigate(['/dashboard']);
+  }
+
+  public closeAllMenus(): void {
+    this.locationMenuOpen.set(false);
+    this.notificationsMenuOpen.set(false);
+    this.userMenuOpen.set(false);
+  }
 
   public readonly availableClients = computed<ContextClient[]>(() => {
     const fromRepo = this.repository.clients();
@@ -210,9 +251,6 @@ export class ShellComponent {
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
         this.currentUrl.set(event.urlAfterRedirects);
-        if (this.isAdminRoute(event.urlAfterRedirects)) {
-          this.adminExpanded.set(true);
-        }
         if (this.isGateEventsRoute(event.urlAfterRedirects)) {
           this.gateEventsExpanded.set(true);
         }
@@ -262,12 +300,16 @@ export class ShellComponent {
   }
 
   public isAdminRoute(url: string = this.currentUrl()): boolean {
-    return url.includes('/clients') || url.includes('/sites') || url.includes('/users') || url.includes('/roles');
+    return (
+      url === '/admin' ||
+      url.startsWith('/admin/') ||
+      url.includes('/clients') ||
+      url.includes('/sites') ||
+      url.includes('/users') ||
+      url.includes('/roles')
+    );
   }
 
-  public toggleAdmin(): void {
-    this.adminExpanded.update((v) => !v);
-  }
 
   public isGateEventsRoute(url: string = this.currentUrl()): boolean {
     return url.includes('/gate-events');

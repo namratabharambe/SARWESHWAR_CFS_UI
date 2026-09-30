@@ -18,6 +18,8 @@ export class PageHeaderComponent {
   public readonly breadcrumbs = input<BreadcrumbItem[]>([]);
   public readonly title = input.required<string>();
   public readonly subtitle = input<string>('');
+  public readonly tag = input<string>('');
+  public readonly tagColor = input<'blue' | 'teal' | 'purple' | 'default'>('default');
   public readonly actionLabel = input<string>('');
   public readonly actionIcon = input<string>('add');
   public readonly action = output<void>();

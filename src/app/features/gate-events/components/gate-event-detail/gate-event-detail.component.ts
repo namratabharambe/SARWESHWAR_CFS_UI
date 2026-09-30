@@ -316,40 +316,15 @@ export class GateEventDetailComponent {
             ? c.photos.map((p, pIdx) => ({
                 title: `${pIdx + 1}. ${p.label || `Container ${idx + 1} Scan`}`,
                 timestamp: eventTime,
-                url: p.url || 'assets/gate/container-stencil.jpg',
+                url: p.url || '',
                 tag: p.tag || `C${idx + 1}`,
               }))
-            : [
-                {
-                  title: `1. Container ${idx + 1} (20FT) - Front OCR`,
-                  timestamp: eventTime,
-                  url: 'assets/gate/container-stencil.jpg',
-                  tag: 'FRONT',
-                },
-                {
-                  title: `2. Container ${idx + 1} (20FT) - Left Side ISO`,
-                  timestamp: eventTime,
-                  url: 'assets/gate/truck-side.jpg',
-                  tag: 'LEFT',
-                },
-                {
-                  title: `3. Container ${idx + 1} (20FT) - Right Side ISO`,
-                  timestamp: eventTime,
-                  url: 'assets/gate/overview.jpg',
-                  tag: 'RIGHT',
-                },
-                {
-                  title: `4. Container ${idx + 1} (20FT) - Rear Doors`,
-                  timestamp: eventTime,
-                  url: 'assets/gate/front-gate.jpg',
-                  tag: 'REAR',
-                },
-              ];
+            : [];
 
         containers.push({
           index: idx + 1,
-          label: `Container ${idx + 1} (${c.size || '20 FT'})`,
-          containerNo: c.containerNo ? c.containerNo.replace(/\s+/g, '') : `MSCU20491${idx}2`,
+          label: `Container ${idx + 1} (${c.size || '40 FT'})`,
+          containerNo: c.containerNo ? c.containerNo.replace(/\s+/g, '') : `MSCU000000${idx}`,
           confidence: c.confidence || 96,
           isoCode: c.isoCode || (c.size?.includes('20') ? '22G1' : '45G1'),
           size: c.size || (isDual ? '20 FT' : '40 FT'),
@@ -357,19 +332,19 @@ export class GateEventDetailComponent {
           fullOrEmpty: c.fullOrEmpty || 'Full',
           fullEmptyConfidence: 96,
           tareWeight: c.tareWeight || (c.size?.includes('20') ? '2,250 kg' : '3,800 kg'),
-          sealNo1: c.sealNo1 || (idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114'),
-          sealNo2: c.sealNo2 || (idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591'),
-          customSealNo: c.customSealNo || (idx === 0 ? 'CUST-8831' : 'CUST-8832'),
+          sealNo1: c.sealNo1 && c.sealNo1 !== '-' ? c.sealNo1 : '-',
+          sealNo2: c.sealNo2 && c.sealNo2 !== '-' ? c.sealNo2 : '-',
+          customSealNo: c.customSealNo && c.customSealNo !== '-' ? c.customSealNo : '-',
           cargoType: c.cargoType || 'General Cargo',
-          location: c.location || (idx === 0 ? 'A SHEL' : 'B YARD'),
+          location: c.location || 'A SHEL',
           condition: c.condition || 'Sound',
           damageDetected: c.damageFlag || false,
           capturedPhotos: cPhotos,
         });
       });
     } else {
-      const cleanContainer = event.containerNo ? event.containerNo.replace(/\s+/g, '') : 'MSCU2049182';
-      const containerSize = event.rawVisit?.containerSize || event.rawDto?.container?.size || '20 FT';
+      const cleanContainer = event.containerNo ? event.containerNo.replace(/\s+/g, '') : 'MSCU0000000';
+      const containerSize = event.rawVisit?.containerSize || event.rawDto?.container?.size || '40 FT';
       const isoCode = containerSize.includes('20') ? '22G1' : '45G1';
 
       containers.push({
@@ -383,9 +358,9 @@ export class GateEventDetailComponent {
         fullOrEmpty: 'Full',
         fullEmptyConfidence: 96,
         tareWeight: containerSize.includes('20') ? '2,250 kg' : '3,800 kg',
-        sealNo1: 'MSCU-S1-9981',
-        sealNo2: 'MSCU-S2-4412',
-        customSealNo: 'CUST-8831',
+        sealNo1: (event.rawVisit as any)?.sealNo || '-',
+        sealNo2: '-',
+        customSealNo: '-',
         cargoType: 'General Cargo',
         location: 'A SHEL',
         condition: 'Sound',
@@ -395,84 +370,11 @@ export class GateEventDetailComponent {
             ? event.photos.map((p, idx) => ({
                 title: `${idx + 1}. ${p.label || 'Camera Scan'}`,
                 timestamp: eventTime,
-                url: p.url || 'assets/gate/container-stencil.jpg',
+                url: p.url || '',
                 tag: p.tag || 'CAM',
               }))
-            : [
-                {
-                  title: '1. Front OCR (20FT)',
-                  timestamp: eventTime,
-                  url: 'assets/gate/container-stencil.jpg',
-                  tag: 'FRONT',
-                },
-                {
-                  title: '2. Left Side ISO',
-                  timestamp: eventTime,
-                  url: 'assets/gate/truck-side.jpg',
-                  tag: 'LEFT',
-                },
-                {
-                  title: '3. Right Side ISO',
-                  timestamp: eventTime,
-                  url: 'assets/gate/overview.jpg',
-                  tag: 'RIGHT',
-                },
-                {
-                  title: '4. Rear Doors',
-                  timestamp: eventTime,
-                  url: 'assets/gate/front-gate.jpg',
-                  tag: 'REAR',
-                },
-              ],
+            : [],
       });
-
-      if (isDual || containerSize.includes('20')) {
-        containers.push({
-          index: 2,
-          label: 'Container 2 (20 FT)',
-          containerNo: 'TCLU8192031',
-          confidence: 96,
-          isoCode: '22G1',
-          size: '20 FT',
-          typeConfidence: 97,
-          fullOrEmpty: 'Full',
-          fullEmptyConfidence: 95,
-          tareWeight: '2,280 kg',
-          sealNo1: 'TCLU-S2-8114',
-          sealNo2: 'TCLU-S3-5591',
-          customSealNo: 'CUST-8832',
-          cargoType: 'General Cargo',
-          location: 'B YARD',
-          condition: 'Sound',
-          damageDetected: false,
-          capturedPhotos: [
-            {
-              title: '1. Container 2 (20FT) - Front OCR',
-              timestamp: eventTime,
-              url: 'assets/gate/container-stencil.jpg',
-              tag: 'C2-FRONT',
-            },
-            {
-              title: '2. Container 2 (20FT) - Left Side ISO',
-              timestamp: eventTime,
-              url: 'assets/gate/truck-side.jpg',
-              tag: 'C2-LEFT',
-            },
-            {
-              title: '3. Container 2 (20FT) - Right Side ISO',
-              timestamp: eventTime,
-              url: 'assets/gate/overview.jpg',
-              tag: 'C2-RIGHT',
-            },
-            {
-              title: '4. Container 2 (20FT) - Rear Doors',
-              timestamp: eventTime,
-              url: 'assets/gate/front-gate.jpg',
-              tag: 'C2-REAR',
-            },
-          ],
-        });
-      }
     }
 
     const primary = containers[0];

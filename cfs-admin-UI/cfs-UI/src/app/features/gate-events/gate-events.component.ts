@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -28,6 +28,12 @@ import {
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
 export type { GateCameraPhoto };
+
+export interface ActiveLightboxGallery {
+  photos: GateCameraPhoto[];
+  currentIndex: number;
+  eventTitle?: string;
+}
 
 export interface GateContainerRecord {
   index: number;
@@ -143,6 +149,21 @@ export class GateEventsComponent implements OnInit {
   public readonly alertMessage = signal<string>('');
   public readonly copyFeedback = signal<boolean>(false);
   public readonly exportDropdownOpen = signal<boolean>(false);
+  public readonly activeLightboxGallery = signal<ActiveLightboxGallery | null>(null);
+
+  public readonly currentLightboxPhoto = computed<GateCameraPhoto | null>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return null;
+    return g.photos[g.currentIndex] ?? null;
+  });
+
+  public readonly lightboxCounterText = computed<string>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return '';
+    return `${g.currentIndex + 1} / ${g.photos.length}`;
+  });
+
+  // Keep for backward compatibility if referenced elsewhere
   public readonly activeLightboxPhoto = signal<{ title: string; url: string } | null>(null);
 
   public readonly currentPage = signal<number>(1);
@@ -284,35 +305,6 @@ export class GateEventsComponent implements OnInit {
       });
     }
 
-    if (photos.length === 0) {
-      photos.push(
-        {
-          label: `${prefix}Front OCR (20FT)`,
-          color: '#c9842a',
-          tag: `C${index}-FRONT`,
-          url: 'assets/gate/container-stencil.jpg',
-        },
-        {
-          label: `${prefix}Left Side ISO`,
-          color: '#1f487e',
-          tag: `C${index}-LEFT`,
-          url: 'assets/gate/truck-side.jpg',
-        },
-        {
-          label: `${prefix}Right Side ISO`,
-          color: '#1f487e',
-          tag: `C${index}-RIGHT`,
-          url: 'assets/gate/overview.jpg',
-        },
-        {
-          label: `${prefix}Rear Doors`,
-          color: '#993030',
-          tag: `C${index}-REAR`,
-          url: 'assets/gate/front-gate.jpg',
-        },
-      );
-    }
-
     return photos;
   }
 
@@ -362,7 +354,7 @@ export class GateEventsComponent implements OnInit {
       }
     });
 
-    // Extract all container records (e.g. when 2 containers on 1 visit / 20ft dual trailer)
+    // Extract all container records (only real containers from API payload)
     const rawContainersList: any[] = [];
     if (Array.isArray(visit.containers) && visit.containers.length > 0) {
       visit.containers.forEach((c: any) => {
@@ -396,49 +388,27 @@ export class GateEventsComponent implements OnInit {
         visit.ContainerNumber ??
         primaryEvent?.detectedContainerNumber ??
         primaryEvent?.DetectedContainerNumber ??
-        'MSCU 204918 2';
+        '';
       
       const parts = String(rawCNo).split(/[,/|]+/).map((s) => s.trim()).filter(Boolean);
-      const is20FtTwin =
-        String(visit.containerSize || visit.ContainerSize || '').includes('20') ||
-        parts.length > 1 ||
-        String(rawCNo).includes('20');
 
       if (parts.length > 1) {
         parts.forEach((p, idx) => {
           rawContainersList.push({
             containerNumber: p,
-            size: '20 FT',
-            isoCode: '22G1',
+            size: visit.containerSize ?? visit.ContainerSize ?? '20 FT',
+            isoCode: String(visit.containerSize || '').includes('20') ? '22G1' : '45G1',
             containerNumberConfidence: 0.96 - idx * 0.02,
             images: idx === 0 ? (primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages) : (eventsList[idx]?.images ?? eventsList[idx]?.Images ?? []),
           });
         });
-      } else if (is20FtTwin && !String(visit.containerSize || '').includes('40')) {
-        // Build 2x 20FT dual container load
-        rawContainersList.push({
-          containerNumber: rawCNo || 'MSCU 204918 2',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.98,
-          sealNo: 'MSCU-S1-9981',
-          tareWeight: '2,250 kg',
-          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
-        });
-        rawContainersList.push({
-          containerNumber: 'TCLU 819203 1',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.96,
-          sealNo: 'TCLU-S2-8114',
-          tareWeight: '2,280 kg',
-          images: eventsList[1]?.images ?? eventsList[1]?.Images ?? [],
-        });
       } else {
+        // Exactly 1 container - do NOT synthesize any fake second container
+        const cSize = visit.containerSize ?? visit.ContainerSize ?? '40 FT';
         rawContainersList.push({
-          containerNumber: rawCNo,
-          size: visit.containerSize ?? visit.ContainerSize ?? '40 FT',
-          isoCode: String(visit.containerSize || '').includes('20') ? '22G1' : '45G1',
+          containerNumber: rawCNo || 'MSCU 000000 0',
+          size: cSize,
+          isoCode: String(cSize).includes('20') ? '22G1' : '45G1',
           containerNumberConfidence:
             visit.containerConfidence ??
             visit.ContainerConfidence ??
@@ -454,7 +424,7 @@ export class GateEventsComponent implements OnInit {
 
     // Map each container into GateContainerRecord
     const containers: GateContainerRecord[] = rawContainersList.map((c, idx) => {
-      const cNo = c.containerNumber ?? c.ContainerNumber ?? `MSCU 20491${idx} 2`;
+      const cNo = c.containerNumber ?? c.ContainerNumber ?? (idx === 0 ? 'MSCU 000000 0' : '');
       const rawConf = c.containerNumberConfidence ?? c.ContainerNumberConfidence ?? 0.96;
       const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
       const cSize = c.size ?? c.Size ?? (isDualContainer ? '20 FT' : '40 FT');
@@ -469,14 +439,14 @@ export class GateEventsComponent implements OnInit {
         isoCode: cIso,
         confidence: conf,
         tareWeight: c.tareWeight ?? (cSize.includes('20') ? '2,250 kg' : '3,800 kg'),
-        sealNo1: c.sealNo ?? (idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114'),
-        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
-        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
-        cargoType: 'General Cargo',
-        fullOrEmpty: 'Full',
-        location: idx === 0 ? 'A SHEL' : 'B YARD',
-        condition: 'Sound',
-        damageFlag: false,
+        sealNo1: c.sealNo ?? c.sealNo1 ?? c.SealNo ?? '-',
+        sealNo2: c.sealNo2 ?? c.SealNo2 ?? '-',
+        customSealNo: c.customSealNo ?? c.CustomSealNo ?? '-',
+        cargoType: c.cargoType ?? 'General Cargo',
+        fullOrEmpty: c.fullOrEmpty ?? 'Full',
+        location: c.location ?? 'A SHEL',
+        condition: c.condition ?? 'Sound',
+        damageFlag: Boolean(c.damageFlag),
         photos: cPhotos,
       };
     });
@@ -490,7 +460,7 @@ export class GateEventsComponent implements OnInit {
       containers.reduce((acc, c) => acc + c.confidence, 0) / (containers.length || 1),
     );
 
-    // Aggregate photos for backward compatibility
+    // Aggregate photos
     const allPhotos: GateCameraPhoto[] = [];
     containers.forEach((c) => allPhotos.push(...c.photos));
 
@@ -543,32 +513,15 @@ export class GateEventsComponent implements OnInit {
       const container = dto.container ?? dto.Container;
       const cNo = container?.containerNumber ?? container?.ContainerNumber ?? 'MSCU 204918 2';
       const cSize = container?.size ?? container?.Size ?? '20 FT';
-
       const dtoImages = dto.images ?? dto.Images ?? [];
-      if (cSize.includes('20')) {
-        rawContainersList.push({
-          containerNumber: cNo,
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: container?.containerNumberConfidence ?? 0.98,
-          images: dtoImages,
-        });
-        rawContainersList.push({
-          containerNumber: 'TCLU 819203 1',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.96,
-          images: [],
-        });
-      } else {
-        rawContainersList.push({
-          containerNumber: cNo,
-          size: cSize,
-          isoCode: '45G1',
-          containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
-          images: dtoImages,
-        });
-      }
+
+      rawContainersList.push({
+        containerNumber: cNo,
+        size: cSize,
+        isoCode: cSize.includes('20') ? '22G1' : '45G1',
+        containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
+        images: dtoImages,
+      });
     }
 
     const totalContainers = rawContainersList.length;
@@ -589,14 +542,14 @@ export class GateEventsComponent implements OnInit {
         isoCode: cIso,
         confidence: conf,
         tareWeight: cSize.includes('20') ? '2,250 kg' : '3,800 kg',
-        sealNo1: idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114',
-        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
-        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
-        cargoType: 'General Cargo',
-        fullOrEmpty: 'Full',
-        location: idx === 0 ? 'A SHEL' : 'B YARD',
-        condition: 'Sound',
-        damageFlag: false,
+        sealNo1: c.sealNo ?? c.sealNo1 ?? '-',
+        sealNo2: c.sealNo2 ?? '-',
+        customSealNo: c.customSealNo ?? '-',
+        cargoType: c.cargoType ?? 'General Cargo',
+        fullOrEmpty: c.fullOrEmpty ?? 'Full',
+        location: c.location ?? 'A SHEL',
+        condition: c.condition ?? 'Sound',
+        damageFlag: Boolean(c.damageFlag),
         photos: cPhotos,
       };
     });
@@ -883,15 +836,16 @@ export class GateEventsComponent implements OnInit {
     const eventId = event.rawVisit?.visitId || event.id || 'VISIT-001';
     const cleanTruck = (event.truckNo || 'MH12AB1234').replace(/\s+/g, '').toUpperCase();
     const cleanContainer = (event.containerNo || 'MSCU1234567').replace(/\s+/g, '').toUpperCase();
-    const containerSize = event.rawVisit?.containerSize ? `${event.rawVisit.containerSize} FT` : '40 FT';
+    const primaryContainer = event.containers?.[0];
+    const containerSize = primaryContainer?.size || (event.rawVisit?.containerSize ? `${event.rawVisit.containerSize} FT` : '40 FT');
 
     return {
       eventId,
       truckNo: cleanTruck,
       containerNo: cleanContainer,
       containerSize,
-      fullOrEmpty: 'Full',
-      sealNo: 'TCLU7890123',
+      fullOrEmpty: primaryContainer?.fullOrEmpty || 'Full',
+      sealNo: primaryContainer?.sealNo1 && primaryContainer?.sealNo1 !== '-' ? primaryContainer.sealNo1 : ((event.rawVisit as any)?.sealNo || '-'),
       truckConfidence: event.rawVisit?.truckConfidence
         ? Math.round(event.rawVisit.truckConfidence * 100)
         : Math.max(95, event.confidence),
@@ -902,10 +856,10 @@ export class GateEventsComponent implements OnInit {
       overallConfidence: event.confidence,
       gate: event.gate.replace('GATE-', 'Gate ').replace('0', ''),
       terminal: 'Prosper CFS Terminal',
-      driver: event.driver || 'Ramesh Kumar',
-      driverPhone: '9876543210',
-      transporter: 'Shree Logistics Pvt. Ltd.',
-      appointmentLink: 'APPT-2025-05-17-00156',
+      driver: event.driver || 'Driver (Unassigned)',
+      driverPhone: (event.rawVisit as any)?.driverPhone || '9876543210',
+      transporter: (event.rawVisit as any)?.transporterName || 'Logistics Transporter',
+      appointmentLink: (event.rawVisit as any)?.appointmentNumber || `APPT-${eventId}`,
       operatorReviewStatus: event.status === 'Verified' ? 'Verified by Admin User' : 'Pending Operator Review',
       remarks: event.notes || 'No issues found',
       damageDetected: event.damageFlag,
@@ -916,7 +870,7 @@ export class GateEventsComponent implements OnInit {
       capturedImages: event.photos.map((p, idx) => ({
         title: `${idx + 1}. ${p.label}`,
         time: event.eventTime,
-        url: p.url || 'assets/gate/container-stencil.jpg',
+        url: p.url || '',
         tag: p.tag || 'CAM',
       })),
       timeline: [
@@ -1050,13 +1004,72 @@ export class GateEventsComponent implements OnInit {
     });
   }
 
+  public openRowLightbox(photos: GateCameraPhoto[], initialIndex: number = 0, eventTitle?: string, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    if (!photos || photos.length === 0) return;
+    const safeIndex = Math.max(0, Math.min(initialIndex, photos.length - 1));
+    this.activeLightboxGallery.set({
+      photos,
+      currentIndex: safeIndex,
+      eventTitle,
+    });
+  }
+
   public openLightbox(title: string, url: string, e?: MouseEvent): void {
     if (e) e.stopPropagation();
+    this.activeLightboxGallery.set({
+      photos: [{ label: title, tag: 'CAM', color: '#1f487e', url }],
+      currentIndex: 0,
+      eventTitle: title,
+    });
     this.activeLightboxPhoto.set({ title, url });
   }
 
+  public prevLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex - 1 + g.photos.length) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public nextLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex + 1) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public selectLightboxIndex(index: number, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || index < 0 || index >= g.photos.length) return g;
+      return { ...g, currentIndex: index };
+    });
+  }
+
   public closeLightbox(): void {
+    this.activeLightboxGallery.set(null);
     this.activeLightboxPhoto.set(null);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleGalleryKeydown(event: KeyboardEvent): void {
+    if (!this.activeLightboxGallery()) return;
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevLightboxPhoto();
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextLightboxPhoto();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeLightbox();
+    }
   }
 
   private showToast(msg: string): void {

@@ -1,0 +1,153 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.container-journey-card {
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14);
+
+  :host-context(.dark) & {
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  position: relative;
+  min-height: 290px;
+}
+
+.timeline-step {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-height: 40px;
+  padding: 2.5px 0;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    transform: translateX(3px);
+  }
+}
+
+/* Continuous connector line running seamlessly from this circle center to the next circle center */
+.timeline-connector-line {
+  position: absolute;
+  left: 14px;
+  /* Exactly at center of 28px (w-7) node */
+  top: 50%;
+  /* Starts at vertical center of this step's circle */
+  height: 100%;
+  /* Spans 100% of step height down to next step's circle center */
+  width: 2.5px;
+  transform: translateX(-50%);
+  background-color: #cbd5e1;
+  z-index: 1;
+  pointer-events: none;
+
+  &.line-completed {
+    background-color: #10b981;
+  }
+
+  &.line-to-yard {
+    background-color: #3b82f6;
+  }
+
+  &.line-to-inspection {
+    background-color: #f97316;
+  }
+
+  &.line-to-gateout {
+    background-color: #0284c7;
+  }
+}
+
+/* Milestone Node Badges (Outer Halo + Inner Core) */
+.timeline-node-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-node-badge {
+  position: relative;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.badge-completed {
+    background-color: #d1fae5;
+
+    .node-icon-core {
+      background-color: #059669;
+    }
+  }
+
+  &.badge-inyard {
+    background-color: #dbeafe;
+
+    .node-icon-core {
+      background-color: #2563eb;
+    }
+  }
+
+  &.badge-inspection {
+    background-color: #ffedd5;
+
+    .node-icon-core {
+      background-color: #ea580c;
+    }
+  }
+
+  &.badge-gateout {
+    background-color: #e0f2fe;
+
+    .node-icon-core {
+      background-color: #0284c7;
+    }
+  }
+
+  :host-context(.dark) & {
+    &.badge-completed {
+      background-color: rgba(5, 150, 105, 0.25);
+    }
+
+    &.badge-inyard {
+      background-color: rgba(37, 99, 235, 0.25);
+    }
+
+    &.badge-inspection {
+      background-color: rgba(234, 88, 12, 0.25);
+    }
+
+    &.badge-gateout {
+      background-color: rgba(2, 132, 199, 0.25);
+    }
+  }
+}
+
+.node-icon-core {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+
+  svg {
+    display: block;
+    margin: auto;
+  }
+}
