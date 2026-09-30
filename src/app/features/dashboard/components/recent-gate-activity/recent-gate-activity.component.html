@@ -1,179 +1,52 @@
 <div
-  class="dashboard-card flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
+  class="dashboard-card recent-gate-card flex h-full flex-col justify-between rounded-[12px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] relative overflow-hidden">
   <!-- Card Header -->
-  <div class="mb-4 flex items-center justify-between">
-    <h3 class="text-base font-semibold text-slate-900 dark:text-white">
-      {{ 'DASHBOARD.RECENT_GATE_ACTIVITY' | translate }}
-    </h3>
+  <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800/80">
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shrink-0 shadow-2xs">
+        <!-- Activity Pulse SVG Icon -->
+        <svg class="h-4.5 w-4.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="flex items-center gap-2 min-w-0">
+        <h3 class="text-sm font-bold text-[#0f2851] dark:text-white truncate">
+          Recent Gate Activity
+        </h3>
+        <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 shrink-0">
+          Last {{ latest().length }}
+        </span>
+      </div>
+    </div>
     <a
       routerLink="/gate-events"
-      class="view-all-link inline-flex items-center gap-1 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">
-      <span>{{ 'COMMON.VIEW_ALL' | translate }}</span>
-      <span class="view-all-arrow">→</span>
+      class="view-all-link inline-flex items-center gap-1 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 shrink-0">
+      <span>View All</span>
+      <span class="text-xs">→</span>
     </a>
   </div>
 
-  <!-- Table Container with Horizontal Scroll Safety -->
-  <div class="flex-1 overflow-x-auto">
-    <table class="activity-table w-full border-collapse text-left text-xs">
-      <thead>
-        <tr
-          class="border-b border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-700 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-300">
-          <th class="min-w-[95px] px-2.5 py-3 font-bold">{{ 'TABLE.TIME' | translate }}</th>
-          <th class="min-w-[55px] px-2 py-3 font-bold">{{ 'TABLE.TYPE' | translate }}</th>
-          <th class="min-w-[115px] px-2.5 py-3 font-bold">{{ 'TABLE.TRUCK_NO' | translate }}</th>
-          <th class="min-w-[130px] px-2.5 py-3 font-bold">{{ 'TABLE.CONTAINER_NO' | translate }}</th>
-          <th class="min-w-[75px] px-2 py-3 font-bold">{{ 'TABLE.SIZE_TYPE' | translate }}</th>
-          <th class="min-w-[75px] px-2 py-3 font-bold">{{ 'TABLE.DIRECTION' | translate }}</th>
-          <th class="min-w-[130px] px-2.5 py-3 font-bold">{{ 'TABLE.OCR_CONFIDENCE' | translate }}</th>
-          <th class="min-w-[90px] px-2.5 py-3 font-bold">{{ 'TABLE.STATUS' | translate }}</th>
-          <th class="min-w-[65px] px-2 py-3 text-center font-bold">Image</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
-        @for (item of activities(); track item.id) {
-          <tr class="activity-row transition-colors hover:bg-blue-50/40 dark:hover:bg-blue-950/20">
-            <!-- Time -->
-            <td class="whitespace-nowrap px-2.5 py-3 font-semibold text-slate-700 dark:text-slate-300">
-              {{ item.time }}
-            </td>
-
-            <!-- Type IN / OUT -->
-            <td class="px-2 py-3">
-              @if (item.type === 'IN') {
-                <span
-                  class="inline-flex items-center rounded-md bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  IN
-                </span>
-              } @else {
-                <span
-                  class="inline-flex items-center rounded-md bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
-                  OUT
-                </span>
-              }
-            </td>
-
-            <!-- Truck No. -->
-            <td class="whitespace-nowrap px-2.5 py-3 font-bold text-slate-900 dark:text-white">
-              {{ item.truckNo }}
-            </td>
-
-            <!-- Container No. -->
-            <td class="whitespace-nowrap px-2.5 py-3">
-              <span
-                class="container-pill inline-block rounded border border-blue-200/60 bg-blue-50 px-2 py-1 font-mono text-xs font-bold text-blue-700 transition-all dark:border-blue-800/40 dark:bg-blue-950/40 dark:text-blue-300">
-                {{ item.containerNo }}
-              </span>
-            </td>
-
-            <!-- Size/Type -->
-            <td class="whitespace-nowrap px-2 py-3 font-semibold text-slate-700 dark:text-slate-300">
-              {{ item.sizeType }}
-            </td>
-
-            <!-- Direction -->
-            <td class="whitespace-nowrap px-2 py-3 font-semibold text-slate-700 dark:text-slate-300">
-              {{ item.direction }}
-            </td>
-
-            <!-- OCR Result & Confidence -->
-            <td class="px-2.5 py-3">
-              <div class="flex items-center gap-1.5 whitespace-nowrap">
-                <span class="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
-                  {{ item.ocrResult }}
-                </span>
-                <span
-                  class="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                  [class.bg-emerald-100]="item.ocrConfidence >= 95"
-                  [class.text-emerald-800]="item.ocrConfidence >= 95"
-                  [class.dark:bg-emerald-950/60]="item.ocrConfidence >= 95"
-                  [class.dark:text-emerald-300]="item.ocrConfidence >= 95"
-                  [class.bg-amber-100]="item.ocrConfidence < 95"
-                  [class.text-amber-800]="item.ocrConfidence < 95"
-                  [class.dark:bg-amber-950/60]="item.ocrConfidence < 95"
-                  [class.dark:text-amber-300]="item.ocrConfidence < 95">
-                  {{ item.ocrConfidence }}%
-                </span>
-              </div>
-            </td>
-
-            <!-- Status -->
-            <td class="whitespace-nowrap px-2.5 py-3">
-              @if (item.status === 'Verified') {
-                <span
-                  class="inline-flex items-center rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  ● Verified
-                </span>
-              } @else if (item.status === 'Review') {
-                <span
-                  class="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                  ▲ Review
-                </span>
-              } @else {
-                <span
-                  class="inline-flex items-center rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 dark:border-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
-                  ✕ {{ item.status }}
-                </span>
-              }
-            </td>
-
-            <!-- Image Thumbnail -->
-            <td class="px-2 py-3 text-center">
-              <div
-                class="container-thumb group/img relative mx-auto h-8 w-12 overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:scale-110 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
-                @if (item.imageUrl) {
-                  <img
-                    [src]="item.imageUrl"
-                    alt="Container"
-                    class="h-full w-full object-cover transition-transform duration-200 group-hover/img:scale-105"
-                    loading="lazy" />
-                } @else {
-                  <div class="flex h-full w-full items-center justify-center text-xs font-bold text-slate-400">N/A</div>
-                }
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="9" class="py-10 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
-              No recent gate activity recorded for this site.
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Table Pagination Footer -->
-  <div class="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800">
-    <span class="text-xs text-gray-500 dark:text-gray-400">
-      Showing {{ showingStart() }} to {{ showingEnd() }} of {{ totalEntries() }} entries
-    </span>
-
-    <div class="flex items-center gap-1.5">
-      @for (page of pages; track page) {
-        <button
-          type="button"
-          (click)="onSelectPage(page)"
-          class="flex h-7 w-7 items-center justify-center rounded-md text-xs font-semibold transition-colors"
-          [class.bg-blue-600]="currentPage() === page"
-          [class.text-white]="currentPage() === page"
-          [class.bg-gray-50]="currentPage() !== page"
-          [class.text-gray-600]="currentPage() !== page"
-          [class.hover:bg-gray-100]="currentPage() !== page"
-          [class.dark:bg-gray-800]="currentPage() !== page"
-          [class.dark:text-gray-300]="currentPage() !== page"
-          [class.dark:hover:bg-gray-700]="currentPage() !== page">
-          {{ page }}
-        </button>
-      }
-      <button
-        type="button"
-        (click)="onNextPage()"
-        class="flex h-7 w-7 items-center justify-center rounded-md bg-gray-50 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-        aria-label="Next page">
-        ›
-      </button>
-    </div>
-  </div>
+  <!-- Table Viewport with Auto-Scroll & Container Bounds Protection -->
+  <ul class="table-scroll-viewport max-h-[245px] divide-y divide-slate-100 overflow-y-auto rounded-xl border border-slate-100 dark:divide-slate-800/80 dark:border-slate-800/60 min-w-0">
+    @for (item of latest(); track item.id) {
+      <li class="activity-row grid min-h-[48px] grid-cols-[auto_1fr_auto] items-center gap-x-2.5 px-3 py-2 hover:bg-blue-50/40 dark:hover:bg-slate-800/50 min-w-0">
+        <span class="whitespace-nowrap text-[11px] font-semibold text-slate-500 dark:text-slate-400 shrink-0">{{ item.time }}</span>
+        <div class="flex min-w-0 flex-col overflow-hidden">
+          <span class="truncate text-xs font-bold text-slate-900 dark:text-white leading-tight">
+            @if (item.gate) { <span class="font-semibold text-slate-500 dark:text-slate-400">{{ item.gate }} · </span> }{{ item.truckNo }}
+          </span>
+          <span class="truncate text-[11px] text-slate-500 dark:text-slate-400 leading-tight">Container: <span class="font-mono font-semibold text-blue-600 dark:text-blue-400">{{ item.containerNo }}</span></span>
+        </div>
+        <div class="flex flex-col items-end gap-1 shrink-0">
+          <span class="rounded-full px-2 py-0.5 text-[10px] font-bold"
+            [class]="item.type === 'IN' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-orange-50 text-orange-700 dark:bg-orange-950/60 dark:text-orange-300'">{{ item.type === 'IN' ? 'In' : 'Out' }}</span>
+          <span class="rounded-full px-2 py-0.5 text-[10px] font-bold"
+            [class]="item.status === 'Verified' || item.status === 'Completed' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300' : item.status === 'Flagged' ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-300' : 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'">{{ item.status }}</span>
+        </div>
+      </li>
+    } @empty {
+      <li class="py-8 text-center text-xs font-semibold text-slate-500 dark:text-slate-400">No recent gate activity recorded.</li>
+    }
+  </ul>
 </div>
+

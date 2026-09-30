@@ -25,6 +25,10 @@ export const routes: Routes = [
         loadChildren: () => import('app/features/dashboard/dashboard.routes').then((m) => m.DASHBOARD_ROUTES),
       },
       {
+        path: AppRoutes.ADMIN,
+        loadChildren: () => import('app/features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+      },
+      {
         path: AppRoutes.CLIENTS,
         loadChildren: () => import('app/features/clients/clients.routes').then((m) => m.CLIENTS_ROUTES),
       },
@@ -59,6 +63,10 @@ export const routes: Routes = [
       {
         path: AppRoutes.ALERTS,
         loadChildren: () => import('app/features/alerts/alerts.routes').then((m) => m.ALERTS_ROUTES),
+      },
+      {
+        path: AppRoutes.YARD_MAP,
+        loadChildren: () => import('app/features/yard-map/yard-map.routes').then((m) => m.YARD_MAP_ROUTES),
       },
       { path: '', pathMatch: 'full', redirectTo: AppRoutes.DASHBOARD },
     ],

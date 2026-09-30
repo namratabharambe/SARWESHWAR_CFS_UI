@@ -1,22 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ReportService } from 'shared/services/report.service';
 import { ReportCategory } from 'shared/types/report/report.interface';
-
-import { TranslatePipe } from 'shared/pipes';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslatePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsComponent {
   public readonly reportService = inject(ReportService);
+
+  public readonly isDateDropdownOpen = signal<boolean>(false);
+  public readonly isExportDropdownOpen = signal<boolean>(false);
+  public readonly isMoreMenuOpen = signal<boolean>(false);
 
   public readonly categories: {
     id: ReportCategory;
@@ -69,6 +70,12 @@ export class ReportsComponent {
     { value: 'last30days', label: 'Last 30 Days' },
     { value: 'monthToDate', label: 'Month to Date' },
   ] as const;
+
+  public readonly selectedPresetLabel = computed(() => {
+    const currentPreset = this.reportService.filter().preset;
+    const found = this.datePresets.find((dp) => dp.value === currentPreset);
+    return found ? found.label : 'Today';
+  });
 
   public setCategory(cat: ReportCategory): void {
     this.reportService.setCategory(cat);

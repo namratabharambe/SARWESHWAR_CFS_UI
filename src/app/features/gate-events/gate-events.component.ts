@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -28,6 +28,12 @@ import {
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
 export type { GateCameraPhoto };
+
+export interface ActiveLightboxGallery {
+  photos: GateCameraPhoto[];
+  currentIndex: number;
+  eventTitle?: string;
+}
 
 export interface GateContainerRecord {
   index: number;
@@ -102,7 +108,7 @@ export class GateEventsComponent implements OnInit {
   public readonly directionFilter = signal<string>('All');
   public readonly gateFilter = signal<string>('All');
   public readonly confidenceFilter = signal<string>('All');
-  public readonly dateFilter = signal<string>('17 May 2025');
+  public readonly dateFilter = signal<string>('');
   public readonly searchQuery = signal<string>('');
 
   public readonly cycleOptions = [
@@ -143,6 +149,21 @@ export class GateEventsComponent implements OnInit {
   public readonly alertMessage = signal<string>('');
   public readonly copyFeedback = signal<boolean>(false);
   public readonly exportDropdownOpen = signal<boolean>(false);
+  public readonly activeLightboxGallery = signal<ActiveLightboxGallery | null>(null);
+
+  public readonly currentLightboxPhoto = computed<GateCameraPhoto | null>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return null;
+    return g.photos[g.currentIndex] ?? null;
+  });
+
+  public readonly lightboxCounterText = computed<string>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return '';
+    return `${g.currentIndex + 1} / ${g.photos.length}`;
+  });
+
+  // Keep for backward compatibility if referenced elsewhere
   public readonly activeLightboxPhoto = signal<{ title: string; url: string } | null>(null);
 
   public readonly currentPage = signal<number>(1);
@@ -179,6 +200,7 @@ export class GateEventsComponent implements OnInit {
     this.currentPage.set(1);
     this.isNonErpView.set(false);
     this.selectedEventForDetails.set(null);
+    this.loadGateEvents();
   }
 
   public ngOnInit(): void {
@@ -189,6 +211,8 @@ export class GateEventsComponent implements OnInit {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
+    const cycle = this.cycleFilter();
+    const eventType = cycle === 'All' ? undefined : (cycle === 'IN' ? 'GATE_IN' : 'GATE_OUT');
 
     this.gateEventService
       .getVisits({
@@ -196,6 +220,7 @@ export class GateEventsComponent implements OnInit {
         pageSize: this.pageSize(),
         siteId,
         clientId,
+        eventType,
       })
       .subscribe({
         next: (response: VisitsPagedResponse) => {
@@ -216,6 +241,7 @@ export class GateEventsComponent implements OnInit {
             .getGateEvents({
               page: this.currentPage(),
               pageSize: this.pageSize(),
+              eventType,
             })
             .subscribe({
               next: (legacyRes) => {
@@ -633,12 +659,13 @@ export class GateEventsComponent implements OnInit {
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
     const list = this.events();
-    const arrivals = list.filter((e) => e.direction === 'IN').length;
-    const departures = list.filter((e) => e.direction === 'OUT').length;
-    const ocrVerified = list.filter((e) => e.status === 'Verified').length;
+    const total = this.totalCount();
+    const cycle = this.cycleFilter();
+    const arrivals = cycle === 'IN' ? total : (cycle === 'OUT' ? 0 : total);
+    const departures = cycle === 'OUT' ? total : (cycle === 'IN' ? 0 : total);
+    const ocrVerified = total;
     const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
-    const total = list.length;
 
     return {
       todayArrivals: arrivals,
@@ -646,7 +673,7 @@ export class GateEventsComponent implements OnInit {
       todayDepartures: departures,
       departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
       ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? `${Math.round((ocrVerified / total) * 100)}% of total` : '0%',
+      ocrVerifiedPercent: total > 0 ? '100% of total' : '0%',
       pendingReview: pendingReview,
       pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
       damagedCaptures: damagedCaptures,
@@ -658,13 +685,13 @@ export class GateEventsComponent implements OnInit {
   public readonly tabCounts = computed(() => {
     const list = this.events();
     return {
-      all: list.length,
-      arrivals: list.filter((e) => e.direction === 'IN').length,
-      departures: list.filter((e) => e.direction === 'OUT').length,
+      all: this.totalCount() || list.length,
+      arrivals: this.cycleFilter() === 'IN' ? this.totalCount() : list.filter((e) => e.direction === 'IN').length,
+      departures: this.cycleFilter() === 'OUT' ? this.totalCount() : list.filter((e) => e.direction === 'OUT').length,
     };
   });
 
-  // Filtered dataset (uses Cycle filter instead of tabs/direction/gate)
+  // Filtered dataset
   public readonly filteredEvents = computed<GateEventItem[]>(() => {
     const list = this.events();
     const cycle = this.cycleFilter();
@@ -672,7 +699,6 @@ export class GateEventsComponent implements OnInit {
     const query = this.searchQuery().trim().toLowerCase();
 
     return list.filter((item) => {
-      // Cycle filter replaces direction + gate + tabs
       if (cycle !== 'All' && item.direction !== cycle) return false;
 
       if (conf === 'High' && item.confidence < 95) return false;
@@ -695,10 +721,54 @@ export class GateEventsComponent implements OnInit {
   });
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
-    const list = this.filteredEvents();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
+    return this.filteredEvents();
   });
+
+  public readonly totalPages = computed<number>(() => {
+    return Math.max(1, Math.ceil(this.totalCount() / this.pageSize()));
+  });
+
+  public readonly visiblePageNumbers = computed<number[]>(() => {
+    const total = this.totalPages();
+    const current = this.currentPage();
+    const start = Math.max(1, Math.min(current - 2, total - 4 > 0 ? total - 4 : 1));
+    const end = Math.min(total, start + 4);
+    const pages: number[] = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  });
+
+  public setPage(page: number): void {
+    if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
+    this.currentPage.set(page);
+    this.loadGateEvents();
+  }
+
+  public prevPage(): void {
+    if (this.currentPage() > 1) {
+      this.setPage(this.currentPage() - 1);
+    }
+  }
+
+  public nextPage(): void {
+    if (this.currentPage() < this.totalPages()) {
+      this.setPage(this.currentPage() + 1);
+    }
+  }
+
+  public onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+    this.loadGateEvents();
+  }
+
+  public onCycleFilterChange(cycle: string): void {
+    this.cycleFilter.set(cycle);
+    this.currentPage.set(1);
+    this.loadGateEvents();
+  }
 
   public readonly isAllSelected = computed<boolean>(() => {
     const current = this.paginatedEvents();
@@ -717,6 +787,7 @@ export class GateEventsComponent implements OnInit {
       this.cycleFilter.set(this.gateMode() === 'out' ? 'OUT' : 'IN');
     }
     this.currentPage.set(1);
+    this.loadGateEvents();
   }
 
   public toggleSelectAll(): void {
@@ -1000,13 +1071,72 @@ export class GateEventsComponent implements OnInit {
     });
   }
 
+  public openRowLightbox(photos: GateCameraPhoto[], initialIndex: number = 0, eventTitle?: string, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    if (!photos || photos.length === 0) return;
+    const safeIndex = Math.max(0, Math.min(initialIndex, photos.length - 1));
+    this.activeLightboxGallery.set({
+      photos,
+      currentIndex: safeIndex,
+      eventTitle,
+    });
+  }
+
   public openLightbox(title: string, url: string, e?: MouseEvent): void {
     if (e) e.stopPropagation();
+    this.activeLightboxGallery.set({
+      photos: [{ label: title, tag: 'CAM', color: '#1f487e', url }],
+      currentIndex: 0,
+      eventTitle: title,
+    });
     this.activeLightboxPhoto.set({ title, url });
   }
 
+  public prevLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex - 1 + g.photos.length) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public nextLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex + 1) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public selectLightboxIndex(index: number, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || index < 0 || index >= g.photos.length) return g;
+      return { ...g, currentIndex: index };
+    });
+  }
+
   public closeLightbox(): void {
+    this.activeLightboxGallery.set(null);
     this.activeLightboxPhoto.set(null);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleGalleryKeydown(event: KeyboardEvent): void {
+    if (!this.activeLightboxGallery()) return;
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevLightboxPhoto();
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextLightboxPhoto();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeLightbox();
+    }
   }
 
   private showToast(msg: string): void {

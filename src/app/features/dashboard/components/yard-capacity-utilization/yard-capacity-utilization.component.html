@@ -1,0 +1,158 @@
+<div
+  class="dashboard-card yard-capacity-card flex h-full flex-col justify-between rounded-[12px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] relative overflow-hidden">
+  <!-- Card Header -->
+  <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800/80">
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-2xs">
+        <!-- Warehouse / BarChart3 SVG Icon -->
+        <svg class="h-4.5 w-4.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+      </div>
+      <h3 class="text-sm font-bold text-[#0f2851] dark:text-white truncate">
+        Yard Capacity & Utilization
+      </h3>
+    </div>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <!-- Mini Left & Right Scroll Buttons for Pillars -->
+      <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
+        <button
+          type="button"
+          (click)="scrollLeft()"
+          title="Scroll Left"
+          class="flex h-5 w-5 items-center justify-center rounded text-slate-500 hover:text-blue-600 hover:bg-white dark:hover:bg-slate-700 dark:text-slate-400 transition-colors cursor-pointer">
+          <svg class="h-3 w-3 fill-none stroke-current" stroke-width="2.5" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button
+          type="button"
+          (click)="scrollRight()"
+          title="Scroll Right"
+          class="flex h-5 w-5 items-center justify-center rounded text-slate-500 hover:text-blue-600 hover:bg-white dark:hover:bg-slate-700 dark:text-slate-400 transition-colors cursor-pointer">
+          <svg class="h-3 w-3 fill-none stroke-current" stroke-width="2.5" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <a
+        routerLink="/yard-map"
+        class="view-all-link inline-flex items-center gap-1 text-xs font-semibold text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 shrink-0">
+        <span>View Details</span>
+        <span class="text-xs">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bar Chart: Fills Upper Section with Complete Vertical Balance and Horizontal Scroll -->
+  <div class="relative flex flex-1 items-stretch gap-2 pt-1 pb-1 h-[195px] min-w-0 overflow-hidden">
+    <!-- Left: Y-Axis Percentages -->
+    <div class="flex flex-col justify-between pb-7 text-right text-[10px] font-bold text-slate-400 w-6 shrink-0 select-none">
+      <span>100%</span>
+      <span>50%</span>
+      <span>0%</span>
+    </div>
+
+    <!-- Right: Grid Lines + Scrollable Vertical Bars -->
+    <div class="relative flex-1 h-full min-w-0 flex flex-col justify-end">
+      <!-- Background Grid Lines -->
+      <div class="pointer-events-none absolute inset-x-0 top-1 bottom-7 flex flex-col justify-between z-0">
+        <div class="w-full border-b border-dashed border-slate-200/90 dark:border-slate-800"></div>
+        <div class="w-full border-b border-dashed border-slate-200/90 dark:border-slate-800"></div>
+        <div class="w-full border-b border-dashed border-slate-200/90 dark:border-slate-800"></div>
+      </div>
+
+      <!-- Horizontal Scrollable Container with Scrollbar at the Bottom -->
+      <div
+        #scrollContainer
+        class="bars-scroll-container relative z-10 flex h-full items-end gap-3.5 sm:gap-4 overflow-x-auto overflow-y-hidden pb-1 select-none">
+        @for (bar of blockBars(); track bar.name) {
+          <div class="group/bar flex flex-col items-center justify-end h-full relative cursor-pointer w-9 sm:w-10 shrink-0 pb-6">
+            <!-- Percentage Label Above Bar -->
+            <span class="text-[10px] sm:text-[11px] font-bold text-[#0f2851] dark:text-slate-200 mb-1 transition-transform duration-200 group-hover/bar:-translate-y-1">
+              {{ bar.percentage }}%
+            </span>
+
+            <!-- Rounded Capsule Bar Pill -->
+            <div
+              class="w-6 sm:w-7 rounded-t-xl rounded-b-xs transition-all duration-300 shadow-2xs group-hover/bar:brightness-110"
+              [class.bg-gradient-to-t]="true"
+              [class.from-[#0284c7]]="bar.colorClass === 'bar-blue'"
+              [class.to-[#38bdf8]]="bar.colorClass === 'bar-blue'"
+              [class.from-[#06b6d4]]="bar.colorClass === 'bar-teal'"
+              [class.to-[#2dd4bf]]="bar.colorClass === 'bar-teal'"
+              [style.height.%]="bar.percentage">
+            </div>
+
+            <!-- Block Letter Label Underneath -->
+            <span class="absolute bottom-1 text-xs font-bold text-slate-600 dark:text-slate-300 truncate w-full text-center">
+              {{ bar.name }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider Line -->
+  <div class="border-t border-slate-100 dark:border-slate-800/80 my-1.5"></div>
+
+  <!-- Bottom Section: Donut Gauge & TEU Metric -->
+  <div class="flex flex-col gap-1.5 pt-0.5 min-w-0">
+    <div class="flex items-center gap-3 min-w-0">
+      <!-- Donut Ring Gauge -->
+      <div class="utilization-donut-wrap relative flex h-[52px] w-[52px] shrink-0 items-center justify-center">
+        <svg class="h-[52px] w-[52px] -rotate-90 transform shrink-0" viewBox="0 0 64 64">
+          <defs>
+            <linearGradient id="donutProgressGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0284c7" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+          <!-- Background track -->
+          <circle
+            cx="32"
+            cy="32"
+            r="24"
+            fill="transparent"
+            stroke="currentColor"
+            stroke-width="5.5"
+            class="text-slate-100 dark:text-slate-800" />
+          <!-- Active Progress Stroke -->
+          <circle
+            cx="32"
+            cy="32"
+            r="24"
+            fill="transparent"
+            stroke="url(#donutProgressGrad)"
+            stroke-width="5.5"
+            stroke-linecap="round"
+            [style.stroke-dasharray]="donutStrokeDash()"
+            stroke-dashoffset="0" />
+        </svg>
+
+        <span class="donut-percentage-label absolute inset-0 flex items-center justify-center text-[11px] font-black text-[#0f2851] dark:text-white select-none">
+          {{ totalUtilization() }}%
+        </span>
+      </div>
+
+      <!-- Metric Details -->
+      <div class="flex flex-col justify-center min-w-0 flex-1">
+        <div class="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 min-w-0">
+          <span class="text-xs leading-none shrink-0">◇</span>
+          <span class="truncate">Total Yard Utilization</span>
+        </div>
+        <div class="flex items-baseline gap-1.5 mt-0.5 min-w-0">
+          <span class="text-base sm:text-lg font-black text-[#2563eb] dark:text-blue-400 leading-tight shrink-0">
+            {{ currentTeu() | number }}
+          </span>
+          <span class="text-xs font-semibold text-slate-400 dark:text-slate-500 truncate">
+            / {{ maxTeu() | number }} TEU
+          </span>
+        </div>
+      </div>
+      <img src="assets/images/yard-capacity-truck.png" alt="CFS Yard Capacity Truck"
+        class="ml-auto h-11 w-auto max-w-[80px] shrink-0 object-contain hidden sm:block" />
+    </div>
+  </div>
+</div>
+

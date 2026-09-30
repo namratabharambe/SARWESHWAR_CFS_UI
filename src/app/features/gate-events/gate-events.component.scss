@@ -2,3 +2,122 @@
   display: block;
   width: 100%;
 }
+
+.gate-events-page {
+  min-height: 100%;
+  padding-bottom: 1.5rem;
+}
+
+// Light Blue Color Shade Gradient + Solid Dark Blue Border + Hover Shadow
+.kpi-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e2f0fd 100%) !important;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+  }
+
+  :host-context(.dark) & {
+    background: linear-gradient(135deg, #111a2e 0%, #0d1527 100%) !important;
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45) !important;
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75) !important;
+    }
+  }
+}
+
+.gate-events-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fe 100%) !important;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  .filters-bar-container {
+    background: linear-gradient(180deg, #f0f7ff 0%, #e6f1fe 100%) !important;
+  }
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+  }
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+    border: 2px solid #1e3a8a !important;
+
+    .filters-bar-container {
+      background: #0f172a !important;
+    }
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.6) !important;
+    }
+  }
+}
+
+.camera-thumbnails-row {
+  min-width: 96px;
+}
+
+.camera-photo-thumb {
+  min-width: 44px;
+  max-width: 44px;
+  height: 32px;
+  border-radius: 6px;
+  outline: none;
+  border: 1px solid #e2e8f0;
+
+  :host-context(.dark) & {
+    border-color: #334155;
+  }
+}
+
+.photos-count-overlay {
+  user-select: none;
+}
+
+.lightbox-backdrop {
+  animation: lightboxFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lightbox-dialog {
+  animation: lightboxScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.lightbox-nav-btn {
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lightboxScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+
+
+
+

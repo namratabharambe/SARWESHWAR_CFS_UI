@@ -10,6 +10,8 @@ export class AppRoutes {
   public static readonly INVENTORY = 'inventory';
   public static readonly REPORTS = 'reports';
   public static readonly ALERTS = 'alerts';
+  public static readonly YARD_MAP = 'yard-map';
+  public static readonly ADMIN = 'admin';
   public static readonly MAINTENANCE = 'maintenance';
 }
 
