@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.gate-operations-card {
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Operation Mode Tabs (Gate In vs Gate Out) */
+.gate-mode-tab {
+  user-select: none;
+  outline: none;
+
+  &.active-gate-tab {
+    background-color: #eff6ff;
+    border-bottom-color: #2563eb !important;
+
+    :host-context(.dark) & {
+      background-color: rgba(30, 58, 138, 0.35);
+      border-bottom-color: #3b82f6 !important;
+    }
+  }
+
+  &.inactive-gate-tab {
+    background-color: transparent;
+    border-bottom-color: transparent !important;
+
+    &:hover {
+      background-color: rgba(241, 245, 249, 0.8);
+
+      :host-context(.dark) & {
+        background-color: rgba(30, 41, 59, 0.5);
+      }
+    }
+  }
+}
+
+/* Progress Bar Gradients matching reference design */
+.stage-progress-blue {
+  background: linear-gradient(90deg, #0284c7 0%, #38bdf8 65%, #bae6fd 100%);
+
+  :host-context(.dark) & {
+    background: linear-gradient(90deg, #0369a1 0%, #0284c7 60%, #38bdf8 100%);
+  }
+}
+
+.stage-progress-amber {
+  background: linear-gradient(90deg, #d97706 0%, #f59e0b 60%, #fde047 100%);
+
+  :host-context(.dark) & {
+    background: linear-gradient(90deg, #b45309 0%, #d97706 60%, #f59e0b 100%);
+  }
+}

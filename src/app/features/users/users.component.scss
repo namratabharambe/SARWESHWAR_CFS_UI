@@ -2,6 +2,38 @@
   display: block;
 }
 
+.admin-page-container {
+  animation: fadeIn 0.18s ease-in-out;
+}
+
+.admin-users-panel {
+  border-top: 2px solid #0d9488;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px -2px rgba(13, 148, 136, 0.08);
+  }
+}
+
+:host-context(.dark) {
+  .admin-users-panel {
+    border-top-color: #14b8a6;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 /* Custom Scrollbar for Modal Panels */
 .custom-scroll {
   scrollbar-width: thin;

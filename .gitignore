@@ -1,49 +1,10 @@
-# Backend folders
+/node_modules
+/dist
+/.angular
+/.idea
+/.vscode
+npm-debug.log
 CFS.Admin/
 CFS.Gate/
-
-# Compiled output
-/dist
-dist/
-/tmp
-/out-tsc
-/bazel-out
-bin/
-obj/
-publish/
-publish_syapi/
 *.zip
-
-# Node
-node_modules/
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-.vscode/*
-/.vscode
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
-
-# Angular
-.angular/cache
-.angular
-/.angular
-
-# Miscellaneous
-.DS_Store
-Thumbs.db
-.openai
 

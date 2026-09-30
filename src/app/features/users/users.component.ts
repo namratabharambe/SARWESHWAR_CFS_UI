@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminRepository } from 'core/data/admin.repository';
 import { AuthService } from 'core/auth/auth.service';
 import { User, Site, Role } from 'core/models/admin.models';
-import { PageHeaderComponent } from 'shared/components/organisms/page-header/page-header.component';
+import { RouterLink } from '@angular/router';
 import { StatusBadgeComponent } from 'shared/components/atoms/status-badge/status-badge.component';
 import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component';
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
@@ -31,7 +31,7 @@ export interface SiteRoleItem {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    PageHeaderComponent,
+    RouterLink,
     StatusBadgeComponent,
     AvatarComponent,
     ModalComponent,
@@ -71,8 +71,8 @@ export class UsersComponent implements OnInit {
 
   public readonly breadcrumbs = [
     { label: 'Home', url: '/dashboard' },
-    { label: 'Admin', url: '/users' },
-    { label: 'User' },
+    { label: 'Admin', url: '/admin' },
+    { label: 'Users' },
   ];
 
   public readonly form = new FormGroup({

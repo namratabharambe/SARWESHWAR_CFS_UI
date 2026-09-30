@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -28,6 +28,12 @@ import {
 export type GateDirection = 'IN' | 'OUT';
 export type EventStatus = 'Verified' | 'Review';
 export type { GateCameraPhoto };
+
+export interface ActiveLightboxGallery {
+  photos: GateCameraPhoto[];
+  currentIndex: number;
+  eventTitle?: string;
+}
 
 export interface GateContainerRecord {
   index: number;
@@ -143,6 +149,21 @@ export class GateEventsComponent implements OnInit {
   public readonly alertMessage = signal<string>('');
   public readonly copyFeedback = signal<boolean>(false);
   public readonly exportDropdownOpen = signal<boolean>(false);
+  public readonly activeLightboxGallery = signal<ActiveLightboxGallery | null>(null);
+
+  public readonly currentLightboxPhoto = computed<GateCameraPhoto | null>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return null;
+    return g.photos[g.currentIndex] ?? null;
+  });
+
+  public readonly lightboxCounterText = computed<string>(() => {
+    const g = this.activeLightboxGallery();
+    if (!g || !g.photos || g.photos.length === 0) return '';
+    return `${g.currentIndex + 1} / ${g.photos.length}`;
+  });
+
+  // Keep for backward compatibility if referenced elsewhere
   public readonly activeLightboxPhoto = signal<{ title: string; url: string } | null>(null);
 
   public readonly currentPage = signal<number>(1);
@@ -1050,13 +1071,72 @@ export class GateEventsComponent implements OnInit {
     });
   }
 
+  public openRowLightbox(photos: GateCameraPhoto[], initialIndex: number = 0, eventTitle?: string, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    if (!photos || photos.length === 0) return;
+    const safeIndex = Math.max(0, Math.min(initialIndex, photos.length - 1));
+    this.activeLightboxGallery.set({
+      photos,
+      currentIndex: safeIndex,
+      eventTitle,
+    });
+  }
+
   public openLightbox(title: string, url: string, e?: MouseEvent): void {
     if (e) e.stopPropagation();
+    this.activeLightboxGallery.set({
+      photos: [{ label: title, tag: 'CAM', color: '#1f487e', url }],
+      currentIndex: 0,
+      eventTitle: title,
+    });
     this.activeLightboxPhoto.set({ title, url });
   }
 
+  public prevLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex - 1 + g.photos.length) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public nextLightboxPhoto(e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || g.photos.length <= 1) return g;
+      const nextIdx = (g.currentIndex + 1) % g.photos.length;
+      return { ...g, currentIndex: nextIdx };
+    });
+  }
+
+  public selectLightboxIndex(index: number, e?: MouseEvent): void {
+    if (e) e.stopPropagation();
+    this.activeLightboxGallery.update((g) => {
+      if (!g || index < 0 || index >= g.photos.length) return g;
+      return { ...g, currentIndex: index };
+    });
+  }
+
   public closeLightbox(): void {
+    this.activeLightboxGallery.set(null);
     this.activeLightboxPhoto.set(null);
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  public handleGalleryKeydown(event: KeyboardEvent): void {
+    if (!this.activeLightboxGallery()) return;
+
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      this.prevLightboxPhoto();
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.nextLightboxPhoto();
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.closeLightbox();
+    }
   }
 
   private showToast(msg: string): void {
