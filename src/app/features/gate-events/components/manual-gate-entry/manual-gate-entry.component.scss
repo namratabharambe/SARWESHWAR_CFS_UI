@@ -16,3 +16,25 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.form-control:focus {
+  border-color: #525EA7 !important;
+  box-shadow: 0 0 0 2px rgba(82, 94, 167, 0.2) !important;
+}
+
+.btn-electric {
+  background-color: #525EA7 !important;
+
+  &:hover {
+    background-color: #434d8a !important;
+  }
+}
+
+.btn-add-plus {
+  background-color: #525EA7 !important;
+
+  &:hover {
+    background-color: #434d8a !important;
+  }
+}
+
