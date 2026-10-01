@@ -275,22 +275,22 @@ button:not(:disabled) {
   }
 }
 
-/* Electric Blue Action Button */
+/* CFS Theme Primary Action Button */
 .btn-electric {
-  background: #2563eb;
+  background: #525EA7;
   color: #ffffff;
-  font-weight: 600;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  font-weight: 700;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.18s ease;
 
   &:hover {
-    background: #1d4ed8;
-    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+    background: #434d8a;
+    box-shadow: 0 4px 6px -1px rgba(82, 94, 167, 0.25);
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.95);
   }
 }
 
@@ -757,30 +757,30 @@ app-kpi-metric-card>div:hover {
   }
 }
 
-/* 2. Unified Primary Action Buttons (Enterprise Blue Standard: #2563EB) */
+/* 2. Unified Primary Action Buttons (CFS Standard: #525EA7) */
 .btn-electric,
 .btn-primary,
 .btn-modal-submit {
-  background: #2563eb !important;
+  background: #525EA7 !important;
   color: #ffffff !important;
   font-family: 'Inter', sans-serif !important;
-  font-weight: 500 !important;
+  font-weight: 700 !important;
   border: 1px solid transparent !important;
-  border-radius: 8px !important;
+  border-radius: 0.75rem !important;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
 
   &:hover:not(:disabled) {
-    background: #1d4ed8 !important;
+    background: #434d8a !important;
     transform: translateY(-0.5px) !important;
-    box-shadow: 0 2px 6px 0 rgba(37, 99, 235, 0.25) !important;
+    box-shadow: 0 4px 6px -1px rgba(82, 94, 167, 0.25) !important;
   }
 
   &:focus-visible {
     outline: none !important;
     box-shadow:
       0 0 0 2px #ffffff,
-      0 0 0 4px #3b82f6 !important;
+      0 0 0 4px #525EA7 !important;
   }
 
   &:active:not(:disabled) {
