@@ -108,8 +108,8 @@
     </div>
   </header>
 
-  <!-- 6 Top KPI Metric Cards -->
-  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6 min-w-0">
+  <!-- 5 Top KPI Metric Cards (Hazardous card removed) -->
+  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
     <!-- 1. Total Containers -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
@@ -194,28 +194,7 @@
       </div>
     </div>
 
-    <!-- 5. Hazardous -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
-          <span class="material-icons-outlined text-lg">warning</span>
-        </div>
-        <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-rose-600 dark:text-rose-400">{{
-            'INVENTORY.HAZARDOUS' | translate
-          }}</span>
-          <div class="text-xl font-black leading-tight text-rose-700 dark:text-rose-400">
-            {{ inventoryService.kpiMetrics().hazardousCount }}
-          </div>
-        </div>
-      </div>
-      <div class="mt-2 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
-        ↑ {{ inventoryService.kpiMetrics().hazardousTrend }}
-      </div>
-    </div>
-
-    <!-- 6. Overstay (>7 Days) -->
+    <!-- 5. Overstay (>7 Days) -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -239,9 +218,10 @@
 
   <!-- Analytics Row: Inventory by Type (LEFT) + Location Utilization (RIGHT) in ONE ROW on desktop -->
   <section class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-    <!-- LEFT CARD: Inventory by Type -->
+    <!-- LEFT CARD: Inventory by Type (Export, Import, Empty) -->
     <div class="inventory-analytics-card flex flex-col justify-between rounded-[14px] p-4 shadow-xs">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+      <!-- Card Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
         <div class="flex items-center gap-2">
           <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">pie_chart</span>
           <h3 class="text-sm font-black text-[#0f2851] dark:text-white">{{ 'INVENTORY.BY_TYPE' | translate }}</h3>
@@ -251,87 +231,91 @@
         </a>
       </div>
 
+      <!-- Card Content: Donut + 3 Balanced Stat Tiles -->
       <div class="my-auto flex flex-col sm:flex-row items-center justify-between gap-5 py-2">
         <!-- Donut Graphic -->
-        <div class="relative flex h-36 w-36 flex-shrink-0 items-center justify-center">
+        <div class="relative flex h-32 w-32 flex-shrink-0 items-center justify-center">
           <svg class="h-full w-full -rotate-90 transform" viewBox="0 0 36 36">
+            <!-- Background Ring -->
             <path
               class="text-slate-100 dark:text-slate-800/60"
               stroke-width="4.2"
               stroke="currentColor"
               fill="none"
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <!-- 40' HC 50.8% -->
-            <path
-              stroke="#2563eb"
-              stroke-width="4.2"
-              stroke-dasharray="50.8, 100"
-              stroke-dashoffset="0"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <!-- 20' GP 35.1% -->
-            <path
-              stroke="#10b981"
-              stroke-width="4.2"
-              stroke-dasharray="35.1, 100"
-              stroke-dashoffset="-51"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <!-- 40' GP 5.8% -->
-            <path
-              stroke="#06b6d4"
-              stroke-width="4.2"
-              stroke-dasharray="5.8, 100"
-              stroke-dashoffset="-86.5"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <!-- Reefer 3.9% -->
-            <path
-              stroke="#f59e0b"
-              stroke-width="4.2"
-              stroke-dasharray="3.9, 100"
-              stroke-dashoffset="-92.5"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <!-- OT / FR 2.4% -->
-            <path
-              stroke="#f43f5e"
-              stroke-width="4.2"
-              stroke-dasharray="2.4, 100"
-              stroke-dashoffset="-96.5"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <!-- Export -->
+            @if (inventoryService.typeDistributions()[0].percent > 0) {
+              <path
+                stroke="#2563eb"
+                stroke-width="4.2"
+                [attr.stroke-dasharray]="inventoryService.typeDistributions()[0].percent + ', 100'"
+                stroke-dashoffset="0"
+                stroke-linecap="round"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            }
+            <!-- Import -->
+            @if (inventoryService.typeDistributions()[1].percent > 0) {
+              <path
+                stroke="#10b981"
+                stroke-width="4.2"
+                [attr.stroke-dasharray]="inventoryService.typeDistributions()[1].percent + ', 100'"
+                [attr.stroke-dashoffset]="-inventoryService.typeDistributions()[0].percent"
+                stroke-linecap="round"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            }
+            <!-- Empty -->
+            @if (inventoryService.typeDistributions()[2].percent > 0) {
+              <path
+                stroke="#8b5cf6"
+                stroke-width="4.2"
+                [attr.stroke-dasharray]="inventoryService.typeDistributions()[2].percent + ', 100'"
+                [attr.stroke-dashoffset]="-(inventoryService.typeDistributions()[0].percent + inventoryService.typeDistributions()[1].percent)"
+                stroke-linecap="round"
+                fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            }
           </svg>
-          <div class="absolute flex flex-col items-center justify-center text-center">
-            <span class="text-2xl font-black text-[#0f2851] dark:text-white leading-tight">2,456</span>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ 'COMMON.TOTAL' | translate }}</span>
+          <div class="absolute flex flex-col items-center justify-center text-center pointer-events-none">
+            <span class="text-xl font-black text-[#0f2851] dark:text-white leading-tight">
+              {{ inventoryService.kpiMetrics().totalContainers | number }}
+            </span>
+            <span class="text-[9px] font-bold uppercase tracking-widest text-slate-400">{{ 'COMMON.TOTAL' | translate }}</span>
           </div>
         </div>
 
-        <!-- Structured Legend Grid -->
-        <div class="grid grid-cols-2 gap-x-4 gap-y-2 flex-1 w-full">
-          @for (d of inventoryService.typeDistributions; track d.type) {
-            <div class="flex items-center justify-between rounded-lg border border-slate-200/80 bg-white/80 px-2.5 py-1.5 shadow-xs dark:border-slate-800 dark:bg-slate-900/50">
-              <div class="flex items-center gap-2 min-w-0">
-                <span class="h-2.5 w-2.5 flex-shrink-0 rounded-full" [style.background-color]="d.color"></span>
-                <span class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{{ d.type }}</span>
-                <span class="text-[11px] font-medium text-slate-400">({{ d.count }})</span>
+        <!-- 3-Column Compact Stat Tiles (Export, Import, Empty) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-1 w-full">
+          @for (d of inventoryService.typeDistributions(); track d.type) {
+            <div class="flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white/90 p-2.5 shadow-2xs dark:border-slate-800 dark:bg-slate-900/60">
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="h-2 w-2 rounded-full shrink-0" [style.background-color]="d.color"></span>
+                  <span class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate">{{ d.type }}</span>
+                </div>
+                <span class="font-mono text-xs font-black" [style.color]="d.color">{{ d.percent }}%</span>
               </div>
-              <span class="ml-2 font-mono text-xs font-black text-[#0f2851] dark:text-blue-300">{{ d.percent }}%</span>
+              <div class="text-base font-black text-[#0f2851] dark:text-white leading-tight mb-2">
+                {{ d.count | number }}
+                <span class="text-[10px] font-normal text-slate-400">units</span>
+              </div>
+              <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                <div
+                  class="h-full rounded-full transition-all duration-500"
+                  [style.background-color]="d.color"
+                  [style.width.%]="d.percent"></div>
+              </div>
             </div>
           }
         </div>
       </div>
     </div>
 
-    <!-- RIGHT CARD: Location Utilization -->
+    <!-- RIGHT CARD: Location Utilization (Yard and Gate) -->
     <div class="inventory-analytics-card flex flex-col justify-between rounded-[14px] p-4 shadow-xs">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+      <!-- Card Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 dark:border-slate-800">
         <div class="flex items-center gap-2">
           <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">grid_view</span>
           <h3 class="text-sm font-black text-[#0f2851] dark:text-white">{{ 'INVENTORY.UTILIZATION' | translate }}</h3>
@@ -341,270 +325,108 @@
         </a>
       </div>
 
-      <div class="mt-2.5 flex items-baseline justify-between">
-        <div class="flex items-baseline gap-2">
-          <span class="text-xs font-bold text-slate-500">{{ 'INVENTORY.OVERALL_UTILIZATION' | translate }}:</span>
-          <span class="text-lg font-black text-[#0f2851] dark:text-white">52%</span>
-        </div>
-        <span class="font-mono text-xs font-bold text-slate-400">1,280 / 2,400 TEU</span>
-      </div>
-
-      <!-- Block Utilization Progress Rows -->
-      <div class="mt-2.5 space-y-1.5 text-xs">
-        @for (bu of inventoryService.blockUtilizations; track bu.block) {
-          <div class="flex items-center justify-between gap-2">
-            <span class="w-14 text-[11px] font-bold text-slate-600 dark:text-slate-400">Block {{ bu.block }}</span>
-            <div class="flex flex-1 items-center gap-2">
-              <span class="w-8 font-mono text-[11px] font-bold text-slate-800 dark:text-slate-200">{{ bu.percent }}%</span>
-              <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-200/70 dark:bg-slate-800/70">
-                <div class="h-full rounded-full bg-blue-600" [style.width.%]="bu.percent"></div>
-              </div>
-              <span class="w-16 text-right font-mono text-[10px] font-medium text-slate-400">{{ bu.occupied }} / {{ bu.capacity }}</span>
-            </div>
+      <!-- Overall Utilization Headline -->
+      <div class="my-auto py-1">
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="flex items-baseline gap-2">
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">{{ 'INVENTORY.OVERALL_UTILIZATION' | translate }}:</span>
+            <span class="text-base font-black text-[#0f2851] dark:text-white">62%</span>
+            <span class="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Optimal
+            </span>
           </div>
-        }
+          <span class="font-mono text-xs font-bold text-slate-500 dark:text-slate-300">1,776 / 3,000 TEU</span>
+        </div>
+
+        <!-- 2 Side-by-Side Utilization Cards: Yard and Gate -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          @for (lu of inventoryService.locationUtilizations(); track lu.location) {
+            <div class="flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white/90 p-2.5 shadow-2xs dark:border-slate-800 dark:bg-slate-900/60">
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="material-icons-outlined text-sm text-[#525EA7]">{{ lu.icon || 'domain' }}</span>
+                  <div>
+                    <span class="text-xs font-bold text-slate-800 dark:text-slate-100 block">{{ lu.location }}</span>
+                  </div>
+                </div>
+                <span class="font-mono text-xs font-black text-[#0f2851] dark:text-white">{{ lu.percent }}%</span>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800 mb-1.5">
+                <div
+                  class="h-full rounded-full transition-all duration-500"
+                  [style.background-color]="lu.color"
+                  [style.width.%]="lu.percent"></div>
+              </div>
+
+              <!-- Occupied / Capacity footer -->
+              <div class="flex items-center justify-between text-[10px]">
+                <span class="font-mono font-medium text-slate-600 dark:text-slate-300">{{ lu.occupied | number }} / {{ lu.capacity | number }} TEU</span>
+                <span class="font-medium text-slate-400">{{ lu.capacity - lu.occupied | number }} free</span>
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Filter Section with Hide/Show Filters Toggle -->
+  <!-- Filter Section: Gate In & Gate Out Buttons -->
   <section class="inventory-filter-card relative z-20 rounded-[14px] p-4 shadow-xs">
-    <!-- Filter Card Header -->
-    <div class="flex flex-wrap items-center justify-between gap-3">
-      <!-- Left: Global Search Input (when expanded or collapsed) -->
-      <div class="relative min-w-[280px] flex-1">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+      <!-- Left: Two Buttons - Gate In and Gate Out with Live Status -->
+      <div class="flex items-center gap-2.5 w-full sm:w-auto">
+        <!-- 1. Gate In Button -->
+        <button
+          type="button"
+          (click)="selectGateMode('GATE_IN')"
+          [class.bg-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.text-white]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.shadow-md]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.border-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.bg-white]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          [class.text-slate-700]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          [class.border-slate-200]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          [class.dark:bg-[#111a2e]]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          [class.dark:text-slate-200]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          [class.dark:border-slate-800]="inventoryService.activeGateMode() !== 'GATE_IN'"
+          class="flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-xs font-bold transition-all cursor-pointer hover:opacity-90 active:scale-95">
+          <span class="material-icons-outlined text-base">login</span>
+          <span>Gate In</span>
+        </button>
+
+        <!-- 2. Gate Out Button -->
+        <button
+          type="button"
+          (click)="selectGateMode('GATE_OUT')"
+          [class.bg-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.text-white]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.shadow-md]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.border-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.bg-white]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          [class.text-slate-700]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          [class.border-slate-200]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          [class.dark:bg-[#111a2e]]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          [class.dark:text-slate-200]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          [class.dark:border-slate-800]="inventoryService.activeGateMode() !== 'GATE_OUT'"
+          class="flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-xl border px-5 py-2.5 text-xs font-bold transition-all cursor-pointer hover:opacity-90 active:scale-95">
+          <span class="material-icons-outlined text-base">logout</span>
+          <span>Gate Out</span>
+        </button>
+      </div>
+
+      <!-- Right: Search Input -->
+      <div class="relative w-full sm:w-72">
         <span class="material-icons-outlined absolute left-3 top-2.5 text-sm text-slate-400">search</span>
         <input
           type="text"
           [value]="inventoryService.filter().searchQuery"
           (input)="inventoryService.setSearchQuery($any($event.target).value)"
           [placeholder]="'INVENTORY.SEARCH_PLACEHOLDER' | translate"
-          class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-12 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
-        <kbd
-          class="pointer-events-none absolute right-2.5 top-2 rounded bg-slate-200/80 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-          ⌘ K
-        </kbd>
-      </div>
-
-      <!-- Right: Action Controls (Reset, and Filters Toggle) -->
-      <div class="flex items-center gap-2">
-        @if (activeFilterCount() > 0) {
-          <span class="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-            {{ activeFilterCount() }} active
-          </span>
-          <button
-            type="button"
-            (click)="inventoryService.resetFilters()"
-            class="flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 cursor-pointer"
-            [title]="'COMMON.RESET' | translate">
-            <span class="material-icons text-sm">refresh</span>
-            <span>{{ 'COMMON.RESET' | translate }}</span>
-          </button>
-        }
-
-        <!-- Filters Toggle Button on Far Right Corner -->
-        <button
-          type="button"
-          (click)="isFilterVisible.set(!isFilterVisible())"
-          class="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
-          <span class="material-icons-outlined text-sm text-blue-600">tune</span>
-          <span>Filters</span>
-          <span class="material-icons text-sm text-slate-400">
-            {{ isFilterVisible() ? 'expand_less' : 'expand_more' }}
-          </span>
-        </button>
+          class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-3 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
       </div>
     </div>
-
-    <!-- Detailed Filter Grid (Visible when isFilterVisible() is true) -->
-    @if (isFilterVisible()) {
-      <div class="mt-4 space-y-3.5 border-t border-slate-100 pt-3.5 dark:border-slate-800">
-        <!-- SECOND ROW: Container No, Shipping Line, Block, Row, Bay (5 Equal Columns) -->
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-          <!-- 1. Container No -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'TABLE.CONTAINER_NO' | translate
-            }}</label>
-            <div class="relative flex items-center">
-              <span
-                class="material-icons-outlined pointer-events-none absolute left-2.5 text-sm text-slate-400">
-                inventory_2
-              </span>
-              <input
-                type="text"
-                [value]="inventoryService.filter().containerNo"
-                (input)="inventoryService.updateFilter('containerNo', $any($event.target).value)"
-                [placeholder]="'INVENTORY.ENTER_CONTAINER_NO' | translate"
-                class="h-9 w-full rounded-xl border border-slate-200 bg-white pl-8 pr-7 text-xs font-bold text-slate-800 placeholder-slate-400 placeholder:font-normal focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500" />
-              @if (inventoryService.filter().containerNo) {
-                <button
-                  type="button"
-                  (click)="inventoryService.updateFilter('containerNo', '')"
-                  class="absolute right-2 flex h-4 w-4 items-center justify-center rounded-full text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-700 dark:hover:text-slate-200 cursor-pointer">
-                  <span class="text-xs leading-none">&times;</span>
-                </button>
-              }
-            </div>
-          </div>
-
-          <!-- 2. Shipping Line -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.LINE' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="shippingLineOptions()"
-              [value]="inventoryService.filter().shippingLine"
-              (valueChange)="inventoryService.updateFilter('shippingLine', $event)"
-              placeholder="All Lines"
-              [searchable]="true" />
-          </div>
-
-          <!-- 3. Block -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.BLOCK' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="blockOptions()"
-              [value]="inventoryService.filter().block"
-              (valueChange)="inventoryService.updateFilter('block', $event)"
-              placeholder="All Blocks" />
-          </div>
-
-          <!-- 4. Row -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.ROW' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="rowOptions()"
-              [value]="inventoryService.filter().row"
-              (valueChange)="inventoryService.updateFilter('row', $event)"
-              placeholder="All Rows" />
-          </div>
-
-          <!-- 5. Bay -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.BAY' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="bayOptions()"
-              [value]="inventoryService.filter().bay"
-              (valueChange)="inventoryService.updateFilter('bay', $event)"
-              placeholder="All Bays" />
-          </div>
-        </div>
-
-        <!-- THIRD ROW: Tier, Size, Type, Status, Full / Empty (5 Equal Columns) -->
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-          <!-- 6. Tier -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.TIER' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="tierOptions()"
-              [value]="inventoryService.filter().tier"
-              (valueChange)="inventoryService.updateFilter('tier', $event)"
-              placeholder="All Tiers" />
-          </div>
-
-          <!-- 7. Size -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.SIZE' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="sizeOptions()"
-              [value]="inventoryService.filter().size"
-              (valueChange)="inventoryService.updateFilter('size', $event)"
-              placeholder="All Sizes" />
-          </div>
-
-          <!-- 8. Type -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.TYPE' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="typeOptions()"
-              [value]="inventoryService.filter().type"
-              (valueChange)="inventoryService.updateFilter('type', $event)"
-              placeholder="All Types" />
-          </div>
-
-          <!-- 9. Status -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.STATUS' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="statusOptions()"
-              [value]="inventoryService.filter().status"
-              (valueChange)="inventoryService.updateFilter('status', $event)"
-              placeholder="All Statuses" />
-          </div>
-
-          <!-- 10. Full / Empty -->
-          <div>
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.FULL_EMPTY' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="fullEmptyFormattedOptions()"
-              [value]="inventoryService.filter().fullEmpty"
-              (valueChange)="inventoryService.updateFilter('fullEmpty', $event)"
-              placeholder="All States" />
-          </div>
-        </div>
-
-        <!-- FOURTH ROW: Customer + More Filters Button -->
-        <div class="flex flex-wrap items-end gap-3 pt-1">
-          <div class="w-full sm:w-72">
-            <label class="mb-1 block text-xs font-bold text-slate-700 dark:text-slate-300">{{
-              'FILTER.CUSTOMER' | translate
-            }}</label>
-            <app-dropdown
-              [fullWidth]="true"
-              size="sm"
-              [options]="customerOptions()"
-              [value]="inventoryService.filter().customer"
-              (valueChange)="inventoryService.updateFilter('customer', $event)"
-              placeholder="All Customers"
-              [searchable]="true" />
-          </div>
-
-          <button
-            type="button"
-            (click)="isAdvancedFiltersOpen.set(!isAdvancedFiltersOpen())"
-            class="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 text-xs font-bold text-blue-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-blue-400 cursor-pointer">
-            <span>{{ 'FILTER.MORE' | translate }}</span>
-            <span class="text-[10px]">⌄</span>
-          </button>
-        </div>
-      </div>
-    }
   </section>
 
   <!-- Container Table Card (Full Width) -->
@@ -612,9 +434,23 @@
     <!-- Table Subheader Bar -->
     <div
       class="flex flex-wrap items-center justify-between border-b border-slate-100 bg-slate-50/50 px-5 py-3 dark:border-slate-800 dark:bg-slate-800/30">
-      <span class="text-xs font-bold text-[#0f2851] dark:text-slate-200">
-        Showing 1 to {{ inventoryService.paginatedContainers().length }} of 2,456 entries
-      </span>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-[#0f2851] dark:text-slate-200">
+          Showing 1 to {{ inventoryService.paginatedContainers().length }} of {{ inventoryService.filteredContainers().length }} entries
+        </span>
+        <span
+          class="inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold"
+          [class.bg-blue-50]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.text-blue-700]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.dark:bg-blue-950/60]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.dark:text-blue-300]="inventoryService.activeGateMode() === 'GATE_IN'"
+          [class.bg-purple-50]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.text-purple-700]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.dark:bg-purple-950/60]="inventoryService.activeGateMode() === 'GATE_OUT'"
+          [class.dark:text-purple-300]="inventoryService.activeGateMode() === 'GATE_OUT'">
+          {{ inventoryService.activeGateMode() === 'GATE_IN' ? 'Gate In' : 'Gate Out' }}
+        </span>
+      </div>
 
       <div class="flex items-center gap-2">
         <!-- Refresh Button -->
@@ -623,7 +459,7 @@
           (click)="refresh()"
           class="flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 cursor-pointer"
           [title]="'COMMON.REFRESH' | translate">
-          <span class="material-icons text-sm">refresh</span>
+          <span class="material-icons text-sm" [class.animate-spin]="inventoryService.isLoading()">refresh</span>
         </button>
 
         <!-- Export CSV Button -->
@@ -656,16 +492,22 @@
                 <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.CONTAINER_NO' | translate }}
               </label>
               <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
-                <input type="checkbox" checked class="rounded" /> {{ 'TABLE.SIZE_TYPE' | translate }}
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.SIZE_TYPE' | translate }}
               </label>
               <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
-                <input type="checkbox" checked class="rounded" /> {{ 'TABLE.LINE' | translate }}
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.FULL_EMPTY' | translate }}
               </label>
               <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
-                <input type="checkbox" checked class="rounded" /> {{ 'TABLE.FULL_EMPTY' | translate }}
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.LOCATION' | translate }}
               </label>
               <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
-                <input type="checkbox" checked class="rounded" /> {{ 'TABLE.LOCATION' | translate }}
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.LAST_ACTION' | translate }}
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.LAST_UPDATED' | translate }}
+              </label>
+              <label class="flex items-center gap-2 py-1 text-xs font-medium text-slate-700 dark:text-slate-200">
+                <input type="checkbox" checked disabled class="rounded" /> {{ 'TABLE.DAYS_IN_YARD' | translate }}
               </label>
             </div>
           }
@@ -673,7 +515,7 @@
       </div>
     </div>
 
-    <!-- Table Container -->
+    <!-- Table Container (Line, Status, Holds, Actions removed as requested) -->
     <div class="overflow-x-auto">
       <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
         <thead
@@ -681,21 +523,26 @@
           <tr>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.CONTAINER_NO' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.SIZE_TYPE' | translate }}</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LINE' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.FULL_EMPTY' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LOCATION' | translate }}</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.STATUS' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LAST_ACTION' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LAST_UPDATED' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.DAYS_IN_YARD' | translate }}</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.HOLDS' | translate }}</th>
-            <th class="px-4 py-3.5 text-right whitespace-nowrap">{{ 'TABLE.ACTIONS' | translate }}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
-          @if (inventoryService.paginatedContainers().length === 0) {
+          @if (inventoryService.isLoading()) {
             <tr>
-              <td colspan="11" class="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
+              <td colspan="7" class="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <span class="material-icons animate-spin text-2xl text-[#525EA7]">refresh</span>
+                  <p>Loading live {{ inventoryService.activeGateMode() === 'GATE_IN' ? 'Gate In' : 'Gate Out' }} inventory data...</p>
+                </div>
+              </td>
+            </tr>
+          } @else if (inventoryService.paginatedContainers().length === 0) {
+            <tr>
+              <td colspan="7" class="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
                 <span class="material-icons-outlined mb-2 text-3xl text-slate-400">search_off</span>
                 <p>{{ 'INVENTORY.NO_CONTAINERS' | translate }}</p>
               </td>
@@ -727,12 +574,7 @@
                 {{ c.sizeType }}
               </td>
 
-              <!-- 3. Line -->
-              <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-800 dark:text-slate-200">
-                {{ c.line }}
-              </td>
-
-              <!-- 4. Full / Empty Pill -->
+              <!-- 3. Full / Empty Pill -->
               <td class="whitespace-nowrap px-4 py-3">
                 <span
                   class="inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold"
@@ -746,103 +588,34 @@
                 </span>
               </td>
 
-              <!-- 5. Current Location -->
-              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-[#0f2851] dark:text-white">
-                {{ c.currentLocation }}
-              </td>
-
-              <!-- 6. Yard Status -->
-              <td class="whitespace-nowrap px-4 py-3">
-                <span
-                  class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-0.5 text-[11px] font-bold"
-                  [ngClass]="{
-                    'border border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300':
-                      c.yardStatus === 'In Yard',
-                    'border border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300':
-                      c.yardStatus === 'Overstay',
-                    'border border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/60 dark:text-rose-300':
-                      c.yardStatus === 'Hold',
-                    'border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300':
-                      c.yardStatus === 'Ready Out',
-                  }">
-                  <span
-                    class="h-1.5 w-1.5 rounded-full"
-                    [ngClass]="{
-                      'bg-emerald-500': c.yardStatus === 'In Yard',
-                      'bg-amber-500': c.yardStatus === 'Overstay',
-                      'bg-rose-500': c.yardStatus === 'Hold',
-                      'bg-blue-500': c.yardStatus === 'Ready Out',
-                    }"></span>
-                  <span>{{ c.yardStatus }}</span>
+              <!-- 4. Location: Shows "In Yard" -->
+              <td class="whitespace-nowrap px-4 py-3 font-bold">
+                <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                  <span>In Yard</span>
                 </span>
               </td>
 
-              <!-- 7. Last Action -->
+              <!-- 5. Last Action -->
               <td class="whitespace-nowrap px-4 py-3 font-medium text-slate-700 dark:text-slate-300">
-                {{ c.lastAction }}
+                <span class="inline-flex items-center gap-1">
+                  <span class="material-icons-outlined text-xs text-slate-400">
+                    {{ c.lastAction === 'Gated Out' ? 'logout' : 'login' }}
+                  </span>
+                  <span>{{ c.lastAction }}</span>
+                </span>
               </td>
 
-              <!-- 8. Last Updated -->
+              <!-- 6. Arrival Date / Last Updated -->
               <td class="whitespace-nowrap px-4 py-3 text-slate-500 font-medium dark:text-slate-400">
                 {{ c.lastUpdated }}
               </td>
 
-              <!-- 9. Days in Yard -->
+              <!-- 7. Days in Yard (Depends upon arrival date) -->
               <td class="whitespace-nowrap px-4 py-3 font-mono font-bold">
-                <span [class.text-rose-600]="c.daysInYard > 7" [class.text-slate-800]="c.daysInYard <= 7">
-                  {{ c.daysInYard }}
+                <span [class.text-rose-600]="c.daysInYard > 7" [class.text-slate-800]="c.daysInYard <= 7" [class.dark:text-slate-200]="c.daysInYard <= 7">
+                  {{ c.daysInYard }} {{ c.daysInYard === 1 ? 'day' : 'days' }}
                 </span>
-              </td>
-
-              <!-- 10. Holds -->
-              <td class="whitespace-nowrap px-4 py-3">
-                @if (c.holds && c.holds.length > 0) {
-                  <span class="inline-flex rounded-md bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-600 border border-rose-200">
-                    {{ c.holds[0] }}
-                  </span>
-                } @else {
-                  <span class="text-slate-400">-</span>
-                }
-              </td>
-
-              <!-- 11. Actions -->
-              <td class="whitespace-nowrap px-4 py-3 text-right" (click)="$event.stopPropagation()">
-                <div class="flex items-center justify-end gap-1 text-slate-400">
-                  <button
-                    type="button"
-                    (click)="openDrawer(c)"
-                    class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 cursor-pointer"
-                    [title]="'COMMON.VIEW_DETAILS' | translate">
-                    <span class="material-icons-outlined text-base">visibility</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    (click)="openMoveModal(c, $event)"
-                    class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 cursor-pointer"
-                    [title]="'COMMON.EDIT' | translate">
-                    <span class="material-icons-outlined text-base">edit</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    (click)="handleToggleHold({ id: c.id, holdType: 'Customs Hold' }, $event)"
-                    class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-                    [class.text-rose-500]="c.yardStatus === 'Hold'"
-                    [title]="c.yardStatus === 'Hold' ? ('STATUS.HOLD' | translate) : ('STATUS.ACTIVE' | translate)">
-                    <span class="material-icons-outlined text-base">{{
-                      c.yardStatus === 'Hold' ? 'lock' : 'lock_open'
-                    }}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    (click)="openDrawer(c)"
-                    class="flex h-7 w-7 items-center justify-center rounded-lg transition-colors hover:bg-slate-100 hover:text-amber-600 dark:hover:bg-slate-800 cursor-pointer"
-                    [title]="'TABS.HISTORY' | translate">
-                    <span class="material-icons-outlined text-base">schedule</span>
-                  </button>
-                </div>
               </td>
             </tr>
           }
@@ -880,47 +653,26 @@
           class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
           1
         </button>
-        <button
-          type="button"
-          (click)="inventoryService.setPage(2)"
-          [class.bg-blue-600]="inventoryService.currentPage() === 2"
-          [class.text-white]="inventoryService.currentPage() === 2"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
-          2
-        </button>
-        <button
-          type="button"
-          (click)="inventoryService.setPage(3)"
-          [class.bg-blue-600]="inventoryService.currentPage() === 3"
-          [class.text-white]="inventoryService.currentPage() === 3"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
-          3
-        </button>
-        <button
-          type="button"
-          (click)="inventoryService.setPage(4)"
-          [class.bg-blue-600]="inventoryService.currentPage() === 4"
-          [class.text-white]="inventoryService.currentPage() === 4"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
-          4
-        </button>
-        <button
-          type="button"
-          (click)="inventoryService.setPage(5)"
-          [class.bg-blue-600]="inventoryService.currentPage() === 5"
-          [class.text-white]="inventoryService.currentPage() === 5"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
-          5
-        </button>
-        <span class="px-1 text-slate-400">...</span>
-        <button
-          type="button"
-          (click)="inventoryService.setPage(164)"
-          [class.bg-blue-600]="inventoryService.currentPage() === 164"
-          [class.text-white]="inventoryService.currentPage() === 164"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
-          164
-        </button>
+        @if (inventoryService.totalPages() > 1) {
+          <button
+            type="button"
+            (click)="inventoryService.setPage(2)"
+            [class.bg-blue-600]="inventoryService.currentPage() === 2"
+            [class.text-white]="inventoryService.currentPage() === 2"
+            class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
+            2
+          </button>
+        }
+        @if (inventoryService.totalPages() > 2) {
+          <button
+            type="button"
+            (click)="inventoryService.setPage(3)"
+            [class.bg-blue-600]="inventoryService.currentPage() === 3"
+            [class.text-white]="inventoryService.currentPage() === 3"
+            class="flex h-7 w-7 items-center justify-center rounded-lg text-xs font-semibold">
+            3
+          </button>
+        }
         <button
           type="button"
           [disabled]="inventoryService.currentPage() >= inventoryService.totalPages()"

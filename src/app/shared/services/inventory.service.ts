@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import {
   AddInventoryFormData,
   BlockUtilization,
@@ -7,25 +7,56 @@ import {
   InventoryFilterOptions,
   InventoryKpiMetrics,
   InventoryTypeDistribution,
+  LocationUtilizationItem,
 } from 'shared/types/inventory/inventory.interface';
+import { GateEventService } from 'shared/services/gate-event.service';
+import { AuthService } from 'core/auth/auth.service';
+import { VisitListItemDto, VisitsPagedResponse } from 'shared/types/gate-event/gate-event.interface';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
-  private readonly initialContainers: ContainerInventoryItem[] = [
+  private readonly gateEventService = inject(GateEventService);
+  private readonly authService = inject(AuthService);
+
+  // Active Gate Mode ('GATE_IN' or 'GATE_OUT')
+  public readonly activeGateMode = signal<'GATE_IN' | 'GATE_OUT'>('GATE_IN');
+
+  // Loading state for live API fetching
+  public readonly isLoading = signal<boolean>(false);
+
+  // Total server count
+  public readonly totalServerCount = signal<number>(2456);
+
+  /**
+   * Dynamically calculate Days in Yard depending on the container's arrival date
+   */
+  public calculateDaysInYard(arrivalDateStr?: string): number {
+    if (!arrivalDateStr) return 0;
+    const arrival = new Date(arrivalDateStr);
+    if (isNaN(arrival.getTime())) return 0;
+    const now = new Date();
+    const diffMs = Math.max(0, now.getTime() - arrival.getTime());
+    return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  }
+
+  // Pre-configured fallback items for GATE_IN with dynamic arrival dates
+  private readonly fallbackGateInContainers: ContainerInventoryItem[] = [
     {
-      id: 'inv-1',
+      id: 'inv-in-1',
       containerNo: 'MSCU 556123 4',
       sizeType: "40' HC",
       line: 'MSK',
       fullEmpty: 'Full',
-      currentLocation: 'A / 12 / 05 / 02',
+      cargoType: 'Import',
+      currentLocation: 'In Yard',
       block: 'A',
       row: '12',
       bay: '05',
       tier: '02',
       yardStatus: 'In Yard',
       lastAction: 'Gated In',
-      lastUpdated: '23 May 2025 10:24 AM',
+      arrivalDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '3 days ago',
       daysInYard: 3,
       holds: '-',
       isStarred: true,
@@ -37,19 +68,21 @@ export class InventoryService {
       sealNo: 'ML-IN-982341',
     },
     {
-      id: 'inv-2',
+      id: 'inv-in-2',
       containerNo: 'TCNU 789654 1',
       sizeType: "20' GP",
       line: 'TCLU',
       fullEmpty: 'Empty',
-      currentLocation: 'B / 07 / 03 / 01',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
       block: 'B',
       row: '07',
       bay: '03',
       tier: '01',
       yardStatus: 'In Yard',
-      lastAction: 'Moved to B / 07 / 03 / 01',
-      lastUpdated: '23 May 2025 09:58 AM',
+      lastAction: 'Gated In',
+      arrivalDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '1 day ago',
       daysInYard: 1,
       holds: '-',
       customerName: 'Global Shippers Corp',
@@ -57,19 +90,21 @@ export class InventoryService {
       grossWeightKg: 2200,
     },
     {
-      id: 'inv-3',
+      id: 'inv-in-3',
       containerNo: 'OOLU 123456 7',
       sizeType: "40' HC",
       line: 'OOCL',
       fullEmpty: 'Full',
-      currentLocation: 'C / 03 / 08 / 03',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
       block: 'C',
       row: '03',
       bay: '08',
       tier: '03',
       yardStatus: 'In Yard',
       lastAction: 'Gated In',
-      lastUpdated: '22 May 2025 04:21 PM',
+      arrivalDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '2 days ago',
       daysInYard: 2,
       holds: '-',
       customerName: 'Orient Express Freight',
@@ -77,40 +112,43 @@ export class InventoryService {
       grossWeightKg: 24100,
     },
     {
-      id: 'inv-4',
+      id: 'inv-in-4',
       containerNo: 'HMMU 123456 7',
       sizeType: "40' HC",
       line: 'HMM',
       fullEmpty: 'Full',
-      currentLocation: 'A / 15 / 02 / 04',
+      cargoType: 'Import',
+      currentLocation: 'In Yard',
       block: 'A',
       row: '15',
       bay: '02',
       tier: '04',
       yardStatus: 'Overstay',
-      lastAction: 'Arrived',
-      lastUpdated: '20 May 2025 11:12 AM',
+      lastAction: 'Gated In',
+      arrivalDate: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '8 days ago',
       daysInYard: 8,
       holds: '-',
       customerName: 'Hyundai Merchant Marine',
       bookingNo: 'EXP-889021',
       grossWeightKg: 32450,
-      isHazardous: false,
     },
     {
-      id: 'inv-5',
+      id: 'inv-in-5',
       containerNo: 'TRHU 987654 3',
       sizeType: "20' GP",
       line: 'TRHU',
       fullEmpty: 'Empty',
-      currentLocation: 'D / 01 / 09 / 01',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
       block: 'D',
       row: '01',
       bay: '09',
       tier: '01',
       yardStatus: 'In Yard',
       lastAction: 'Gated In',
-      lastUpdated: '23 May 2025 08:45 AM',
+      arrivalDate: new Date().toISOString(),
+      lastUpdated: 'Today',
       daysInYard: 0,
       holds: '-',
       customerName: 'Trans-Hub Logistics',
@@ -118,42 +156,21 @@ export class InventoryService {
       grossWeightKg: 2150,
     },
     {
-      id: 'inv-6',
-      containerNo: 'TEMU 456789 2',
-      sizeType: "40' HC",
-      line: 'COSC',
-      fullEmpty: 'Full',
-      currentLocation: 'E / 02 / 04 / 02',
-      block: 'E',
-      row: '02',
-      bay: '04',
-      tier: '02',
-      yardStatus: 'Hold',
-      lastAction: 'Hold Placed',
-      lastUpdated: '22 May 2025 02:33 PM',
-      daysInYard: 4,
-      holds: 'DG',
-      hasWarning: true,
-      warningText: 'Dangerous Goods Class 3 Flammable Hold',
-      isHazardous: true,
-      customerName: 'Falcon Chemicals India',
-      bookingNo: 'RF-991048',
-      grossWeightKg: 25600,
-    },
-    {
-      id: 'inv-7',
+      id: 'inv-in-6',
       containerNo: 'CMAU 456789 2',
       sizeType: "20' GP",
       line: 'CMA',
       fullEmpty: 'Empty',
-      currentLocation: 'B / 05 / 06 / 03',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
       block: 'B',
       row: '05',
       bay: '06',
       tier: '03',
       yardStatus: 'In Yard',
-      lastAction: 'Moved to B / 05 / 06 / 03',
-      lastUpdated: '23 May 2025 10:02 AM',
+      lastAction: 'Gated In',
+      arrivalDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '1 day ago',
       daysInYard: 1,
       holds: '-',
       customerName: 'CMA CGM Agency',
@@ -161,59 +178,43 @@ export class InventoryService {
       grossWeightKg: 2300,
     },
     {
-      id: 'inv-8',
-      containerNo: 'MSKU 234567 8',
-      sizeType: "40' HC",
-      line: 'MSK',
-      fullEmpty: 'Full',
-      currentLocation: 'A / 10 / 01 / 01',
-      block: 'A',
-      row: '10',
-      bay: '01',
-      tier: '01',
-      yardStatus: 'Ready Out',
-      lastAction: 'Gate Out',
-      lastUpdated: '21 May 2025 05:11 PM',
-      daysInYard: 0,
-      holds: '-',
-      customerName: 'Sun Pharma Exports',
-      bookingNo: 'EXP-332910',
-      grossWeightKg: 26500,
-    },
-    {
-      id: 'inv-9',
+      id: 'inv-in-7',
       containerNo: 'NYKU 876543 9',
       sizeType: "40' HC",
       line: 'NYK',
-      fullEmpty: 'Empty',
-      currentLocation: 'F / 04 / 03 / 02',
+      fullEmpty: 'Full',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
       block: 'F',
       row: '04',
       bay: '03',
       tier: '02',
       yardStatus: 'In Yard',
       lastAction: 'Gated In',
-      lastUpdated: '23 May 2025 07:36 AM',
+      arrivalDate: new Date().toISOString(),
+      lastUpdated: 'Today',
       daysInYard: 0,
       holds: '-',
       customerName: 'NYK Line Logistics',
       bookingNo: 'NYK-992104',
-      grossWeightKg: 3800,
+      grossWeightKg: 23800,
     },
     {
-      id: 'inv-10',
+      id: 'inv-in-8',
       containerNo: 'SUDU 765432 1',
       sizeType: "20' GP",
       line: 'SUD',
       fullEmpty: 'Full',
-      currentLocation: 'C / 08 / 02 / 01',
+      cargoType: 'Import',
+      currentLocation: 'In Yard',
       block: 'C',
       row: '08',
       bay: '02',
       tier: '01',
       yardStatus: 'In Yard',
-      lastAction: 'Arrived',
-      lastUpdated: '22 May 2025 01:20 PM',
+      lastAction: 'Gated In',
+      arrivalDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '2 days ago',
       daysInYard: 2,
       holds: '-',
       customerName: 'Hamburg Sud Logistics',
@@ -221,39 +222,21 @@ export class InventoryService {
       grossWeightKg: 18500,
     },
     {
-      id: 'inv-11',
-      containerNo: 'PONU 234567 8',
-      sizeType: "40' HC",
-      line: 'PIL',
-      fullEmpty: 'Empty',
-      currentLocation: 'D / 03 / 07 / 02',
-      block: 'D',
-      row: '03',
-      bay: '07',
-      tier: '02',
-      yardStatus: 'In Yard',
-      lastAction: 'Moved to D / 03 / 07 / 02',
-      lastUpdated: '23 May 2025 09:21 AM',
-      daysInYard: 1,
-      holds: '-',
-      customerName: 'Pacific International Lines',
-      bookingNo: 'PIL-330192',
-      grossWeightKg: 3900,
-    },
-    {
-      id: 'inv-12',
+      id: 'inv-in-9',
       containerNo: 'BEAU 123456 9',
       sizeType: "20' GP",
       line: 'BEA',
       fullEmpty: 'Full',
-      currentLocation: 'A / 09 / 06 / 01',
+      cargoType: 'Import',
+      currentLocation: 'In Yard',
       block: 'A',
       row: '09',
       bay: '06',
       tier: '01',
       yardStatus: 'Overstay',
-      lastAction: 'Hold Removed',
-      lastUpdated: '19 May 2025 03:40 PM',
+      lastAction: 'Gated In',
+      arrivalDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '10 days ago',
       daysInYard: 10,
       holds: '-',
       customerName: 'Beacon Intermodal',
@@ -261,80 +244,183 @@ export class InventoryService {
       grossWeightKg: 16800,
     },
     {
-      id: 'inv-13',
+      id: 'inv-in-10',
       containerNo: 'ZIMU 987654 0',
       sizeType: "40' HC",
       line: 'ZIM',
       fullEmpty: 'Full',
-      currentLocation: 'E / 01 / 05 / 03',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
       block: 'E',
       row: '01',
       bay: '05',
       tier: '03',
       yardStatus: 'In Yard',
       lastAction: 'Gated In',
-      lastUpdated: '23 May 2025 06:52 AM',
+      arrivalDate: new Date().toISOString(),
+      lastUpdated: 'Today',
       daysInYard: 0,
       holds: '-',
       customerName: 'ZIM Integrated Shipping',
       bookingNo: 'ZIM-884019',
       grossWeightKg: 27100,
     },
+  ];
+
+  // Pre-configured fallback items for GATE_OUT
+  private readonly fallbackGateOutContainers: ContainerInventoryItem[] = [
     {
-      id: 'inv-14',
+      id: 'inv-out-1',
+      containerNo: 'MSKU 234567 8',
+      sizeType: "40' HC",
+      line: 'MSK',
+      fullEmpty: 'Full',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
+      block: 'A',
+      row: '10',
+      bay: '01',
+      tier: '01',
+      yardStatus: 'Ready Out',
+      lastAction: 'Gated Out',
+      arrivalDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '4 days ago',
+      daysInYard: 4,
+      holds: '-',
+      customerName: 'Sun Pharma Exports',
+      bookingNo: 'EXP-332910',
+      grossWeightKg: 26500,
+    },
+    {
+      id: 'inv-out-2',
+      containerNo: 'UETU 112233 4',
+      sizeType: "40' HC",
+      line: 'UES',
+      fullEmpty: 'Full',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
+      block: 'F',
+      row: '06',
+      bay: '01',
+      tier: '01',
+      yardStatus: 'Ready Out',
+      lastAction: 'Gated Out',
+      arrivalDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '5 days ago',
+      daysInYard: 5,
+      holds: '-',
+      customerName: 'Universal Express Systems',
+      bookingNo: 'UES-776201',
+      grossWeightKg: 24800,
+    },
+    {
+      id: 'inv-out-3',
+      containerNo: 'PONU 234567 8',
+      sizeType: "40' HC",
+      line: 'PIL',
+      fullEmpty: 'Empty',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
+      block: 'D',
+      row: '03',
+      bay: '07',
+      tier: '02',
+      yardStatus: 'In Yard',
+      lastAction: 'Gated Out',
+      arrivalDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '2 days ago',
+      daysInYard: 2,
+      holds: '-',
+      customerName: 'Pacific International Lines',
+      bookingNo: 'PIL-330192',
+      grossWeightKg: 3900,
+    },
+    {
+      id: 'inv-out-4',
       containerNo: 'TGHU 555666 7',
       sizeType: "20' GP",
       line: 'TGHU',
       fullEmpty: 'Empty',
-      currentLocation: 'B / 11 / 04 / 02',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
       block: 'B',
       row: '11',
       bay: '04',
       tier: '02',
       yardStatus: 'In Yard',
-      lastAction: 'Moved to B / 11 / 04 / 02',
-      lastUpdated: '23 May 2025 10:01 AM',
-      daysInYard: 1,
+      lastAction: 'Gated Out',
+      arrivalDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '3 days ago',
+      daysInYard: 3,
       holds: '-',
       customerName: 'Textainer Group',
       bookingNo: 'TGH-551029',
       grossWeightKg: 2250,
     },
     {
-      id: 'inv-15',
-      containerNo: 'UETU 112233 4',
+      id: 'inv-out-5',
+      containerNo: 'TCLU 667788 9',
       sizeType: "40' HC",
-      line: 'UES',
+      line: 'TCLU',
       fullEmpty: 'Full',
-      currentLocation: 'F / 06 / 01 / 01',
-      block: 'F',
-      row: '06',
+      cargoType: 'Export',
+      currentLocation: 'In Yard',
+      block: 'C',
+      row: '04',
+      bay: '02',
+      tier: '02',
+      yardStatus: 'Ready Out',
+      lastAction: 'Gated Out',
+      arrivalDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUpdated: '1 day ago',
+      daysInYard: 1,
+      holds: '-',
+      customerName: 'Reliance Industries Ltd',
+      bookingNo: 'EXP-RIL-9921',
+      grossWeightKg: 29200,
+    },
+    {
+      id: 'inv-out-6',
+      containerNo: 'COSU 991122 3',
+      sizeType: "20' GP",
+      line: 'COSC',
+      fullEmpty: 'Empty',
+      cargoType: 'Empty',
+      currentLocation: 'In Yard',
+      block: 'E',
+      row: '05',
       bay: '01',
       tier: '01',
       yardStatus: 'Ready Out',
-      lastAction: 'Gate Out',
-      lastUpdated: '21 May 2025 09:15 AM',
+      lastAction: 'Gated Out',
+      arrivalDate: new Date().toISOString(),
+      lastUpdated: 'Today',
       daysInYard: 0,
       holds: '-',
-      customerName: 'Universal Express Systems',
-      bookingNo: 'UES-776201',
-      grossWeightKg: 24800,
+      customerName: 'COSCO Shipping Lines',
+      bookingNo: 'BKG-COS-1102',
+      grossWeightKg: 2180,
     },
   ];
 
-  // Collection signal
-  public readonly containers = signal<ContainerInventoryItem[]>(this.initialContainers);
+  // Collection signal initialized with Gate In items
+  public readonly containers = signal<ContainerInventoryItem[]>(
+    this.fallbackGateInContainers.map((c) => ({
+      ...c,
+      currentLocation: 'In Yard',
+      daysInYard: this.calculateDaysInYard(c.arrivalDate),
+    })),
+  );
 
   // Active Selected Container for Drawer / Details
-  public readonly selectedContainer = signal<ContainerInventoryItem | null>(this.initialContainers[0]);
+  public readonly selectedContainer = signal<ContainerInventoryItem | null>(this.fallbackGateInContainers[0]);
 
   // Modal Open States
   public readonly isAddModalOpen = signal<boolean>(false);
   public readonly isDrawerOpen = signal<boolean>(false);
   public readonly isMoveModalOpen = signal<boolean>(false);
-  public readonly isAdvancedFilterOpen = signal<boolean>(false);
 
-  // Filter Signals
+  // Filter Signals (Kept simple, driven by Gate In / Gate Out toggle)
   public readonly filter = signal<InventoryFilterOptions>({
     containerNo: '',
     shippingLine: 'All',
@@ -357,55 +443,257 @@ export class InventoryService {
   // Toast Signal
   public readonly toastMessage = signal<string | null>(null);
 
+  constructor() {
+    // Automatically load live gate-in data on initialization
+    this.loadLiveGateData('GATE_IN');
+
+    // Reactively refresh when active site or client changes
+    effect(() => {
+      const sId = this.authService.selectedSiteId();
+      const cId = this.authService.selectedClientId();
+      if (sId || cId) {
+        this.loadLiveGateData(this.activeGateMode());
+      }
+    });
+  }
+
+  /**
+   * Switches active gate mode ('GATE_IN' or 'GATE_OUT') and triggers live API fetch
+   */
+  public setGateMode(mode: 'GATE_IN' | 'GATE_OUT'): void {
+    this.activeGateMode.set(mode);
+    this.currentPage.set(1);
+    this.loadLiveGateData(mode);
+  }
+
+  /**
+   * Fetches live data from backend Gate API
+   */
+  public loadLiveGateData(mode: 'GATE_IN' | 'GATE_OUT' = this.activeGateMode()): void {
+    this.isLoading.set(true);
+    const siteId = this.authService.getActiveSiteId() || undefined;
+    const clientId = this.authService.getActiveClientId() || undefined;
+
+    this.gateEventService
+      .getVisits({
+        page: this.currentPage(),
+        pageSize: this.pageSize(),
+        siteId,
+        clientId,
+        eventType: mode,
+      })
+      .subscribe({
+        next: (response: VisitsPagedResponse) => {
+          this.isLoading.set(false);
+          const items = response?.items ?? (response as any)?.Items ?? (Array.isArray(response) ? (response as any) : []);
+          if (items && items.length > 0) {
+            const mapped = this.mapVisitsToInventoryItems(items, mode);
+            this.containers.set(mapped);
+            this.totalServerCount.set(response.totalCount ?? (response as any)?.TotalCount ?? mapped.length);
+            if (mapped.length > 0) {
+              this.selectedContainer.set(mapped[0]);
+            }
+          } else {
+            // Fallback demo items for active mode
+            const fallback = this.getFallbackContainersForMode(mode);
+            this.containers.set(fallback);
+            this.totalServerCount.set(fallback.length);
+            if (fallback.length > 0) {
+              this.selectedContainer.set(fallback[0]);
+            }
+          }
+        },
+        error: () => {
+          // Fallback to legacy getGateEvents
+          this.gateEventService
+            .getGateEvents({
+              page: this.currentPage(),
+              pageSize: this.pageSize(),
+              eventType: mode,
+            })
+            .subscribe({
+              next: (legacyRes) => {
+                this.isLoading.set(false);
+                const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
+                if (legacyItems && legacyItems.length > 0) {
+                  const mapped = this.mapLegacyToInventoryItems(legacyItems, mode);
+                  this.containers.set(mapped);
+                  this.totalServerCount.set(legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length);
+                } else {
+                  const fallback = this.getFallbackContainersForMode(mode);
+                  this.containers.set(fallback);
+                  this.totalServerCount.set(fallback.length);
+                }
+              },
+              error: () => {
+                this.isLoading.set(false);
+                const fallback = this.getFallbackContainersForMode(mode);
+                this.containers.set(fallback);
+                this.totalServerCount.set(fallback.length);
+              },
+            });
+        },
+      });
+  }
+
+  private getFallbackContainersForMode(mode: 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+    const list = mode === 'GATE_OUT' ? this.fallbackGateOutContainers : this.fallbackGateInContainers;
+    return list.map((c) => ({
+      ...c,
+      currentLocation: 'In Yard',
+      daysInYard: this.calculateDaysInYard(c.arrivalDate),
+    }));
+  }
+
+  private mapVisitsToInventoryItems(visits: any[], mode: 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+    const result: ContainerInventoryItem[] = [];
+
+    visits.forEach((v, index) => {
+      const eventsList = Array.isArray(v.events) ? v.events : Array.isArray(v.Events) ? v.Events : [];
+      const primaryEvent = eventsList.length > 0 ? eventsList[0] : null;
+      const arrivalDate =
+        primaryEvent?.capturedAt ?? primaryEvent?.CapturedAt ?? v.createdAt ?? v.CreatedAt ?? new Date().toISOString();
+      const daysInYard = this.calculateDaysInYard(arrivalDate);
+
+      const dateObj = new Date(arrivalDate);
+      const formattedDate = isNaN(dateObj.getTime())
+        ? arrivalDate
+        : dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+          ', ' +
+          dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      const rawContainers = Array.isArray(v.containers) && v.containers.length > 0
+        ? v.containers
+        : Array.isArray(v.Containers) && v.Containers.length > 0
+          ? v.Containers
+          : null;
+
+      if (rawContainers && rawContainers.length > 0) {
+        rawContainers.forEach((cItem: any, cIdx: number) => {
+          const cNumber =
+            cItem.containerNumber ||
+            cItem.ContainerNumber ||
+            v.containerNumber ||
+            v.ContainerNumber ||
+            `CONT-${1000 + index}-${cIdx + 1}`;
+          const cSize = cItem.size || cItem.Size || v.containerSize || v.ContainerSize || "40' HC";
+          const rawFullEmpty = cItem.fullOrEmpty || cItem.FullOrEmpty;
+          const fullEmpty = rawFullEmpty?.toLowerCase().includes('empty') ? 'Empty' : 'Full';
+
+          let cargoType: 'Export' | 'Import' | 'Empty' = fullEmpty === 'Empty' ? 'Empty' : (mode === 'GATE_OUT' ? 'Export' : 'Import');
+          const rawCt = cItem.cargoType || cItem.CargoType;
+          if (rawCt) {
+            const ct = rawCt.toLowerCase();
+            if (ct.includes('export')) cargoType = 'Export';
+            else if (ct.includes('empty')) cargoType = 'Empty';
+            else if (ct.includes('import')) cargoType = 'Import';
+          }
+
+          result.push({
+            id: `${v.visitId || v.VisitId || index}-${cIdx}`,
+            containerNo: String(cNumber).toUpperCase(),
+            sizeType: String(cSize),
+            line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
+            fullEmpty,
+            cargoType,
+            currentLocation: 'In Yard',
+            block: 'A',
+            row: '01',
+            bay: '01',
+            tier: '01',
+            yardStatus: mode === 'GATE_OUT' ? 'Ready Out' : 'In Yard',
+            lastAction: mode === 'GATE_OUT' ? 'Gated Out' : 'Gated In',
+            arrivalDate,
+            lastUpdated: formattedDate,
+            daysInYard,
+            holds: '-',
+            customerName: v.driverName || v.DriverName || 'General Shipping Logistics',
+            bookingNo: `BKG-${v.visitId || v.VisitId ? String(v.visitId || v.VisitId).slice(0, 6) : 1000 + index}`,
+          });
+        });
+      } else {
+        const cNumber =
+          v.containerNumber ||
+          v.ContainerNumber ||
+          primaryEvent?.detectedContainerNumber ||
+          primaryEvent?.DetectedContainerNumber ||
+          `CONT-${1000 + index}`;
+        const cSize =
+          v.containerSize ||
+          v.ContainerSize ||
+          primaryEvent?.detectedContainerSize ||
+          primaryEvent?.DetectedContainerSize ||
+          "40' HC";
+
+        const fullEmpty = 'Full';
+        const cargoType: 'Export' | 'Import' | 'Empty' = mode === 'GATE_OUT' ? 'Export' : 'Import';
+
+        result.push({
+          id: v.visitId || v.VisitId || `live-${index}`,
+          containerNo: String(cNumber).toUpperCase(),
+          sizeType: String(cSize),
+          line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
+          fullEmpty,
+          cargoType,
+          currentLocation: 'In Yard',
+          block: 'A',
+          row: '01',
+          bay: '01',
+          tier: '01',
+          yardStatus: mode === 'GATE_OUT' ? 'Ready Out' : 'In Yard',
+          lastAction: mode === 'GATE_OUT' ? 'Gated Out' : 'Gated In',
+          arrivalDate,
+          lastUpdated: formattedDate,
+          daysInYard,
+          holds: '-',
+          customerName: v.driverName || v.DriverName || 'General Shipping Logistics',
+          bookingNo: `BKG-${v.visitId || v.VisitId ? String(v.visitId || v.VisitId).slice(0, 6) : 1000 + index}`,
+        });
+      }
+    });
+
+    return result;
+  }
+
+  private mapLegacyToInventoryItems(items: any[], mode: 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+    return items.map((item, index) => {
+      const arrivalDate = item.capturedAt || item.CapturedAt || item.createdAt || new Date().toISOString();
+      const daysInYard = this.calculateDaysInYard(arrivalDate);
+      const cNumber =
+        item.container?.containerNumber ||
+        item.Container?.ContainerNumber ||
+        item.detectedContainerNumber ||
+        `CONT-${2000 + index}`;
+      const cSize =
+        item.container?.size || item.Container?.Size || item.detectedContainerSize || "40' HC";
+
+      return {
+        id: item.id || item.Id || `legacy-${index}`,
+        containerNo: String(cNumber).toUpperCase(),
+        sizeType: String(cSize),
+        line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
+        fullEmpty: 'Full',
+        cargoType: mode === 'GATE_OUT' ? 'Export' : 'Import',
+        currentLocation: 'In Yard',
+        block: 'B',
+        row: '02',
+        bay: '03',
+        tier: '01',
+        yardStatus: mode === 'GATE_OUT' ? 'Ready Out' : 'In Yard',
+        lastAction: mode === 'GATE_OUT' ? 'Gated Out' : 'Gated In',
+        arrivalDate,
+        lastUpdated: 'Recently',
+        daysInYard,
+        holds: '-',
+        customerName: 'Gateway Logistics India',
+      };
+    });
+  }
+
   // Filtered list
   public readonly filteredContainers = computed<ContainerInventoryItem[]>(() => {
     let list = this.containers();
-    const f = this.filter();
-    const q = f.searchQuery.trim().toLowerCase();
-
-    if (f.containerNo.trim()) {
-      list = list.filter((c) => c.containerNo.toLowerCase().includes(f.containerNo.trim().toLowerCase()));
-    }
-
-    if (f.shippingLine !== 'All') {
-      list = list.filter((c) => c.line.toLowerCase() === f.shippingLine.toLowerCase());
-    }
-
-    if (f.block !== 'All') {
-      list = list.filter((c) => c.block.toLowerCase() === f.block.toLowerCase());
-    }
-
-    if (f.row !== 'All') {
-      list = list.filter((c) => c.row === f.row);
-    }
-
-    if (f.bay !== 'All') {
-      list = list.filter((c) => c.bay === f.bay);
-    }
-
-    if (f.tier !== 'All') {
-      list = list.filter((c) => c.tier === f.tier);
-    }
-
-    if (f.size !== 'All') {
-      list = list.filter((c) => c.sizeType.includes(f.size));
-    }
-
-    if (f.type !== 'All') {
-      list = list.filter((c) => c.sizeType.toLowerCase().includes(f.type.toLowerCase()));
-    }
-
-    if (f.status !== 'All') {
-      list = list.filter((c) => c.yardStatus.toLowerCase() === f.status.toLowerCase());
-    }
-
-    if (f.fullEmpty !== 'All') {
-      list = list.filter((c) => c.fullEmpty.toLowerCase() === f.fullEmpty.toLowerCase());
-    }
-
-    if (f.customer !== 'All') {
-      list = list.filter((c) => c.customerName?.toLowerCase().includes(f.customer.toLowerCase()));
-    }
+    const q = this.filter().searchQuery?.trim().toLowerCase();
 
     if (q) {
       list = list.filter(
@@ -422,44 +710,87 @@ export class InventoryService {
     return list;
   });
 
-  // KPI Metrics (Fixed baseline from screenshot + live delta)
+  // KPI Metrics (Hazardous card removed as requested)
   public readonly kpiMetrics = computed<InventoryKpiMetrics>(() => {
-    const delta = this.containers().length - this.initialContainers.length;
+    const list = this.containers();
+    const total = list.length;
+    const imports = list.filter((c) => c.cargoType === 'Import').length;
+    const exports = list.filter((c) => c.cargoType === 'Export').length;
+    const empties = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
+    const overstays = list.filter((c) => c.daysInYard > 7).length;
+
     return {
-      totalContainers: 2456 + delta,
+      totalContainers: total || 2456,
       totalTrend: '6% vs yesterday',
-      importCount: 1042 + Math.floor(delta * 0.4),
+      importCount: imports || 1042,
       importTrend: '8% vs yesterday',
-      exportCount: 892 + Math.floor(delta * 0.35),
+      exportCount: exports || 892,
       exportTrend: '5% vs yesterday',
-      emptyCount: 522 + Math.floor(delta * 0.25),
+      emptyCount: empties || 522,
       emptyTrend: '4% vs yesterday',
-      hazardousCount: 60,
-      hazardousTrend: '11% vs yesterday',
-      overstayCount: 214,
+      overstayCount: overstays || 214,
       overstayTrend: '19% vs yesterday',
     };
   });
 
-  // Type Distribution for Donut Chart
-  public readonly typeDistributions: InventoryTypeDistribution[] = [
-    { type: "40' HC", count: 1248, percent: 50.8, color: '#2563eb' },
-    { type: "20' GP", count: 862, percent: 35.1, color: '#10b981' },
-    { type: "40' GP", count: 142, percent: 5.8, color: '#06b6d4' },
-    { type: 'Reefer', count: 96, percent: 3.9, color: '#f59e0b' },
-    { type: 'OT / FR', count: 60, percent: 2.4, color: '#f43f5e' },
-    { type: 'Other', count: 48, percent: 2.0, color: '#8b5cf6' },
-  ];
+  // Type Distribution: Export, Import, Empty (Replaced current types)
+  public readonly typeDistributions = computed<InventoryTypeDistribution[]>(() => {
+    const list = this.containers();
+    const total = list.length;
 
-  // Block Utilizations for Right Widget
-  public readonly blockUtilizations: BlockUtilization[] = [
-    { block: 'A', percent: 68, occupied: 326, capacity: 480 },
-    { block: 'B', percent: 55, occupied: 264, capacity: 480 },
-    { block: 'C', percent: 48, occupied: 230, capacity: 480 },
-    { block: 'D', percent: 45, occupied: 216, capacity: 480 },
-    { block: 'E', percent: 50, occupied: 240, capacity: 480 },
-    { block: 'F', percent: 44, occupied: 204, capacity: 480 },
-  ];
+    let exp = list.filter((c) => c.cargoType === 'Export').length;
+    let imp = list.filter((c) => c.cargoType === 'Import').length;
+    let emp = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
+
+    // Use baseline proportion if count is 0
+    if (exp === 0 && imp === 0 && emp === 0) {
+      exp = 892;
+      imp = 1042;
+      emp = 522;
+    }
+
+    const sum = exp + imp + emp || 1;
+    const expPct = +((exp / sum) * 100).toFixed(1);
+    const impPct = +((imp / sum) * 100).toFixed(1);
+    const empPct = +Math.max(0, 100 - expPct - impPct).toFixed(1);
+
+    return [
+      { type: 'Export', count: exp, percent: expPct, color: '#2563eb' },
+      { type: 'Import', count: imp, percent: impPct, color: '#10b981' },
+      { type: 'Empty', count: emp, percent: empPct, color: '#8b5cf6' },
+    ];
+  });
+
+  // Location Utilization: Yard and Gate (Replaced block-level breakdown)
+  public readonly locationUtilizations = computed<LocationUtilizationItem[]>(() => {
+    const totalInYard = this.containers().length;
+    const yardOccupied = 1200 + totalInYard;
+    const yardCapacity = 2400;
+    const yardPercent = Math.min(100, Math.round((yardOccupied / yardCapacity) * 100));
+
+    const gateOccupied = this.activeGateMode() === 'GATE_IN' ? 142 : 118;
+    const gateCapacity = 300;
+    const gatePercent = Math.round((gateOccupied / gateCapacity) * 100);
+
+    return [
+      {
+        location: 'Yard',
+        percent: yardPercent,
+        occupied: yardOccupied,
+        capacity: yardCapacity,
+        color: '#525EA7',
+        icon: 'warehouse',
+      },
+      {
+        location: 'Gate',
+        percent: gatePercent,
+        occupied: gateOccupied,
+        capacity: gateCapacity,
+        color: '#10b981',
+        icon: 'sensor_door',
+      },
+    ];
+  });
 
   // Paginated containers
   public readonly paginatedContainers = computed<ContainerInventoryItem[]>(() => {
@@ -472,7 +803,9 @@ export class InventoryService {
 
   // Total pages
   public readonly totalPages = computed<number>(() => {
-    return 164; // Matching design screenshot total 164 pages
+    const total = this.filteredContainers().length;
+    const size = this.pageSize();
+    return Math.max(1, Math.ceil(total / size));
   });
 
   // Actions
@@ -520,32 +853,9 @@ export class InventoryService {
     this.currentPage.set(1);
   }
 
-  public updateFilter<K extends keyof InventoryFilterOptions>(key: K, value: InventoryFilterOptions[K]): void {
-    this.filter.update((f) => ({ ...f, [key]: value }));
-    this.currentPage.set(1);
-  }
-
-  public resetFilters(): void {
-    this.filter.set({
-      containerNo: '',
-      shippingLine: 'All',
-      block: 'All',
-      row: 'All',
-      bay: 'All',
-      tier: 'All',
-      size: 'All',
-      type: 'All',
-      status: 'All',
-      fullEmpty: 'All',
-      customer: 'All',
-      searchQuery: '',
-    });
-    this.showToast('Inventory filters reset.');
-  }
-
   public addInventory(formData: AddInventoryFormData): ContainerInventoryItem {
-    const loc = `${formData.block} / ${formData.row} / ${formData.bay} / ${formData.tier}`;
     const now = new Date();
+    const arrivalDate = now.toISOString();
     const formatted = `${now.getDate()} May 2025 ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
     const newItem: ContainerInventoryItem = {
@@ -554,21 +864,22 @@ export class InventoryService {
       sizeType: formData.sizeType,
       line: formData.line,
       fullEmpty: formData.fullEmpty,
-      currentLocation: loc,
+      cargoType: formData.fullEmpty === 'Empty' ? 'Empty' : 'Import',
+      currentLocation: 'In Yard', // Location shows "In Yard"
       block: formData.block,
       row: formData.row,
       bay: formData.bay,
       tier: formData.tier,
       yardStatus: formData.yardStatus,
       lastAction: 'Gated In',
+      arrivalDate,
       lastUpdated: formatted,
-      daysInYard: 0,
+      daysInYard: 0, // dynamically 0 for brand new arrival
       holds: formData.holds || '-',
       customerName: formData.customerName || 'General Shipping Client',
       bookingNo: formData.bookingNo || `BKG-${Date.now().toString().slice(-6)}`,
       grossWeightKg: formData.grossWeightKg || 24000,
       sealNo: formData.sealNo || `SEAL-${Date.now().toString().slice(-4)}`,
-      isHazardous: formData.isHazardous || false,
     };
 
     this.containers.update((list) => [newItem, ...list]);
@@ -578,7 +889,7 @@ export class InventoryService {
   }
 
   public moveContainer(id: string, newLocation: { block: string; row: string; bay: string; tier: string }): void {
-    const locString = `${newLocation.block} / ${newLocation.row} / ${newLocation.bay} / ${newLocation.tier}`;
+    const locString = 'In Yard';
     const now = new Date();
     const formatted = `${now.getDate()} May 2025 ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -592,7 +903,7 @@ export class InventoryService {
               row: newLocation.row,
               bay: newLocation.bay,
               tier: newLocation.tier,
-              lastAction: `Moved to ${locString}`,
+              lastAction: `Moved within Yard (${newLocation.block}/${newLocation.row})`,
               lastUpdated: formatted,
             }
           : c,
@@ -608,7 +919,7 @@ export class InventoryService {
         row: newLocation.row,
         bay: newLocation.bay,
         tier: newLocation.tier,
-        lastAction: `Moved to ${locString}`,
+        lastAction: `Moved within Yard (${newLocation.block}/${newLocation.row})`,
         lastUpdated: formatted,
       });
     }
@@ -641,14 +952,11 @@ export class InventoryService {
     const headers = [
       'Container No',
       'Size/Type',
-      'Line',
       'Full/Empty',
       'Location',
-      'Status',
       'Last Action',
-      'Last Updated',
+      'Arrival Date / Last Updated',
       'Days in Yard',
-      'Holds',
       'Customer',
     ];
     const csvContent =
@@ -659,14 +967,11 @@ export class InventoryService {
           [
             c.containerNo,
             c.sizeType,
-            c.line,
             c.fullEmpty,
             c.currentLocation,
-            c.yardStatus,
             c.lastAction,
             c.lastUpdated,
             c.daysInYard,
-            c.holds,
             c.customerName || '',
           ]
             .map((v) => `"${v}"`)
@@ -677,7 +982,7 @@ export class InventoryService {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `container-inventory-${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `container-inventory-${this.activeGateMode().toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

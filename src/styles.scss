@@ -760,8 +760,7 @@ app-kpi-metric-card>div:hover {
 /* 2. Unified Primary Action Buttons (Enterprise Blue Standard: #2563EB) */
 .btn-electric,
 .btn-primary,
-.btn-modal-submit,
-.btn-manual-gate-entry {
+.btn-modal-submit {
   background: #2563eb !important;
   color: #ffffff !important;
   font-family: 'Inter', sans-serif !important;
@@ -1390,7 +1389,6 @@ button,
 .btn-modal-cancel,
 .btn-action,
 .btn-login-submit,
-.btn-manual-gate-entry,
 .btn-refresh,
 .btn-extra-filters {
   font-size: 14px !important;

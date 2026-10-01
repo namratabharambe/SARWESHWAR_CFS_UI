@@ -61,6 +61,7 @@ export interface GateEventItem {
   direction: GateDirection;
   truckNo: string;
   containerNo: string;
+  size: string;
   isDualContainer: boolean;
   containers: GateContainerRecord[];
   ocrResult: string;
@@ -523,6 +524,7 @@ export class GateEventsComponent implements OnInit {
       direction,
       truckNo,
       containerNo: containerNoDisplay,
+      size: isDualContainer ? '2x 20 FT' : (primaryContainer?.size || visit.containerSize || visit.ContainerSize || (rawContainersList[0]?.size ?? "40' HC")),
       isDualContainer,
       containers,
       ocrResult: containerNoDisplay,
@@ -642,6 +644,7 @@ export class GateEventsComponent implements OnInit {
       direction,
       truckNo,
       containerNo: containerNoDisplay,
+      size: isDualContainer ? '2x 20 FT' : (primaryContainer?.size || dto.container?.size || dto.Container?.Size || (rawContainersList[0]?.size ?? "40' HC")),
       isDualContainer,
       containers,
       ocrResult: containerNoDisplay,
