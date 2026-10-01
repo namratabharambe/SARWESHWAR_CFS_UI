@@ -55,15 +55,14 @@ export class AdminRepository {
     const targetCid = clientId || this.auth.getActiveClientId();
     const targetSid = siteId || this.auth.getActiveSiteId();
 
-    const clients$ = this.auth.canManageClients()
-      ? this.listClients().pipe(catchError(() => of([])))
-      : targetCid
-        ? this.clientService.getById(targetCid).pipe(
-            map((res) => this.unwrap(res)),
-            map((raw) => (raw ? [this.normalizeClient(raw)] : [])),
-            catchError(() => of([])),
-          )
-        : of([]);
+    const clients$ = this.listClients().pipe(
+      map((list) => {
+        if (!targetCid) return list;
+        const match = list.find((c) => c.id === targetCid);
+        return match ? [match] : list;
+      }),
+      catchError(() => of([])),
+    );
 
     forkJoin({
       clients: clients$,

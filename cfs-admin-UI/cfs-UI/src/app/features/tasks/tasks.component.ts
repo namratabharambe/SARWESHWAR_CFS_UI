@@ -10,6 +10,7 @@ import { TaskQueueViewComponent } from './components/task-queue-view/task-queue-
 
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 import { TranslatePipe } from 'shared/pipes';
 
 @Component({
@@ -23,6 +24,7 @@ import { TranslatePipe } from 'shared/pipes';
     TaskQueueViewComponent,
     DatePickerComponent,
     DropdownComponent,
+    PaginationComponent,
     TranslatePipe,
   ],
   templateUrl: './tasks.component.html',

@@ -215,7 +215,7 @@
       <input
         type="text"
         [value]="reportService.filter().searchQuery"
-        (input)="reportService.setSearchQuery($any($event.target).value)"
+        (input)="onSearchInput($any($event.target).value)"
         placeholder="Filter records in current report..."
         class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-4 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
     </div>
@@ -261,7 +261,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of reportService.filteredGateRows(); track row.id) {
+            @for (row of paginatedGateOps(); track row.id) {
               <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
                 <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
                   {{ row.visitNo }}
@@ -356,7 +356,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of reportService.filteredMismatchRows(); track row.id) {
+            @for (row of paginatedMismatches(); track row.id) {
               <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
                 <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
                   {{ row.alertCode }}
@@ -422,7 +422,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of reportService.filteredYardRows(); track row.id) {
+            @for (row of paginatedYardOccupancy(); track row.id) {
               <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
                 <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white">{{ row.blockName }}</td>
                 <td class="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">{{ row.yardZone }}</td>
@@ -476,7 +476,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of reportService.filteredEquipmentRows(); track row.id) {
+            @for (row of paginatedEquipment(); track row.id) {
               <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
                 <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
                   {{ row.equipmentCode }}
@@ -535,7 +535,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of reportService.filteredCustomsRows(); track row.id) {
+            @for (row of paginatedCustoms(); track row.id) {
               <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
                 <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
                   {{ row.dossierNo }}
@@ -593,5 +593,14 @@
         </table>
       }
     </div>
+
+    <!-- Pagination Footer -->
+    <app-pagination
+      [totalItems]="totalItems()"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      itemLabel="records"
+      (pageChange)="setPage($event)"
+      (pageSizeChange)="setPageSize($event)" />
   </section>
 </div>

@@ -27,8 +27,8 @@ export interface ContainerInventoryItem {
   cargoDescription?: string;
   grossWeightKg?: number;
   sealNo?: string;
-  reeferTemp?: string;
-  isHazardous?: boolean;
+  arrivalDate?: string;
+  cargoType?: 'Export' | 'Import' | 'Empty';
 }
 
 export interface InventoryKpiMetrics {
@@ -40,8 +40,8 @@ export interface InventoryKpiMetrics {
   exportTrend: string;
   emptyCount: number;
   emptyTrend: string;
-  hazardousCount: number;
-  hazardousTrend: string;
+  hazardousCount?: number;
+  hazardousTrend?: string;
   overstayCount: number;
   overstayTrend: string;
 }
@@ -51,6 +51,15 @@ export interface InventoryTypeDistribution {
   count: number;
   percent: number;
   color: string;
+}
+
+export interface LocationUtilizationItem {
+  location: 'Yard' | 'Gate' | string;
+  percent: number;
+  occupied: number;
+  capacity: number;
+  color?: string;
+  icon?: string;
 }
 
 export interface BlockUtilization {

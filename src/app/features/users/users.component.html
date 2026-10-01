@@ -112,7 +112,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-          @for (user of filteredUsers(); track user.id) {
+          @for (user of paginatedUsers(); track user.id) {
           <tr class="table-row transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
             <td class="cell-user px-4 py-3.5">
               <div class="user-identity flex items-center gap-2.5">
@@ -212,6 +212,14 @@
       </table>
     </div>
   </div>
+
+  <!-- Pagination Component -->
+  <app-pagination
+    [totalItems]="filteredUsers().length"
+    [pageSize]="pageSize()"
+    [currentPage]="currentPage()"
+    (pageChange)="setPage($event)"
+    (pageSizeChange)="setPageSize($event)" />
 </div>
 
 <!-- Add / Edit User Modal with 2-Column Responsive Layout and Per-Site Role Assignment -->

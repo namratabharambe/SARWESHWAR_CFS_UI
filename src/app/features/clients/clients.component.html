@@ -91,7 +91,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-        @for (client of filteredClients(); track client.id) {
+        @for (client of paginatedClients(); track client.id) {
           <tr class="table-row transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40">
             <td class="cell-client-name px-4 py-3.5">
               <div class="client-identity flex items-center gap-2.5">
@@ -173,6 +173,15 @@
       </tbody>
     </table>
   </div>
+
+  <!-- Pagination Footer -->
+  <app-pagination
+    [totalItems]="filteredClients().length"
+    [currentPage]="currentPage()"
+    [pageSize]="pageSize()"
+    itemLabel="clients"
+    (pageChange)="setPage($event)"
+    (pageSizeChange)="setPageSize($event)" />
 </div>
 
 <!-- Add / Edit Client Modal (Client Name field only) -->

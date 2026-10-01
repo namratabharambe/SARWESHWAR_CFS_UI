@@ -118,7 +118,7 @@ export class AlertService {
       status: 'Active',
       timestamp: '2025-05-17T09:05:00Z',
       gateLocation: 'GATE-03 (Express Gate)',
-      truckNo: 'MH-12-PQ-9002',
+      truckNo: 'MH-46-CL-9002',
       driverName: 'Sanjay Deshmukh',
       scannedContainerNo: 'MSKU 234567 8',
       expectedContainerNo: 'MSKU 234567 8',

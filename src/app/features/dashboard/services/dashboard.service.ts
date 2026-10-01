@@ -277,7 +277,7 @@ export class DashboardService {
     const kpis = this.kpiMetrics();
     const arr = parseInt(kpis.find((k) => k.id === 'arrivals-today')?.value || '0', 10);
     const dep = parseInt(kpis.find((k) => k.id === 'departures-today')?.value || '0', 10);
-    return arr + dep || this.filteredGateActivities().length || 142;
+    return arr + dep || this._allGateActivities().length || 0;
   });
 
   public readonly paginatedGateActivities = computed<GateActivityItem[]>(() => {

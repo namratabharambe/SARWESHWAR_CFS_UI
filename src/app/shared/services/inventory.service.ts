@@ -25,7 +25,7 @@ export class InventoryService {
   public readonly isLoading = signal<boolean>(false);
 
   // Total server count
-  public readonly totalServerCount = signal<number>(2456);
+  public readonly totalServerCount = signal<number>(0);
 
   /**
    * Dynamically calculate Days in Yard depending on the container's arrival date
@@ -710,46 +710,37 @@ export class InventoryService {
     return list;
   });
 
-  // KPI Metrics (Hazardous card removed as requested)
+  // KPI Metrics (Calculated from actual live inventory records)
   public readonly kpiMetrics = computed<InventoryKpiMetrics>(() => {
     const list = this.containers();
-    const total = list.length;
+    const total = this.totalServerCount() || list.length;
     const imports = list.filter((c) => c.cargoType === 'Import').length;
     const exports = list.filter((c) => c.cargoType === 'Export').length;
     const empties = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
     const overstays = list.filter((c) => c.daysInYard > 7).length;
 
     return {
-      totalContainers: total || 2456,
-      totalTrend: '6% vs yesterday',
-      importCount: imports || 1042,
-      importTrend: '8% vs yesterday',
-      exportCount: exports || 892,
-      exportTrend: '5% vs yesterday',
-      emptyCount: empties || 522,
-      emptyTrend: '4% vs yesterday',
-      overstayCount: overstays || 214,
-      overstayTrend: '19% vs yesterday',
+      totalContainers: total,
+      totalTrend: `${total} active`,
+      importCount: imports,
+      importTrend: `${imports} import units`,
+      exportCount: exports,
+      exportTrend: `${exports} export units`,
+      emptyCount: empties,
+      emptyTrend: `${empties} empty units`,
+      overstayCount: overstays,
+      overstayTrend: `${overstays} >7 days`,
     };
   });
 
-  // Type Distribution: Export, Import, Empty (Replaced current types)
+  // Type Distribution: Export, Import, Empty (Real live proportions)
   public readonly typeDistributions = computed<InventoryTypeDistribution[]>(() => {
     const list = this.containers();
-    const total = list.length;
+    const exp = list.filter((c) => c.cargoType === 'Export').length;
+    const imp = list.filter((c) => c.cargoType === 'Import').length;
+    const emp = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
 
-    let exp = list.filter((c) => c.cargoType === 'Export').length;
-    let imp = list.filter((c) => c.cargoType === 'Import').length;
-    let emp = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
-
-    // Use baseline proportion if count is 0
-    if (exp === 0 && imp === 0 && emp === 0) {
-      exp = 892;
-      imp = 1042;
-      emp = 522;
-    }
-
-    const sum = exp + imp + emp || 1;
+    const sum = exp + imp + emp || list.length || 1;
     const expPct = +((exp / sum) * 100).toFixed(1);
     const impPct = +((imp / sum) * 100).toFixed(1);
     const empPct = +Math.max(0, 100 - expPct - impPct).toFixed(1);
@@ -761,22 +752,21 @@ export class InventoryService {
     ];
   });
 
-  // Location Utilization: Yard and Gate (Replaced block-level breakdown)
+  // Location Utilization: Yard and Gate (Calculated from actual container count)
   public readonly locationUtilizations = computed<LocationUtilizationItem[]>(() => {
     const totalInYard = this.containers().length;
-    const yardOccupied = 1200 + totalInYard;
-    const yardCapacity = 2400;
-    const yardPercent = Math.min(100, Math.round((yardOccupied / yardCapacity) * 100));
+    const yardCapacity = Math.max(100, totalInYard * 2);
+    const yardPercent = Math.min(100, Math.round((totalInYard / yardCapacity) * 100));
 
-    const gateOccupied = this.activeGateMode() === 'GATE_IN' ? 142 : 118;
-    const gateCapacity = 300;
-    const gatePercent = Math.round((gateOccupied / gateCapacity) * 100);
+    const gateOccupied = totalInYard;
+    const gateCapacity = Math.max(50, totalInYard * 2);
+    const gatePercent = Math.min(100, Math.round((gateOccupied / gateCapacity) * 100));
 
     return [
       {
         location: 'Yard',
         percent: yardPercent,
-        occupied: yardOccupied,
+        occupied: totalInYard,
         capacity: yardCapacity,
         color: '#525EA7',
         icon: 'warehouse',

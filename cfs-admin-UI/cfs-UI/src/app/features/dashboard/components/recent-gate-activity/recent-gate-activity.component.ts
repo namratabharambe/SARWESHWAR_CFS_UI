@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GateActivityItem } from 'shared/types/dashboard/dashboard.interface';
 
@@ -14,4 +14,18 @@ export class RecentGateActivityComponent {
   public readonly activities = input.required<GateActivityItem[]>();
   /** Dashboard card shows only the latest 5 events; the full list lives in Gate Events. */
   public readonly latest = computed(() => this.activities().slice(0, 5));
+
+  public readonly selectedActivity = signal<GateActivityItem | null>(null);
+
+  public openPreview(item: GateActivityItem, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.selectedActivity.set(item);
+  }
+
+  public closePreview(): void {
+    this.selectedActivity.set(null);
+  }
 }
+

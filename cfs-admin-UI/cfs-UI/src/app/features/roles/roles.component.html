@@ -58,7 +58,7 @@
 
     <!-- Roles List Rows -->
     <div class="divide-y divide-slate-100 dark:divide-slate-800">
-      @for (x of repo.roles(); track x.id) {
+      @for (x of paginatedRoles(); track x.id) {
         <div class="role-row flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4.5 transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
           <div class="flex items-start sm:items-center gap-3.5">
             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 border border-purple-200/60 dark:bg-purple-950/60 dark:text-purple-400 dark:border-purple-800/40 shadow-xs">
@@ -107,6 +107,14 @@
         </div>
       }
     </div>
+
+    <!-- Pagination Component -->
+    <app-pagination
+      [totalItems]="repo.roles().length"
+      [pageSize]="pageSize()"
+      [currentPage]="currentPage()"
+      (pageChange)="setPage($event)"
+      (pageSizeChange)="setPageSize($event)" />
   </div>
 </div>
 

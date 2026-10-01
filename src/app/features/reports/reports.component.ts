@@ -3,11 +3,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { FormsModule } from '@angular/forms';
 import { ReportService } from 'shared/services/report.service';
 import { ReportCategory } from 'shared/types/report/report.interface';
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +19,57 @@ export class ReportsComponent {
   public readonly isDateDropdownOpen = signal<boolean>(false);
   public readonly isExportDropdownOpen = signal<boolean>(false);
   public readonly isMoreMenuOpen = signal<boolean>(false);
+
+  // Pagination
+  public readonly currentPage = signal<number>(1);
+  public readonly pageSize = signal<number>(10);
+
+  public readonly paginatedGateOps = computed(() => {
+    const list = this.reportService.filteredGateRows();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public readonly paginatedMismatches = computed(() => {
+    const list = this.reportService.filteredMismatchRows();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public readonly paginatedYardOccupancy = computed(() => {
+    const list = this.reportService.filteredYardRows();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public readonly paginatedEquipment = computed(() => {
+    const list = this.reportService.filteredEquipmentRows();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public readonly paginatedCustoms = computed(() => {
+    const list = this.reportService.filteredCustomsRows();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public readonly totalItems = computed(() => {
+    switch (this.reportService.selectedCategory()) {
+      case 'gate-operations':
+        return this.reportService.filteredGateRows().length;
+      case 'container-mismatch':
+        return this.reportService.filteredMismatchRows().length;
+      case 'yard-occupancy':
+        return this.reportService.filteredYardRows().length;
+      case 'equipment-productivity':
+        return this.reportService.filteredEquipmentRows().length;
+      case 'customs-billing':
+        return this.reportService.filteredCustomsRows().length;
+      default:
+        return 0;
+    }
+  });
 
   public readonly categories: {
     id: ReportCategory;
@@ -79,10 +131,26 @@ export class ReportsComponent {
 
   public setCategory(cat: ReportCategory): void {
     this.reportService.setCategory(cat);
+    this.currentPage.set(1);
   }
 
   public setDatePreset(preset: (typeof this.datePresets)[number]['value']): void {
     this.reportService.setDatePreset(preset);
+    this.currentPage.set(1);
+  }
+
+  public onSearchInput(value: string): void {
+    this.reportService.setSearchQuery(value);
+    this.currentPage.set(1);
+  }
+
+  public setPage(page: number): void {
+    this.currentPage.set(page);
+  }
+
+  public setPageSize(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
   }
 
   public exportCsv(): void {
@@ -93,3 +161,4 @@ export class ReportsComponent {
     this.reportService.exportCurrentReportToXls();
   }
 }
+

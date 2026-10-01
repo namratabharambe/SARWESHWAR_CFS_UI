@@ -135,7 +135,7 @@ const cfsSlots = slots.map((s, idx) => {
     polygon,
     truckNumber,
     driverName: isOccupied ? `Driver #${101 + (idx % 50)}` : undefined,
-    transporter: isOccupied ? 'Sarveshwar Freight Logistics' : undefined,
+    transporter: isOccupied ? 'Prosper Freight Logistics' : undefined,
     containerNumber,
     isoCode,
     shippingLine,

@@ -11,6 +11,7 @@ import { AvatarComponent } from 'shared/components/atoms/avatar/avatar.component
 import { ModalComponent } from 'shared/components/molecules/modal/modal.component';
 import { FormFieldComponent, SelectOption } from 'shared/components/molecules/form-field/form-field.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 import { FocusInvalidFieldDirective, HighlightTextDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -37,6 +38,7 @@ export interface SiteRoleItem {
     ModalComponent,
     FormFieldComponent,
     DropdownComponent,
+    PaginationComponent,
     FocusInvalidFieldDirective,
     HighlightTextDirective,
     TranslatePipe,
@@ -198,6 +200,25 @@ export class UsersComponent implements OnInit {
       return matchesQuery && matchesStatus && matchesRole;
     });
   });
+
+  // Pagination
+  public readonly currentPage = signal<number>(1);
+  public readonly pageSize = signal<number>(10);
+
+  public readonly paginatedUsers = computed(() => {
+    const list = this.filteredUsers();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
+  });
+
+  public setPage(page: number): void {
+    this.currentPage.set(page);
+  }
+
+  public setPageSize(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
 
   constructor() {
     this.repo.loadAll();

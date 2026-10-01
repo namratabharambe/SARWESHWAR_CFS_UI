@@ -301,7 +301,9 @@ export class GateEventDetailComponent {
   public buildEventDetail(event: GateEventItem): GateEventDetailData {
     const rawNumber = event.id.replace('evt-', '').padStart(6, '0');
     const eventId = `GE-2025-05-17-${rawNumber}`;
-    const cleanTruck = event.truckNo ? event.truckNo.replace(/\s+/g, '') : 'MH12AB1234';
+    const cleanTruck = event.truckNo
+      ? event.truckNo.replace(/\s+/g, '')
+      : (event.rawVisit?.truckNumber || event.rawDto?.truck?.truckNumber || '-');
     const eventTime = event.eventTime || '15 Sept 2026, 01:53 PM';
 
     const isDual = event.isDualContainer || (event.containers && event.containers.length > 1);
@@ -387,7 +389,7 @@ export class GateEventDetailComponent {
 
     return {
       eventId,
-      truckNo: cleanTruck || 'MH12AB1234',
+      truckNo: cleanTruck || '-',
       truckConfidence: Math.max(95, event.confidence || 95),
       isDualContainer: isTwin,
       containers,
