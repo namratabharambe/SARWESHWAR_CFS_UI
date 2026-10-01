@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.inventory-view {
+  min-height: 100%;
+  padding-bottom: 2rem;
+}
+
+// Global Cards in Inventory: Solid Dark Blue Border + Light Blue Gradient Tint + Hover Shadow
+.kpi-card,
+.inventory-analytics-card,
+.inventory-filter-card,
+.inventory-table-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
+  border: 2px solid #0f2851 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.12) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.18) !important;
+  }
+
+  :host-context(.dark) & {
+    background: linear-gradient(135deg, #111a2e 0%, #0d1527 100%) !important;
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45) !important;
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75) !important;
+    }
+  }
+}
+
+.inventory-table-card {
+  background: #ffffff !important;
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+  }
+}
+
+.quick-actions-popover {
+  border: 2px solid #0f2851 !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: 0 12px 32px -4px rgba(15, 40, 81, 0.22) !important;
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8) !important;
+  }
+}
+

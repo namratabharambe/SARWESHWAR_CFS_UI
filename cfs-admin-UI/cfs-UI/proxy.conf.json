@@ -1,0 +1,14 @@
+{
+  "/api/v1": {
+    "target": "https://syapi.prosperassettracking.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
+  "/api": {
+    "target": "https://cfsapi.prosperassettracking.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  }
+}

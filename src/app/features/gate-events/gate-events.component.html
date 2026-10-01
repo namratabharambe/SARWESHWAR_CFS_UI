@@ -84,12 +84,13 @@
     <section
       class="kpi-metrics-grid grid grid-cols-2 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
       aria-label="Gate KPI Summary">
-      <!-- Card 1: Today's Arrivals (Gate In) / Today's Departures (Gate Out) -->
+      <!-- Card 1: Today's Gate In (on Gate In page) OR Today's Gate Out (on Gate Out page) -->
       <div
-        class="kpi-card card-arrivals flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        class="kpi-card card-direction-today flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
           <div
-            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400">
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            [ngClass]="gateMode() === 'out' ? 'bg-orange-50 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400' : 'bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400'">
             @if (gateMode() === 'out') {
               <!-- Departure Symbol (Gate Out / Outbound Exit) -->
               <svg
@@ -122,7 +123,7 @@
           </div>
           <div class="kpi-content overflow-hidden">
             <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
-              {{ gateMode() === 'out' ? "Today's Departures" : ('GATE_EVENTS.TODAYS_ARRIVALS' | translate) }}
+              {{ gateMode() === 'out' ? "Today's Gate Out" : "Today's Gate In" }}
             </span>
             <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
               {{ gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals }}
@@ -135,7 +136,33 @@
         </div>
       </div>
 
-      <!-- Card 2: OCR Verified -->
+      <!-- Card 2: Total Gate In (on Gate In page) OR Total Gate Out (on Gate Out page) -->
+      <div
+        class="kpi-card card-total flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              {{ gateMode() === 'out' ? "Total Gate Out" : "Total Gate In" }}
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ gateMode() === 'out' ? metrics().totalCheckout : metrics().totalCheckin }}
+            </strong>
+          </div>
+        </div>
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          ↑ {{ gateMode() === 'out' ? metrics().totalCheckoutTrend : metrics().totalCheckinTrend }}
+        </div>
+      </div>
+
+      <!-- Card 3: OCR Verified -->
       <div
         class="kpi-card card-ocr flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
@@ -147,12 +174,12 @@
             </svg>
           </div>
           <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-              'GATE_EVENTS.OCR_VERIFIED' | translate
-            }}</span>
-            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">{{
-              metrics().ocrVerified
-            }}</strong>
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              OCR Verified
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ metrics().ocrVerified }}
+            </strong>
           </div>
         </div>
         <div
@@ -161,7 +188,7 @@
         </div>
       </div>
 
-      <!-- Card 3: Pending Review -->
+      <!-- Card 4: In Review / Pending Review Count -->
       <div
         class="kpi-card card-review flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
         <div class="flex items-center gap-3">
@@ -173,44 +200,18 @@
             </svg>
           </div>
           <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-              'GATE_EVENTS.PENDING_REVIEW' | translate
-            }}</span>
-            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">{{
-              metrics().pendingReview
-            }}</strong>
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              In Review
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ metrics().pendingReview }}
+            </strong>
           </div>
         </div>
         <div
-          class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400">
-          ↓ {{ metrics().pendingReviewTrend }}
-        </div>
-      </div>
-
-      <!-- Card 4: Damaged Captures -->
-      <div
-        class="kpi-card card-damaged flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
-        <div class="flex items-center gap-3">
-          <div
-            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
-            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-              <line x1="12" y1="9" x2="12" y2="13" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg>
-          </div>
-          <div class="kpi-content overflow-hidden">
-            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-              'GATE_EVENTS.DAMAGED_CAPTURES' | translate
-            }}</span>
-            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">{{
-              metrics().damagedCaptures
-            }}</strong>
-          </div>
-        </div>
-        <div
-          class="kpi-trend trend-danger mt-2.5 flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400">
-          ↓ {{ metrics().damagedTrend }}
+          class="kpi-trend mt-2.5 flex items-center gap-1 text-xs font-bold"
+          [ngClass]="metrics().pendingReview > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'">
+          {{ metrics().pendingReviewTrend }}
         </div>
       </div>
     </section>
@@ -252,7 +253,7 @@
         <div class="filter-controls-right flex flex-wrap items-center gap-2.5 shrink-0">
           <!-- Date Selector (Calendar Option) -->
           <div class="filter-item relative z-20 flex items-center">
-            <app-date-picker [value]="dateFilter()" (valueChange)="dateFilter.set($event)" placeholder="Select Date" />
+            <app-date-picker [value]="dateFilter()" (valueChange)="onDateFilterChange($event)" placeholder="Select Date" />
           </div>
 
           <!-- OCR Confidence Dropdown -->

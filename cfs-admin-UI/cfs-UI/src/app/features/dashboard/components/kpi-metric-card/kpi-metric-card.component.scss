@@ -1,0 +1,48 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.kpi-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 106px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14);
+  text-decoration: none;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22);
+    border-color: #2563eb !important;
+  }
+}
+
+:host-context(.dark) .kpi-card {
+  background: #111a2e;
+  border-color: rgba(51, 65, 85, 0.7);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.4);
+
+  &:hover {
+    border-color: rgba(96, 165, 250, 0.4);
+    box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.6);
+  }
+}
+
+.sparkline-container {
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.kpi-card:hover .sparkline-container {
+  opacity: 1;
+  transform: scale(1.04);
+}

@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.admin-page-container {
+  animation: fadeIn 0.18s ease-in-out;
+}
+
+.admin-users-panel {
+  border-top: 2px solid #0d9488;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px -2px rgba(13, 148, 136, 0.08);
+  }
+}
+
+:host-context(.dark) {
+  .admin-users-panel {
+    border-top-color: #14b8a6;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Custom Scrollbar for Modal Panels */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+:host-context(.dark) .custom-scroll {
+  scrollbar-color: #374151 transparent;
+
+  &::-webkit-scrollbar-thumb {
+    background: #374151;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+  }
+}
+
+/* Micro-interaction on Chip Hover & Click */
+.site-chip {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Row Hover Effect */
+.role-row-item {
+  transition: all 0.15s ease-in-out;
+}

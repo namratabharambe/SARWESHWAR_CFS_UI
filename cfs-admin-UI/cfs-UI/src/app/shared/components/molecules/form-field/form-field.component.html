@@ -1,0 +1,80 @@
+<div class="flex w-full flex-col gap-1.5">
+  <div class="flex items-center justify-between">
+    <label class="text-sm font-medium text-gray-700 dark:text-gray-300" [for]="fieldId()">
+      {{ label() }}
+      @if (control().hasError('required')) {
+        <span class="ml-0.5 font-semibold text-red-500">*</span>
+      }
+    </label>
+  </div>
+
+  <div class="relative rounded-xl shadow-sm">
+    @if (icon()) {
+      <div
+        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
+        <span class="material-icons-outlined text-lg">{{ icon() }}</span>
+      </div>
+    }
+
+    @switch (type()) {
+      @case ('select') {
+        <app-dropdown
+          [formControl]="control()"
+          [options]="options()"
+          [placeholder]="placeholder() || 'Select an option'"
+          [fullWidth]="true"
+          customTriggerClass="w-full h-10 rounded-xl border border-gray-300 bg-white px-3.5 text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100" />
+      }
+      @case ('multiselect') {
+        <select
+          [id]="fieldId()"
+          [formControl]="control()"
+          [attr.data-control-name]="controlNameAttr()"
+          multiple
+          class="block min-h-[100px] w-full rounded-xl border border-gray-300 bg-white p-2.5 text-sm text-gray-900 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          [class.border-red-500]="errorMessage()">
+          @for (option of options(); track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      }
+      @case ('textarea') {
+        <textarea
+          [id]="fieldId()"
+          [formControl]="control()"
+          [attr.data-control-name]="controlNameAttr()"
+          [placeholder]="placeholder()"
+          rows="3"
+          class="block w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          [class.pl-10]="icon()"
+          [class.border-red-500]="errorMessage()"
+          [class.focus:border-red-500]="errorMessage()"></textarea>
+      }
+      @default {
+        <input
+          [id]="fieldId()"
+          [formControl]="control()"
+          [attr.data-control-name]="controlNameAttr()"
+          [type]="type()"
+          [placeholder]="placeholder()"
+          [autocomplete]="autocomplete()"
+          class="block w-full rounded-xl border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+          [class.pl-10]="icon()"
+          [class.border-red-500]="errorMessage()"
+          [class.focus:border-red-500]="errorMessage()" />
+      }
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <div class="mt-0.5 flex items-center gap-1 text-xs text-red-600 dark:text-red-400" role="alert">
+      <svg class="h-3.5 w-3.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+          clip-rule="evenodd" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+</div>

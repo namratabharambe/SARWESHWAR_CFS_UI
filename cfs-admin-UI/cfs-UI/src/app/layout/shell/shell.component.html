@@ -1,0 +1,420 @@
+<div class="app-shell" [class.sidebar-collapsed]="collapsed()">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" [class.mobile-open]="mobileOpen()">
+    <!-- Brand Header -->
+    <div class="brand">
+      <img src="assets/images/logo.png" alt="SARVESHWAR CFS" class="brand-logo-img" />
+      <div class="brand-copy">
+        <strong class="brand-company-name">SARVESHWAR CFS</strong>
+        <small class="brand-product-desc text-white">Container Freight Station</small>
+      </div>
+    </div>
+
+    <!-- Navigation Items: Only Dashboard, Gate Events, Tasks, Inventory, Yard Map, Reports, Alerts, Admin -->
+    <nav class="sidebar-nav" aria-label="Main Navigation">
+      <!-- Dashboard -->
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">home</span>
+        <span class="nav-label-text">{{ 'NAV.DASHBOARD' | translate }}</span>
+      </a>
+
+      <!-- Gate Events (Parent) -->
+      <div class="nav-parent-group">
+        <button type="button" class="nav-item nav-parent-btn" [class.active]="isGateEventsRoute()"
+          (click)="toggleGateEvents()">
+          <div class="nav-left-part">
+            <span class="material-icons-outlined text-lg">published_with_changes</span>
+            <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
+          </div>
+          <span class="material-icons-outlined text-base nav-chevron"
+            [class.rotated]="gateEventsExpanded()">expand_more</span>
+        </button>
+
+        <!-- Gate Events Submenu -->
+        @if (gateEventsExpanded()) {
+        <div class="sub-nav-container">
+          <a routerLink="/gate-events/in" routerLinkActive="sub-active" class="sub-nav-item"
+            (click)="mobileOpen.set(false)">
+            <span class="sub-nav-label">{{ 'NAV.GATE_IN' | translate }}</span>
+          </a>
+          <a routerLink="/gate-events/out" routerLinkActive="sub-active" class="sub-nav-item"
+            (click)="mobileOpen.set(false)">
+            <span class="sub-nav-label">{{ 'NAV.GATE_OUT' | translate }}</span>
+          </a>
+        </div>
+        }
+      </div>
+
+      <!-- Tasks -->
+      <a routerLink="/tasks" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">timelapse</span>
+        <span class="nav-label-text">{{ 'NAV.TASKS' | translate }}</span>
+      </a>
+
+      <!-- Inventory -->
+      <a routerLink="/inventory" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">inventory_2</span>
+        <span class="nav-label-text">{{ 'NAV.INVENTORY' | translate }}</span>
+      </a>
+
+      <!-- Yard Map -->
+      <a routerLink="/yard-map" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">map</span>
+        <span class="nav-label-text">{{ 'NAV.YARD_MAP' | translate }}</span>
+      </a>
+
+      <!-- Reports -->
+      <a routerLink="/reports" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">bar_chart</span>
+        <span class="nav-label-text">{{ 'NAV.REPORTS' | translate }}</span>
+      </a>
+
+      <!-- Alerts -->
+      <a routerLink="/alerts" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">shield</span>
+        <span class="nav-label-text">{{ 'NAV.ALERTS' | translate }}</span>
+      </a>
+
+      <!-- Admin - Direct Nav Link -->
+      @if (auth.hasAdminAccess()) {
+      <a routerLink="/admin" routerLinkActive="active" [class.active]="isAdminRoute()" class="nav-item"
+        (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">settings</span>
+        <span class="nav-label-text">{{ 'NAV.ADMIN' | translate }}</span>
+      </a>
+      }
+    </nav>
+
+    <!-- Bottom Logistics Banner -->
+    <div class="sidebar-truck-banner">
+      <img src="assets/images/sidebar-cfs-truck.png" alt="CFS Logistics" class="sidebar-truck-img" />
+    </div>
+
+    <!-- Sidebar Collapse Button -->
+    <button class="collapse-button" type="button" (click)="collapsed.set(!collapsed())">
+      <span class="material-icons-outlined text-sm">{{ collapsed() ? 'chevron_right' : 'chevron_left' }}</span>
+      <span>{{ 'COMMON.COLLAPSE' | translate }}</span>
+    </button>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="bg-slate-50 transition-colors duration-200 dark:bg-[#070c18]">
+    <!-- Top Bar -->
+    <!-- Top Bar -->
+    <header class="topbar sticky top-0 z-40">
+      <!-- Backdrop for closing open topbar popovers -->
+      @if (locationMenuOpen() || notificationsMenuOpen() || userMenuOpen()) {
+      <div class="fixed inset-0 z-30 bg-transparent" (click)="closeAllMenus()" aria-hidden="true"></div>
+      }
+
+      <!-- Mobile Menu Button (Phone / Tablet) -->
+      <button class="mobile-menu text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+        type="button" aria-label="Open menu" (click)="mobileOpen.set(!mobileOpen())">
+        <span class="material-icons-outlined text-2xl">menu</span>
+      </button>
+
+      <!-- Left Header: Map Location Logo & Quick Context -->
+      <div class="topbar-left-controls relative z-40 flex items-center gap-2">
+        <!-- Map / Location Icon Button with Tooltip and Selection Popover -->
+        <div class="relative">
+          <button type="button" class="action-btn location-map-btn group relative" [class.active]="locationMenuOpen()"
+            (click)="toggleLocationMenu()" [attr.aria-expanded]="locationMenuOpen()"
+            title="Current Location: {{ currentSiteName() }}">
+            <span class="material-icons-outlined text-xl text-blue-600 dark:text-blue-400">location_on</span>
+
+            <!-- Hover Tooltip showing current Location -->
+            <span class="location-hover-tooltip pointer-events-none">
+              <span class="font-bold text-white">{{ currentSiteName() }}</span>
+              <span class="text-[10px] text-blue-200">Click to change location</span>
+            </span>
+          </button>
+
+          <!-- Location Selector Popover Menu -->
+          @if (locationMenuOpen()) {
+          <div
+            class="popover-dropdown location-popover absolute top-12 left-0 z-50 w-72 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-slate-800 dark:bg-[#111a2e]">
+            <div class="mb-2 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">map</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">Change
+                  Location</span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-400">{{ sitesForSelectedClient().length }} Sites</span>
+            </div>
+
+            <!-- System Admin Organization / Client Selection -->
+            @if (auth.isSystemAdmin() && availableClients().length > 0) {
+            <div class="mb-3 flex flex-col gap-1">
+              <label
+                class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Organization /
+                Client</label>
+              <div class="flex flex-col gap-1 max-h-32 overflow-y-auto">
+                @for (client of availableClients(); track client.id) {
+                <button type="button" (click)="onClientSelect(client.id); closeAllMenus()"
+                  class="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs font-semibold transition-colors"
+                  [class.bg-blue-50]="auth.selectedClientId() === client.id"
+                  [class.text-blue-600]="auth.selectedClientId() === client.id"
+                  [class.dark:bg-blue-950/40]="auth.selectedClientId() === client.id"
+                  [class.dark:text-blue-400]="auth.selectedClientId() === client.id"
+                  [class.text-slate-700]="auth.selectedClientId() !== client.id"
+                  [class.dark:text-slate-300]="auth.selectedClientId() !== client.id"
+                  [class.hover:bg-slate-100]="auth.selectedClientId() !== client.id"
+                  [class.dark:hover:bg-slate-800]="auth.selectedClientId() !== client.id">
+                  <span class="truncate">{{ client.name }}</span>
+                  @if (auth.selectedClientId() === client.id) {
+                  <span class="text-xs">✓</span>
+                  }
+                </button>
+                }
+              </div>
+            </div>
+            }
+
+            <!-- Sites List -->
+            <div class="flex flex-col gap-1">
+              <label class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Select
+                Terminal Site</label>
+              <div class="flex flex-col gap-1 max-h-48 overflow-y-auto">
+                @for (site of sitesForSelectedClient(); track site.id) {
+                <button type="button" (click)="onSiteSelect(site.id); closeAllMenus()"
+                  class="flex items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs font-semibold transition-colors"
+                  [class.bg-blue-600]="effectiveSelectedSiteId() === site.id"
+                  [class.text-white]="effectiveSelectedSiteId() === site.id"
+                  [class.text-slate-700]="effectiveSelectedSiteId() !== site.id"
+                  [class.dark:text-slate-300]="effectiveSelectedSiteId() !== site.id"
+                  [class.hover:bg-slate-100]="effectiveSelectedSiteId() !== site.id"
+                  [class.dark:hover:bg-slate-800]="effectiveSelectedSiteId() !== site.id">
+                  <div class="flex items-center gap-2 overflow-hidden">
+                    <span class="material-icons-outlined text-sm"
+                      [class.text-white]="effectiveSelectedSiteId() === site.id"
+                      [class.text-slate-400]="effectiveSelectedSiteId() !== site.id">location_city</span>
+                    <span class="truncate">{{ site.name }}</span>
+                  </div>
+                  @if (effectiveSelectedSiteId() === site.id) {
+                  <span class="text-xs font-bold">✓</span>
+                  }
+                </button>
+                } @empty {
+                <div class="py-3 text-center text-xs text-slate-400">No sites available</div>
+                }
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Location Name Pill (Subtle & Clean) -->
+        <div
+          class="flex items-center gap-1.5 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-1.5 text-xs font-bold text-slate-800 dark:border-slate-800 dark:bg-slate-800/60 dark:text-slate-200">
+          <span class="beacon-dot-blue"></span>
+          <span>{{ currentSiteName() }}</span>
+        </div>
+
+
+
+        <!-- Context Sync Indicator -->
+        @if (switchingContext() || auth.contextLoading()) {
+        <div class="context-sync-badge">
+          <span class="sync-spinner"></span>
+          <span>Syncing Site...</span>
+        </div>
+        } @else if (contextToast()) {
+        <div class="context-toast-badge">
+          <span>✓ {{ contextToast() }}</span>
+        </div>
+        }
+      </div>
+
+      <!-- Right Actions: Theme, Notifications with Alerts Popup, Initials User Profile with Sign Out -->
+      <div class="top-actions relative z-40 flex items-center gap-2.5">
+        <!-- Theme Switcher -->
+        <button type="button" class="action-btn theme-toggle-btn" (click)="theme.toggleTheme()"
+          [title]="theme.isDarkMode() ? ('NAV.LIGHT_MODE' | translate) : ('NAV.DARK_MODE' | translate)"
+          aria-label="Toggle theme mode">
+          @if (theme.isDarkMode()) {
+          <span class="material-icons-outlined text-lg text-amber-400">light_mode</span>
+          } @else {
+          <span class="material-icons-outlined text-lg text-slate-600">dark_mode</span>
+          }
+        </button>
+
+        <!-- Notification Bell with Dynamic Alerts Popup -->
+        <div class="relative">
+          <button type="button" aria-label="Notifications" class="action-btn notification-btn relative"
+            [class.active]="notificationsMenuOpen()" (click)="toggleNotificationsMenu()" title="Notifications & Alerts">
+            <span class="material-icons-outlined text-xl text-slate-600 dark:text-slate-300">notifications</span>
+            @if (notificationCount() > 0) {
+            <span class="notification-badge">
+              {{ notificationCount() }}
+            </span>
+            }
+          </button>
+
+          <!-- Notifications & Alerts Popover Menu -->
+          @if (notificationsMenuOpen()) {
+          <div
+            class="popover-dropdown notifications-popover absolute top-12 right-0 z-50 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-slate-800 dark:bg-[#111a2e]">
+            <div class="mb-3 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-lg text-amber-500">warning_amber</span>
+                <strong class="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Active Alerts
+                  & Notifications</strong>
+              </div>
+              <span
+                class="rounded-full bg-rose-50 px-2 py-0.5 text-[10px] font-bold text-rose-600 dark:bg-rose-950/60 dark:text-rose-300">
+                {{ notificationCount() }} New
+              </span>
+            </div>
+
+            <!-- Alerts List -->
+            <div class="flex flex-col gap-2 max-h-72 overflow-y-auto">
+              @for (alert of dashboardService.exceptionAlerts(); track alert.id) {
+              <div
+                class="group flex items-start gap-2.5 rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 transition-all hover:border-slate-200 hover:bg-slate-100 dark:border-slate-800/80 dark:bg-slate-800/50 dark:hover:border-slate-700">
+                <div class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+                  [class.bg-rose-100]="alert.severity === 'danger'" [class.text-rose-600]="alert.severity === 'danger'"
+                  [class.dark:bg-rose-950/70]="alert.severity === 'danger'"
+                  [class.dark:text-rose-400]="alert.severity === 'danger'"
+                  [class.bg-amber-100]="alert.severity === 'warning'"
+                  [class.text-amber-600]="alert.severity === 'warning'"
+                  [class.dark:bg-amber-950/70]="alert.severity === 'warning'"
+                  [class.dark:text-amber-400]="alert.severity === 'warning'"
+                  [class.bg-sky-100]="alert.severity === 'info'" [class.text-sky-600]="alert.severity === 'info'"
+                  [class.dark:bg-sky-950/70]="alert.severity === 'info'"
+                  [class.dark:text-sky-400]="alert.severity === 'info'">
+                  <span class="material-icons-outlined text-sm">warning</span>
+                </div>
+
+                <div class="flex flex-1 flex-col overflow-hidden">
+                  <div class="flex items-center justify-between gap-1">
+                    <span class="truncate text-xs font-bold text-slate-900 dark:text-white">{{ alert.title }}</span>
+                    <span class="text-[10px] text-slate-400">{{ alert.time }}</span>
+                  </div>
+                  <span class="line-clamp-2 text-[11px] text-slate-600 dark:text-slate-300">{{ alert.description
+                    }}</span>
+                </div>
+              </div>
+              } @empty {
+              <!-- Fallback Live Sample Alerts for immediate feedback -->
+              <div
+                class="flex items-start gap-2.5 rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 dark:border-slate-800/80 dark:bg-slate-800/50">
+                <div
+                  class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-950/70 dark:text-amber-400">
+                  <span class="material-icons-outlined text-sm">warning</span>
+                </div>
+                <div class="flex flex-1 flex-col">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-900 dark:text-white">Gate OCR Discrepancy</span>
+                    <span class="text-[10px] text-slate-400">2m ago</span>
+                  </div>
+                  <span class="text-[11px] text-slate-600 dark:text-slate-300">Container MSCU9823471 OCR confidence
+                    flagged below 90%</span>
+                </div>
+              </div>
+              <div
+                class="flex items-start gap-2.5 rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 dark:border-slate-800/80 dark:bg-slate-800/50">
+                <div
+                  class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600 dark:bg-sky-950/70 dark:text-sky-400">
+                  <span class="material-icons-outlined text-sm">local_shipping</span>
+                </div>
+                <div class="flex flex-1 flex-col">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-slate-900 dark:text-white">Gate In Verified</span>
+                    <span class="text-[10px] text-slate-400">10m ago</span>
+                  </div>
+                  <span class="text-[11px] text-slate-600 dark:text-slate-300">Truck MH12AB1234 entry cleared through
+                    South Gate 01</span>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- View All Footer -->
+            <div class="mt-3 border-t border-slate-100 pt-2 dark:border-slate-800">
+              <a routerLink="/alerts" (click)="closeAllMenus()"
+                class="flex w-full items-center justify-center gap-1.5 rounded-xl bg-slate-100 py-2 text-xs font-bold text-blue-600 transition-colors hover:bg-blue-50 dark:bg-slate-800 dark:text-blue-400 dark:hover:bg-slate-700">
+                <span>View All Alerts & Activity</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+          }
+        </div>
+
+        <!-- Subtle Divider -->
+        <div class="topbar-divider hidden sm:block"></div>
+
+        <!-- Initials-Only Account Avatar with Sign Out Popover Menu -->
+        <div class="relative">
+          <button type="button"
+            class="user-avatar-btn flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black tracking-wider text-white shadow-md shadow-blue-600/25 transition-transform duration-200 hover:scale-105 active:scale-95"
+            (click)="toggleUserMenu()" [attr.aria-expanded]="userMenuOpen()" title="Account: {{ auth.userName() }}">
+            {{ auth.userInitials() }}
+          </button>
+
+          <!-- User Profile & Sign Out Popover Menu -->
+          @if (userMenuOpen()) {
+          <div
+            class="popover-dropdown user-popover absolute top-12 right-0 z-50 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl dark:border-slate-800 dark:bg-[#111a2e]">
+            <!-- User Info Header -->
+            <div class="mb-3 flex items-center gap-3 border-b border-slate-100 pb-3 dark:border-slate-800">
+              <div
+                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 font-bold text-white shadow-sm">
+                {{ auth.userInitials() }}
+              </div>
+              <div class="flex flex-col overflow-hidden">
+                <span class="truncate text-xs font-bold text-slate-900 dark:text-white" [title]="auth.userName()">
+                  {{ auth.userName() }}
+                </span>
+                <span class="truncate text-[11px] font-semibold text-blue-600 dark:text-blue-400">
+                  {{ auth.userRoleDisplay() }}
+                </span>
+                <span class="truncate text-[10px] text-slate-400" [title]="currentSiteName()">
+                  {{ currentSiteName() }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Quick Links / Profile Actions -->
+            <div class="flex flex-col gap-1">
+              <a routerLink="/dashboard" (click)="closeAllMenus()"
+                class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800">
+                <span class="material-icons-outlined text-base text-slate-400">dashboard</span>
+                <span>Dashboard Overview</span>
+              </a>
+              <a routerLink="/yard-map" (click)="closeAllMenus()"
+                class="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800">
+                <span class="material-icons-outlined text-base text-slate-400">map</span>
+                <span>Live Yard Map</span>
+              </a>
+            </div>
+
+            <!-- Sign Out Button -->
+            <div class="mt-2 border-t border-slate-100 pt-2 dark:border-slate-800">
+              <button type="button" (click)="auth.logout()"
+                class="flex w-full items-center justify-center gap-2 rounded-xl border border-rose-200 bg-rose-50 py-2 text-xs font-bold text-rose-600 transition-all hover:bg-rose-100 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-950/80">
+                <span class="material-icons-outlined text-sm">logout</span>
+                <span>{{ 'NAV.LOGOUT' | translate }}</span>
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content Container -->
+    <section class="page">
+      <router-outlet />
+    </section>
+
+    <!-- Dashboard Footer -->
+    <footer
+      class="flex items-center justify-between border-t border-gray-200/80 px-5 py-2 text-xs text-gray-400 dark:border-gray-800 dark:text-gray-500">
+      <div class="flex-1 text-center text-[11px]">
+        © 2026 Sarveshwar CFS (Container Freight Station). All rights reserved.
+      </div>
+      <span class="font-mono text-[10px]">v1.0.0</span>
+    </footer>
+  </main>
+</div>

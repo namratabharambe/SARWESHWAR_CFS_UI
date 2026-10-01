@@ -1,0 +1,77 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.alerts-page {
+  min-height: 100%;
+  padding-bottom: 2rem;
+  max-width: 100%;
+}
+
+// Global Cards in Alerts: Solid Dark Blue Border + Light Blue Gradient Tint + Hover Shadow
+.kpi-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
+  border: 2px solid #0f2851 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.12) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:hover {
+    transform: translateY(-2px) !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 10px 26px -4px rgba(15, 40, 81, 0.2) !important;
+  }
+
+  :host-context(.dark) & {
+    background: linear-gradient(135deg, #111a2e 0%, #0d1527 100%) !important;
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45) !important;
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.75) !important;
+    }
+  }
+}
+
+.alerts-filter-card,
+.alerts-table-card {
+  border: 2px solid #0f2851 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.12) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.18) !important;
+  }
+
+  :host-context(.dark) & {
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45) !important;
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75) !important;
+    }
+  }
+}
+
+.alerts-filter-card {
+  background: linear-gradient(180deg, #f8fbfe 0%, #eef5fe 100%) !important;
+  position: relative;
+  z-index: 20;
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+  }
+}
+
+.alerts-table-card {
+  background: #ffffff !important;
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+  }
+}

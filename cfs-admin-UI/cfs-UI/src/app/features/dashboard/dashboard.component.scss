@@ -1,0 +1,346 @@
+/* ==========================================================================
+   Dashboard Entrance Animations (Coordinated, Staggered, Hardware-Accelerated)
+   Fires smoothly when navigating to the dashboard (e.g., right after login).
+   ========================================================================== */
+
+/* 1. Main Dashboard Container Entrance: Scale, Lift & Soft Glow Fade */
+@keyframes dashboardOpenEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.978);
+    filter: blur(4px);
+  }
+
+  60% {
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* 2. Top Ambient Sheen Laser Line: Smooth sweep across top edge on open */
+@keyframes dashboardSheenPass {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(250%);
+    opacity: 0;
+  }
+}
+
+/* 3. KPI Metric Cards Staggered Pop-In with Spring Effect */
+@keyframes kpiCardPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(26px) scale(0.92);
+  }
+
+  75% {
+    transform: translateY(-2px) scale(1.015);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 4. Operations Panel - Activity Log (Smooth slide from left-bottom) */
+@keyframes panelSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-20px, 24px, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 5. Operations Panel - Alerts (Smooth slide from right-bottom) */
+@keyframes panelSlideRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(20px, 24px, 0) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* 6. Analytics Cards (Yard, Donut, Inventory) Staggered Slide-Up */
+@keyframes analyticsCardUp {
+  0% {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.dashboard-page {
+  position: relative;
+  will-change: transform, opacity, filter;
+  animation: dashboardOpenEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: top center;
+  background-image: url('../../../assets/images/dashboard-ui-bg.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  border-radius: 1.25rem;
+  padding: 0.75rem;
+
+  :host-context(.dark) & {
+    background-image: none;
+    background-color: #081b2d;
+  }
+
+  /* Top Sheen Line container */
+  .dashboard-sheen-line {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 30;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(59, 130, 246, 0.8),
+          rgba(147, 197, 253, 0.95),
+          rgba(59, 130, 246, 0.8),
+          transparent);
+      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
+      animation: dashboardSheenPass 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    }
+  }
+
+  /* Top Hero Section */
+  .dashboard-section-hero {
+    display: grid;
+    gap: 14px;
+    align-items: stretch;
+
+    .welcome-banner-card {
+      min-height: 104px;
+      position: relative;
+      background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+      border: 1px solid rgba(186, 230, 253, 0.85);
+
+      :host-context(.dark) & {
+        background: linear-gradient(135deg, #0d1527 0%, #1e293b 100%);
+        border-color: rgba(30, 58, 138, 0.5);
+      }
+
+      .banner-bg-media img {
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      &:hover {
+        .banner-bg-media img {
+          transform: scale(1.03);
+        }
+      }
+    }
+
+    .weather-widget-card,
+    .throughput-widget-card {
+      min-height: 104px;
+    }
+  }
+
+  /* Section 1: KPI Metrics Grid with 5-Card Staggered Pop-In */
+  .dashboard-section-kpi {
+    .dashboard-kpi-card {
+      display: block;
+      height: 100%;
+      will-change: transform, opacity;
+      animation: kpiCardPopIn 0.52s cubic-bezier(0.2, 0.9, 0.3, 1.05) both;
+
+      &:nth-child(1) {
+        animation-delay: 0.08s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.22s;
+      }
+
+      &:nth-child(4) {
+        animation-delay: 0.29s;
+      }
+
+      &:nth-child(5) {
+        animation-delay: 0.36s;
+      }
+    }
+  }
+
+  /* Operational Grid: Yard Overview (6 cols) + 2x2 Quad Grid (6 cols) */
+  .dashboard-section-ops-grid {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* 2x2 Operational Quad Grid: Exact Same Card Sizes across all 4 cards */
+  .dashboard-ops-quad-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(295px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+  }
+
+  .dashboard-quad-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+
+    > * {
+      height: 100%;
+      min-height: 0;
+    }
+  }
+
+
+  /* Section 3: Analytics (Yard Snapshot, Status Donut, Inventory Summary) */
+  .dashboard-section-analytics {
+    .panel-yard-snapshot {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.46s;
+    }
+
+    .panel-status-donut {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.54s;
+    }
+
+    .panel-inventory-summary {
+      will-change: transform, opacity;
+      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.62s;
+    }
+  }
+}
+
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+
+  .dashboard-page,
+  .dashboard-sheen-line::after,
+  .dashboard-kpi-card,
+  .panel-recent-activity,
+  .panel-exception-alerts,
+  .panel-yard-snapshot,
+  .panel-status-donut,
+  .panel-inventory-summary {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* Global Dashboard Cards & Interactive Hover Elevation System */
+:host ::ng-deep .dashboard-page .dashboard-card,
+:host ::ng-deep .dashboard-page .welcome-banner-card,
+:host ::ng-deep .dashboard-page .weather-widget-card,
+:host ::ng-deep .dashboard-page .throughput-widget-card {
+  border: 2px solid #0f2851 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease !important;
+
+  &:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+    border-color: #2563eb !important;
+  }
+}
+
+:host-context(.dark) ::ng-deep .dashboard-page .dashboard-card,
+:host-context(.dark) ::ng-deep .dashboard-page .welcome-banner-card,
+:host-context(.dark) ::ng-deep .dashboard-page .weather-widget-card,
+:host-context(.dark) ::ng-deep .dashboard-page .throughput-widget-card {
+  background: #111a2e !important;
+  border-color: rgba(148, 163, 184, 0.14) !important;
+  box-shadow: none !important;
+
+  &:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
+    border-color: rgba(59, 130, 246, 0.35) !important;
+  }
+}
+
+/* Dark palette typography & background surfaces */
+:host-context(.dark) ::ng-deep .dashboard-page {
+
+  .bg-slate-50\/70,
+  .bg-slate-50,
+  .bg-slate-100 {
+    background-color: #0e2942 !important;
+  }
+
+  .dark\:bg-slate-800,
+  .dark\:bg-slate-900\/40 {
+    background-color: #0e2942 !important;
+  }
+
+  .text-\[\#0f2851\] {
+    color: #eaf4ff !important;
+  }
+
+  .text-slate-500,
+  .text-slate-600 {
+    color: #a5bcd0 !important;
+  }
+
+  .text-slate-400 {
+    color: #718da5 !important;
+  }
+}

@@ -1,0 +1,597 @@
+<div class="reports-page flex flex-col gap-4 md:gap-5">
+  <!-- Toast Notification -->
+  @if (reportService.toastMessage()) {
+    <div
+      class="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-xs font-semibold text-white shadow-xl dark:bg-white dark:text-slate-900">
+      <span class="material-icons-outlined text-base text-emerald-400 dark:text-emerald-600">check_circle</span>
+      <span>{{ reportService.toastMessage() }}</span>
+    </div>
+  }
+
+  <!-- 1. Page Header (Left: Title/Subtitle, Right: Compact Date Range & Export Actions) -->
+  <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="min-w-0 flex-1">
+      <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-[#0f2851] leading-tight dark:text-white truncate">
+        Operational Reports & Analytics
+      </h1>
+      <p class="mt-0.5 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+        Audit logs, throughput analytics, turn-around times, and equipment metrics
+      </p>
+    </div>
+
+    <!-- Right Controls: Compact Single Date Range Dropdown + Unified Export Dropdown -->
+    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+      <!-- Compact Date Range Dropdown -->
+      <div class="relative">
+        <button
+          type="button"
+          (click)="isDateDropdownOpen.set(!isDateDropdownOpen()); isExportDropdownOpen.set(false)"
+          class="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+          <span class="material-icons-outlined text-sm text-blue-600">calendar_today</span>
+          <span>{{ selectedPresetLabel() }}</span>
+          <span class="material-icons text-sm text-slate-400">expand_more</span>
+        </button>
+
+        <!-- Floating Date Dropdown Popover -->
+        @if (isDateDropdownOpen()) {
+          <div class="fixed inset-0 z-40" (click)="isDateDropdownOpen.set(false)"></div>
+          <div
+            class="absolute right-0 top-full mt-1.5 z-50 min-w-[170px] rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-800">
+            @for (dp of datePresets; track dp.value) {
+              <button
+                type="button"
+                (click)="setDatePreset(dp.value); isDateDropdownOpen.set(false)"
+                class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold transition-colors cursor-pointer"
+                [ngClass]="
+                  reportService.filter().preset === dp.value
+                    ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/80 dark:text-blue-300'
+                    : 'text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-slate-700'
+                ">
+                <span>{{ dp.label }}</span>
+                @if (reportService.filter().preset === dp.value) {
+                  <span class="material-icons text-xs text-blue-600">check</span>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Unified Export Dropdown Button -->
+      <div class="relative">
+        <button
+          type="button"
+          (click)="isExportDropdownOpen.set(!isExportDropdownOpen()); isDateDropdownOpen.set(false)"
+          class="flex h-9 items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 text-xs font-bold text-white shadow-xs hover:bg-blue-700 active:scale-95 cursor-pointer">
+          <span class="material-icons-outlined text-sm">download</span>
+          <span>Export</span>
+          <span class="material-icons text-sm">expand_more</span>
+        </button>
+
+        <!-- Floating Export Options Dropdown Popover -->
+        @if (isExportDropdownOpen()) {
+          <div class="fixed inset-0 z-40" (click)="isExportDropdownOpen.set(false)"></div>
+          <div
+            class="absolute right-0 top-full mt-1.5 z-50 min-w-[180px] rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-800">
+            <!-- Option 1: Export CSV -->
+            <button
+              type="button"
+              (click)="exportCsv(); isExportDropdownOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-slate-700 cursor-pointer">
+              <span class="material-icons-outlined text-base text-emerald-600">table_view</span>
+              <span>Export CSV</span>
+            </button>
+
+            <!-- Option 2: Export to Excel -->
+            <button
+              type="button"
+              (click)="exportXls(); isExportDropdownOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold text-blue-700 hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-950/60 cursor-pointer">
+              <span class="material-icons-outlined text-base text-blue-600">download</span>
+              <span>Export to Excel</span>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Report Category Selection Tabs (Horizontally Scrollable, No Page Overflow) -->
+  <section class="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar w-full max-w-full">
+    @for (cat of categories; track cat.id) {
+      <button
+        type="button"
+        (click)="setCategory(cat.id)"
+        class="flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-150 cursor-pointer"
+        [ngClass]="
+          reportService.selectedCategory() === cat.id
+            ? 'border-2 border-[#0f2851] bg-[#0f2851] text-white shadow-md shadow-[#0f2851]/25 dark:border-blue-500 dark:bg-blue-600'
+            : 'border border-slate-200 bg-white text-slate-700 shadow-xs hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-slate-800'
+        ">
+        <span class="material-icons-outlined text-base">{{ cat.icon }}</span>
+        <span>{{ cat.label }}</span>
+        @if (cat.countBadge) {
+          <span
+            class="rounded-full px-2 py-0.5 text-[10px] font-bold"
+            [ngClass]="
+              reportService.selectedCategory() === cat.id
+                ? 'bg-white/20 text-white'
+                : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
+            ">
+            {{ cat.countBadge }}
+          </span>
+        }
+      </button>
+    }
+  </section>
+
+  <!-- 3. Dynamic KPI Summary Cards (4 Desktop, 2 Tablet, 1 Mobile) -->
+  <section class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Metric 1 -->
+    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
+          {{ reportService.activeKpis().metric1Label }}
+        </span>
+        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">trending_up</span>
+      </div>
+      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
+        {{ reportService.activeKpis().metric1Value }}
+      </div>
+      <div
+        class="mt-2 flex items-center gap-1 text-xs font-bold"
+        [class.text-emerald-600]="reportService.activeKpis().metric1IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric1IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric1IsPositive">
+        <span>{{ reportService.activeKpis().metric1Trend }}</span>
+      </div>
+    </div>
+
+    <!-- Metric 2 -->
+    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
+          {{ reportService.activeKpis().metric2Label }}
+        </span>
+        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">speed</span>
+      </div>
+      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
+        {{ reportService.activeKpis().metric2Value }}
+      </div>
+      <div
+        class="mt-2 flex items-center gap-1 text-xs font-bold"
+        [class.text-emerald-600]="reportService.activeKpis().metric2IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric2IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric2IsPositive">
+        <span>{{ reportService.activeKpis().metric2Trend }}</span>
+      </div>
+    </div>
+
+    <!-- Metric 3 -->
+    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
+          {{ reportService.activeKpis().metric3Label }}
+        </span>
+        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">verified</span>
+      </div>
+      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
+        {{ reportService.activeKpis().metric3Value }}
+      </div>
+      <div
+        class="mt-2 flex items-center gap-1 text-xs font-bold"
+        [class.text-emerald-600]="reportService.activeKpis().metric3IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric3IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric3IsPositive">
+        <span>{{ reportService.activeKpis().metric3Trend }}</span>
+      </div>
+    </div>
+
+    <!-- Metric 4 -->
+    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
+          {{ reportService.activeKpis().metric4Label }}
+        </span>
+        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">bolt</span>
+      </div>
+      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
+        {{ reportService.activeKpis().metric4Value }}
+      </div>
+      <div
+        class="mt-2 flex items-center gap-1 text-xs font-bold"
+        [class.text-emerald-600]="reportService.activeKpis().metric4IsPositive"
+        [class.dark:text-emerald-400]="reportService.activeKpis().metric4IsPositive"
+        [class.text-rose-600]="!reportService.activeKpis().metric4IsPositive">
+        <span>{{ reportService.activeKpis().metric4Trend }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Filter / Search Card -->
+  <section class="reports-filter-card flex flex-wrap items-center justify-between gap-3 rounded-[14px] p-3.5 shadow-xs">
+    <div class="relative min-w-[240px] flex-1 max-w-lg">
+      <span class="material-icons-outlined absolute left-3 top-2.5 text-sm text-slate-400">search</span>
+      <input
+        type="text"
+        [value]="reportService.filter().searchQuery"
+        (input)="reportService.setSearchQuery($any($event.target).value)"
+        placeholder="Filter records in current report..."
+        class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-4 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
+    </div>
+
+    <!-- Quick Secondary Export Pills -->
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        (click)="exportCsv()"
+        class="flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 cursor-pointer">
+        <span class="material-icons-outlined text-sm text-emerald-600">file_download</span>
+        <span>CSV</span>
+      </button>
+      <button
+        type="button"
+        (click)="exportXls()"
+        class="flex h-9 items-center gap-1 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-bold text-blue-700 hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 cursor-pointer">
+        <span class="material-icons-outlined text-sm">grid_on</span>
+        <span>XLS</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- 5. Main Report Table Container (Internal Horizontal Scroll Only, Never Page Scroll) -->
+  <section class="reports-table-card overflow-hidden rounded-[14px] shadow-xs">
+    <div class="overflow-x-auto">
+      <!-- 1. Gate Operations Table -->
+      @if (reportService.selectedCategory() === 'gate-operations') {
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
+            <tr>
+              <th class="px-4 py-3.5 whitespace-nowrap">Visit No</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Gate / Lane</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Direction</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Truck / Driver</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Line</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">OCR Status</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">TAT (Mins)</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Weighbridge</th>
+              <th class="px-4 py-3.5 whitespace-nowrap text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (row of reportService.filteredGateRows(); track row.id) {
+              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
+                  {{ row.visitNo }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{{ row.timestamp }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">{{ row.gateLane }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span
+                    class="rounded-md px-2 py-0.5 text-[10px] font-bold"
+                    [class.bg-blue-50]="row.direction === 'IN'"
+                    [class.text-blue-700]="row.direction === 'IN'"
+                    [class.dark:bg-blue-950]="row.direction === 'IN'"
+                    [class.dark:text-blue-300]="row.direction === 'IN'"
+                    [class.bg-teal-50]="row.direction === 'OUT'"
+                    [class.text-teal-700]="row.direction === 'OUT'"
+                    [class.dark:bg-teal-950]="row.direction === 'OUT'"
+                    [class.dark:text-teal-300]="row.direction === 'OUT'">
+                    {{ row.direction === 'IN' ? '↓ INBOUND' : '↑ OUTBOUND' }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="font-bold text-slate-900 dark:text-white">{{ row.truckNo }}</div>
+                  <div class="text-[10px] text-slate-400 truncate max-w-[140px]" [title]="row.driverName">{{ row.driverName }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
+                  {{ row.containerNo }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{{ row.shippingLine }}</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span
+                    class="rounded-md px-2 py-0.5 text-[10px] font-bold"
+                    [class.bg-emerald-50]="row.ocrStatus === 'Auto-Matched'"
+                    [class.text-emerald-700]="row.ocrStatus === 'Auto-Matched'"
+                    [class.dark:bg-emerald-950]="row.ocrStatus === 'Auto-Matched'"
+                    [class.dark:text-emerald-300]="row.ocrStatus === 'Auto-Matched'"
+                    [class.bg-amber-50]="row.ocrStatus === 'Manual Verified'"
+                    [class.text-amber-700]="row.ocrStatus === 'Manual Verified'"
+                    [class.dark:bg-amber-950]="row.ocrStatus === 'Manual Verified'"
+                    [class.dark:text-amber-300]="row.ocrStatus === 'Manual Verified'"
+                    [class.bg-rose-50]="row.ocrStatus === 'Exception'"
+                    [class.text-rose-700]="row.ocrStatus === 'Exception'"
+                    [class.dark:bg-rose-950]="row.ocrStatus === 'Exception'"
+                    [class.dark:text-rose-300]="row.ocrStatus === 'Exception'">
+                    {{ row.ocrStatus }}
+                  </span>
+                </td>
+                <td
+                  class="whitespace-nowrap px-4 py-3 font-mono font-bold"
+                  [class.text-emerald-600]="row.turnaroundMinutes <= 10"
+                  [class.text-amber-600]="row.turnaroundMinutes > 10 && row.turnaroundMinutes <= 20"
+                  [class.text-rose-600]="row.turnaroundMinutes > 20">
+                  {{ row.turnaroundMinutes }}m
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+                  {{ row.weighbridgeKg | number }} KG
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span
+                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
+                    [class.bg-emerald-50]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                    [class.text-emerald-700]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                    [class.dark:bg-emerald-950]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                    [class.dark:text-emerald-300]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                    [class.bg-rose-50]="row.status === 'Held'"
+                    [class.text-rose-700]="row.status === 'Held'"
+                    [class.dark:bg-rose-950]="row.status === 'Held'"
+                    [class.dark:text-rose-300]="row.status === 'Held'">
+                    {{ row.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 2. Container Mismatch & OCR Audit Table -->
+      @if (reportService.selectedCategory() === 'container-mismatch') {
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
+            <tr>
+              <th class="px-4 py-3.5 whitespace-nowrap">Alert Code</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Gate Lane</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Scanned Reality (OCR)</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Manifest Record</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Discrepancy Detail</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Vision Conf.</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Line / BL</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Resolution SLA</th>
+              <th class="px-4 py-3.5 whitespace-nowrap text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (row of reportService.filteredMismatchRows(); track row.id) {
+              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
+                  {{ row.alertCode }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{{ row.timestamp }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-medium">{{ row.gateLane }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-rose-600 dark:text-rose-400">
+                  {{ row.scannedContainerNo }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                  {{ row.manifestContainerNo }}
+                </td>
+                <td class="px-4 py-3 max-w-[200px]">
+                  <div class="font-bold text-slate-800 dark:text-slate-200 truncate" [title]="row.discrepancyType">{{ row.discrepancyType }}</div>
+                  <div class="text-[10px] text-slate-400 truncate" [title]="row.varianceDescription">{{ row.varianceDescription }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-slate-800 dark:text-slate-200">{{ row.ocrConfidence }}%</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="font-semibold text-slate-800 dark:text-slate-200">{{ row.shippingLine }}</div>
+                  <div class="font-mono text-[10px] text-slate-400">{{ row.bookingNo }}</div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+                  {{ row.resolutionDurationMins }} mins
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span
+                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
+                    [class.bg-emerald-50]="row.resolutionStatus === 'Resolved'"
+                    [class.text-emerald-700]="row.resolutionStatus === 'Resolved'"
+                    [class.dark:bg-emerald-950]="row.resolutionStatus === 'Resolved'"
+                    [class.dark:text-emerald-300]="row.resolutionStatus === 'Resolved'"
+                    [class.bg-blue-50]="row.resolutionStatus === 'Overridden'"
+                    [class.text-blue-700]="row.resolutionStatus === 'Overridden'"
+                    [class.dark:bg-blue-950]="row.resolutionStatus === 'Overridden'"
+                    [class.dark:text-blue-300]="row.resolutionStatus === 'Overridden'"
+                    [class.bg-amber-50]="row.resolutionStatus === 'Pending Inspection'"
+                    [class.text-amber-700]="row.resolutionStatus === 'Pending Inspection'"
+                    [class.dark:bg-amber-950]="row.resolutionStatus === 'Pending Inspection'"
+                    [class.dark:text-amber-300]="row.resolutionStatus === 'Pending Inspection'">
+                    {{ row.resolutionStatus }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 3. Yard Occupancy & Dwell Table -->
+      @if (reportService.selectedCategory() === 'yard-occupancy') {
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
+            <tr>
+              <th class="px-4 py-3.5 whitespace-nowrap">Block Name</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Zone</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Total Capacity</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Occupied (TEU)</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Occupancy Rate</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Reefer Slots</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Avg Dwell</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Long-Stay (>30d)</th>
+              <th class="px-4 py-3.5 whitespace-nowrap text-right">Last Audit</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (row of reportService.filteredYardRows(); track row.id) {
+              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white">{{ row.blockName }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">{{ row.yardZone }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium">{{ row.totalCapacityTeu | number }} TEU</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">{{ row.occupiedTeu | number }} TEU</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <div class="h-2 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                      <div
+                        class="h-full rounded-full"
+                        [class.bg-emerald-500]="row.occupancyRatePercent <= 75"
+                        [class.bg-amber-500]="row.occupancyRatePercent > 75 && row.occupancyRatePercent <= 90"
+                        [class.bg-rose-500]="row.occupancyRatePercent > 90"
+                        [style.width.%]="row.occupancyRatePercent"></div>
+                    </div>
+                    <span class="font-mono text-xs font-black text-slate-800 dark:text-slate-200">{{ row.occupancyRatePercent }}%</span>
+                  </div>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+                  {{ row.reeferSlotsOccupied }} / {{ row.reeferSlotsTotal }} plugs
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-800 dark:text-slate-200">{{ row.averageDwellDays }} Days</td>
+                <td
+                  class="whitespace-nowrap px-4 py-3 font-mono font-bold"
+                  [class.text-rose-600]="row.longStayOver30DaysCount > 5"
+                  [class.text-slate-700]="row.longStayOver30DaysCount <= 5"
+                  [class.dark:text-slate-300]="row.longStayOver30DaysCount <= 5">
+                  {{ row.longStayOver30DaysCount }} units
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-right font-mono text-slate-500 dark:text-slate-400">{{ row.lastAuditedTime }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 4. Equipment Productivity Table -->
+      @if (reportService.selectedCategory() === 'equipment-productivity') {
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
+            <tr>
+              <th class="px-4 py-3.5 whitespace-nowrap">Equipment Code</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Type</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Operator</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Shift</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Total Moves</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Moves / Hour</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Operating Hrs</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Fuel (L)</th>
+              <th class="px-4 py-3.5 whitespace-nowrap text-right">Rating</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (row of reportService.filteredEquipmentRows(); track row.id) {
+              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
+                  {{ row.equipmentCode }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">{{ row.equipmentType }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white">{{ row.assignedOperator }}</td>
+                <td class="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">{{ row.shift }}</td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-blue-600 dark:text-blue-400">
+                  {{ row.totalMoves }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-emerald-600 dark:text-emerald-400">
+                  {{ row.movesPerHour }} MPH
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+                  {{ row.operatingHours }} hrs ({{ row.idleHours }} idle)
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">{{ row.fuelConsumptionLitres }} L</td>
+                <td class="whitespace-nowrap px-4 py-3 text-right">
+                  <span
+                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
+                    [class.bg-emerald-50]="row.efficiencyRating === 'Optimal'"
+                    [class.text-emerald-700]="row.efficiencyRating === 'Optimal'"
+                    [class.dark:bg-emerald-950]="row.efficiencyRating === 'Optimal'"
+                    [class.dark:text-emerald-300]="row.efficiencyRating === 'Optimal'"
+                    [class.bg-blue-50]="row.efficiencyRating === 'Standard'"
+                    [class.text-blue-700]="row.efficiencyRating === 'Standard'"
+                    [class.dark:bg-blue-950]="row.efficiencyRating === 'Standard'"
+                    [class.dark:text-blue-300]="row.efficiencyRating === 'Standard'"
+                    [class.bg-amber-50]="row.efficiencyRating === 'Needs Attention'"
+                    [class.text-amber-700]="row.efficiencyRating === 'Needs Attention'"
+                    [class.dark:bg-amber-950]="row.efficiencyRating === 'Needs Attention'"
+                    [class.dark:text-amber-300]="row.efficiencyRating === 'Needs Attention'">
+                    {{ row.efficiencyRating }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+
+      <!-- 5. Customs & Billing Table -->
+      @if (reportService.selectedCategory() === 'customs-billing') {
+        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
+            <tr>
+              <th class="px-4 py-3.5 whitespace-nowrap">Dossier No</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">BL Number</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Importer / Exporter</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Cargo Description</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Gross Weight</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Customs Status</th>
+              <th class="px-4 py-3.5 whitespace-nowrap">Bonded Days</th>
+              <th class="px-4 py-3.5 whitespace-nowrap text-right">Demurrage (INR)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (row of reportService.filteredCustomsRows(); track row.id) {
+              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
+                  {{ row.dossierNo }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
+                  {{ row.containerNo }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+                  {{ row.blNumber }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white truncate max-w-[170px]" [title]="row.importerExporterName">
+                  {{ row.importerExporterName }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 text-slate-600 dark:text-slate-400 truncate max-w-[180px]" [title]="row.cargoDescription">
+                  {{ row.cargoDescription }}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-700 dark:text-slate-300">{{ row.grossWeightKg | number }} KG</td>
+                <td class="whitespace-nowrap px-4 py-3">
+                  <span
+                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
+                    [class.bg-emerald-50]="row.customsStatus === 'Cleared'"
+                    [class.text-emerald-700]="row.customsStatus === 'Cleared'"
+                    [class.dark:bg-emerald-950]="row.customsStatus === 'Cleared'"
+                    [class.dark:text-emerald-300]="row.customsStatus === 'Cleared'"
+                    [class.bg-amber-50]="
+                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
+                    "
+                    [class.text-amber-700]="
+                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
+                    "
+                    [class.dark:bg-amber-950]="
+                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
+                    "
+                    [class.dark:text-amber-300]="
+                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
+                    "
+                    [class.bg-rose-50]="row.customsStatus === 'Detained'"
+                    [class.text-rose-700]="row.customsStatus === 'Detained'"
+                    [class.dark:bg-rose-950]="row.customsStatus === 'Detained'"
+                    [class.dark:text-rose-300]="row.customsStatus === 'Detained'">
+                    {{ row.customsStatus }}
+                  </span>
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium text-slate-700 dark:text-slate-300">{{ row.bondedWarehouseDays }} Days</td>
+                <td
+                  class="whitespace-nowrap px-4 py-3 text-right font-mono font-bold"
+                  [class.text-emerald-600]="row.demurrageAccruedInr === 0"
+                  [class.text-amber-600]="row.demurrageAccruedInr > 0 && row.demurrageAccruedInr <= 10000"
+                  [class.text-rose-600]="row.demurrageAccruedInr > 10000">
+                  ₹{{ row.demurrageAccruedInr | number }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </section>
+</div>

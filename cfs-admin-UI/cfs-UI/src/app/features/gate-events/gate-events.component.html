@@ -1,0 +1,781 @@
+<div class="gate-events-page flex flex-col gap-5">
+  <!-- Toast Notification Alert -->
+  @if (alertMessage()) {
+    <div
+      class="gate-toast-alert fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-slate-900/90 px-4 py-2.5 text-xs font-semibold text-white shadow-2xl backdrop-blur-md dark:bg-white/95 dark:text-slate-900"
+      role="status">
+      <span class="toast-icon">ℹ️</span>
+      <span>{{ alertMessage() }}</span>
+      <button type="button" class="btn-close-toast ml-2 hover:opacity-80" (click)="alertMessage.set('')">✕</button>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 1. NON ERP CONTAINER VIEW (Modular Component)                              -->
+  <!-- ========================================================================= -->
+  @if (isNonErpView()) {
+    <app-non-erp-container [gateMode]="gateMode()" (back)="closeNonErpView()" (toast)="handleNonErpToast($event)">
+    </app-non-erp-container>
+  } @else if (selectedEventForDetails(); as selectedEvent) {
+    <!-- ========================================================================= -->
+    <!-- 2. GATE EVENT DETAIL VIEW (Modular Component)                              -->
+    <!-- ========================================================================= -->
+    <app-gate-event-detail
+      [event]="selectedEvent"
+      (back)="closeDetails()"
+      (approve)="approveSingleEvent($event)"
+      (markException)="markExceptionForEvent($event)"
+      (reRunOcr)="reRunOcrForEvent($event)"
+      (createTask)="createTaskForEvent($event)"
+      (toast)="alertMessage.set($event)">
+    </app-gate-event-detail>
+  } @else {
+    <!-- ========================================================================= -->
+    <!-- 3. GATE EVENTS TABLE VIEW                                                 -->
+    <!-- ========================================================================= -->
+    <!-- Page Header with Action Buttons: Non ERP Container & Manual Gate Entry -->
+    <header class="page-title-header flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="header-title-content">
+        <h1 class="page-title text-[28px] md:text-3xl font-black tracking-tight text-[#0f2851] leading-tight dark:text-white">
+          {{ gateMode() === 'out' ? 'Gate Out' : 'Gate In' }}
+        </h1>
+        <p class="page-subtitle mt-0.5 text-xs md:text-sm font-medium text-slate-500 dark:text-slate-400">
+          {{
+            gateMode() === 'out'
+              ? 'Real-time OCR event monitoring & Gate Out verification'
+              : 'Real-time OCR event monitoring & Gate In verification'
+          }}
+        </p>
+      </div>
+      <div class="header-actions flex flex-wrap items-center gap-2.5">
+        <!-- Non ERP Container Button (Available in both Gate In and Gate Out) -->
+        <button
+          type="button"
+          class="btn-non-erp-container flex items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+          (click)="openNonErpContainerModal()"
+          title="Non ERP Container">
+          <svg class="btn-non-erp-svg h-4 w-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+          <span>Non ERP Container</span>
+        </button>
+
+        <!-- Manual Gate Entry (Gate In only) -->
+        @if (gateMode() === 'in') {
+          <button
+            type="button"
+            class="btn-manual-gate-entry flex items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+            (click)="openGateInModal()"
+            title="Manual Gate Entry">
+            <svg class="btn-entry-svg h-4 w-4 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
+            </svg>
+            <span>{{ 'GATE_EVENTS.MANUAL_GATE_ENTRY' | translate }}</span>
+          </button>
+        }
+      </div>
+    </header>
+
+    <!-- 4 KPI Metrics Cards Grid -->
+    <section
+      class="kpi-metrics-grid grid grid-cols-2 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
+      aria-label="Gate KPI Summary">
+      <!-- Card 1: Today's Gate In (on Gate In page) OR Today's Gate Out (on Gate Out page) -->
+      <div
+        class="kpi-card card-direction-today flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            [ngClass]="gateMode() === 'out' ? 'bg-orange-50 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400' : 'bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400'">
+            @if (gateMode() === 'out') {
+              <!-- Departure Symbol (Gate Out / Outbound Exit) -->
+              <svg
+                class="kpi-svg h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            } @else {
+              <!-- Arrival Symbol (Gate In / Inbound Entry) -->
+              <svg
+                class="kpi-svg h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <polyline points="10 17 15 12 10 7" />
+                <line x1="15" y1="12" x2="3" y2="12" />
+              </svg>
+            }
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              {{ gateMode() === 'out' ? "Today's Gate Out" : "Today's Gate In" }}
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals }}
+            </strong>
+          </div>
+        </div>
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          ↑ {{ gateMode() === 'out' ? metrics().departuresTrend : metrics().arrivalsTrend }}
+        </div>
+      </div>
+
+      <!-- Card 2: Total Gate In (on Gate In page) OR Total Gate Out (on Gate Out page) -->
+      <div
+        class="kpi-card card-total flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              {{ gateMode() === 'out' ? "Total Gate Out" : "Total Gate In" }}
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ gateMode() === 'out' ? metrics().totalCheckout : metrics().totalCheckin }}
+            </strong>
+          </div>
+        </div>
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          ↑ {{ gateMode() === 'out' ? metrics().totalCheckoutTrend : metrics().totalCheckinTrend }}
+        </div>
+      </div>
+
+      <!-- Card 3: OCR Verified -->
+      <div
+        class="kpi-card card-ocr flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <polyline points="9 12 11 14 15 10" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              OCR Verified
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ metrics().ocrVerified }}
+            </strong>
+          </div>
+        </div>
+        <div
+          class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          {{ metrics().ocrVerifiedPercent }}
+        </div>
+      </div>
+
+      <!-- Card 4: In Review / Pending Review Count -->
+      <div
+        class="kpi-card card-review flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        <div class="flex items-center gap-3">
+          <div
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400">
+            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <div class="kpi-content overflow-hidden">
+            <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+              In Review
+            </span>
+            <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+              {{ metrics().pendingReview }}
+            </strong>
+          </div>
+        </div>
+        <div
+          class="kpi-trend mt-2.5 flex items-center gap-1 text-xs font-bold"
+          [ngClass]="metrics().pendingReview > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'">
+          {{ metrics().pendingReviewTrend }}
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Table Card Container -->
+    <div
+      class="gate-events-card rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white shadow-xs overflow-hidden dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+      <!-- Streamlined Toolbar: Search on Left Corner, Date + Confidence + Export on Right Corner -->
+      <div
+        class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-[#111a2e]">
+        <!-- Left Corner: Live Search Box -->
+        <div class="search-field-wrapper relative flex flex-1 min-w-[260px] max-w-lg items-center">
+          <svg
+            class="search-lens-svg pointer-events-none absolute left-3 h-4 w-4 text-slate-400"
+            viewBox="0 0 20 20"
+            fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clip-rule="evenodd" />
+          </svg>
+          <input
+            type="text"
+            class="gate-search-input h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 pl-9 pr-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+            [placeholder]="'GATE_EVENTS.SEARCH_PLACEHOLDER' | translate"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)" />
+          @if (searchQuery()) {
+            <button
+              type="button"
+              class="btn-clear-gate-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+              (click)="searchQuery.set('')">
+              ✕
+            </button>
+          }
+        </div>
+
+        <!-- Right Corner: Date Selector + OCR Confidence + Export -->
+        <div class="filter-controls-right flex flex-wrap items-center gap-2.5 shrink-0">
+          <!-- Date Selector (Calendar Option) -->
+          <div class="filter-item relative z-20 flex items-center">
+            <app-date-picker [value]="dateFilter()" (valueChange)="onDateFilterChange($event)" placeholder="Select Date" />
+          </div>
+
+          <!-- OCR Confidence Dropdown -->
+          <div class="filter-item flex items-center">
+            <app-dropdown
+              [options]="confidenceOptions"
+              [value]="confidenceFilter()"
+              (valueChange)="confidenceFilter.set($event)"
+              placeholder="All Confidence" />
+          </div>
+
+          <!-- Export Button -->
+          <button
+            type="button"
+            class="btn-export-main flex h-9 items-center gap-2 rounded-xl bg-[#525EA7] px-4 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+            (click)="exportData()"
+            title="Export gate events as CSV">
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Export</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-responsive-wrapper overflow-x-auto">
+        <table class="gate-events-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
+          <thead
+            class="border-b border-slate-200/80 bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-300">
+            <tr>
+              <th class="col-checkbox px-4 py-3.5">
+                <input
+                  type="checkbox"
+                  class="gate-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7]"
+                  [checked]="isAllSelected()"
+                  (change)="toggleSelectAll()"
+                  title="Select all" />
+              </th>
+              <th class="col-time px-4 py-3.5">
+                <span>{{ 'GATE_EVENTS.COL_TIME' | translate }}</span>
+                <span class="sort-indicator ml-1 text-slate-400">↕</span>
+              </th>
+              <th class="col-cycle px-4 py-3.5">Cycle</th>
+              <th class="col-direction px-4 py-3.5">{{ 'GATE_EVENTS.COL_DIR' | translate }}</th>
+              <th class="col-truck px-4 py-3.5">{{ 'GATE_EVENTS.COL_TRUCK' | translate }}</th>
+              <th class="col-container px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONTAINER' | translate }}</th>
+              <th class="col-ocr px-4 py-3.5">{{ 'GATE_EVENTS.COL_OCR_RESULT' | translate }}</th>
+              <th class="col-confidence px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</th>
+              <th class="col-driver px-4 py-3.5">{{ 'GATE_EVENTS.COL_DRIVER' | translate }}</th>
+              <th class="col-status px-4 py-3.5">{{ 'GATE_EVENTS.COL_STATUS' | translate }}</th>
+              <th class="col-damage px-4 py-3.5">{{ 'GATE_EVENTS.COL_DAMAGE' | translate }}</th>
+              <th class="col-photos px-4 py-3.5">{{ 'GATE_EVENTS.COL_PHOTOS' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            @for (event of paginatedEvents(); track event.id) {
+              <tr
+                class="gate-event-row cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+                [class.bg-blue-50/40]="isSelected(event.id)"
+                [class.dark:bg-blue-950/20]="isSelected(event.id)"
+                (click)="openDetails(event)"
+                title="Click to view full detail for {{ event.containerNo }}">
+                <!-- Checkbox -->
+                <td class="col-checkbox px-4 py-3.5" (click)="$event.stopPropagation()">
+                  <input
+                    type="checkbox"
+                    class="gate-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    [checked]="isSelected(event.id)"
+                    (change)="toggleSelect(event.id)" />
+                </td>
+
+                <!-- Event Time -->
+                <td class="col-time px-4 py-3.5">
+                  <span class="cell-event-time font-medium text-slate-600 dark:text-slate-300">{{
+                    event.eventTime
+                  }}</span>
+                </td>
+
+                <!-- Cycle (Replaces Gate column) -->
+                <td class="col-cycle px-4 py-3.5">
+                  <span
+                    class="cycle-tag inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+                    [class.border-blue-200]="event.direction === 'IN'"
+                    [class.bg-blue-50]="event.direction === 'IN'"
+                    [class.text-blue-700]="event.direction === 'IN'"
+                    [class.dark:border-blue-800]="event.direction === 'IN'"
+                    [class.dark:bg-blue-950/30]="event.direction === 'IN'"
+                    [class.dark:text-blue-300]="event.direction === 'IN'"
+                    [class.border-emerald-200]="event.direction === 'OUT'"
+                    [class.bg-emerald-50]="event.direction === 'OUT'"
+                    [class.text-emerald-700]="event.direction === 'OUT'"
+                    [class.dark:border-emerald-800]="event.direction === 'OUT'"
+                    [class.dark:bg-emerald-950/30]="event.direction === 'OUT'"
+                    [class.dark:text-emerald-300]="event.direction === 'OUT'">
+                    <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                      @if (event.direction === 'IN') {
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                          clip-rule="evenodd" />
+                      } @else {
+                        <path
+                          fill-rule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                          clip-rule="evenodd" />
+                      }
+                    </svg>
+                    {{ event.direction === 'IN' ? 'Gate In' : 'Gate Out' }}
+                  </span>
+                </td>
+
+                <!-- Direction Badge -->
+                <td class="col-direction px-4 py-3.5">
+                  <span
+                    class="dir-badge inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold"
+                    [class.bg-blue-100]="event.direction === 'IN'"
+                    [class.text-blue-800]="event.direction === 'IN'"
+                    [class.border]="true"
+                    [class.border-blue-200]="event.direction === 'IN'"
+                    [class.dark:bg-blue-950/40]="event.direction === 'IN'"
+                    [class.dark:text-blue-300]="event.direction === 'IN'"
+                    [class.bg-emerald-100]="event.direction === 'OUT'"
+                    [class.text-emerald-800]="event.direction === 'OUT'"
+                    [class.border-emerald-200]="event.direction === 'OUT'"
+                    [class.dark:bg-emerald-950/40]="event.direction === 'OUT'"
+                    [class.dark:text-emerald-300]="event.direction === 'OUT'">
+                    {{ event.direction }}
+                  </span>
+                </td>
+
+                <!-- Truck No -->
+                <td class="col-truck px-4 py-3.5">
+                  <span class="truck-plate font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{
+                    event.truckNo
+                  }}</span>
+                </td>
+
+                <!-- Container No -->
+                <td class="col-container px-4 py-3.5">
+                  @if (event.isDualContainer && event.containers.length > 1) {
+                    <div class="flex flex-col gap-1">
+                      <div class="inline-flex items-center gap-1">
+                        <span class="rounded bg-blue-100 px-1.5 py-0.2 text-[10px] font-extrabold text-blue-800 dark:bg-blue-950 dark:text-blue-300">
+                          2x 20FT
+                        </span>
+                      </div>
+                      <div class="space-y-0.5 font-mono text-xs font-bold text-blue-600 dark:text-blue-400">
+                        @for (c of event.containers; track c.index) {
+                          <div class="flex items-center gap-1">
+                            <span class="text-[10px] font-normal text-slate-400">#{{ c.index }}:</span>
+                            <span>{{ c.containerNo }}</span>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  } @else {
+                    <strong class="container-code font-mono text-xs font-bold text-blue-600 dark:text-blue-400">{{ event.containerNo }}</strong>
+                  }
+                </td>
+
+                <!-- OCR Result -->
+                <td class="col-ocr px-4 py-3.5">
+                  @if (event.isDualContainer && event.containers.length > 1) {
+                    <div class="flex flex-col gap-0.5 font-mono text-xs text-slate-700 dark:text-slate-300">
+                      @for (c of event.containers; track c.index) {
+                        <div class="flex items-center gap-1">
+                          <span class="text-[10px] text-slate-400">C{{ c.index }}:</span>
+                          <span>{{ c.containerNo }}</span>
+                          <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">({{ c.confidence }}%)</span>
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <span class="ocr-text-result font-mono text-xs text-slate-700 dark:text-slate-300">{{ event.ocrResult }}</span>
+                  }
+                </td>
+
+                <!-- Confidence Rating -->
+                <td class="col-confidence px-4 py-3.5">
+                  <div class="confidence-pill-wrap flex items-center gap-1.5">
+                    <span
+                      class="confidence-percent text-xs font-bold"
+                      [class.text-emerald-600]="event.confidence >= 95"
+                      [class.text-amber-600]="event.confidence >= 90 && event.confidence < 95"
+                      [class.text-rose-600]="event.confidence < 90"
+                      >{{ event.confidence }}%</span
+                    >
+                    <div
+                      class="signal-bars-icon flex h-3 items-end gap-0.5"
+                      [class.high]="event.confidence >= 95"
+                      [class.med]="event.confidence >= 90 && event.confidence < 95"
+                      [class.low]="event.confidence < 90">
+                      <span
+                        class="bar bar-1 h-1.5 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span
+                        class="bar bar-2 h-2.5 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 90"></span>
+                      <span
+                        class="bar bar-3 h-3 w-1 rounded-sm bg-slate-300"
+                        [class.bg-emerald-500]="event.confidence >= 95"></span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Driver Name -->
+                <td class="col-driver px-4 py-3.5">
+                  <span class="driver-name-text text-xs text-slate-600 dark:text-slate-300">{{ event.driver }}</span>
+                </td>
+
+                <!-- Status Badge -->
+                <td class="col-status px-4 py-3.5">
+                  <app-status-badge [status]="event.status === 'Verified' ? 'Active' : 'Pending'" />
+                </td>
+
+                <!-- Damage Flag -->
+                <td class="col-damage px-4 py-3.5">
+                  <span
+                    class="damage-tag inline-flex rounded-full px-2 py-0.5 text-xs font-semibold"
+                    [class.bg-slate-100]="!event.damageFlag"
+                    [class.text-slate-600]="!event.damageFlag"
+                    [class.bg-rose-100]="event.damageFlag"
+                    [class.text-rose-800]="event.damageFlag"
+                    [class.border]="true"
+                    [class.border-rose-200]="event.damageFlag">
+                    {{ event.damageFlag ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+
+                <!-- Camera Photos (4-Angle) Column -->
+                <td class="col-photos px-4 py-3.5" (click)="$event.stopPropagation()">
+                  <div class="camera-thumbnails-row flex items-center gap-1.5 whitespace-nowrap">
+                    @if (event.photos && event.photos.length > 0) {
+                      <!-- Thumbnail 1 (First Photo) -->
+                      <button
+                        type="button"
+                        class="camera-photo-thumb group/thumb relative h-8 w-11 shrink-0 cursor-pointer overflow-hidden rounded-md border border-slate-200 bg-slate-100 p-0 transition-all hover:scale-105 hover:border-blue-500 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                        [style.background-color]="event.photos[0].color"
+                        [title]="event.photos[0].label"
+                        (click)="openRowLightbox(event.photos, 0, event.containerNo || event.truckNo, $event)">
+                        @if (event.photos[0].url) {
+                          <img
+                            [src]="event.photos[0].url"
+                            [alt]="event.photos[0].label"
+                            class="h-full w-full object-cover"
+                            loading="lazy" />
+                          <div class="thumb-hover-overlay absolute inset-0 bg-blue-600/15 opacity-0 transition-opacity group-hover/thumb:opacity-100"></div>
+                        } @else {
+                          <div class="thumb-container-ribs flex h-full items-center justify-center">
+                            <span class="text-[9px] font-bold text-white/80">{{ event.photos[0].tag }}</span>
+                          </div>
+                        }
+                      </button>
+
+                      <!-- Thumbnail 2 (Second Photo or +N Overlay if > 2 Photos) -->
+                      @if (event.photos.length >= 2) {
+                        <button
+                          type="button"
+                          class="camera-photo-thumb group/thumb relative h-8 w-11 shrink-0 cursor-pointer overflow-hidden rounded-md border border-slate-200 bg-slate-100 p-0 transition-all hover:scale-105 hover:border-blue-500 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                          [style.background-color]="event.photos[1].color"
+                          [title]="event.photos.length > 2 ? '+' + (event.photos.length - 2) + ' more photos (Click to view all ' + event.photos.length + ' photos)' : event.photos[1].label"
+                          (click)="openRowLightbox(event.photos, 1, event.containerNo || event.truckNo, $event)">
+                          @if (event.photos[1].url) {
+                            <img
+                              [src]="event.photos[1].url"
+                              [alt]="event.photos[1].label"
+                              class="h-full w-full object-cover"
+                              loading="lazy" />
+                          } @else {
+                            <div class="thumb-container-ribs flex h-full items-center justify-center">
+                              <span class="text-[9px] font-bold text-white/80">{{ event.photos[1].tag }}</span>
+                            </div>
+                          }
+
+                          <!-- +N Badge Overlay for additional hidden photos -->
+                          @if (event.photos.length > 2) {
+                            <div class="photos-count-overlay absolute inset-0 flex items-center justify-center bg-slate-950/75 backdrop-blur-[1px] transition-colors group-hover/thumb:bg-blue-600/85">
+                              <span class="text-[11px] font-extrabold text-white tracking-tight drop-shadow-sm">+{{ event.photos.length - 2 }}</span>
+                            </div>
+                          } @else {
+                            <div class="thumb-hover-overlay absolute inset-0 bg-blue-600/15 opacity-0 transition-opacity group-hover/thumb:opacity-100"></div>
+                          }
+                        </button>
+                      }
+                    } @else {
+                      <span class="text-xs text-slate-400 italic">No photos</span>
+                    }
+                  </div>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="12" class="empty-state-cell p-8 text-center">
+                  <div class="empty-message-box flex flex-col items-center justify-center gap-2">
+                    <span class="empty-icon text-3xl">🔍</span>
+                    <strong class="text-sm font-semibold text-slate-900 dark:text-white"
+                      >No gate events match your filter criteria</strong
+                    >
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                      Try adjusting the cycle or search term to see records.
+                    </p>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div
+        class="table-pagination-footer flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-5 py-3 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        <div class="pagination-info">
+          <span>Showing 1 to {{ paginatedEvents().length }} of {{ totalCount() }} events</span>
+        </div>
+
+        <div class="pagination-controls-group flex items-center gap-1">
+          <button
+            type="button"
+            class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            [disabled]="currentPage() <= 1"
+            (click)="prevPage()"
+            title="Previous page">
+            &lt;
+          </button>
+
+          @for (page of visiblePageNumbers(); track page) {
+            <button
+              type="button"
+              class="page-nav-btn flex h-8 w-8 items-center justify-center rounded-lg border text-xs font-semibold transition-all"
+              [class.border-blue-600]="currentPage() === page"
+              [class.bg-blue-600]="currentPage() === page"
+              [class.text-white]="currentPage() === page"
+              [class.border-slate-200]="currentPage() !== page"
+              [class.bg-white]="currentPage() !== page"
+              [class.text-slate-700]="currentPage() !== page"
+              [class.dark:border-slate-700]="currentPage() !== page"
+              [class.dark:bg-slate-800]="currentPage() !== page"
+              [class.dark:text-slate-300]="currentPage() !== page"
+              (click)="setPage(page)">
+              {{ page }}
+            </button>
+          }
+
+          <button
+            type="button"
+            class="page-arrow-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
+            [disabled]="currentPage() >= totalPages()"
+            (click)="nextPage()"
+            title="Next page">
+            &gt;
+          </button>
+        </div>
+
+        <div class="items-per-page-select-wrap">
+          <app-dropdown
+            size="sm"
+            [options]="pageSizeOptions"
+            [value]="pageSize()"
+            (valueChange)="onPageSizeChange(+$event)" />
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Multi-Image Lightbox Gallery Modal with Previous/Next Navigation -->
+  @if (activeLightboxGallery(); as gallery) {
+    <div
+      class="lightbox-backdrop fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md transition-all animate-fade-in"
+      (click)="closeLightbox()">
+      <div
+        class="lightbox-dialog relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl"
+        (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div
+          class="lightbox-header flex items-center justify-between border-b border-slate-800 bg-slate-900/95 px-5 py-3.5 backdrop-blur-sm">
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/20">
+              <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-white">
+                  {{ currentLightboxPhoto()?.label || 'Camera Capture' }}
+                </h3>
+                <!-- Counter Badge (e.g. 2 / 5) -->
+                @if (gallery.photos.length > 1) {
+                  <span class="inline-flex items-center rounded-full bg-blue-500/15 px-2.5 py-0.5 text-[11px] font-bold text-blue-400 border border-blue-500/30">
+                    {{ lightboxCounterText() }}
+                  </span>
+                }
+              </div>
+              <p class="text-[11px] text-slate-400">
+                @if (gallery.eventTitle) {
+                  <span class="text-slate-300 font-semibold">{{ gallery.eventTitle }}</span> •
+                }
+                Gate Optical Inspection • Full Resolution
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            @if (currentLightboxPhoto()?.url; as photoUrl) {
+              <a
+                [href]="photoUrl"
+                target="_blank"
+                download
+                class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 text-xs font-semibold text-slate-300 transition-colors hover:bg-slate-700 hover:text-white"
+                title="Open full resolution in new tab">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                <span>Full Size</span>
+              </a>
+            }
+            <button
+              type="button"
+              class="btn-close-lightbox flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+              (click)="closeLightbox()"
+              title="Close image preview (Esc)">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <!-- Image Viewport with Floating Prev / Next Navigation Arrows -->
+        <div class="lightbox-body relative flex min-h-[380px] max-h-[70vh] items-center justify-center overflow-hidden bg-slate-950 p-4">
+          <!-- Previous Button < -->
+          @if (gallery.photos.length > 1) {
+            <button
+              type="button"
+              class="lightbox-nav-btn lightbox-prev-btn absolute left-4 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/80 text-white border border-slate-700/80 shadow-xl backdrop-blur-sm transition-all hover:bg-blue-600 hover:scale-110 hover:border-blue-400 active:scale-95"
+              (click)="prevLightboxPhoto($event)"
+              title="Previous photo (← Left Arrow)">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
+          }
+
+          <!-- Active Photo Image Display -->
+          @if (currentLightboxPhoto()?.url; as photoUrl) {
+            <img
+              [src]="photoUrl"
+              [alt]="currentLightboxPhoto()?.label || 'Gate Inspection Photo'"
+              class="lightbox-img max-h-[66vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-transform duration-200" />
+          } @else {
+            <div class="flex flex-col items-center justify-center gap-2 py-16 text-slate-400">
+              <span class="text-4xl">📷</span>
+              <p class="text-xs font-medium">No optical image stream available for this camera angle.</p>
+            </div>
+          }
+
+          <!-- Next Button > -->
+          @if (gallery.photos.length > 1) {
+            <button
+              type="button"
+              class="lightbox-nav-btn lightbox-next-btn absolute right-4 top-1/2 -translate-y-1/2 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-slate-900/80 text-white border border-slate-700/80 shadow-xl backdrop-blur-sm transition-all hover:bg-blue-600 hover:scale-110 hover:border-blue-400 active:scale-95"
+              (click)="nextLightboxPhoto($event)"
+              title="Next photo (→ Right Arrow)">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
+          }
+        </div>
+
+        <!-- Lightbox Footer / Thumbnail Strip -->
+        @if (gallery.photos.length > 1) {
+          <div class="lightbox-footer flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800 bg-slate-900/95 px-5 py-3 backdrop-blur-sm">
+            <!-- All Camera Angles Thumbnail Selector -->
+            <div class="flex items-center gap-2 overflow-x-auto py-0.5">
+              @for (p of gallery.photos; track $index) {
+                <button
+                  type="button"
+                  class="relative h-9 w-12 shrink-0 cursor-pointer overflow-hidden rounded-lg border transition-all"
+                  [class.border-blue-500]="gallery.currentIndex === $index"
+                  [class.ring-2]="gallery.currentIndex === $index"
+                  [class.ring-blue-500]="gallery.currentIndex === $index"
+                  [class.scale-105]="gallery.currentIndex === $index"
+                  [class.opacity-100]="gallery.currentIndex === $index"
+                  [class.border-slate-700]="gallery.currentIndex !== $index"
+                  [class.opacity-50]="gallery.currentIndex !== $index"
+                  [class.hover:opacity-85]="gallery.currentIndex !== $index"
+                  [style.background-color]="p.color"
+                  (click)="selectLightboxIndex($index, $event)"
+                  [title]="p.label">
+                  @if (p.url) {
+                    <img [src]="p.url" [alt]="p.label" class="h-full w-full object-cover" />
+                  } @else {
+                    <div class="flex h-full items-center justify-center">
+                      <span class="text-[8px] font-bold text-white">{{ p.tag }}</span>
+                    </div>
+                  }
+                </button>
+              }
+            </div>
+
+            <!-- Keyboard Navigation Helper -->
+            <div class="hidden md:flex items-center gap-1.5 text-[11px] text-slate-400">
+              <kbd class="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-slate-300">←</kbd>
+              <kbd class="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-slate-300">→</kbd>
+              <span>Navigate</span>
+              <span class="text-slate-600">•</span>
+              <kbd class="rounded border border-slate-700 bg-slate-800 px-1.5 py-0.5 font-mono text-[10px] text-slate-300">Esc</kbd>
+              <span>Close</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Manual Gate Entry Modal -->
+  <app-manual-gate-entry [isOpen]="isGateInModalOpen()" (close)="closeGateInModal()" (save)="handleGateInSave($event)">
+  </app-manual-gate-entry>
+</div>

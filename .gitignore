@@ -4,3 +4,7 @@
 /.idea
 /.vscode
 npm-debug.log
+CFS.Admin/
+CFS.Gate/
+*.zip
+

@@ -1,0 +1,17 @@
+<div class="camera-thumbnails-row">
+  @for (photo of visiblePhotos(); track $index) {
+    <div
+      class="camera-photo-thumb"
+      [class.clickable]="interactive()"
+      [style.background-color]="photo.color"
+      [title]="photo.label + ' - ' + photo.tag"
+      (click)="onPhotoClick(photo, $index, $event)">
+      <div class="thumb-container-ribs">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="thumb-tag">{{ photo.tag }}</span>
+    </div>
+  }
+</div>

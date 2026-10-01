@@ -1,0 +1,506 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Login Page Animations (Exact Specifications)
+   1. Background: Fade-in (500ms)
+   2. Logo: Fade + slide down (400ms)
+   3. Hero heading: Fade + slide up (500ms)
+   4. Login card: Fade + slide up (450ms)
+   5. Feature badges: Staggered fade + slide (400ms)
+   6. Input focus: Border + focus ring (180ms)
+   7. Primary button hover: Color + subtle lift (180ms)
+   8. Button click: Subtle scale (120–180ms)
+   9. Validation messages: Fade-in (150ms)
+   10. Authentication loading: Spinner (Until request completes)
+   ========================================================================== */
+
+/* 1. Background Fade-in (500ms) */
+@keyframes bgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-bg-fade {
+  animation: bgFadeIn 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 2. Logo Fade + Slide Down (400ms) */
+@keyframes logoSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-logo-slide-down {
+  animation: logoSlideDown 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 3. Hero Heading Fade + Slide Up (500ms) */
+@keyframes heroSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-slide-up {
+  animation: heroSlideUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 100ms backwards;
+}
+
+/* 4. Login Card Fade + Slide Up (450ms) */
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-card-slide-up {
+  animation: cardSlideUp 450ms cubic-bezier(0.16, 1, 0.3, 1) 150ms backwards;
+}
+
+/* 5. Feature Badges Staggered Fade + Slide (400ms) */
+@keyframes badgeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-badge-1 {
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 250ms backwards;
+}
+
+.animate-badge-2 {
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 370ms backwards;
+}
+
+.animate-badge-3 {
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 490ms backwards;
+}
+
+/* 9. Validation Messages Fade-in (150ms) */
+@keyframes validationFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-validation-fade {
+  animation: validationFadeIn 150ms ease-out forwards;
+}
+
+/* 10. Authentication Loading Spinner (Continuous) */
+@keyframes authSpinner {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-auth-spinner {
+  animation: authSpinner 0.75s linear infinite;
+}
+
+/* ==========================================================================
+   Interactive Component Micro-Interactions
+   ========================================================================== */
+
+/* 6. Input Focus: Border + Focus Ring (180ms) */
+.form-input-control {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+/* 7. Primary Button Hover: Color + Subtle Lift (180ms) */
+.btn-primary-action {
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background-color: #1d4ed8 !important;
+    box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.45) !important;
+  }
+}
+
+/* 8. Button Click: Subtle Scale (120–180ms) */
+button:active:not(:disabled) {
+  transform: scale(0.98) !important;
+  transition: transform 140ms ease !important;
+}
+
+/* ==========================================================================
+   Typography & Visual Contrast Protection
+   ========================================================================== */
+.login-layout {
+  .hero-eyebrow {
+    color: #38bdf8 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase !important;
+  }
+
+  .hero-headline {
+    font-family: 'Lexend', sans-serif !important;
+    font-size: 40px !important;
+    font-weight: 700 !important;
+    line-height: 1.18 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6) !important;
+
+    @media (min-width: 1024px) {
+      font-size: 44px !important;
+    }
+
+    @media (max-width: 640px) {
+      font-size: 26px !important;
+    }
+  }
+
+  .hero-description {
+    color: #e2e8f0 !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* Exact Feature Badges as shared in user image */
+  .feature-pill {
+    background: rgba(11, 23, 40, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff !important;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      transform 200ms ease,
+      box-shadow 200ms ease;
+
+    &:hover {
+      background: rgba(16, 32, 56, 0.88);
+      border-color: rgba(255, 255, 255, 0.32);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+/* Dark mode specific enhancements for login card */
+:host-context(.dark) {
+  .login-card {
+    background-color: #111928 !important;
+    border-color: #1f2a37 !important;
+    color: #f9fafb !important;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75) !important;
+
+    .card-title {
+      color: #ffffff !important;
+    }
+
+    .card-subtitle {
+      color: #9ca3af !important;
+    }
+
+    label {
+      color: #cbd5e1 !important;
+    }
+
+    input[type='text'],
+    input[type='password'] {
+      background-color: #1f2a37 !important;
+      border-color: #374151 !important;
+      color: #ffffff !important;
+
+      &::placeholder {
+        color: #6b7280 !important;
+      }
+
+      &:hover {
+        border-color: #4b5563 !important;
+      }
+
+      &:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   Ultra-Realistic Cinematic Blue Theme Splash Animation (#E3F2FD, #90CAF9, #2196F3, #0D47A1)
+   ========================================================================== */
+@keyframes splashFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spinClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinCounterClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes shockwavePulse1 {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes shockwavePulse2 {
+  0% {
+    transform: scale(0.65);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@keyframes logo3dFloat {
+  0% {
+    transform: scale(0.75) translateY(20px);
+    opacity: 0;
+    filter: drop-shadow(0 0 10px rgba(33, 150, 243, 0.4));
+  }
+  35% {
+    transform: scale(1.05) translateY(-6px);
+    opacity: 1;
+    filter: drop-shadow(0 15px 35px rgba(13, 71, 161, 0.45));
+  }
+  65% {
+    transform: scale(0.98) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 10px 25px rgba(13, 71, 161, 0.35));
+  }
+}
+
+@keyframes textCardPopUp {
+  0% {
+    transform: translateY(22px) scale(0.94);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmerPass {
+  0% {
+    transform: translateX(-120%) rotate(30deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(220%) rotate(30deg);
+    opacity: 0;
+  }
+}
+
+@keyframes splashProgressCharge {
+  0% {
+    width: 0%;
+  }
+  25% {
+    width: 32%;
+  }
+  55% {
+    width: 68%;
+  }
+  85% {
+    width: 90%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes pulseCoreGlow {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.85;
+  }
+}
+
+@keyframes letterPopFast {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.6) rotateX(40deg);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.08) rotateX(0deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+.login-splash-overlay {
+  background: radial-gradient(
+    circle at 50% 38%,
+    #ffffff 0%,
+    #e3f2fd 28%,
+    #90caf9 58%,
+    #2196f3 86%,
+    #0d47a1 100%
+  );
+  animation: splashFadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  .splash-grid-bg {
+    background-image: linear-gradient(rgba(33, 150, 243, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(33, 150, 243, 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .splash-shockwave-1 {
+    animation: shockwavePulse1 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  }
+
+  .splash-shockwave-2 {
+    animation: shockwavePulse2 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) 0.6s infinite;
+  }
+
+  .splash-ring-outer {
+    animation: spinClockwise 8s linear infinite;
+  }
+
+  .splash-ring-inner {
+    animation: spinCounterClockwise 5s linear infinite;
+  }
+
+  .splash-core-glow {
+    animation: pulseCoreGlow 1.8s ease-in-out infinite;
+  }
+
+  .splash-logo-container {
+    animation: logo3dFloat 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .splash-logo-shimmer {
+    .shimmer-light-beam {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      animation: shimmerPass 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s infinite;
+    }
+  }
+
+  .splash-title {
+    font-family: 'Lexend', 'Outfit', sans-serif !important;
+
+    .stagger-letter {
+      display: inline-block;
+      opacity: 0;
+      animation: letterPopFast 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+      animation-delay: calc(0.15s + var(--i) * 0.04s);
+      color: #0d47a1;
+      text-shadow: 0 2px 10px rgba(33, 150, 243, 0.3);
+      will-change: transform, opacity;
+    }
+  }
+
+  .splash-progress-bar {
+    animation: splashProgressCharge 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+}
+
+

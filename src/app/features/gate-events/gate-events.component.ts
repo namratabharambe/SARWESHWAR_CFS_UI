@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inj
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
 import {
   GatePhotoStripComponent,
@@ -170,6 +170,10 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
+  public readonly totalCheckinCount = signal<number>(0);
+  public readonly totalCheckoutCount = signal<number>(0);
+  public readonly todayCheckinCount = signal<number>(0);
+  public readonly todayCheckoutCount = signal<number>(0);
 
   constructor() {
     this.syncGateMode();
@@ -204,7 +208,56 @@ export class GateEventsComponent implements OnInit {
     this.loadGateEvents();
   }
 
+  public readonly fromDate = signal<string | undefined>(undefined);
+  public readonly toDate = signal<string | undefined>(undefined);
+
   public ngOnInit(): void {
+    this.loadGateEvents();
+  }
+
+  public onDateFilterChange(val: string): void {
+    this.dateFilter.set(val);
+    this.currentPage.set(1);
+
+    if (!val) {
+      this.fromDate.set(undefined);
+      this.toDate.set(undefined);
+      this.loadGateEvents();
+      return;
+    }
+
+    // Parse date and build ISO range for that full day
+    const parsed = new Date(val);
+    if (!isNaN(parsed.getTime())) {
+      const year = parsed.getFullYear();
+      const month = parsed.getMonth();
+      const day = parsed.getDate();
+      const start = new Date(Date.UTC(year, month, day, 0, 0, 0)).toISOString();
+      const end = new Date(Date.UTC(year, month, day, 23, 59, 59, 999)).toISOString();
+      this.fromDate.set(start);
+      this.toDate.set(end);
+    } else {
+      // If user typed string like DD-MM-YYYY or DD MMM YYYY
+      const dmyMatch = val.match(/^(\d{1,2})[-/\s]+([A-Za-z]+|\d{1,2})[-/\s]+(\d{4})/);
+      if (dmyMatch) {
+        const d = parseInt(dmyMatch[1], 10);
+        let m = parseInt(dmyMatch[2], 10) - 1;
+        if (isNaN(m)) {
+          const shortMonths = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+          m = shortMonths.findIndex((sm) => dmyMatch[2].toLowerCase().startsWith(sm));
+          if (m < 0) m = 0;
+        }
+        const y = parseInt(dmyMatch[3], 10);
+        const start = new Date(Date.UTC(y, m, d, 0, 0, 0)).toISOString();
+        const end = new Date(Date.UTC(y, m, d, 23, 59, 59, 999)).toISOString();
+        this.fromDate.set(start);
+        this.toDate.set(end);
+      } else {
+        this.fromDate.set(undefined);
+        this.toDate.set(undefined);
+      }
+    }
+
     this.loadGateEvents();
   }
 
@@ -214,58 +267,128 @@ export class GateEventsComponent implements OnInit {
     const clientId = this.authService.getActiveClientId() || undefined;
     const cycle = this.cycleFilter();
     const eventType = cycle === 'All' ? undefined : (cycle === 'IN' ? 'GATE_IN' : 'GATE_OUT');
+    const from = this.fromDate();
+    const to = this.toDate();
 
-    this.gateEventService
-      .getVisits({
-        page: this.currentPage(),
-        pageSize: this.pageSize(),
-        siteId,
-        clientId,
-        eventType,
-      })
-      .subscribe({
-        next: (response: VisitsPagedResponse) => {
-          this.isLoading.set(false);
-          const items = response?.items ?? (Array.isArray(response) ? (response as any) : []);
-          if (items && items.length > 0) {
-            const mapped = items.map((visit: VisitListItemDto) => this.mapVisitToGateEventItem(visit));
-            this.events.set(mapped);
-            this.totalCount.set(response.totalCount ?? mapped.length);
-          } else {
-            this.events.set([]);
-            this.totalCount.set(0);
-          }
-        },
-        error: () => {
-          // Fallback to legacy gate events API
-          this.gateEventService
-            .getGateEvents({
-              page: this.currentPage(),
-              pageSize: this.pageSize(),
-              eventType,
-            })
-            .subscribe({
-              next: (legacyRes) => {
-                this.isLoading.set(false);
-                const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
-                if (legacyItems && legacyItems.length > 0) {
-                  const mapped = legacyItems.map((dto: GateEventDetailDto) => this.mapDtoToGateEventItem(dto));
-                  this.events.set(mapped);
-                  this.totalCount.set(legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length);
-                } else {
-                  this.events.set([]);
-                  this.totalCount.set(0);
+    const now = new Date();
+    const todayStartIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)).toISOString();
+    const todayEndIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+
+    // All-time Total Gate In & Out Counts
+    const allInVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_IN',
+    });
+
+    const allOutVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_OUT',
+    });
+
+    // Today Only Gate In & Out Counts
+    const todayInVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_IN',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    const todayOutVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_OUT',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    // Current View / Filtered List
+    const currentVisits$ = this.gateEventService.getVisits({
+      page: this.currentPage(),
+      pageSize: this.pageSize(),
+      siteId,
+      clientId,
+      eventType,
+      from,
+      to,
+    });
+
+    forkJoin({
+      allInRes: allInVisits$,
+      allOutRes: allOutVisits$,
+      todayInRes: todayInVisits$,
+      todayOutRes: todayOutVisits$,
+      currentRes: currentVisits$,
+    }).subscribe({
+      next: ({ allInRes, allOutRes, todayInRes, todayOutRes, currentRes }) => {
+        this.isLoading.set(false);
+        const totalIn = allInRes?.totalCount ?? 0;
+        const totalOut = allOutRes?.totalCount ?? 0;
+        const todayIn = todayInRes?.totalCount ?? 0;
+        const todayOut = todayOutRes?.totalCount ?? 0;
+
+        this.totalCheckinCount.set(totalIn);
+        this.totalCheckoutCount.set(totalOut);
+        this.todayCheckinCount.set(todayIn);
+        this.todayCheckoutCount.set(todayOut);
+
+        const items = currentRes?.items ?? (Array.isArray(currentRes) ? (currentRes as any) : []);
+        if (items && items.length > 0) {
+          const mapped = items.map((visit: VisitListItemDto) => this.mapVisitToGateEventItem(visit));
+          this.events.set(mapped);
+          this.totalCount.set(currentRes.totalCount ?? mapped.length);
+        } else {
+          this.events.set([]);
+          this.totalCount.set(0);
+        }
+      },
+      error: () => {
+        // Fallback to legacy gate events API
+        this.gateEventService
+          .getGateEvents({
+            page: this.currentPage(),
+            pageSize: this.pageSize(),
+            eventType,
+          })
+          .subscribe({
+            next: (legacyRes) => {
+              this.isLoading.set(false);
+              const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
+              if (legacyItems && legacyItems.length > 0) {
+                const mapped = legacyItems.map((dto: GateEventDetailDto) => this.mapDtoToGateEventItem(dto));
+                this.events.set(mapped);
+                const total = legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length;
+                this.totalCount.set(total);
+                if (cycle === 'IN') {
+                  this.totalCheckinCount.set(total);
+                } else if (cycle === 'OUT') {
+                  this.totalCheckoutCount.set(total);
                 }
-              },
-              error: () => {
-                this.isLoading.set(false);
+              } else {
                 this.events.set([]);
                 this.totalCount.set(0);
-              },
-            });
-        },
-      });
+              }
+            },
+            error: () => {
+              this.isLoading.set(false);
+              this.events.set([]);
+              this.totalCount.set(0);
+            },
+          });
+      },
+    });
   }
+
 
   private buildContainerPhotos(
     containerNo: string,
@@ -304,35 +427,6 @@ export class GateEventsComponent implements OnInit {
           url: String(url),
         });
       });
-    }
-
-    if (photos.length === 0) {
-      photos.push(
-        {
-          label: `${prefix}Front OCR (20FT)`,
-          color: '#c9842a',
-          tag: `C${index}-FRONT`,
-          url: 'assets/gate/container-stencil.jpg',
-        },
-        {
-          label: `${prefix}Left Side ISO`,
-          color: '#1f487e',
-          tag: `C${index}-LEFT`,
-          url: 'assets/gate/truck-side.jpg',
-        },
-        {
-          label: `${prefix}Right Side ISO`,
-          color: '#1f487e',
-          tag: `C${index}-RIGHT`,
-          url: 'assets/gate/overview.jpg',
-        },
-        {
-          label: `${prefix}Rear Doors`,
-          color: '#993030',
-          tag: `C${index}-REAR`,
-          url: 'assets/gate/front-gate.jpg',
-        },
-      );
     }
 
     return photos;
@@ -384,7 +478,7 @@ export class GateEventsComponent implements OnInit {
       }
     });
 
-    // Extract all container records (e.g. when 2 containers on 1 visit / 20ft dual trailer)
+    // Extract all container records (only real containers from API payload)
     const rawContainersList: any[] = [];
     if (Array.isArray(visit.containers) && visit.containers.length > 0) {
       visit.containers.forEach((c: any) => {
@@ -418,49 +512,27 @@ export class GateEventsComponent implements OnInit {
         visit.ContainerNumber ??
         primaryEvent?.detectedContainerNumber ??
         primaryEvent?.DetectedContainerNumber ??
-        'MSCU 204918 2';
+        '';
       
       const parts = String(rawCNo).split(/[,/|]+/).map((s) => s.trim()).filter(Boolean);
-      const is20FtTwin =
-        String(visit.containerSize || visit.ContainerSize || '').includes('20') ||
-        parts.length > 1 ||
-        String(rawCNo).includes('20');
 
       if (parts.length > 1) {
         parts.forEach((p, idx) => {
           rawContainersList.push({
             containerNumber: p,
-            size: '20 FT',
-            isoCode: '22G1',
+            size: visit.containerSize ?? visit.ContainerSize ?? '20 FT',
+            isoCode: String(visit.containerSize || '').includes('20') ? '22G1' : '45G1',
             containerNumberConfidence: 0.96 - idx * 0.02,
             images: idx === 0 ? (primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages) : (eventsList[idx]?.images ?? eventsList[idx]?.Images ?? []),
           });
         });
-      } else if (is20FtTwin && !String(visit.containerSize || '').includes('40')) {
-        // Build 2x 20FT dual container load
-        rawContainersList.push({
-          containerNumber: rawCNo || 'MSCU 204918 2',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.98,
-          sealNo: 'MSCU-S1-9981',
-          tareWeight: '2,250 kg',
-          images: primaryEvent?.images ?? primaryEvent?.Images ?? visitLevelImages,
-        });
-        rawContainersList.push({
-          containerNumber: 'TCLU 819203 1',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.96,
-          sealNo: 'TCLU-S2-8114',
-          tareWeight: '2,280 kg',
-          images: eventsList[1]?.images ?? eventsList[1]?.Images ?? [],
-        });
       } else {
+        // Exactly 1 container - do NOT synthesize any fake second container
+        const cSize = visit.containerSize ?? visit.ContainerSize ?? '40 FT';
         rawContainersList.push({
-          containerNumber: rawCNo,
-          size: visit.containerSize ?? visit.ContainerSize ?? '40 FT',
-          isoCode: String(visit.containerSize || '').includes('20') ? '22G1' : '45G1',
+          containerNumber: rawCNo || 'MSCU 000000 0',
+          size: cSize,
+          isoCode: String(cSize).includes('20') ? '22G1' : '45G1',
           containerNumberConfidence:
             visit.containerConfidence ??
             visit.ContainerConfidence ??
@@ -476,7 +548,7 @@ export class GateEventsComponent implements OnInit {
 
     // Map each container into GateContainerRecord
     const containers: GateContainerRecord[] = rawContainersList.map((c, idx) => {
-      const cNo = c.containerNumber ?? c.ContainerNumber ?? `MSCU 20491${idx} 2`;
+      const cNo = c.containerNumber ?? c.ContainerNumber ?? (idx === 0 ? 'MSCU 000000 0' : '');
       const rawConf = c.containerNumberConfidence ?? c.ContainerNumberConfidence ?? 0.96;
       const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
       const cSize = c.size ?? c.Size ?? (isDualContainer ? '20 FT' : '40 FT');
@@ -491,14 +563,14 @@ export class GateEventsComponent implements OnInit {
         isoCode: cIso,
         confidence: conf,
         tareWeight: c.tareWeight ?? (cSize.includes('20') ? '2,250 kg' : '3,800 kg'),
-        sealNo1: c.sealNo ?? (idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114'),
-        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
-        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
-        cargoType: 'General Cargo',
-        fullOrEmpty: 'Full',
-        location: idx === 0 ? 'A SHEL' : 'B YARD',
-        condition: 'Sound',
-        damageFlag: false,
+        sealNo1: c.sealNo ?? c.sealNo1 ?? c.SealNo ?? '-',
+        sealNo2: c.sealNo2 ?? c.SealNo2 ?? '-',
+        customSealNo: c.customSealNo ?? c.CustomSealNo ?? '-',
+        cargoType: c.cargoType ?? 'General Cargo',
+        fullOrEmpty: c.fullOrEmpty ?? 'Full',
+        location: c.location ?? 'A SHEL',
+        condition: c.condition ?? 'Sound',
+        damageFlag: Boolean(c.damageFlag),
         photos: cPhotos,
       };
     });
@@ -512,7 +584,7 @@ export class GateEventsComponent implements OnInit {
       containers.reduce((acc, c) => acc + c.confidence, 0) / (containers.length || 1),
     );
 
-    // Aggregate photos for backward compatibility
+    // Aggregate photos
     const allPhotos: GateCameraPhoto[] = [];
     containers.forEach((c) => allPhotos.push(...c.photos));
 
@@ -531,7 +603,17 @@ export class GateEventsComponent implements OnInit {
       confidence: overallConfidence,
       driver: driverName,
       status: visit.status === 'IN_YARD' || visit.status === 'DEPARTED' ? 'Verified' : 'Review',
-      damageFlag: false,
+      damageFlag: Boolean(
+        visit.hasDamage ||
+        visit.isDamaged ||
+        visit.damageFlag ||
+        visit.damageDetected ||
+        (visit.damageCount && visit.damageCount > 0) ||
+        primaryEvent?.damageDetected ||
+        primaryEvent?.damageFlag ||
+        eventsList.some((e) => e.damageDetected || e.damageFlag || e.hasDamage) ||
+        containers.some((c) => c.damageFlag || (c.condition && c.condition.toLowerCase().includes('damage'))),
+      ),
       photos: allPhotos.slice(0, 8),
       notes: `Visit ID: ${id} | Load: ${isDualContainer ? '2x 20FT Dual Containers' : primaryContainer?.size || '40FT'}`,
       rawVisit: visit,
@@ -566,32 +648,15 @@ export class GateEventsComponent implements OnInit {
       const container = dto.container ?? dto.Container;
       const cNo = container?.containerNumber ?? container?.ContainerNumber ?? 'MSCU 204918 2';
       const cSize = container?.size ?? container?.Size ?? '20 FT';
-
       const dtoImages = dto.images ?? dto.Images ?? [];
-      if (cSize.includes('20')) {
-        rawContainersList.push({
-          containerNumber: cNo,
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: container?.containerNumberConfidence ?? 0.98,
-          images: dtoImages,
-        });
-        rawContainersList.push({
-          containerNumber: 'TCLU 819203 1',
-          size: '20 FT',
-          isoCode: '22G1',
-          containerNumberConfidence: 0.96,
-          images: [],
-        });
-      } else {
-        rawContainersList.push({
-          containerNumber: cNo,
-          size: cSize,
-          isoCode: '45G1',
-          containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
-          images: dtoImages,
-        });
-      }
+
+      rawContainersList.push({
+        containerNumber: cNo,
+        size: cSize,
+        isoCode: cSize.includes('20') ? '22G1' : '45G1',
+        containerNumberConfidence: container?.containerNumberConfidence ?? 0.95,
+        images: dtoImages,
+      });
     }
 
     const totalContainers = rawContainersList.length;
@@ -612,14 +677,14 @@ export class GateEventsComponent implements OnInit {
         isoCode: cIso,
         confidence: conf,
         tareWeight: cSize.includes('20') ? '2,250 kg' : '3,800 kg',
-        sealNo1: idx === 0 ? 'MSCU-S1-9981' : 'TCLU-S2-8114',
-        sealNo2: idx === 0 ? 'MSCU-S2-4412' : 'TCLU-S3-5591',
-        customSealNo: idx === 0 ? 'CUST-8831' : 'CUST-8832',
-        cargoType: 'General Cargo',
-        fullOrEmpty: 'Full',
-        location: idx === 0 ? 'A SHEL' : 'B YARD',
-        condition: 'Sound',
-        damageFlag: false,
+        sealNo1: c.sealNo ?? c.sealNo1 ?? '-',
+        sealNo2: c.sealNo2 ?? '-',
+        customSealNo: c.customSealNo ?? '-',
+        cargoType: c.cargoType ?? 'General Cargo',
+        fullOrEmpty: c.fullOrEmpty ?? 'Full',
+        location: c.location ?? 'A SHEL',
+        condition: c.condition ?? 'Sound',
+        damageFlag: Boolean(c.damageFlag),
         photos: cPhotos,
       };
     });
@@ -651,7 +716,14 @@ export class GateEventsComponent implements OnInit {
       confidence: overallConfidence,
       driver: driverName,
       status: overallConfidence >= 90 ? 'Verified' : 'Review',
-      damageFlag: false,
+      damageFlag: Boolean(
+        dto.damageFlag ||
+        dto.damageDetected ||
+        dto.hasDamage ||
+        dto.isDamaged ||
+        (dto.condition && dto.condition.toLowerCase().includes('damage')) ||
+        containers.some((c) => c.damageFlag || (c.condition && c.condition.toLowerCase().includes('damage'))),
+      ),
       photos: allPhotos.slice(0, 8),
       notes: `Captured at ${gate} via automated optical lane sensor.`,
       rawDto: dto,
@@ -661,22 +733,43 @@ export class GateEventsComponent implements OnInit {
 
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
+    const mode = this.gateMode();
     const list = this.events();
     const total = this.totalCount();
-    const cycle = this.cycleFilter();
-    const arrivals = cycle === 'IN' ? total : (cycle === 'OUT' ? 0 : total);
-    const departures = cycle === 'OUT' ? total : (cycle === 'IN' ? 0 : total);
-    const ocrVerified = total;
+    const totalIn = this.totalCheckinCount();
+    const totalOut = this.totalCheckoutCount();
+    const todayInCount = this.todayCheckinCount();
+    const todayOutCount = this.todayCheckoutCount();
+
+    // Calculate today arrivals/departures from items or API
+    const todayIn = todayInCount || list.filter((e) => {
+      const d = new Date(e.timestamp);
+      return d.toDateString() === new Date().toDateString() && e.direction === 'IN';
+    }).length || (mode === 'in' && !this.fromDate() ? total : 0);
+
+    const todayOut = todayOutCount || list.filter((e) => {
+      const d = new Date(e.timestamp);
+      return d.toDateString() === new Date().toDateString() && e.direction === 'OUT';
+    }).length || (mode === 'out' && !this.fromDate() ? total : 0);
+
+    const totalCurrentMode = mode === 'out' ? (totalOut || total) : (totalIn || total);
+    const ocrVerified = totalCurrentMode;
     const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
 
     return {
-      todayArrivals: arrivals,
-      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
-      todayDepartures: departures,
-      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
+      todayArrivals: todayIn,
+      arrivalsTrend: todayIn > 0 ? `${todayIn} arrivals today` : '0 arrivals today',
+      todayDepartures: todayOut,
+      departuresTrend: todayOut > 0 ? `${todayOut} departures today` : '0 departures today',
+      totalCheckin: totalIn || total,
+      totalCheckinTrend: totalIn > 0 ? `${totalIn} total gate in` : '0 total gate in',
+      totalCheckout: totalOut || total,
+      totalCheckoutTrend: totalOut > 0 ? `${totalOut} total gate out` : '0 total gate out',
+      totalAll: totalCurrentMode,
+      totalAllTrend: totalCurrentMode > 0 ? `${totalCurrentMode} total operations` : '0 total operations',
       ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? '100% of total' : '0%',
+      ocrVerifiedPercent: totalCurrentMode > 0 ? '100% verified' : '0% verified',
       pendingReview: pendingReview,
       pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
       damagedCaptures: damagedCaptures,
@@ -687,10 +780,12 @@ export class GateEventsComponent implements OnInit {
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
+    const totalIn = this.totalCheckinCount();
+    const totalOut = this.totalCheckoutCount();
     return {
-      all: this.totalCount() || list.length,
-      arrivals: this.cycleFilter() === 'IN' ? this.totalCount() : list.filter((e) => e.direction === 'IN').length,
-      departures: this.cycleFilter() === 'OUT' ? this.totalCount() : list.filter((e) => e.direction === 'OUT').length,
+      all: (totalIn + totalOut) || this.totalCount() || list.length,
+      arrivals: totalIn || (this.cycleFilter() === 'IN' ? this.totalCount() : list.filter((e) => e.direction === 'IN').length),
+      departures: totalOut || (this.cycleFilter() === 'OUT' ? this.totalCount() : list.filter((e) => e.direction === 'OUT').length),
     };
   });
 
@@ -700,6 +795,7 @@ export class GateEventsComponent implements OnInit {
     const cycle = this.cycleFilter();
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
+    const dateStr = this.dateFilter().trim();
 
     return list.filter((item) => {
       if (cycle !== 'All' && item.direction !== cycle) return false;
@@ -707,6 +803,23 @@ export class GateEventsComponent implements OnInit {
       if (conf === 'High' && item.confidence < 95) return false;
       if (conf === 'Medium' && (item.confidence < 90 || item.confidence >= 95)) return false;
       if (conf === 'Low' && item.confidence >= 90) return false;
+
+      if (dateStr) {
+        const itemDate = new Date(item.timestamp);
+        const parsed = new Date(dateStr);
+        if (!isNaN(parsed.getTime())) {
+          if (
+            itemDate.getFullYear() !== parsed.getFullYear() ||
+            itemDate.getMonth() !== parsed.getMonth() ||
+            itemDate.getDate() !== parsed.getDate()
+          ) {
+            // Also check formatted text match
+            if (!item.eventTime.toLowerCase().includes(dateStr.toLowerCase())) {
+              return false;
+            }
+          }
+        }
+      }
 
       if (query) {
         const matchesContainer = item.containerNo.toLowerCase().includes(query);
@@ -907,15 +1020,16 @@ export class GateEventsComponent implements OnInit {
     const eventId = event.rawVisit?.visitId || event.id || 'VISIT-001';
     const cleanTruck = (event.truckNo || 'MH12AB1234').replace(/\s+/g, '').toUpperCase();
     const cleanContainer = (event.containerNo || 'MSCU1234567').replace(/\s+/g, '').toUpperCase();
-    const containerSize = event.rawVisit?.containerSize ? `${event.rawVisit.containerSize} FT` : '40 FT';
+    const primaryContainer = event.containers?.[0];
+    const containerSize = primaryContainer?.size || (event.rawVisit?.containerSize ? `${event.rawVisit.containerSize} FT` : '40 FT');
 
     return {
       eventId,
       truckNo: cleanTruck,
       containerNo: cleanContainer,
       containerSize,
-      fullOrEmpty: 'Full',
-      sealNo: 'TCLU7890123',
+      fullOrEmpty: primaryContainer?.fullOrEmpty || 'Full',
+      sealNo: primaryContainer?.sealNo1 && primaryContainer?.sealNo1 !== '-' ? primaryContainer.sealNo1 : ((event.rawVisit as any)?.sealNo || '-'),
       truckConfidence: event.rawVisit?.truckConfidence
         ? Math.round(event.rawVisit.truckConfidence * 100)
         : Math.max(95, event.confidence),
@@ -926,10 +1040,10 @@ export class GateEventsComponent implements OnInit {
       overallConfidence: event.confidence,
       gate: event.gate.replace('GATE-', 'Gate ').replace('0', ''),
       terminal: 'Prosper CFS Terminal',
-      driver: event.driver || 'Ramesh Kumar',
-      driverPhone: '9876543210',
-      transporter: 'Shree Logistics Pvt. Ltd.',
-      appointmentLink: 'APPT-2025-05-17-00156',
+      driver: event.driver || 'Driver (Unassigned)',
+      driverPhone: (event.rawVisit as any)?.driverPhone || '9876543210',
+      transporter: (event.rawVisit as any)?.transporterName || 'Logistics Transporter',
+      appointmentLink: (event.rawVisit as any)?.appointmentNumber || `APPT-${eventId}`,
       operatorReviewStatus: event.status === 'Verified' ? 'Verified by Admin User' : 'Pending Operator Review',
       remarks: event.notes || 'No issues found',
       damageDetected: event.damageFlag,
@@ -940,7 +1054,7 @@ export class GateEventsComponent implements OnInit {
       capturedImages: event.photos.map((p, idx) => ({
         title: `${idx + 1}. ${p.label}`,
         time: event.eventTime,
-        url: p.url || 'assets/gate/container-stencil.jpg',
+        url: p.url || '',
         tag: p.tag || 'CAM',
       })),
       timeline: [
