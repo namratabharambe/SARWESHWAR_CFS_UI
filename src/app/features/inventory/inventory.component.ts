@@ -7,7 +7,7 @@ import { AddInventoryFormData, ContainerInventoryItem } from 'shared/types/inven
 import { AddInventoryModalComponent } from './components/add-inventory-modal/add-inventory-modal.component';
 import { ContainerDetailDrawerComponent } from './components/container-detail-drawer/container-detail-drawer.component';
 import { MoveContainerModalComponent } from './components/move-container-modal/move-container-modal.component';
-import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 import { TranslatePipe } from 'shared/pipes';
 
 @Component({
@@ -20,7 +20,7 @@ import { TranslatePipe } from 'shared/pipes';
     AddInventoryModalComponent,
     ContainerDetailDrawerComponent,
     MoveContainerModalComponent,
-    DropdownComponent,
+    PaginationComponent,
     TranslatePipe,
   ],
   templateUrl: './inventory.component.html',

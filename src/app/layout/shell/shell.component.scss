@@ -3,11 +3,10 @@
   min-height: 100vh;
 }
 
-/* App density: whole shell renders at 0.75 scale (same as a 75% browser zoom) so the
-   reference layout and the full sidebar fit at 100% zoom. `zoom` also scales vh, hence /0.75. */
+/* App density: comfortably scaled to 0.88 for maximum legibility, large clear fonts and crisp layout */
 .app-shell {
-  zoom: 0.75;
-  min-height: calc(100vh / 0.75);
+  zoom: 0.88;
+  min-height: calc(100vh / 0.88);
   display: grid;
   grid-template-columns: 240px 1fr;
   background-color: #f8fafc;

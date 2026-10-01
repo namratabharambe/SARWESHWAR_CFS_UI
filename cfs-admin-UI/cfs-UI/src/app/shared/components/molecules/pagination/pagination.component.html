@@ -1,0 +1,79 @@
+<div
+  class="pagination-container flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/60 px-4 py-3 text-xs text-slate-600 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-400">
+  
+  <!-- Left Side: Range Info & Page Size Selector -->
+  <div class="flex flex-wrap items-center gap-3">
+    <div class="pagination-info font-medium">
+      @if (totalItems() > 0) {
+        <span>Showing <strong class="font-bold text-slate-900 dark:text-white">{{ startIndex() }}</strong> to <strong class="font-bold text-slate-900 dark:text-white">{{ endIndex() }}</strong> of <strong class="font-bold text-slate-900 dark:text-white">{{ totalItems() }}</strong> {{ itemLabel() }}</span>
+      } @else {
+        <span>No {{ itemLabel() }} to display</span>
+      }
+    </div>
+
+    @if (showPageSize() && totalItems() > 0) {
+      <div class="flex items-center gap-1.5 pl-2 border-l border-slate-200 dark:border-slate-700">
+        <span class="text-[11px] text-slate-500 dark:text-slate-400">Rows per page:</span>
+        <select
+          [value]="pageSize()"
+          (change)="onPageSizeSelect($event)"
+          class="rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 outline-none hover:border-slate-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+          @for (opt of pageSizeOptions(); track opt) {
+            <option [value]="opt">{{ opt }}</option>
+          }
+        </select>
+      </div>
+    }
+  </div>
+
+  <!-- Right Side: Navigation Buttons -->
+  @if (totalPages() > 1) {
+    <div class="flex items-center gap-1">
+      <!-- Prev Button -->
+      <button
+        type="button"
+        class="pagination-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 transition-all hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        [disabled]="currentPage() <= 1"
+        (click)="onPrevPage()"
+        title="Previous Page">
+        ‹
+      </button>
+
+      <!-- Page Numbers with Dots -->
+      @for (p of pages(); track $index) {
+        @if (p === '...') {
+          <span class="flex h-8 w-6 items-center justify-center text-xs font-bold text-slate-400">...</span>
+        } @else {
+          <button
+            type="button"
+            class="pagination-btn flex h-8 min-w-[32px] px-2 items-center justify-center rounded-lg border text-xs font-bold transition-all"
+            [class.border-blue-600]="currentPage() === p"
+            [class.bg-blue-600]="currentPage() === p"
+            [class.text-white]="currentPage() === p"
+            [class.shadow-xs]="currentPage() === p"
+            [class.border-slate-200]="currentPage() !== p"
+            [class.bg-white]="currentPage() !== p"
+            [class.text-slate-700]="currentPage() !== p"
+            [class.hover:bg-slate-100]="currentPage() !== p"
+            [class.dark:border-slate-700]="currentPage() !== p"
+            [class.dark:bg-slate-800]="currentPage() !== p"
+            [class.dark:text-slate-200]="currentPage() !== p"
+            [class.dark:hover:bg-slate-700]="currentPage() !== p"
+            (click)="onSelectPage(p)">
+            {{ p }}
+          </button>
+        }
+      }
+
+      <!-- Next Button -->
+      <button
+        type="button"
+        class="pagination-btn flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs font-bold text-slate-700 transition-all hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+        [disabled]="currentPage() >= totalPages()"
+        (click)="onNextPage()"
+        title="Next Page">
+        ›
+      </button>
+    </div>
+  }
+</div>

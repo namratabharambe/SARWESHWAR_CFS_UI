@@ -26,40 +26,44 @@
     </a>
   </div>
 
-  <!-- Streamlined Activity List: Image • Container No • Direction • DateTime ONLY -->
+  <!-- Streamlined Activity List: Image • Container No + Time • Direction Badge -->
   <div class="table-scroll-viewport flex-1 min-h-0 overflow-y-auto rounded-lg border border-slate-100 dark:border-slate-800/60 bg-slate-50/40 dark:bg-slate-900/30">
     <div class="divide-y divide-slate-100 dark:divide-slate-800/60">
       @for (item of latest(); track item.id) {
-        <div class="activity-single-line flex items-center justify-between gap-3 px-3 py-2 hover:bg-blue-50/60 dark:hover:bg-slate-800/60 transition-colors text-xs">
-          <!-- 1. One Image Thumbnail + Container Number -->
-          <div class="flex items-center gap-2.5 min-w-0 flex-1 truncate">
-            <div class="relative h-9 w-12 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 shadow-2xs">
+        <div
+          class="activity-single-line flex items-center justify-between gap-2.5 px-3 py-2 hover:bg-blue-50/60 dark:hover:bg-slate-800/60 transition-colors text-xs cursor-pointer group"
+          (click)="openPreview(item, $event)">
+          <!-- 1. Image Thumbnail + Container Number & Timestamp (Stacked for maximum container number space) -->
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <div
+              class="relative h-9 w-11 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800 shadow-2xs group-hover:border-blue-400 transition-colors"
+              title="Click to view full photo and details">
               <img
                 [src]="item.imageUrl || 'assets/images/throughput-truck.png'"
                 [alt]="item.containerNo"
-                class="h-full w-full object-cover" />
+                class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" />
             </div>
-            <div class="flex flex-col min-w-0 truncate">
-              <span class="font-mono text-xs font-black tracking-wide text-[#0f2851] dark:text-cyan-400 truncate">
+            <div class="flex flex-col min-w-0 justify-center">
+              <span class="font-mono text-xs sm:text-[13px] font-black tracking-wide text-[#0f2851] dark:text-cyan-300 whitespace-nowrap">
                 {{ item.containerNo }}
               </span>
+              <div class="flex items-center gap-1.5 text-[10.5px] font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap leading-tight mt-0.5">
+                <span>{{ item.time }}</span>
+                @if (item.truckNo) {
+                  <span class="text-slate-300 dark:text-slate-600">•</span>
+                  <span class="font-mono text-slate-600 dark:text-slate-300">{{ item.truckNo }}</span>
+                }
+              </div>
             </div>
           </div>
 
           <!-- 2. Direction Badge -->
-          <div class="shrink-0">
+          <div class="shrink-0 flex items-center">
             <span
-              class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs"
-              [class]="item.type === 'IN' ? 'bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300' : 'bg-orange-100/80 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300'">
+              class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-2xs whitespace-nowrap"
+              [class]="item.type === 'IN' ? 'bg-emerald-100/80 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60' : 'bg-orange-100/80 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 border border-orange-200/60 dark:border-orange-800/60'">
               <span>{{ item.type === 'IN' ? '↓' : '↑' }}</span>
               <span>{{ item.type === 'IN' ? 'GATE IN' : 'GATE OUT' }}</span>
-            </span>
-          </div>
-
-          <!-- 3. DateTime Only -->
-          <div class="shrink-0 text-right">
-            <span class="font-mono text-[11px] font-semibold text-slate-600 dark:text-slate-300 whitespace-nowrap">
-              {{ item.time }}
             </span>
           </div>
         </div>
@@ -68,6 +72,110 @@
       }
     </div>
   </div>
+
+  <!-- Activity Detail Modal / Popup -->
+  @if (selectedActivity(); as act) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-4 backdrop-blur-sm transition-all"
+      (click)="closePreview()">
+      <div
+        class="relative flex max-h-[90vh] max-w-lg w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-[#0f172a]"
+        (click)="$event.stopPropagation()">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/80">
+          <div class="flex items-center gap-2">
+            <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+              <svg class="h-4 w-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-[#0f2851] dark:text-white">Gate Activity Details</h3>
+              <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ act.time }}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-200/70 text-slate-600 transition-colors hover:bg-slate-300 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white font-bold text-sm"
+            (click)="closePreview()"
+            title="Close">
+            ✕
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="flex flex-col gap-3 p-4 overflow-y-auto">
+          <!-- Big Captured Image -->
+          <div class="relative w-full aspect-video rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-950 shadow-inner flex items-center justify-center">
+            <img
+              [src]="act.imageUrl || 'assets/images/throughput-truck.png'"
+              [alt]="act.containerNo"
+              class="h-full w-full object-contain" />
+            <div class="absolute top-2 right-2">
+              <span
+                class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-md backdrop-blur-md"
+                [class]="act.type === 'IN' ? 'bg-emerald-600/90' : 'bg-orange-600/90'">
+                <span>{{ act.type === 'IN' ? '↓' : '↑' }}</span>
+                <span>{{ act.type === 'IN' ? 'GATE IN' : 'GATE OUT' }}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <!-- Container No -->
+            <div class="rounded-lg border border-slate-100 bg-slate-50 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Container No</span>
+              <div class="font-mono text-sm sm:text-base font-black text-blue-600 dark:text-cyan-400 tracking-wider mt-0.5">
+                {{ act.containerNo }}
+              </div>
+            </div>
+
+            <!-- Truck No -->
+            <div class="rounded-lg border border-slate-100 bg-slate-50 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Truck No</span>
+              <div class="font-mono text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-wider mt-0.5">
+                {{ act.truckNo || '—' }}
+              </div>
+            </div>
+
+            <!-- Size / Type -->
+            <div class="rounded-lg border border-slate-100 bg-slate-50 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Size / Type</span>
+              <div class="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
+                {{ act.sizeType || '40HC Standard' }}
+              </div>
+            </div>
+
+            <!-- Status / Verification -->
+            <div class="rounded-lg border border-slate-100 bg-slate-50 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+              <span class="text-[10px] font-bold uppercase text-slate-400">Status</span>
+              <div class="flex items-center gap-1.5 font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                <span>{{ act.status || 'Verified' }} ({{ act.ocrConfidence || 98 }}%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-between border-t border-slate-100 bg-slate-50/60 px-4 py-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+          <span class="text-[11px] text-slate-500 dark:text-slate-400">
+            Gate: <strong class="text-slate-800 dark:text-slate-200">{{ act.gate || 'Main Gate 01' }}</strong>
+          </span>
+          <a
+            routerLink="/gate-events"
+            (click)="closePreview()"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-blue-700 shadow-xs">
+            <span>View All Events</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  }
 </div>
+
 
 

@@ -27,13 +27,14 @@
 // Requirement 4: Custom Hover Tooltip Styling
 ::ng-deep .leaflet-tooltip.yard-map-tooltip-custom {
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
+  border: 2px solid #0f2851 !important;
   border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2) !important;
   padding: 8px 12px !important;
-  color: #1e293b !important;
+  color: #0f172a !important; /* DARK font */
   font-family: inherit !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
   line-height: 1.4 !important;
   z-index: 1000 !important;
   opacity: 1 !important;
@@ -42,11 +43,17 @@
     display: none !important;
   }
 
+  * {
+    color: #0f172a !important;
+  }
+
   .yard-tooltip-card {
-    min-width: 140px;
+    min-width: 150px;
     
     .tooltip-header {
-      font-size: 11px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #091a38 !important;
       letter-spacing: 0.03em;
     }
   }
@@ -54,35 +61,47 @@
 
 // Leaflet Popup Styling
 ::ng-deep .leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  border: 2px solid #0f2851 !important;
   border-radius: 10px !important;
-  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.15) !important;
+  box-shadow: 0 14px 32px -4px rgba(15, 23, 42, 0.3) !important;
   padding: 0 !important;
 }
 
 ::ng-deep .leaflet-popup-content {
   margin: 12px 14px !important;
   font-family: inherit !important;
+  color: #0f172a !important;
+
+  * {
+    color: #0f172a !important;
+  }
 
   .yard-popup-card {
-    min-width: 170px;
-    font-size: 12px;
+    min-width: 180px;
+    font-size: 13.5px;
+    color: #0f172a !important;
 
     .popup-header {
-      font-size: 13px;
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #091a38 !important;
       margin-bottom: 6px;
       padding-bottom: 4px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1.5px solid #e2e8f0;
     }
 
     .popup-row {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 3px;
-      color: #475569;
+      margin-bottom: 4px;
+      color: #1e293b !important;
+      font-weight: 600;
 
       strong {
-        color: #0f172a;
+        color: #000000 !important;
+        font-weight: 800;
       }
     }
   }

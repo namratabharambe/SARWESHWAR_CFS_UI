@@ -68,7 +68,7 @@ export class LoginComponent {
         }, 1400);
 
         setTimeout(() => {
-          this.splashStep.set('Welcome to SARWESHWAR CFS!');
+          this.splashStep.set('Welcome to PROSPER CFS!');
         }, 2100);
 
         setTimeout(() => {

@@ -158,7 +158,7 @@
         <input
           type="text"
           [value]="alertService.searchQuery()"
-          (input)="alertService.setSearchQuery($any($event.target).value)"
+          (input)="onSearchChange($any($event.target).value)"
           placeholder="Search alerts by code, container, truck, gate..."
           class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-4 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
       </div>
@@ -171,7 +171,7 @@
             <app-dropdown
               [options]="severityOptions"
               [value]="alertService.severityFilter()"
-              (valueChange)="alertService.setSeverityFilter($event)"
+              (valueChange)="onSeverityChange($event)"
               placeholder="All Severities" />
           </div>
 
@@ -180,7 +180,7 @@
             <app-dropdown
               [options]="typeOptions"
               [value]="alertService.typeFilter()"
-              (valueChange)="alertService.setTypeFilter($event)"
+              (valueChange)="onTypeChange($event)"
               placeholder="All Alert Types"
               [searchable]="true" />
           </div>
@@ -190,7 +190,7 @@
             <app-dropdown
               [options]="statusOptions"
               [value]="alertService.statusFilter()"
-              (valueChange)="alertService.setStatusFilter($event)"
+              (valueChange)="onStatusChange($event)"
               placeholder="All Statuses" />
           </div>
 
@@ -272,7 +272,7 @@
             </tr>
           }
 
-          @for (alert of alertService.filteredAlerts(); track alert.id) {
+          @for (alert of paginatedAlerts(); track alert.id) {
             <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
               <!-- Alert Code -->
               <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-[#0f2851] dark:text-blue-400">
@@ -360,6 +360,15 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination Footer -->
+    <app-pagination
+      [totalItems]="alertService.filteredAlerts().length"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      itemLabel="alerts"
+      (pageChange)="setPage($event)"
+      (pageSizeChange)="setPageSize($event)" />
   </section>
 
   <!-- Mismatch Comparison Modal -->

@@ -34,6 +34,11 @@
   --cfs-card-bg: #111A2E;
 }
 
+html {
+  font-size: 15.5px;
+  -webkit-text-size-adjust: 100%;
+}
+
 html,
 body {
   height: 100%;
@@ -46,6 +51,9 @@ body {
     'Segoe UI',
     Roboto,
     sans-serif;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f8fafc;
@@ -321,30 +329,149 @@ button:not(:disabled) {
   background: rgba(59, 130, 246, 0.6);
 }
 
-/* Universal Label & Typography Enhancements - Make All Pages Showable */
+/* Universal Label & Typography Enhancements - Make All Pages Clearly Legible */
 .text-\[9px\],
-.text-\[10px\],
-.text-\[11px\] {
+.text-\[10px\] {
   font-size: 12px !important;
 }
 
-/* Ensure all table headers and labels are prominent and readable */
+.text-\[11px\],
+.text-xs {
+  font-size: 13.5px !important;
+}
+
+/* Ensure all table headers, rows, and labels are prominent and readable */
+table {
+  font-size: 13.5px !important;
+}
+
 th,
 .th-header,
 .table-header-cell {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  line-height: 1.4 !important;
-  letter-spacing: 0.03em !important;
-  color: #334155 !important;
-  /* Slate 700 */
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  letter-spacing: 0.02em !important;
+  color: #0f172a !important; /* Deep dark crisp header */
 }
 
 .dark th,
 .dark .th-header,
 .dark .table-header-cell {
-  color: #cbd5e1 !important;
-  /* Slate 300 */
+  color: #f1f5f9 !important;
+}
+
+td,
+.table-cell {
+  font-size: 13.5px !important;
+  color: #1e293b !important;
+}
+
+.dark td,
+.dark .table-cell {
+  color: #e2e8f0 !important;
+}
+
+/* ==========================================================================
+   LEAFLET MAP LOCATION POPUP & TOOLTIP - CRISP DARK FONT STYLING
+   ========================================================================== */
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  border: 2px solid #0f2851 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.35) !important;
+  padding: 4px 6px !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid #0f2851 !important;
+}
+
+.leaflet-popup-content {
+  margin: 10px 14px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+  color: #0f172a !important; /* DARK font */
+
+  * {
+    color: #0f172a !important;
+  }
+
+  strong, b, .font-bold, .font-black, .font-extrabold {
+    color: #000000 !important;
+    font-weight: 800 !important;
+  }
+
+  .popup-header, .tooltip-header, h3, h4 {
+    color: #091a38 !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    border-bottom: 1.5px solid #e2e8f0 !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .popup-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 4px;
+    color: #1e293b !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+
+    strong {
+      color: #000000 !important;
+      font-weight: 800 !important;
+    }
+  }
+}
+
+/* Map Location Tooltips - High Contrast Dark Font */
+.leaflet-tooltip,
+.yard-map-tooltip-custom,
+.dark-leaflet-tooltip {
+  background: #ffffff !important;
+  border: 2px solid #0f2851 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.3) !important;
+  padding: 8px 12px !important;
+  color: #0f172a !important; /* DARK font */
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  opacity: 1 !important;
+
+  * {
+    color: #0f172a !important;
+  }
+
+  .font-bold, strong, b {
+    color: #000000 !important;
+    font-weight: 800 !important;
+  }
+
+  .text-amber-300,
+  .text-amber-400 {
+    color: #b45309 !important; /* Deep rich amber */
+    font-weight: 800 !important;
+  }
+
+  .text-cyan-200,
+  .text-cyan-300,
+  .text-cyan-400 {
+    color: #0369a1 !important; /* Deep ocean blue */
+    font-weight: 700 !important;
+  }
+
+  .text-emerald-300,
+  .text-emerald-400 {
+    color: #047857 !important; /* Deep emerald */
+    font-weight: 800 !important;
+  }
 }
 
 /* App Shell & Header Scroll Integrity */
@@ -760,8 +887,7 @@ app-kpi-metric-card>div:hover {
 /* 2. Unified Primary Action Buttons (Enterprise Blue Standard: #2563EB) */
 .btn-electric,
 .btn-primary,
-.btn-modal-submit,
-.btn-manual-gate-entry {
+.btn-modal-submit {
   background: #2563eb !important;
   color: #ffffff !important;
   font-family: 'Inter', sans-serif !important;
@@ -1390,7 +1516,6 @@ button,
 .btn-modal-cancel,
 .btn-action,
 .btn-login-submit,
-.btn-manual-gate-entry,
 .btn-refresh,
 .btn-extra-filters {
   font-size: 14px !important;
@@ -1540,7 +1665,7 @@ header p.text-sm {
 }
 
 /* ==========================================================================
-   SARWESHWAR CFS Modern Dashboard & Fintech-Style Animations
+   PROSPER CFS Modern Dashboard & Fintech-Style Animations
    ========================================================================== */
 
 @keyframes dashboardSlideFadeIn {

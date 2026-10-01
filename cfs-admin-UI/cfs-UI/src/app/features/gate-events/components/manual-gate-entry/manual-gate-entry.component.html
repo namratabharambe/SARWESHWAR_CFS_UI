@@ -16,7 +16,7 @@
             class="breadcrumb-nav flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400"
             aria-label="Breadcrumb">
             <span
-              class="crumb crumb-home inline-flex items-center gap-1 text-slate-500 hover:text-blue-600 dark:text-slate-400">
+              class="crumb crumb-home inline-flex items-center gap-1 text-slate-500 hover:text-[#525EA7] dark:text-slate-400">
               <svg class="home-icon h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -26,20 +26,20 @@
             <span class="crumb-separator text-slate-400">›</span>
             <span class="crumb">{{ 'INVENTORY.IMPORT' | translate }}</span>
             <span class="crumb-separator text-slate-400">›</span>
-            <span class="crumb crumb-active font-semibold text-blue-600 dark:text-blue-400">{{
+            <span class="crumb crumb-active font-bold text-[#525EA7] dark:text-indigo-400">{{
               'GATE_EVENTS.TITLE' | translate
             }}</span>
           </nav>
 
           <!-- Title with Truck Icon -->
           <div class="title-row mt-0.5 flex items-center gap-2.5">
-            <div class="truck-icon-badge flex items-center justify-center text-blue-600 dark:text-blue-400">
-              <svg class="truck-svg h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+            <div class="truck-icon-badge flex h-9 w-9 items-center justify-center rounded-xl bg-[#525EA7]/10 text-[#525EA7] dark:bg-indigo-950/60 dark:text-indigo-400">
+              <svg class="truck-svg h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                 <path
                   d="M20 8h-3V4H1v13h2a3 3 0 006 0h6a3 3 0 006 0h2v-5l-3-4zM6 18.5A1.5 1.5 0 117.5 17 1.5 1.5 0 016 18.5zm11 0a1.5 1.5 0 111.5-1.5 1.5 1.5 0 01-1.5 1.5zM17 12V9.5h2.5l1.8 2.5H17z" />
               </svg>
             </div>
-            <h1 class="page-title text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 class="page-title text-xl font-bold tracking-tight text-[#0f2851] dark:text-white">
               {{ 'GATE_EVENTS.IMPORT_GATE_IN' | translate }}
             </h1>
           </div>
@@ -98,12 +98,12 @@
           <!-- Row 1: 9 Columns -->
           <div class="form-row form-row-9 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-9">
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Container No <span class="required-star font-bold text-rose-500">*</span></label
               >
               <input
                 type="text"
-                class="form-control uppercase-input h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs font-bold uppercase text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control uppercase-input h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs font-bold uppercase text-[#0f2851] placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="CONTAINER NO"
                 [ngModel]="containerNo()"
                 (ngModelChange)="containerNo.set($event)"
@@ -113,7 +113,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >ISO Code <span class="required-star font-bold text-rose-500">*</span></label
               >
               <app-dropdown
@@ -127,7 +127,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Size</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Size</label>
               <app-dropdown
                 [value]="size()"
                 (valueChange)="size.set($event)"
@@ -138,12 +138,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Tare Weight</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Tare Weight"
                 [ngModel]="tareWeight()"
                 (ngModelChange)="tareWeight.set($event)"
@@ -151,7 +151,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Type</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Type</label>
               <app-dropdown
                 [value]="type()"
                 (valueChange)="type.set($event)"
@@ -162,7 +162,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Cargo Type</label
               >
               <app-dropdown
@@ -175,7 +175,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">JO Type</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">JO Type</label>
               <app-dropdown
                 [value]="joType()"
                 (valueChange)="joType.set($event)"
@@ -186,7 +186,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">FCL/LCL</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">FCL/LCL</label>
               <app-dropdown
                 [value]="fclLcl()"
                 (valueChange)="fclLcl.set($event)"
@@ -197,7 +197,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Scan Type</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Scan Type</label>
               <app-dropdown
                 [value]="scanType()"
                 (valueChange)="scanType.set($event)"
@@ -212,12 +212,12 @@
           <!-- Row 2: 5 Columns -->
           <div class="form-row form-row-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >OffLoad Location</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Gate In Type"
                 [ngModel]="offloadLocation()"
                 (ngModelChange)="offloadLocation.set($event)"
@@ -225,12 +225,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Vessel Name/Via No</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Vessel Name"
                 [ngModel]="vesselName()"
                 (ngModelChange)="vesselName.set($event)"
@@ -238,7 +238,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Port Name</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Port Name</label>
               <app-dropdown
                 [value]="portName()"
                 (valueChange)="portName.set($event)"
@@ -249,12 +249,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Shipping Line</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Shipping Line"
                 [ngModel]="shippingLine()"
                 (ngModelChange)="shippingLine.set($event)"
@@ -262,10 +262,10 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">IGM Seal</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">IGM Seal</label>
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="IGM Seal"
                 [ngModel]="igmSeal()"
                 (ngModelChange)="igmSeal.set($event)"
@@ -276,12 +276,12 @@
           <!-- Row 3: 4 Columns -->
           <div class="form-row form-row-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Seal No. 1 <span class="required-star font-bold text-rose-500">*</span></label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Seal No 1"
                 [ngModel]="sealNo1()"
                 (ngModelChange)="sealNo1.set($event)"
@@ -289,12 +289,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Seal No. 2</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Seal No 2"
                 [ngModel]="sealNo2()"
                 (ngModelChange)="sealNo2.set($event)"
@@ -302,12 +302,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Custom Seal No.</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Custom Seal No."
                 [ngModel]="customSealNo()"
                 (ngModelChange)="customSealNo.set($event)"
@@ -315,12 +315,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Customer Name</label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="Customer Name"
                 [ngModel]="customerName()"
                 (ngModelChange)="customerName.set($event)"
@@ -331,10 +331,10 @@
           <!-- Row 4: 5 Columns -->
           <div class="form-row form-row-5-uneven grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">EIR No.</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">EIR No.</label>
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="EIR No."
                 [ngModel]="eirNo()"
                 (ngModelChange)="eirNo.set($event)"
@@ -342,12 +342,12 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >EIR Weight <span class="required-star font-bold text-rose-500">*</span></label
               >
               <input
                 type="text"
-                class="form-control h-9 w-full rounded-lg border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                class="form-control h-9 w-full rounded-xl border border-slate-200 bg-white px-3 font-mono text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                 placeholder="EIR Weight"
                 [ngModel]="eirWeight()"
                 (ngModelChange)="eirWeight.set($event)"
@@ -355,7 +355,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >EIR Date & Time <span class="required-star font-bold text-rose-500">*</span></label
               >
               <app-date-picker
@@ -364,11 +364,11 @@
                 mode="datetime"
                 format="dmy"
                 placeholder="dd-mm-yyyy --:--"
-                customTriggerClass="form-control flex items-center justify-between w-full h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
+                customTriggerClass="form-control flex items-center justify-between w-full h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs dark:border-slate-700 dark:bg-slate-800 dark:text-white" />
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Location</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Location</label>
               <app-dropdown
                 [value]="location()"
                 (valueChange)="location.set($event)"
@@ -379,7 +379,7 @@
             </div>
 
             <div class="form-group flex min-w-0 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300"
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300"
                 >Condition <span class="required-star font-bold text-rose-500">*</span></label
               >
               <app-dropdown
@@ -396,11 +396,11 @@
           <!-- Row 5: Remarks, Attachment, Add Plus Button, and Door to Door -->
           <div class="form-row-actions flex flex-wrap items-end gap-3 pt-1">
             <div class="remarks-group flex min-w-[280px] flex-1 flex-col gap-1">
-              <label class="form-label block text-xs font-semibold text-slate-700 dark:text-slate-300">Remarks</label>
+              <label class="form-label block text-xs font-bold text-slate-700 dark:text-slate-300">Remarks</label>
               <div class="remarks-input-wrapper flex items-center gap-2">
                 <input
                   type="text"
-                  class="form-control remarks-input h-9 flex-1 rounded-lg border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
+                  class="form-control remarks-input h-9 flex-1 rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-900 placeholder-slate-400 shadow-2xs transition-colors focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500"
                   placeholder="Remarks"
                   [ngModel]="remarks()"
                   (ngModelChange)="remarks.set($event)"
@@ -408,7 +408,7 @@
 
                 <!-- Paperclip Attachment Button -->
                 <label
-                  class="btn-attachment flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  class="btn-attachment flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
                   title="Attach Document"
                   aria-label="Attach Document">
                   <input type="file" class="hidden" (change)="handleAttachment($event)" />
@@ -426,7 +426,7 @@
                 <!-- Plus Button to add into Table -->
                 <button
                   type="button"
-                  class="btn-add-plus flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-all hover:bg-blue-700 active:scale-95"
+                  class="btn-add-plus flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#525EA7] text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
                   (click)="addItemToTable()"
                   title="Add to table"
                   aria-label="Add entry to table">
@@ -438,11 +438,11 @@
 
               @if (attachedFileName()) {
                 <span
-                  class="attachment-chip mt-1 inline-flex w-fit items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300">
+                  class="attachment-chip mt-1 inline-flex w-fit items-center gap-1.5 rounded-lg border border-[#525EA7]/20 bg-[#525EA7]/10 px-2 py-0.5 text-xs font-semibold text-[#525EA7] dark:border-indigo-900 dark:bg-indigo-950/60 dark:text-indigo-300">
                   📎 {{ attachedFileName() }}
                   <button
                     type="button"
-                    class="btn-remove-attach text-blue-700 hover:text-blue-900 dark:text-blue-300"
+                    class="btn-remove-attach text-[#525EA7] hover:text-[#434d8a] dark:text-indigo-300 cursor-pointer"
                     (click)="attachedFileName.set('')">
                     ✕
                   </button>
@@ -453,10 +453,10 @@
             <!-- Door To Door Checkbox -->
             <div class="door-to-door-group flex items-center pb-2">
               <label
-                class="checkbox-label inline-flex cursor-pointer items-center gap-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                class="checkbox-label inline-flex cursor-pointer items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                 <input
                   type="checkbox"
-                  class="form-checkbox h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800"
+                  class="form-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7] dark:border-slate-600 dark:bg-slate-800"
                   [ngModel]="doorToDoor()"
                   (ngModelChange)="doorToDoor.set($event)"
                   name="doorToDoor" />
@@ -471,54 +471,54 @@
           class="table-container mb-5 overflow-hidden rounded-xl border border-slate-200 shadow-sm dark:border-slate-800">
           <div class="table-responsive-wrapper w-full overflow-x-auto">
             <table class="purple-grid-table w-full min-w-[1050px] border-collapse text-left text-xs">
-              <thead class="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/80">
+              <thead class="border-b border-slate-200 bg-slate-50/80 dark:border-slate-800 dark:bg-slate-800/80">
                 <tr>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     ACTION
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     SCAN STATUS
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     DOOR TO DOOR
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     ISO CODE
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     PORT NAME
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     WEIGHT
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     REMARKS
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     SCAN TYPE
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     SCAN DATE TIME
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     CARGO TYPE
                   </th>
                   <th
-                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-700/50 dark:text-slate-400">
+                    class="border-r border-slate-200/70 px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-700/50 dark:text-slate-200">
                     UN NO.
                   </th>
                   <th
-                    class="px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                    class="px-3 py-2.5 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:text-slate-200">
                     CLASS
                   </th>
                 </tr>
@@ -593,50 +593,42 @@
 
         <!-- Footer Actions Bar -->
         <div class="modal-footer-bar mb-6 flex flex-wrap items-center justify-between gap-3 pt-2">
-          <div class="footer-left-actions flex items-center gap-2.5">
-            <!-- Primary Save & Submit Button -->
-            <button
-              type="button"
-              class="btn-electric h-9.5 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-xs font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95"
-              (click)="submitForm()"
-              title="Save & Submit Gate In"
-              aria-label="Save Gate In">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon-svg h-4 w-4">
-                <path
-                  d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z" />
-              </svg>
-              <span>{{ 'COMMON.SAVE' | translate }}</span>
-            </button>
+          <!-- Reset Button: Clean rounded pill shape with outline icon -->
+          <button
+            type="button"
+            class="btn-action-reset flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-slate-900 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
+            (click)="resetForm()"
+            [title]="'COMMON.RESET' | translate"
+            aria-label="Reset Form">
+            <svg class="h-3.5 w-3.5 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+            <span>{{ 'COMMON.RESET' | translate }}</span>
+          </button>
 
-            <!-- Reset Button -->
+          <!-- Right Actions: Cancel & Save -->
+          <div class="footer-right-actions flex items-center gap-2.5">
             <button
               type="button"
-              class="btn-action-reset h-9.5 flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-              (click)="resetForm()"
-              [title]="'COMMON.RESET' | translate"
-              aria-label="Reset Form">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                class="footer-icon-svg h-4 w-4">
-                <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-              </svg>
-              <span>{{ 'COMMON.RESET' | translate }}</span>
-            </button>
-          </div>
-
-          <div class="footer-right-actions">
-            <!-- Cancel Button -->
-            <button
-              type="button"
-              class="btn-modal-cancel h-9.5 px-4.5 flex items-center justify-center rounded-xl border border-slate-300 bg-white text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              class="btn-modal-cancel flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2 text-xs font-bold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 cursor-pointer"
               (click)="close.emit()"
               [title]="'COMMON.CANCEL' | translate"
               aria-label="Cancel">
               <span>{{ 'COMMON.CANCEL' | translate }}</span>
+            </button>
+
+            <!-- Primary Save & Submit Button: Clean modern rounded pill shape with check icon -->
+            <button
+              type="button"
+              class="btn-electric flex items-center justify-center gap-2 rounded-xl bg-[#525EA7] px-6 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+              (click)="submitForm()"
+              title="Save & Submit Gate In"
+              aria-label="Save Gate In">
+              <svg class="h-4 w-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              <span>{{ 'COMMON.SAVE' | translate }}</span>
             </button>
           </div>
         </div>
@@ -650,25 +642,25 @@
           <div class="legal-right flex items-center gap-2">
             <a
               href="javascript:void(0)"
-              class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              class="legal-link text-slate-500 hover:text-[#525EA7] dark:text-slate-400 dark:hover:text-indigo-400"
               >Help</a
             >
             <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
             <a
               href="javascript:void(0)"
-              class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              class="legal-link text-slate-500 hover:text-[#525EA7] dark:text-slate-400 dark:hover:text-indigo-400"
               >Support</a
             >
             <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
             <a
               href="javascript:void(0)"
-              class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              class="legal-link text-slate-500 hover:text-[#525EA7] dark:text-slate-400 dark:hover:text-indigo-400"
               >Privacy</a
             >
             <span class="legal-sep text-slate-300 dark:text-slate-700">|</span>
             <a
               href="javascript:void(0)"
-              class="legal-link text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+              class="legal-link text-slate-500 hover:text-[#525EA7] dark:text-slate-400 dark:hover:text-indigo-400"
               >Terms</a
             >
           </div>

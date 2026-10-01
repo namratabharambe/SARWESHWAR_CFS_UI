@@ -1,7 +1,7 @@
 :host {
   display: block;
   width: calc(100% + 36px);
-  height: calc(100vh / 0.75 - 90px);
+  height: calc(100vh / 0.88 - 90px);
   margin: -14px -18px -16px -18px;
   position: relative;
   overflow: hidden;
@@ -9,7 +9,7 @@
 }
 
 /* ==========================================================================
-   SARVESHWAR CFS • CLEAN DARK SHADE HIGH-ACCURACY YARD MAP STYLES
+   PROSPER CFS • CLEAN DARK SHADE HIGH-ACCURACY YARD MAP STYLES
    ========================================================================== */
 
 /* Dark Shade Single Color Uniform Polygons */
@@ -138,16 +138,35 @@
   }
 }
 
-/* Dark Glassmorphic Tooltips */
+/* Crisp Dark Font Map Location Tooltips */
 .dark-leaflet-tooltip {
-  background: rgba(10, 15, 29, 0.96) !important;
-  border: 1px solid rgba(56, 189, 248, 0.5) !important;
-  border-radius: 12px !important;
-  box-shadow:
-    0 10px 30px -5px rgba(0, 0, 0, 0.9),
-    0 0 15px rgba(56, 189, 248, 0.25) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  color: #ffffff !important;
-  padding: 6px 10px !important;
+  background: #ffffff !important;
+  border: 2px solid #0f2851 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.35) !important;
+  color: #0f172a !important; /* DARK font */
+  padding: 8px 12px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  opacity: 1 !important;
+
+  * {
+    color: #0f172a !important;
+  }
+
+  .text-amber-300,
+  .text-amber-400 {
+    color: #92400e !important; /* Deep rich dark amber */
+    font-weight: 800 !important;
+  }
+
+  .text-cyan-200,
+  .text-cyan-300 {
+    color: #0369a1 !important; /* Deep dark ocean blue */
+    font-weight: 700 !important;
+  }
+
+  .text-emerald-300 {
+    color: #047857 !important; /* Deep dark emerald */
+    font-weight: 800 !important;
+  }
 }

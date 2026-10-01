@@ -883,7 +883,7 @@ export class AuthService {
       name: 'Admin User',
       role: role,
       roles: [role],
-      email: 'admin@sarweshwar.com',
+      email: 'admin@prosper.com',
       ClientId: '01a07f00-0000-0000-0000-000000000001',
       ClientName: 'Prosper Logistics Corp',
       SiteId: '01a07f00-0000-0000-0000-000000000011',

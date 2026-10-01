@@ -1,0 +1,13 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.pagination-btn {
+  user-select: none;
+  cursor: pointer;
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+}

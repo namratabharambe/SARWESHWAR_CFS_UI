@@ -12,6 +12,7 @@ import {
 } from 'shared/components';
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 import { GateEventDetailComponent } from './components/gate-event-detail/gate-event-detail.component';
 import { ManualGateEntryComponent } from './components/manual-gate-entry/manual-gate-entry.component';
 import { NonErpContainerComponent } from './components/non-erp-container/non-erp-container.component';
@@ -61,6 +62,7 @@ export interface GateEventItem {
   direction: GateDirection;
   truckNo: string;
   containerNo: string;
+  size: string;
   isDualContainer: boolean;
   containers: GateContainerRecord[];
   ocrResult: string;
@@ -88,6 +90,7 @@ export interface GateEventItem {
     DatePickerComponent,
     DropdownComponent,
     StatusBadgeComponent,
+    PaginationComponent,
   ],
   templateUrl: './gate-events.component.html',
   styleUrls: ['./gate-events.component.scss'],
@@ -595,6 +598,7 @@ export class GateEventsComponent implements OnInit {
       direction,
       truckNo,
       containerNo: containerNoDisplay,
+      size: isDualContainer ? '2x 20 FT' : (primaryContainer?.size || visit.containerSize || visit.ContainerSize || (rawContainersList[0]?.size ?? "40' HC")),
       isDualContainer,
       containers,
       ocrResult: containerNoDisplay,
@@ -707,6 +711,7 @@ export class GateEventsComponent implements OnInit {
       direction,
       truckNo,
       containerNo: containerNoDisplay,
+      size: isDualContainer ? '2x 20 FT' : (primaryContainer?.size || dto.container?.size || dto.Container?.Size || (rawContainersList[0]?.size ?? "40' HC")),
       isDualContainer,
       containers,
       ocrResult: containerNoDisplay,
@@ -834,29 +839,18 @@ export class GateEventsComponent implements OnInit {
   });
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
-    return this.filteredEvents();
+    const list = this.filteredEvents();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return list.slice(start, start + this.pageSize());
   });
 
   public readonly totalPages = computed<number>(() => {
-    return Math.max(1, Math.ceil(this.totalCount() / this.pageSize()));
-  });
-
-  public readonly visiblePageNumbers = computed<number[]>(() => {
-    const total = this.totalPages();
-    const current = this.currentPage();
-    const start = Math.max(1, Math.min(current - 2, total - 4 > 0 ? total - 4 : 1));
-    const end = Math.min(total, start + 4);
-    const pages: number[] = [];
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
+    return Math.max(1, Math.ceil(this.filteredEvents().length / this.pageSize()));
   });
 
   public setPage(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
     this.currentPage.set(page);
-    this.loadGateEvents();
   }
 
   public prevPage(): void {
@@ -874,7 +868,16 @@ export class GateEventsComponent implements OnInit {
   public onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
-    this.loadGateEvents();
+  }
+
+  public onSearchChange(q: string): void {
+    this.searchQuery.set(q);
+    this.currentPage.set(1);
+  }
+
+  public onConfidenceChange(c: string): void {
+    this.confidenceFilter.set(c);
+    this.currentPage.set(1);
   }
 
   public onCycleFilterChange(cycle: string): void {
@@ -1015,7 +1018,7 @@ export class GateEventsComponent implements OnInit {
 
   public getEventDetail(event: GateEventItem) {
     const eventId = event.rawVisit?.visitId || event.id || 'VISIT-001';
-    const cleanTruck = (event.truckNo || 'MH12AB1234').replace(/\s+/g, '').toUpperCase();
+    const cleanTruck = (event.truckNo || (event.rawVisit as any)?.truckNumber || '-').replace(/\s+/g, '').toUpperCase();
     const cleanContainer = (event.containerNo || 'MSCU1234567').replace(/\s+/g, '').toUpperCase();
     const primaryContainer = event.containers?.[0];
     const containerSize = primaryContainer?.size || (event.rawVisit?.containerSize ? `${event.rawVisit.containerSize} FT` : '40 FT');
