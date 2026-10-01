@@ -6,10 +6,9 @@ export class ThemeService {
   public readonly isDarkMode = signal<boolean>(false);
 
   constructor() {
-    const saved = localStorage.getItem(this.storageKey);
-    const prefersDark =
-      typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialDark = saved ? saved === 'dark' : prefersDark;
+    const saved = typeof localStorage !== 'undefined' ? localStorage.getItem(this.storageKey) : null;
+    // By default, light mode is active unless user explicitly saved 'dark'
+    const initialDark = saved === 'dark';
     this.isDarkMode.set(initialDark);
     this.applyTheme(initialDark);
 

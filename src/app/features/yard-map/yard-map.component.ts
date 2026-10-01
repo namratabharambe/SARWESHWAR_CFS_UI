@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   computed,
   inject,
@@ -264,7 +265,16 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
 
     setTimeout(() => {
       this.map?.invalidateSize();
-    }, 250);
+    }, 100);
+
+    setTimeout(() => {
+      this.map?.invalidateSize();
+    }, 500);
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize(): void {
+    this.map?.invalidateSize();
   }
 
   public setTileLayer(type: 'google-hybrid' | 'esri-satellite' | 'google-street'): void {
@@ -297,6 +307,17 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
   }
 
   // Render uniform dark-shade parking polygons with high-accuracy GPS coordinates
+  // Block color mapping for razor-sharp visual clarity
+  private readonly blockBorderColorMap: Record<string, { stroke: string; fill: string }> = {
+    A: { stroke: '#00f0ff', fill: '#06b6d4' },
+    B: { stroke: '#10b981', fill: '#059669' },
+    C: { stroke: '#6366f1', fill: '#4f46e5' },
+    D: { stroke: '#38bdf8', fill: '#0284c7' },
+    F: { stroke: '#f59e0b', fill: '#d97706' },
+    H: { stroke: '#22d3ee', fill: '#0891b2' },
+  };
+
+  // Render high-accuracy surveyed GPS geofence polygons with clean, distinct styling
   public renderGpsPolygons(): void {
     if (!this.map || !this.polygonLayerGroup) return;
 
@@ -313,10 +334,12 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       const isSelected = currentSelected?.id === slot.id || (currentLoc && slot.name === currentLoc);
       const isOccupied = slot.status === 'occupied';
 
-      // Uniform Clean Dark-Shade Polygons
-      const fillColor = '#0a0f1d';
-      const strokeColor = isSelected ? '#facc15' : isOccupied ? '#38bdf8' : '#34d399';
-      const fillOpacity = isSelected ? 0.95 : 0.78;
+      const blockLetter = (slot.block || 'A').toUpperCase();
+      const blockColor = this.blockBorderColorMap[blockLetter] || { stroke: '#00f0ff', fill: '#06b6d4' };
+
+      const strokeColor = isSelected ? '#facc15' : blockColor.stroke;
+      const fillColor = isSelected ? '#facc15' : isOccupied ? blockColor.fill : '#0a0f1d';
+      const fillOpacity = isSelected ? 0.85 : isOccupied ? 0.55 : 0.2;
       const weight = isSelected ? 3.5 : 1.5;
 
       const polygon = L.polygon(latLngs, {
@@ -328,15 +351,17 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       });
 
       polygon.bindTooltip(
-        `<div class="p-1">
-          <div class="font-extrabold text-xs text-amber-300 font-mono tracking-wider">${slot.name}</div>
-          <div class="text-[11px] text-white">Status: <span class="font-bold ${isOccupied ? 'text-cyan-300' : 'text-emerald-300'}">${slot.status.toUpperCase()}</span></div>
-          ${slot.containerNumber ? `<div class="text-[10px] text-cyan-200 font-mono">📦 ${slot.containerNumber}</div>` : ''}
-          ${slot.cycle ? `<div class="text-[9px] text-slate-300 mt-0.5">🔄 ${slot.cycle}</div>` : ''}
+        `<div class="p-1.5 font-sans">
+          <div class="font-black text-xs text-amber-300 font-mono tracking-wider">📍 ${slot.name}</div>
+          <div class="text-[11px] text-cyan-200 mt-0.5">${slot.zoneLabel}</div>
+          <div class="text-[10px] text-white mt-0.5">Status: <span class="font-bold ${isOccupied ? 'text-cyan-300' : 'text-emerald-300'}">${slot.status.toUpperCase()}</span></div>
+          ${slot.containerNumber ? `<div class="text-[10px] text-emerald-300 font-mono font-bold mt-1">📦 ${slot.containerNumber}</div>` : ''}
         </div>`,
         {
           sticky: true,
+          direction: 'top',
           className: 'dark-leaflet-tooltip',
+          opacity: 0.96,
         },
       );
 
@@ -355,11 +380,11 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       this.polygonLayerGroup.addLayer(polygon);
     }
 
-    // Now update markers based on current zoom level (prevents cluttered text overlap when zoomed out!)
+    // Update Level of Detail markers based on current zoom level
     this.updateZoomLevelOfDetail();
   }
 
-  // DYNAMIC LEVEL OF DETAIL (LOD) MARKER VISIBILITY ENGINE
+  // DYNAMIC LEVEL OF DETAIL (LOD) - PREVENTS TEXT COLLISION & CLUTTER AT ALL ZOOM LEVELS
   public updateZoomLevelOfDetail(): void {
     if (!this.map || !this.markerLayerGroup || !this.blockBadgeLayerGroup || !this.highlightCircleGroup) return;
 
@@ -368,27 +393,26 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     this.highlightCircleGroup.clearLayers();
 
     const zoom = this.map.getZoom();
-    const isZoomedIn = zoom >= 19.3; // When zoomed in close, show individual slot labels cleanly
     const currentSelected = this.selectedSlot();
     const currentLoc = this.filterLocation();
     const slotsToRender = this.displayedSlots();
 
-    if (!isZoomedIn) {
-      // ZOOMED OUT: Show clean, elegant Block Group Badges (ZERO text clutter!)
+    if (zoom < 18.2) {
+      // ZOOMED OUT (< 18.2): Render ONLY high-level Block Group Badges (ZERO text crowding)
       for (const cluster of this.blockClusters()) {
         const clusterHtml = `
           <div class="cfs-block-cluster-badge">
-            <span class="material-icons text-sm text-cyan-400">${cluster.icon}</span>
+            <span class="material-icons text-xs text-cyan-400">${cluster.icon}</span>
             <span>${cluster.title}</span>
-            <span class="rounded bg-cyan-500/20 px-1.5 py-0.5 text-[10px] text-cyan-300 font-mono">${cluster.occupiedSlots}/${cluster.totalSlots}</span>
+            <span class="rounded bg-cyan-500/25 px-1.5 py-0.5 text-[9px] text-cyan-200 font-mono font-bold">${cluster.occupiedSlots}/${cluster.totalSlots}</span>
           </div>
         `;
 
         const clusterIcon = L.divIcon({
           className: 'cfs-block-div-icon',
           html: clusterHtml,
-          iconSize: [160, 28],
-          iconAnchor: [80, 14],
+          iconSize: [140, 24],
+          iconAnchor: [70, 12],
         });
 
         const clusterMarker = L.marker([cluster.centerLat, cluster.centerLng], { icon: clusterIcon });
@@ -398,13 +422,8 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
 
         this.blockBadgeLayerGroup.addLayer(clusterMarker);
       }
-
-      // If a specific slot is selected, always show its highlighted beacon even when zoomed out!
-      if (currentSelected) {
-        this.renderSingleSlotBeacon(currentSelected);
-      }
-    } else {
-      // ZOOMED IN: Render individual slot labels with proper spacing
+    } else if (zoom >= 19.8) {
+      // EXTREME ZOOM IN (>= 19.8): Only show clean unobtrusive slot labels inside bays
       for (const slot of slotsToRender) {
         const isSelected = currentSelected?.id === slot.id || (currentLoc && slot.name === currentLoc);
         const isOccupied = slot.status === 'occupied';
@@ -418,8 +437,8 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
         const icon = L.divIcon({
           className: 'dark-slot-div-icon',
           html: labelHtml,
-          iconSize: [36, 14],
-          iconAnchor: [18, 7],
+          iconSize: [32, 13],
+          iconAnchor: [16, 6],
         });
 
         const marker = L.marker([slot.lat, slot.lng], { icon });
@@ -428,11 +447,12 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
         });
 
         this.markerLayerGroup.addLayer(marker);
-
-        if (isSelected) {
-          this.renderSingleSlotBeacon(slot);
-        }
       }
+    }
+
+    // Always keep selected slot's yellow beacon visible at all zoom levels
+    if (currentSelected) {
+      this.renderSingleSlotBeacon(currentSelected);
     }
   }
 

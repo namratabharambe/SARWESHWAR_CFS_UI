@@ -1,4 +1,4 @@
-<div class="relative h-[calc(100vh-4rem)] w-full overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased">
+<div class="relative h-full w-full overflow-hidden bg-slate-950 font-sans text-slate-100 antialiased">
   <!-- Toast Notification Overlay -->
   @if (actionToast()) {
     <div
@@ -186,13 +186,13 @@
       <div class="mt-3.5 flex flex-col gap-3">
         <div class="relative overflow-hidden rounded-2xl border border-cyan-400/40 bg-gradient-to-r from-cyan-950/60 via-blue-950/50 to-slate-900/80 p-3.5 shadow-lg shadow-cyan-950/40">
           <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-cyan-300">
-            <span class="flex items-center gap-1.5">
+            <span class="flex items-center gap-1.5 truncate">
               <span class="material-icons text-sm text-cyan-400">inventory_2</span>
-              CONTAINER ({{ activeTierInfo().tierLabel }})
+              CONTAINER (TIER {{ activeTierInfo().tier }})
             </span>
             @if (activeTierInfo().shippingLine) {
               <span
-                class="rounded-lg px-2.5 py-0.5 text-[10px] font-black shadow-md uppercase"
+                class="rounded-md px-2 py-0.5 text-[9.5px] font-black shadow-md uppercase tracking-wider shrink-0"
                 [ngClass]="getShippingLineColor(activeTierInfo().shippingLine)">
                 {{ activeTierInfo().shippingLine }}
               </span>
@@ -237,14 +237,14 @@
           <div class="flex items-center justify-between text-[11px] font-black uppercase tracking-wider text-emerald-300">
             <span class="flex items-center gap-1.5">
               <span class="material-icons text-sm text-emerald-400">layers</span>
-              CLICK TIER TO INSPECT
+              LEVEL / TIER ELEVATION
             </span>
             <span class="rounded-md bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-black text-emerald-300 border border-emerald-400/30">
-              Active: Tier {{ selectedTier() }} / 4
+              Level {{ selectedSlot()?.status === 'occupied' ? (selectedSlot()?.tierLevel || 2) : 0 }} / 4
             </span>
           </div>
 
-          <!-- Clickable Interactive Vertical Tier Stack -->
+          <!-- Clickable Interactive Vertical Tier Stack (Ground on Bottom, Tier 4 on Top) -->
           <div class="mt-2.5 flex flex-col-reverse gap-2 font-mono text-xs">
             <!-- Tier 4 -->
             <button
@@ -253,20 +253,18 @@
               class="flex items-center justify-between rounded-xl border px-3.5 py-2.5 text-left transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-95"
               [class.ring-2]="selectedTier() === 4"
               [class.ring-amber-400]="selectedTier() === 4"
-              [class.shadow-[0_0_20px_rgba(251,191,36,0.5)]]="selectedTier() === 4"
-              [class.bg-gradient-to-r]="selectedSlot()?.tierLevel === 4"
-              [class.from-cyan-600]="selectedSlot()?.tierLevel === 4"
-              [class.to-blue-600]="selectedSlot()?.tierLevel === 4"
-              [class.text-white]="selectedSlot()?.tierLevel === 4"
-              [class.border-cyan-400]="selectedSlot()?.tierLevel === 4"
-              [class.bg-slate-900/60]="selectedSlot()?.tierLevel !== 4"
-              [class.text-slate-400]="selectedSlot()?.tierLevel !== 4"
-              [class.border-slate-800]="selectedSlot()?.tierLevel !== 4">
+              [class.bg-gradient-to-r]="selectedTier() === 4 && (selectedSlot()?.tierLevel || 0) >= 4"
+              [class.from-sky-500]="selectedTier() === 4 && (selectedSlot()?.tierLevel || 0) >= 4"
+              [class.to-blue-600]="selectedTier() === 4 && (selectedSlot()?.tierLevel || 0) >= 4"
+              [class.text-white]="selectedTier() === 4 && (selectedSlot()?.tierLevel || 0) >= 4"
+              [class.border-cyan-400]="selectedTier() === 4"
+              [class.bg-slate-900/60]="selectedTier() !== 4 || (selectedSlot()?.tierLevel || 0) < 4"
+              [class.text-slate-400]="(selectedSlot()?.tierLevel || 0) < 4"
+              [class.border-slate-800]="selectedTier() !== 4">
               <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full" [class.bg-cyan-400]="selectedSlot()?.tierLevel === 4" [class.bg-slate-600]="selectedSlot()?.tierLevel !== 4"></span>
-                <span class="font-black text-xs">Tier 4 (Top Stack)</span>
+                <span class="font-bold text-xs">Tier 4 (Top Stack)</span>
               </div>
-              <span class="text-[10px] font-bold">{{ selectedSlot()?.tierLevel === 4 ? selectedSlot()?.containerNumber : 'Empty Level' }}</span>
+              <span class="text-[10px] font-bold">{{ (selectedSlot()?.tierLevel || 0) >= 4 ? selectedSlot()?.containerNumber : 'Empty Level' }}</span>
             </button>
 
             <!-- Tier 3 -->
@@ -276,20 +274,18 @@
               class="flex items-center justify-between rounded-xl border px-3.5 py-2.5 text-left transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-95"
               [class.ring-2]="selectedTier() === 3"
               [class.ring-amber-400]="selectedTier() === 3"
-              [class.shadow-[0_0_20px_rgba(251,191,36,0.5)]]="selectedTier() === 3"
-              [class.bg-gradient-to-r]="(selectedSlot()?.tierLevel || 1) >= 3"
-              [class.from-cyan-600]="(selectedSlot()?.tierLevel || 1) >= 3"
-              [class.to-blue-600]="(selectedSlot()?.tierLevel || 1) >= 3"
-              [class.text-white]="(selectedSlot()?.tierLevel || 1) >= 3"
-              [class.border-cyan-400]="(selectedSlot()?.tierLevel || 1) >= 3"
-              [class.bg-slate-900/60]="(selectedSlot()?.tierLevel || 1) < 3"
-              [class.text-slate-400]="(selectedSlot()?.tierLevel || 1) < 3"
-              [class.border-slate-800]="(selectedSlot()?.tierLevel || 1) < 3">
+              [class.bg-gradient-to-r]="selectedTier() === 3 && (selectedSlot()?.tierLevel || 0) >= 3"
+              [class.from-sky-500]="selectedTier() === 3 && (selectedSlot()?.tierLevel || 0) >= 3"
+              [class.to-blue-600]="selectedTier() === 3 && (selectedSlot()?.tierLevel || 0) >= 3"
+              [class.text-white]="selectedTier() === 3 && (selectedSlot()?.tierLevel || 0) >= 3"
+              [class.border-cyan-400]="selectedTier() === 3"
+              [class.bg-slate-900/60]="selectedTier() !== 3 || (selectedSlot()?.tierLevel || 0) < 3"
+              [class.text-slate-400]="(selectedSlot()?.tierLevel || 0) < 3"
+              [class.border-slate-800]="selectedTier() !== 3">
               <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full" [class.bg-cyan-400]="(selectedSlot()?.tierLevel || 1) >= 3" [class.bg-slate-600]="(selectedSlot()?.tierLevel || 1) < 3"></span>
-                <span class="font-black text-xs">Tier 3 (Upper Stack)</span>
+                <span class="font-bold text-xs">Tier 3 (Upper)</span>
               </div>
-              <span class="text-[10px] font-bold">{{ (selectedSlot()?.tierLevel || 1) >= 3 ? 'Occupied Tier 3' : 'Empty Level' }}</span>
+              <span class="text-[10px] font-bold">{{ (selectedSlot()?.tierLevel || 0) >= 3 ? selectedSlot()?.containerNumber : 'Empty Level' }}</span>
             </button>
 
             <!-- Tier 2 -->
@@ -299,20 +295,18 @@
               class="flex items-center justify-between rounded-xl border px-3.5 py-2.5 text-left transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-95"
               [class.ring-2]="selectedTier() === 2"
               [class.ring-amber-400]="selectedTier() === 2"
-              [class.shadow-[0_0_20px_rgba(251,191,36,0.5)]]="selectedTier() === 2"
-              [class.bg-gradient-to-r]="(selectedSlot()?.tierLevel || 1) >= 2"
-              [class.from-cyan-600]="(selectedSlot()?.tierLevel || 1) >= 2"
-              [class.to-blue-600]="(selectedSlot()?.tierLevel || 1) >= 2"
-              [class.text-white]="(selectedSlot()?.tierLevel || 1) >= 2"
-              [class.border-cyan-400]="(selectedSlot()?.tierLevel || 1) >= 2"
-              [class.bg-slate-900/60]="(selectedSlot()?.tierLevel || 1) < 2"
-              [class.text-slate-400]="(selectedSlot()?.tierLevel || 1) < 2"
-              [class.border-slate-800]="(selectedSlot()?.tierLevel || 1) < 2">
+              [class.bg-gradient-to-r]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) >= 2"
+              [class.from-sky-500]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) >= 2"
+              [class.to-blue-600]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) >= 2"
+              [class.text-white]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) >= 2"
+              [class.border-cyan-400]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) >= 2"
+              [class.bg-slate-900/60]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) < 2"
+              [class.text-slate-400]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) < 2"
+              [class.border-slate-800]="(selectedSlot()?.tierLevel || (selectedSlot()?.status === 'occupied' ? 2 : 0)) < 2">
               <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full" [class.bg-cyan-400]="(selectedSlot()?.tierLevel || 1) >= 2" [class.bg-slate-600]="(selectedSlot()?.tierLevel || 1) < 2"></span>
-                <span class="font-black text-xs">Tier 2 (Mid Stack)</span>
+                <span class="font-bold text-xs">Tier 2 (Mid Stack)</span>
               </div>
-              <span class="text-[10px] font-bold">{{ (selectedSlot()?.tierLevel || 1) >= 2 ? 'Occupied Tier 2' : 'Empty Level' }}</span>
+              <span class="text-[10px] font-bold">{{ selectedSlot()?.status === 'occupied' ? (selectedSlot()?.containerNumber || 'EVERU7008077') : 'Empty Level' }}</span>
             </button>
 
             <!-- Tier 1 / Ground -->
@@ -322,20 +316,18 @@
               class="flex items-center justify-between rounded-xl border px-3.5 py-2.5 text-left transition-all duration-200 cursor-pointer hover:scale-[1.02] active:scale-95"
               [class.ring-2]="selectedTier() === 1"
               [class.ring-amber-400]="selectedTier() === 1"
-              [class.shadow-[0_0_20px_rgba(251,191,36,0.5)]]="selectedTier() === 1"
-              [class.bg-gradient-to-r]="(selectedSlot()?.tierLevel || 1) >= 1 && selectedSlot()?.status === 'occupied'"
-              [class.from-emerald-600]="(selectedSlot()?.tierLevel || 1) >= 1 && selectedSlot()?.status === 'occupied'"
-              [class.to-teal-600]="(selectedSlot()?.tierLevel || 1) >= 1 && selectedSlot()?.status === 'occupied'"
-              [class.text-white]="(selectedSlot()?.tierLevel || 1) >= 1 && selectedSlot()?.status === 'occupied'"
-              [class.border-emerald-400]="(selectedSlot()?.tierLevel || 1) >= 1 && selectedSlot()?.status === 'occupied'"
+              [class.bg-gradient-to-r]="selectedSlot()?.status === 'occupied'"
+              [class.from-emerald-600]="selectedSlot()?.status === 'occupied'"
+              [class.to-teal-600]="selectedSlot()?.status === 'occupied'"
+              [class.text-white]="selectedSlot()?.status === 'occupied'"
+              [class.border-emerald-400]="selectedSlot()?.status === 'occupied'"
               [class.bg-slate-900/60]="selectedSlot()?.status !== 'occupied'"
               [class.text-slate-400]="selectedSlot()?.status !== 'occupied'"
               [class.border-slate-800]="selectedSlot()?.status !== 'occupied'">
               <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full" [class.bg-emerald-400]="selectedSlot()?.status === 'occupied'" [class.bg-slate-600]="selectedSlot()?.status !== 'occupied'"></span>
-                <span class="font-black text-xs">Ground (Tier 1)</span>
+                <span class="font-bold text-xs">Tier 1 (Ground Slot)</span>
               </div>
-              <span class="text-[10px] font-bold">{{ selectedSlot()?.status === 'occupied' ? (selectedSlot()?.containerNumber || 'Occupied') : 'Vacant Bay' }}</span>
+              <span class="text-[10px] font-bold">{{ selectedSlot()?.status === 'occupied' ? (selectedSlot()?.containerNumber || 'EVERU7008077') : 'Empty Level' }}</span>
             </button>
           </div>
         </div>

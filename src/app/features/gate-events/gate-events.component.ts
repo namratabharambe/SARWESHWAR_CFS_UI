@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inj
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { filter, forkJoin } from 'rxjs';
 import { TranslatePipe } from 'shared/pipes';
 import {
   GatePhotoStripComponent,
@@ -169,6 +169,10 @@ export class GateEventsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(25);
   public readonly totalCount = signal<number>(0);
+  public readonly totalCheckinCount = signal<number>(0);
+  public readonly totalCheckoutCount = signal<number>(0);
+  public readonly todayCheckinCount = signal<number>(0);
+  public readonly todayCheckoutCount = signal<number>(0);
 
   constructor() {
     this.syncGateMode();
@@ -203,7 +207,56 @@ export class GateEventsComponent implements OnInit {
     this.loadGateEvents();
   }
 
+  public readonly fromDate = signal<string | undefined>(undefined);
+  public readonly toDate = signal<string | undefined>(undefined);
+
   public ngOnInit(): void {
+    this.loadGateEvents();
+  }
+
+  public onDateFilterChange(val: string): void {
+    this.dateFilter.set(val);
+    this.currentPage.set(1);
+
+    if (!val) {
+      this.fromDate.set(undefined);
+      this.toDate.set(undefined);
+      this.loadGateEvents();
+      return;
+    }
+
+    // Parse date and build ISO range for that full day
+    const parsed = new Date(val);
+    if (!isNaN(parsed.getTime())) {
+      const year = parsed.getFullYear();
+      const month = parsed.getMonth();
+      const day = parsed.getDate();
+      const start = new Date(Date.UTC(year, month, day, 0, 0, 0)).toISOString();
+      const end = new Date(Date.UTC(year, month, day, 23, 59, 59, 999)).toISOString();
+      this.fromDate.set(start);
+      this.toDate.set(end);
+    } else {
+      // If user typed string like DD-MM-YYYY or DD MMM YYYY
+      const dmyMatch = val.match(/^(\d{1,2})[-/\s]+([A-Za-z]+|\d{1,2})[-/\s]+(\d{4})/);
+      if (dmyMatch) {
+        const d = parseInt(dmyMatch[1], 10);
+        let m = parseInt(dmyMatch[2], 10) - 1;
+        if (isNaN(m)) {
+          const shortMonths = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+          m = shortMonths.findIndex((sm) => dmyMatch[2].toLowerCase().startsWith(sm));
+          if (m < 0) m = 0;
+        }
+        const y = parseInt(dmyMatch[3], 10);
+        const start = new Date(Date.UTC(y, m, d, 0, 0, 0)).toISOString();
+        const end = new Date(Date.UTC(y, m, d, 23, 59, 59, 999)).toISOString();
+        this.fromDate.set(start);
+        this.toDate.set(end);
+      } else {
+        this.fromDate.set(undefined);
+        this.toDate.set(undefined);
+      }
+    }
+
     this.loadGateEvents();
   }
 
@@ -213,58 +266,128 @@ export class GateEventsComponent implements OnInit {
     const clientId = this.authService.getActiveClientId() || undefined;
     const cycle = this.cycleFilter();
     const eventType = cycle === 'All' ? undefined : (cycle === 'IN' ? 'GATE_IN' : 'GATE_OUT');
+    const from = this.fromDate();
+    const to = this.toDate();
 
-    this.gateEventService
-      .getVisits({
-        page: this.currentPage(),
-        pageSize: this.pageSize(),
-        siteId,
-        clientId,
-        eventType,
-      })
-      .subscribe({
-        next: (response: VisitsPagedResponse) => {
-          this.isLoading.set(false);
-          const items = response?.items ?? (Array.isArray(response) ? (response as any) : []);
-          if (items && items.length > 0) {
-            const mapped = items.map((visit: VisitListItemDto) => this.mapVisitToGateEventItem(visit));
-            this.events.set(mapped);
-            this.totalCount.set(response.totalCount ?? mapped.length);
-          } else {
-            this.events.set([]);
-            this.totalCount.set(0);
-          }
-        },
-        error: () => {
-          // Fallback to legacy gate events API
-          this.gateEventService
-            .getGateEvents({
-              page: this.currentPage(),
-              pageSize: this.pageSize(),
-              eventType,
-            })
-            .subscribe({
-              next: (legacyRes) => {
-                this.isLoading.set(false);
-                const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
-                if (legacyItems && legacyItems.length > 0) {
-                  const mapped = legacyItems.map((dto: GateEventDetailDto) => this.mapDtoToGateEventItem(dto));
-                  this.events.set(mapped);
-                  this.totalCount.set(legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length);
-                } else {
-                  this.events.set([]);
-                  this.totalCount.set(0);
+    const now = new Date();
+    const todayStartIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)).toISOString();
+    const todayEndIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+
+    // All-time Total Gate In & Out Counts
+    const allInVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_IN',
+    });
+
+    const allOutVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_OUT',
+    });
+
+    // Today Only Gate In & Out Counts
+    const todayInVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_IN',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    const todayOutVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId,
+      clientId,
+      eventType: 'GATE_OUT',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    // Current View / Filtered List
+    const currentVisits$ = this.gateEventService.getVisits({
+      page: this.currentPage(),
+      pageSize: this.pageSize(),
+      siteId,
+      clientId,
+      eventType,
+      from,
+      to,
+    });
+
+    forkJoin({
+      allInRes: allInVisits$,
+      allOutRes: allOutVisits$,
+      todayInRes: todayInVisits$,
+      todayOutRes: todayOutVisits$,
+      currentRes: currentVisits$,
+    }).subscribe({
+      next: ({ allInRes, allOutRes, todayInRes, todayOutRes, currentRes }) => {
+        this.isLoading.set(false);
+        const totalIn = allInRes?.totalCount ?? 0;
+        const totalOut = allOutRes?.totalCount ?? 0;
+        const todayIn = todayInRes?.totalCount ?? 0;
+        const todayOut = todayOutRes?.totalCount ?? 0;
+
+        this.totalCheckinCount.set(totalIn);
+        this.totalCheckoutCount.set(totalOut);
+        this.todayCheckinCount.set(todayIn);
+        this.todayCheckoutCount.set(todayOut);
+
+        const items = currentRes?.items ?? (Array.isArray(currentRes) ? (currentRes as any) : []);
+        if (items && items.length > 0) {
+          const mapped = items.map((visit: VisitListItemDto) => this.mapVisitToGateEventItem(visit));
+          this.events.set(mapped);
+          this.totalCount.set(currentRes.totalCount ?? mapped.length);
+        } else {
+          this.events.set([]);
+          this.totalCount.set(0);
+        }
+      },
+      error: () => {
+        // Fallback to legacy gate events API
+        this.gateEventService
+          .getGateEvents({
+            page: this.currentPage(),
+            pageSize: this.pageSize(),
+            eventType,
+          })
+          .subscribe({
+            next: (legacyRes) => {
+              this.isLoading.set(false);
+              const legacyItems = legacyRes?.items ?? legacyRes?.Items ?? [];
+              if (legacyItems && legacyItems.length > 0) {
+                const mapped = legacyItems.map((dto: GateEventDetailDto) => this.mapDtoToGateEventItem(dto));
+                this.events.set(mapped);
+                const total = legacyRes.totalCount ?? legacyRes.TotalCount ?? mapped.length;
+                this.totalCount.set(total);
+                if (cycle === 'IN') {
+                  this.totalCheckinCount.set(total);
+                } else if (cycle === 'OUT') {
+                  this.totalCheckoutCount.set(total);
                 }
-              },
-              error: () => {
-                this.isLoading.set(false);
+              } else {
                 this.events.set([]);
                 this.totalCount.set(0);
-              },
-            });
-        },
-      });
+              }
+            },
+            error: () => {
+              this.isLoading.set(false);
+              this.events.set([]);
+              this.totalCount.set(0);
+            },
+          });
+      },
+    });
   }
+
 
   private buildContainerPhotos(
     containerNo: string,
@@ -478,7 +601,17 @@ export class GateEventsComponent implements OnInit {
       confidence: overallConfidence,
       driver: driverName,
       status: visit.status === 'IN_YARD' || visit.status === 'DEPARTED' ? 'Verified' : 'Review',
-      damageFlag: false,
+      damageFlag: Boolean(
+        visit.hasDamage ||
+        visit.isDamaged ||
+        visit.damageFlag ||
+        visit.damageDetected ||
+        (visit.damageCount && visit.damageCount > 0) ||
+        primaryEvent?.damageDetected ||
+        primaryEvent?.damageFlag ||
+        eventsList.some((e) => e.damageDetected || e.damageFlag || e.hasDamage) ||
+        containers.some((c) => c.damageFlag || (c.condition && c.condition.toLowerCase().includes('damage'))),
+      ),
       photos: allPhotos.slice(0, 8),
       notes: `Visit ID: ${id} | Load: ${isDualContainer ? '2x 20FT Dual Containers' : primaryContainer?.size || '40FT'}`,
       rawVisit: visit,
@@ -580,7 +713,14 @@ export class GateEventsComponent implements OnInit {
       confidence: overallConfidence,
       driver: driverName,
       status: overallConfidence >= 90 ? 'Verified' : 'Review',
-      damageFlag: false,
+      damageFlag: Boolean(
+        dto.damageFlag ||
+        dto.damageDetected ||
+        dto.hasDamage ||
+        dto.isDamaged ||
+        (dto.condition && dto.condition.toLowerCase().includes('damage')) ||
+        containers.some((c) => c.damageFlag || (c.condition && c.condition.toLowerCase().includes('damage'))),
+      ),
       photos: allPhotos.slice(0, 8),
       notes: `Captured at ${gate} via automated optical lane sensor.`,
       rawDto: dto,
@@ -590,22 +730,43 @@ export class GateEventsComponent implements OnInit {
 
   // Metrics matching the reference UI cards
   public readonly metrics = computed(() => {
+    const mode = this.gateMode();
     const list = this.events();
     const total = this.totalCount();
-    const cycle = this.cycleFilter();
-    const arrivals = cycle === 'IN' ? total : (cycle === 'OUT' ? 0 : total);
-    const departures = cycle === 'OUT' ? total : (cycle === 'IN' ? 0 : total);
-    const ocrVerified = total;
+    const totalIn = this.totalCheckinCount();
+    const totalOut = this.totalCheckoutCount();
+    const todayInCount = this.todayCheckinCount();
+    const todayOutCount = this.todayCheckoutCount();
+
+    // Calculate today arrivals/departures from items or API
+    const todayIn = todayInCount || list.filter((e) => {
+      const d = new Date(e.timestamp);
+      return d.toDateString() === new Date().toDateString() && e.direction === 'IN';
+    }).length || (mode === 'in' && !this.fromDate() ? total : 0);
+
+    const todayOut = todayOutCount || list.filter((e) => {
+      const d = new Date(e.timestamp);
+      return d.toDateString() === new Date().toDateString() && e.direction === 'OUT';
+    }).length || (mode === 'out' && !this.fromDate() ? total : 0);
+
+    const totalCurrentMode = mode === 'out' ? (totalOut || total) : (totalIn || total);
+    const ocrVerified = totalCurrentMode;
     const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
 
     return {
-      todayArrivals: arrivals,
-      arrivalsTrend: arrivals > 0 ? `${arrivals} arrivals` : '0 today',
-      todayDepartures: departures,
-      departuresTrend: departures > 0 ? `${departures} departures` : '0 today',
+      todayArrivals: todayIn,
+      arrivalsTrend: todayIn > 0 ? `${todayIn} arrivals today` : '0 arrivals today',
+      todayDepartures: todayOut,
+      departuresTrend: todayOut > 0 ? `${todayOut} departures today` : '0 departures today',
+      totalCheckin: totalIn || total,
+      totalCheckinTrend: totalIn > 0 ? `${totalIn} total gate in` : '0 total gate in',
+      totalCheckout: totalOut || total,
+      totalCheckoutTrend: totalOut > 0 ? `${totalOut} total gate out` : '0 total gate out',
+      totalAll: totalCurrentMode,
+      totalAllTrend: totalCurrentMode > 0 ? `${totalCurrentMode} total operations` : '0 total operations',
       ocrVerified: ocrVerified,
-      ocrVerifiedPercent: total > 0 ? '100% of total' : '0%',
+      ocrVerifiedPercent: totalCurrentMode > 0 ? '100% verified' : '0% verified',
       pendingReview: pendingReview,
       pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
       damagedCaptures: damagedCaptures,
@@ -616,10 +777,12 @@ export class GateEventsComponent implements OnInit {
   // Tab counts
   public readonly tabCounts = computed(() => {
     const list = this.events();
+    const totalIn = this.totalCheckinCount();
+    const totalOut = this.totalCheckoutCount();
     return {
-      all: this.totalCount() || list.length,
-      arrivals: this.cycleFilter() === 'IN' ? this.totalCount() : list.filter((e) => e.direction === 'IN').length,
-      departures: this.cycleFilter() === 'OUT' ? this.totalCount() : list.filter((e) => e.direction === 'OUT').length,
+      all: (totalIn + totalOut) || this.totalCount() || list.length,
+      arrivals: totalIn || (this.cycleFilter() === 'IN' ? this.totalCount() : list.filter((e) => e.direction === 'IN').length),
+      departures: totalOut || (this.cycleFilter() === 'OUT' ? this.totalCount() : list.filter((e) => e.direction === 'OUT').length),
     };
   });
 
@@ -629,6 +792,7 @@ export class GateEventsComponent implements OnInit {
     const cycle = this.cycleFilter();
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
+    const dateStr = this.dateFilter().trim();
 
     return list.filter((item) => {
       if (cycle !== 'All' && item.direction !== cycle) return false;
@@ -636,6 +800,23 @@ export class GateEventsComponent implements OnInit {
       if (conf === 'High' && item.confidence < 95) return false;
       if (conf === 'Medium' && (item.confidence < 90 || item.confidence >= 95)) return false;
       if (conf === 'Low' && item.confidence >= 90) return false;
+
+      if (dateStr) {
+        const itemDate = new Date(item.timestamp);
+        const parsed = new Date(dateStr);
+        if (!isNaN(parsed.getTime())) {
+          if (
+            itemDate.getFullYear() !== parsed.getFullYear() ||
+            itemDate.getMonth() !== parsed.getMonth() ||
+            itemDate.getDate() !== parsed.getDate()
+          ) {
+            // Also check formatted text match
+            if (!item.eventTime.toLowerCase().includes(dateStr.toLowerCase())) {
+              return false;
+            }
+          }
+        }
+      }
 
       if (query) {
         const matchesContainer = item.containerNo.toLowerCase().includes(query);

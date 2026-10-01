@@ -1,19 +1,33 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnDestroy, ViewChild, computed, inject, input, signal, AfterViewInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { YardBlockRow, YardMetrics } from 'shared/types/dashboard/dashboard.interface';
+import { CFS_GPS_SLOTS } from '../../../yard-map/yard-map-data';
 
 declare const L: any;
 
 export interface YardBlockBadge {
   name: string;
   occupancyPct: number;
+  occupied: number;
+  total: number;
 }
 
 @Component({
   selector: 'app-yard-overview',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [],
   templateUrl: './yard-overview.component.html',
   styleUrls: ['./yard-overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,10 +37,12 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
 
   private readonly router = inject(Router);
   private map: any = null;
+  private polygonLayerGroup: any = null;
+  private badgeLayerGroup: any = null;
 
   public readonly metrics = input<YardMetrics>({
-    totalBlocks: 4,
-    totalRows: 4,
+    totalBlocks: 6,
+    totalRows: 12,
     teuCapacity: 1200,
     currentTeu: 816,
     utilizationPercentage: 68,
@@ -34,12 +50,15 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
   public readonly yardRows = input<YardBlockRow[]>([]);
 
   public readonly activeView = signal<'map' | 'list'>('map');
+  public readonly activeMapStyle = signal<'satellite' | 'street'>('satellite');
 
   public readonly blockBadges: YardBlockBadge[] = [
-    { name: 'Block A', occupancyPct: 68 },
-    { name: 'Block B', occupancyPct: 72 },
-    { name: 'Block C', occupancyPct: 59 },
-    { name: 'Block D', occupancyPct: 47 },
+    { name: 'Block A (Import)', occupancyPct: 60, occupied: 21, total: 35 },
+    { name: 'Block B (Export)', occupancyPct: 62, occupied: 21, total: 34 },
+    { name: 'Block C (Empty Depot)', occupancyPct: 61, occupied: 48, total: 79 },
+    { name: 'Block D (General Yard)', occupancyPct: 60, occupied: 40, total: 67 },
+    { name: 'Block F (Trailer Parking)', occupancyPct: 58, occupied: 11, total: 19 },
+    { name: 'Block H (Reefer Grid)', occupancyPct: 60, occupied: 15, total: 25 },
   ];
 
   public readonly totalCapacity = computed(() => this.metrics()?.teuCapacity || 1200);
@@ -52,7 +71,7 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (this.activeView() === 'map') {
-      setTimeout(() => this.initMap(), 50);
+      setTimeout(() => this.initMap(), 60);
     }
   }
 
@@ -64,8 +83,13 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
         if (this.map) {
           this.map.invalidateSize();
         }
-      }, 50);
+      }, 60);
     }
+  }
+
+  public toggleMapStyle(style: 'satellite' | 'street'): void {
+    this.activeMapStyle.set(style);
+    this.initMap();
   }
 
   private initMap(): void {
@@ -78,246 +102,106 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
     }
 
     try {
+      // Center at Sarveshwar CFS GPS coordinates: [18.9028, 73.0465]
       this.map = L.map(this.mapContainer.nativeElement, {
-        center: [18.950, 72.950],
-        zoom: 15,
+        center: [18.9028, 73.0465],
+        zoom: 17.5,
+        minZoom: 16,
+        maxZoom: 21,
         zoomControl: false,
+        attributionControl: false,
       });
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap contributors',
+      // Base tile layer
+      const tileUrl =
+        this.activeMapStyle() === 'satellite'
+          ? 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+          : 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+
+      L.tileLayer(tileUrl, {
+        maxZoom: 21,
+        maxNativeZoom: 20,
       }).addTo(this.map);
 
-      // Block A (Blue - 68%)
-      const blockA = L.polygon([
-        [18.955, 72.942],
-        [18.955, 72.948],
-        [18.950, 72.948],
-        [18.950, 72.942],
-      ], {
-        color: '#2563eb',
-        fillColor: '#3b82f6',
-        fillOpacity: 0.45,
-        weight: 2,
-      }).addTo(this.map);
-      
-      blockA.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-blue-600 font-bold border-b border-slate-100 pb-1 mb-1">BLOCK A</div>
-          <div class="text-xs">Occupancy: <strong class="text-slate-900">68%</strong></div>
-          <div class="text-xs">Capacity: <strong class="text-slate-900">320 TEU</strong></div>
-          <div class="text-xs">Used: <strong class="text-slate-900">218 TEU</strong></div>
-          <div class="text-xs">Available: <strong class="text-slate-900">102 TEU</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
+      this.polygonLayerGroup = L.layerGroup().addTo(this.map);
+      this.badgeLayerGroup = L.layerGroup().addTo(this.map);
 
-      blockA.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-blue-600 font-bold">BLOCK A DETAILS</div>
-          <div class="popup-row"><span>Occupancy:</span> <strong>68%</strong></div>
-          <div class="popup-row"><span>Capacity:</span> <strong>320 TEU</strong></div>
-          <div class="popup-row"><span>Used:</span> <strong>218 TEU</strong></div>
-          <div class="popup-row"><span>Available:</span> <strong>102 TEU</strong></div>
-          <div class="popup-status text-blue-600 font-semibold mt-1">Status: Active Stacking Zone</div>
-        </div>
-      `);
+      // Render all 259 surveyed geofences
+      const blockColorMap: Record<string, { stroke: string; fill: string }> = {
+        A: { stroke: '#00f0ff', fill: '#06b6d4' },
+        B: { stroke: '#10b981', fill: '#059669' },
+        C: { stroke: '#6366f1', fill: '#4f46e5' },
+        D: { stroke: '#38bdf8', fill: '#0284c7' },
+        F: { stroke: '#f59e0b', fill: '#d97706' },
+        H: { stroke: '#22d3ee', fill: '#0891b2' },
+      };
 
-      // Block B (Amber - 72%)
-      const blockB = L.polygon([
-        [18.955, 72.952],
-        [18.955, 72.958],
-        [18.950, 72.958],
-        [18.950, 72.952],
-      ], {
-        color: '#d97706',
-        fillColor: '#f59e0b',
-        fillOpacity: 0.45,
-        weight: 2,
-      }).addTo(this.map);
+      CFS_GPS_SLOTS.forEach((slot) => {
+        const polyCoords = slot.polygon.map((pt) => [pt.lat, pt.lng]);
+        const block = (slot.block || 'A').toUpperCase();
+        const colors = blockColorMap[block] || { stroke: '#06b6d4', fill: '#0891b2' };
+        const isOccupied = slot.status === 'occupied';
 
-      blockB.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-amber-600 font-bold border-b border-slate-100 pb-1 mb-1">BLOCK B</div>
-          <div class="text-xs">Occupancy: <strong class="text-slate-900">72%</strong></div>
-          <div class="text-xs">Capacity: <strong class="text-slate-900">340 TEU</strong></div>
-          <div class="text-xs">Used: <strong class="text-slate-900">245 TEU</strong></div>
-          <div class="text-xs">Available: <strong class="text-slate-900">95 TEU</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
+        const polygon = L.polygon(polyCoords, {
+          color: colors.stroke,
+          weight: 1.5,
+          opacity: 0.95,
+          fillColor: isOccupied ? colors.fill : '#0f172a',
+          fillOpacity: isOccupied ? 0.65 : 0.25,
+          className: 'yard-geofence-slot',
+        });
 
-      blockB.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-amber-600 font-bold">BLOCK B DETAILS</div>
-          <div class="popup-row"><span>Occupancy:</span> <strong>72%</strong></div>
-          <div class="popup-row"><span>Capacity:</span> <strong>340 TEU</strong></div>
-          <div class="popup-row"><span>Used:</span> <strong>245 TEU</strong></div>
-          <div class="popup-row"><span>Available:</span> <strong>95 TEU</strong></div>
-          <div class="popup-status text-amber-600 font-semibold mt-1">Status: High Density Zone</div>
-        </div>
-      `);
+        polygon.bindTooltip(`
+          <div class="px-2 py-1 font-sans text-xs bg-slate-950/95 text-white rounded-md border border-cyan-500/50 shadow-md">
+            <span class="font-bold text-amber-400">📍 ${slot.name}</span> <span class="text-[10px] text-cyan-200">(${slot.status})</span>
+            ${slot.containerNumber ? `<div class="font-mono text-cyan-300 text-[10px] font-bold">📦 ${slot.containerNumber}</div>` : ''}
+          </div>
+        `, { sticky: true, direction: 'top', opacity: 0.95 });
 
-      // Block C (Cyan - 59%)
-      const blockC = L.polygon([
-        [18.948, 72.942],
-        [18.948, 72.948],
-        [18.943, 72.948],
-        [18.943, 72.942],
-      ], {
-        color: '#0891b2',
-        fillColor: '#06b6d4',
-        fillOpacity: 0.45,
-        weight: 2,
-      }).addTo(this.map);
+        polygon.on('click', () => {
+          this.navigateToYardMap();
+        });
 
-      blockC.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-cyan-600 font-bold border-b border-slate-100 pb-1 mb-1">BLOCK C</div>
-          <div class="text-xs">Occupancy: <strong class="text-slate-900">59%</strong></div>
-          <div class="text-xs">Capacity: <strong class="text-slate-900">280 TEU</strong></div>
-          <div class="text-xs">Used: <strong class="text-slate-900">165 TEU</strong></div>
-          <div class="text-xs">Available: <strong class="text-slate-900">115 TEU</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
-
-      blockC.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-cyan-600 font-bold">BLOCK C DETAILS</div>
-          <div class="popup-row"><span>Occupancy:</span> <strong>59%</strong></div>
-          <div class="popup-row"><span>Capacity:</span> <strong>280 TEU</strong></div>
-          <div class="popup-row"><span>Used:</span> <strong>165 TEU</strong></div>
-          <div class="popup-row"><span>Available:</span> <strong>115 TEU</strong></div>
-          <div class="popup-status text-cyan-600 font-semibold mt-1">Status: Normal Operations</div>
-        </div>
-      `);
-
-      // Block D (Rose - 47%)
-      const blockD = L.polygon([
-        [18.948, 72.952],
-        [18.948, 72.958],
-        [18.943, 72.958],
-        [18.943, 72.952],
-      ], {
-        color: '#dc2626',
-        fillColor: '#ef4444',
-        fillOpacity: 0.45,
-        weight: 2,
-      }).addTo(this.map);
-
-      blockD.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-rose-600 font-bold border-b border-slate-100 pb-1 mb-1">BLOCK D</div>
-          <div class="text-xs">Occupancy: <strong class="text-slate-900">47%</strong></div>
-          <div class="text-xs">Capacity: <strong class="text-slate-900">260 TEU</strong></div>
-          <div class="text-xs">Used: <strong class="text-slate-900">122 TEU</strong></div>
-          <div class="text-xs">Available: <strong class="text-slate-900">138 TEU</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
-
-      blockD.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-rose-600 font-bold">BLOCK D DETAILS</div>
-          <div class="popup-row"><span>Occupancy:</span> <strong>47%</strong></div>
-          <div class="popup-row"><span>Capacity:</span> <strong>260 TEU</strong></div>
-          <div class="popup-row"><span>Used:</span> <strong>122 TEU</strong></div>
-          <div class="popup-row"><span>Available:</span> <strong>138 TEU</strong></div>
-          <div class="popup-status text-rose-600 font-semibold mt-1">Status: Crane 02 Operating</div>
-        </div>
-      `);
-
-      // Custom divIcon markers for crisp SVG icons without dependency on external PNGs
-      const craneIcon = L.divIcon({
-        className: 'custom-map-icon crane-icon',
-        html: `<div style="background:#7c3aed;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,0.25);font-size:14px;">⚙</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
+        this.polygonLayerGroup.addLayer(polygon);
       });
 
-      const truckIcon = L.divIcon({
-        className: 'custom-map-icon truck-icon',
-        html: `<div style="background:#2563eb;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,0.25);font-size:14px;">🚛</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
+      // Render Block Cluster Badges with clean offsets
+      const clusters = [
+        { name: 'Block F (Trailers)', count: '11/19', lat: 18.9042, lng: 73.0456, icon: '🚛' },
+        { name: 'Block D (General)', count: '40/67', lat: 18.9034, lng: 73.0459, icon: '🏢' },
+        { name: 'Block C (Empty)', count: '48/79', lat: 18.9036, lng: 73.0467, icon: '📦' },
+        { name: 'Block B (Export)', count: '21/34', lat: 18.9030, lng: 73.0471, icon: '🚢' },
+        { name: 'Block A (Import)', count: '21/35', lat: 18.9023, lng: 73.0474, icon: '📥' },
+        { name: 'Block H (Reefer)', count: '15/25', lat: 18.9015, lng: 73.0470, icon: '❄️' },
+      ];
+
+      clusters.forEach((c) => {
+        const badgeIcon = L.divIcon({
+          className: 'yard-cluster-badge-icon',
+          html: `
+            <div style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(6, 182, 212, 0.7); border-radius: 6px; padding: 2px 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 3px;">
+              <span style="font-size: 10px;">${c.icon}</span>
+              <span style="color: #38bdf8; font-size: 9.5px; font-weight: 800;">${c.name}</span>
+              <span style="background: rgba(6, 182, 212, 0.25); color: #67e8f9; font-size: 8.5px; font-weight: 900; padding: 0.5px 3px; border-radius: 3px;">${c.count}</span>
+            </div>
+          `,
+          iconSize: [130, 22],
+          iconAnchor: [65, 11],
+        });
+
+        const marker = L.marker([c.lat, c.lng], { icon: badgeIcon });
+        marker.on('click', () => this.navigateToYardMap());
+        this.badgeLayerGroup.addLayer(marker);
       });
 
-      const containerIcon = L.divIcon({
-        className: 'custom-map-icon container-icon',
-        html: `<div style="background:#0891b2;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,0.25);font-size:14px;">📦</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-      });
+      // Keep zoomed in by default on Sarveshwar CFS yard [18.9028, 73.0467]
+      this.map.setView([18.9028, 73.0467], 18.6);
 
-      // Equipment Marker (Crane 02 Active)
-      const craneMarker = L.marker([18.945, 72.955], { icon: craneIcon }).addTo(this.map);
-      craneMarker.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-purple-600 font-bold border-b border-slate-100 pb-1 mb-1">EQUIPMENT</div>
-          <div class="text-xs">Equipment No: <strong class="text-slate-900">Crane 02</strong></div>
-          <div class="text-xs">Type: <strong class="text-slate-900">Gantry Crane</strong></div>
-          <div class="text-xs">Zone: <strong class="text-slate-900">Block D Stacking Zone</strong></div>
-          <div class="text-xs">Status: <strong class="text-slate-900">Active Operations</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
-
-      craneMarker.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-purple-600 font-bold">⚙ CRANE 02 ACTIVE</div>
-          <div class="popup-row"><span>Equipment:</span> <strong>Gantry Crane #02</strong></div>
-          <div class="popup-row"><span>Zone:</span> <strong>Block D Yard Bay</strong></div>
-          <div class="popup-row"><span>Handling Rate:</span> <strong>18 moves/hr</strong></div>
-          <div class="popup-status text-purple-600 font-semibold mt-1">Status: Active Operations</div>
-        </div>
-      `);
-
-      // Truck Marker (MH 12 AB 1234)
-      const truckMarker = L.marker([18.949, 72.950], { icon: truckIcon }).addTo(this.map);
-      truckMarker.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-blue-600 font-bold border-b border-slate-100 pb-1 mb-1">TRUCK</div>
-          <div class="text-xs">Truck No: <strong class="text-slate-900">MH 12 AB 1234</strong></div>
-          <div class="text-xs">Container: <strong class="text-slate-900">TCNU6041954</strong></div>
-          <div class="text-xs">Gate: <strong class="text-slate-900">Gate 01 Ingate</strong></div>
-          <div class="text-xs">Status: <strong class="text-slate-900">In Transit</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
-
-      truckMarker.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-blue-600 font-bold">🚛 TRUCK MH 12 AB 1234</div>
-          <div class="popup-row"><span>Container:</span> <strong>TCNU6041954 (40 FT)</strong></div>
-          <div class="popup-row"><span>Type:</span> <strong>Import Container</strong></div>
-          <div class="popup-row"><span>Destination:</span> <strong>Block B Stacking Area</strong></div>
-          <div class="popup-status text-blue-600 font-semibold mt-1">Status: In Transit</div>
-        </div>
-      `);
-
-      // Container Marker (MSCU9823471)
-      const containerMarker = L.marker([18.953, 72.945], { icon: containerIcon }).addTo(this.map);
-      containerMarker.bindTooltip(`
-        <div class="yard-tooltip-card">
-          <div class="tooltip-header text-cyan-600 font-bold border-b border-slate-100 pb-1 mb-1">CONTAINER</div>
-          <div class="text-xs">Container No: <strong class="text-slate-900">MSCU9823471</strong></div>
-          <div class="text-xs">Size: <strong class="text-slate-900">40 FT</strong></div>
-          <div class="text-xs">Type: <strong class="text-slate-900">Import Cargo</strong></div>
-          <div class="text-xs">Status: <strong class="text-slate-900">Verified & Stacked</strong></div>
-          <div class="text-xs">Location: <strong class="text-slate-900">Block A / Row 04 / Slot 14</strong></div>
-        </div>
-      `, { sticky: true, direction: 'top', className: 'yard-map-tooltip-custom' });
-
-      containerMarker.bindPopup(`
-        <div class="yard-popup-card">
-          <div class="popup-header text-cyan-600 font-bold">📦 CONTAINER MSCU9823471</div>
-          <div class="popup-row"><span>Size:</span> <strong>40 FT High Cube</strong></div>
-          <div class="popup-row"><span>Type:</span> <strong>Import Cargo</strong></div>
-          <div class="popup-row"><span>Location:</span> <strong>Block A / Row 04 / Slot 14</strong></div>
-          <div class="popup-status text-cyan-600 font-semibold mt-1">Status: Verified & Stacked</div>
-        </div>
-      `);
-
-      // Navigate to full Yard Map module when clicking anywhere on the map
-      this.map.on('click', () => {
-        this.navigateToYardMap();
-      });
+      setTimeout(() => {
+        if (this.map) {
+          this.map.invalidateSize();
+        }
+      }, 200);
 
     } catch (e) {
       console.warn('Leaflet map initialization skipped:', e);

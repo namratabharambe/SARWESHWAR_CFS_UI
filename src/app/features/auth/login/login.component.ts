@@ -6,6 +6,8 @@ import { CenteredDividerComponent } from 'shared/components/atoms/centered-divid
 import { FocusInvalidFieldDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
+import { ThemeService } from 'core/services/theme.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,6 +19,7 @@ import { TranslatePipe } from 'shared/pipes';
 export class LoginComponent {
   public readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly theme = inject(ThemeService);
 
   public readonly error = signal<string>('');
   public readonly showPassword = signal<boolean>(false);
@@ -51,6 +54,8 @@ export class LoginComponent {
 
     this.auth.login(userName, password).subscribe({
       next: () => {
+        // By default, activate light mode on login
+        this.theme.setDarkMode(false);
         this.isAuthenticating.set(true);
         this.splashStep.set('Authenticating terminal credentials...');
 

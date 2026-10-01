@@ -2,27 +2,67 @@
   class="dashboard-card yard-overview-card flex h-full flex-col justify-between rounded-[12px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] relative overflow-hidden">
   <!-- Card Header -->
   <div class="mb-3 flex items-center justify-between gap-2 border-b border-slate-100 pb-2.5 dark:border-slate-800/80 min-w-0">
-    <!-- Left: Location Pin Icon + Title -->
+    <!-- Left: Location Pin Icon + Title + Live Subtitle -->
     <div class="flex items-center gap-2.5 min-w-0">
-      <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-2xs">
+      <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-md shadow-cyan-500/20">
         <svg class="h-4.5 w-4.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
           <path d="M18 6 12 3 6 6 3 4.5V18l3 1.5 6-3 6 3 3-1.5V3Z"/>
           <path d="M12 3v13.5"/>
           <path d="M9 10a3 3 0 1 0 6 0c0-2-3-5-3-5s-3 3-3 5Z"/>
         </svg>
       </div>
-      <h3 class="text-sm sm:text-base font-bold text-[#0f2851] dark:text-white leading-tight truncate">
-        Yard Overview
-      </h3>
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 class="text-sm sm:text-base font-bold text-[#0f2851] dark:text-white leading-tight truncate">
+            Yard Overview
+          </h3>
+          <span class="rounded-full bg-cyan-500/15 border border-cyan-500/30 px-2 py-0.5 text-[10px] font-extrabold text-cyan-700 dark:text-cyan-300">
+            259 GPS SPOTS
+          </span>
+        </div>
+        <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400">Nhava Sheva Terminal • Live GPS Geofences</p>
+      </div>
     </div>
 
-    <!-- Right: Map/List View Controls + Zoom Controls + Fullscreen Button -->
+    <!-- Right: Map/List View Controls + Style Toggle + Fullscreen Button -->
     <div class="flex items-center gap-2 shrink-0">
+      <!-- Satellite / Street toggle -->
+      @if (activeView() === 'map') {
+        <div class="hidden sm:flex items-center rounded-lg border border-slate-200 bg-slate-100 p-0.5 dark:border-slate-700 dark:bg-slate-800">
+          <button
+            type="button"
+            (click)="toggleMapStyle('satellite')"
+            [class.bg-white]="activeMapStyle() === 'satellite'"
+            [class.text-blue-600]="activeMapStyle() === 'satellite'"
+            [class.dark:bg-slate-900]="activeMapStyle() === 'satellite'"
+            [class.dark:text-cyan-400]="activeMapStyle() === 'satellite'"
+            [class.shadow-xs]="activeMapStyle() === 'satellite'"
+            [class.text-slate-600]="activeMapStyle() !== 'satellite'"
+            [class.dark:text-slate-400]="activeMapStyle() !== 'satellite'"
+            class="rounded-md px-2 py-0.5 text-[10px] font-bold transition cursor-pointer">
+            Satellite
+          </button>
+          <button
+            type="button"
+            (click)="toggleMapStyle('street')"
+            [class.bg-white]="activeMapStyle() === 'street'"
+            [class.text-blue-600]="activeMapStyle() === 'street'"
+            [class.dark:bg-slate-900]="activeMapStyle() === 'street'"
+            [class.dark:text-cyan-400]="activeMapStyle() === 'street'"
+            [class.shadow-xs]="activeMapStyle() === 'street'"
+            [class.text-slate-600]="activeMapStyle() !== 'street'"
+            [class.dark:text-slate-400]="activeMapStyle() !== 'street'"
+            class="rounded-md px-2 py-0.5 text-[10px] font-bold transition cursor-pointer">
+            Street
+          </button>
+        </div>
+      }
+
       <!-- Pill Toggle: Map View / List View -->
       <div class="flex items-center rounded-full bg-slate-100 p-0.5 dark:bg-slate-800">
         <button
           type="button"
-          (click)="navigateToYardMap()"
+          (click)="setView('map')"
           [class.bg-blue-600]="activeView() === 'map'"
           [class.text-white]="activeView() === 'map'"
           [class.shadow-2xs]="activeView() === 'map'"
@@ -62,11 +102,11 @@
         </button>
       </div>
 
-      <!-- Fullscreen / Expand Button -->
+      <!-- Fullscreen / Expand Button -> Goes to Full Yard Map -->
       <button
         type="button"
         (click)="navigateToYardMap()"
-        title="View Full Yard Map Module"
+        title="Open Full Interactive Yard Map"
         class="flex h-7 w-7 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 transition-all hover:bg-blue-600 hover:text-white dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white cursor-pointer">
         <svg class="h-4 w-4 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
           <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
@@ -75,52 +115,53 @@
     </div>
   </div>
 
-  <!-- Main Content Body (Map is Hero, 100% width) -->
-  <div class="relative flex-1 w-full min-h-[440px] rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900">
+  <!-- Main Content Body -->
+  <div class="relative flex-1 w-full min-h-[440px] rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-slate-900">
     @if (activeView() === 'map') {
-      <!-- Real Interactive Leaflet Yard Map Engine Container -->
-      <div #mapContainer (click)="navigateToYardMap()" class="h-full w-full min-h-[440px] z-0 cursor-pointer"></div>
+      <!-- Real Interactive Leaflet Yard Map Container -->
+      <div #mapContainer class="h-full w-full min-h-[440px] z-0"></div>
 
-      <!-- Embedded Bottom Overlay Stats & Legend Bar (Zero Wasted Space!) -->
-      <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/95 backdrop-blur-md px-3.5 py-2 shadow-lg border border-slate-200/90 dark:bg-[#111a2e]/95 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200">
-        <!-- TEU Stats -->
+      <!-- Embedded Bottom Overlay Stats & Legend Bar -->
+      <div class="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-slate-950/90 backdrop-blur-md px-3.5 py-2 shadow-xl border border-cyan-500/30 text-xs font-semibold text-slate-200">
+        <!-- Spot Counts -->
         <div class="flex items-center gap-3">
-          <span class="flex items-center gap-1 font-bold text-[#0f2851] dark:text-white">
-            <span class="text-slate-400 font-normal">Capacity:</span> {{ totalCapacity() | number }} TEU
+          <span class="flex items-center gap-1 font-bold text-white">
+            <span class="text-slate-400 font-normal">Spots:</span> 259 Geofences
           </span>
-          <span class="h-3 w-px bg-slate-200 dark:bg-slate-700"></span>
-          <span class="flex items-center gap-1 font-bold text-blue-600 dark:text-blue-400">
-            <span class="text-slate-400 font-normal">Used:</span> {{ usedCapacity() | number }} TEU
+          <span class="h-3 w-px bg-slate-700"></span>
+          <span class="flex items-center gap-1 font-bold text-cyan-400">
+            <span class="text-slate-400 font-normal">Occupied:</span> 156
           </span>
-          <span class="h-3 w-px bg-slate-200 dark:bg-slate-700"></span>
-          <span class="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
-            <span class="text-slate-400 font-normal">Available:</span> {{ availableCapacity() | number }} TEU
+          <span class="h-3 w-px bg-slate-700"></span>
+          <span class="flex items-center gap-1 font-bold text-emerald-400">
+            <span class="text-slate-400 font-normal">Empty (Available):</span> 103
           </span>
         </div>
 
-        <!-- Legend Items -->
+        <!-- Legend Items: Import, Export, Empty Cycle, Occupied, Empty -->
         <div class="flex items-center gap-3 text-[11px]">
-          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#2563eb]"></span>Import</div>
-          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>Export</div>
-          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#06b6d4]"></span>Empty</div>
-          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#ef4444]"></span>Hazard</div>
+          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#00f0ff] shadow-[0_0_6px_#00f0ff]"></span>Import Cycle</div>
+          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#10b981] shadow-[0_0_6px_#10b981]"></span>Export Cycle</div>
+          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#6366f1] shadow-[0_0_6px_#6366f1]"></span>Empty Cycle</div>
+          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#38bdf8] shadow-[0_0_6px_#38bdf8]"></span>Occupied</div>
+          <div class="flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-[#0f172a] border border-slate-500"></span>Empty</div>
         </div>
       </div>
     } @else {
       <!-- List View: Stacking Matrix -->
       <div class="flex flex-col gap-3 p-4 overflow-y-auto max-h-[440px]">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           @for (badge of blockBadges; track badge.name) {
             <div
               (click)="navigateToYardMap()"
-              class="flex flex-col rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs dark:border-slate-700/80 dark:bg-slate-800 cursor-pointer hover:border-blue-500 transition-colors">
+              class="flex flex-col rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs dark:border-slate-700/80 dark:bg-slate-800 cursor-pointer hover:border-cyan-500 transition-colors">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ badge.name }}</span>
-                <span class="text-xs font-black text-blue-600 dark:text-blue-400">{{ badge.occupancyPct }}%</span>
+                <span class="text-xs font-black text-cyan-600 dark:text-cyan-400">{{ badge.occupied }}/{{ badge.total }}</span>
               </div>
               <div class="mt-2.5 h-2.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
                 <div
-                  class="h-full rounded-full bg-blue-600 transition-all duration-300"
+                  class="h-full rounded-full bg-cyan-500 transition-all duration-300"
                   [style.width.%]="badge.occupancyPct"></div>
               </div>
             </div>
@@ -130,5 +171,6 @@
     }
   </div>
 </div>
+
 
 
