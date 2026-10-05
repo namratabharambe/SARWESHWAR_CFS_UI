@@ -5,17 +5,7 @@
 }
 
 /* ==========================================================================
-   Login Page Animations (Exact Specifications)
-   1. Background: Fade-in (500ms)
-   2. Logo: Fade + slide down (400ms)
-   3. Hero heading: Fade + slide up (500ms)
-   4. Login card: Fade + slide up (450ms)
-   5. Feature badges: Staggered fade + slide (400ms)
-   6. Input focus: Border + focus ring (180ms)
-   7. Primary button hover: Color + subtle lift (180ms)
-   8. Button click: Subtle scale (120–180ms)
-   9. Validation messages: Fade-in (150ms)
-   10. Authentication loading: Spinner (Until request completes)
+   Login Page Animations & Micro-Interactions
    ========================================================================== */
 
 /* 1. Background Fade-in (500ms) */
@@ -93,18 +83,18 @@
 }
 
 .animate-badge-1 {
-  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 250ms backwards;
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 220ms backwards;
 }
 
 .animate-badge-2 {
-  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 370ms backwards;
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 320ms backwards;
 }
 
 .animate-badge-3 {
-  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 490ms backwards;
+  animation: badgeSlideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) 420ms backwards;
 }
 
-/* 9. Validation Messages Fade-in (150ms) */
+/* Validation Messages Fade-in (150ms) */
 @keyframes validationFadeIn {
   from {
     opacity: 0;
@@ -120,7 +110,7 @@
   animation: validationFadeIn 150ms ease-out forwards;
 }
 
-/* 10. Authentication Loading Spinner (Continuous) */
+/* Authentication Loading Spinner */
 @keyframes authSpinner {
   from {
     transform: rotate(0deg);
@@ -135,80 +125,47 @@
 }
 
 /* ==========================================================================
-   Interactive Component Micro-Interactions
-   ========================================================================== */
-
-/* 6. Input Focus: Border + Focus Ring (180ms) */
-.form-input-control {
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background-color 180ms ease;
-}
-
-/* 7. Primary Button Hover: Color + Subtle Lift (180ms) */
-.btn-primary-action {
-  transition:
-    background-color 180ms ease,
-    box-shadow 180ms ease,
-    transform 180ms ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    background-color: #1d4ed8 !important;
-    box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.45) !important;
-  }
-}
-
-/* 8. Button Click: Subtle Scale (120–180ms) */
-button:active:not(:disabled) {
-  transform: scale(0.98) !important;
-  transition: transform 140ms ease !important;
-}
-
-/* ==========================================================================
-   Typography & Visual Contrast Protection
+   Typography & Hero Styles
    ========================================================================== */
 .login-layout {
   .hero-eyebrow {
     color: #38bdf8 !important;
-    font-size: 12px !important;
     font-weight: 700 !important;
-    letter-spacing: 0.16em !important;
+    letter-spacing: 0.14em !important;
     text-transform: uppercase !important;
   }
 
   .hero-headline {
-    font-family: 'Lexend', sans-serif !important;
-    font-size: 40px !important;
+    font-family: 'Lexend', 'Outfit', 'Inter', sans-serif !important;
+    font-size: 42px !important;
     font-weight: 700 !important;
-    line-height: 1.18 !important;
+    line-height: 1.15 !important;
     color: #ffffff !important;
     letter-spacing: -0.02em !important;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6) !important;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5) !important;
 
     @media (min-width: 1024px) {
-      font-size: 44px !important;
+      font-size: 46px !important;
     }
 
     @media (max-width: 640px) {
-      font-size: 26px !important;
+      font-size: 28px !important;
     }
   }
 
   .hero-description {
     color: #e2e8f0 !important;
-    font-size: 15px !important;
+    font-size: 14.5px !important;
     line-height: 1.65 !important;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4) !important;
   }
 
-  /* Exact Feature Badges as shared in user image */
+  /* Exact Feature Badges matching reference design */
   .feature-pill {
-    background: rgba(11, 23, 40, 0.72);
+    background: rgba(11, 23, 40, 0.68);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #ffffff !important;
     transition:
       background-color 200ms ease,
@@ -217,58 +174,111 @@ button:active:not(:disabled) {
       box-shadow 200ms ease;
 
     &:hover {
-      background: rgba(16, 32, 56, 0.88);
-      border-color: rgba(255, 255, 255, 0.32);
+      background: rgba(16, 32, 58, 0.85);
+      border-color: rgba(56, 189, 248, 0.5);
       transform: translateY(-2px);
       box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
     }
   }
 }
 
-/* Dark mode specific enhancements for login card */
-:host-context(.dark) {
-  .login-card {
-    background-color: #111928 !important;
-    border-color: #1f2a37 !important;
-    color: #f9fafb !important;
-    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75) !important;
+/* ==========================================================================
+   High-Tech Glassmorphism Login Card
+   ========================================================================== */
+.login-glass-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(20, 38, 68, 0.62) 25%,
+    rgba(12, 23, 45, 0.76) 100%
+  );
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 30px 60px -15px rgba(0, 0, 0, 0.65),
+    0 0 35px -5px rgba(56, 189, 248, 0.25),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+  overflow: hidden;
 
-    .card-title {
-      color: #ffffff !important;
-    }
+  /* Top Cyan Glowing Rim Light as shown in reference design */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(56, 189, 248, 0.85),
+      rgba(147, 197, 253, 0.95),
+      rgba(56, 189, 248, 0.85),
+      transparent
+    );
+    filter: blur(0.5px);
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.9);
+    pointer-events: none;
+    z-index: 10;
+  }
+}
 
-    .card-subtitle {
-      color: #9ca3af !important;
-    }
+/* Translucent Glass Inputs */
+.glass-input {
+  background: rgba(15, 25, 45, 0.58) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  font-size: 13.5px !important;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 
-    label {
-      color: #cbd5e1 !important;
-    }
+  &::placeholder {
+    color: rgba(203, 213, 225, 0.55) !important;
+  }
 
-    input[type='text'],
-    input[type='password'] {
-      background-color: #1f2a37 !important;
-      border-color: #374151 !important;
-      color: #ffffff !important;
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    background: rgba(15, 25, 45, 0.72) !important;
+  }
 
-      &::placeholder {
-        color: #6b7280 !important;
-      }
+  &:focus {
+    border-color: #38bdf8 !important;
+    background: rgba(15, 25, 45, 0.88) !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+    outline: none !important;
+  }
+}
 
-      &:hover {
-        border-color: #4b5563 !important;
-      }
+/* Vibrant Blue Action Button */
+.glass-btn-primary {
+  background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.45) !important;
+  transition:
+    background 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
 
-      &:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
-      }
-    }
+  &:hover:not(:disabled) {
+    background: linear-gradient(180deg, #60a5fa 0%, #1d4ed8 100%) !important;
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.65) !important;
+    transform: translateY(-1.5px);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98) !important;
+    transition: transform 120ms ease !important;
   }
 }
 
 /* ==========================================================================
-   Ultra-Realistic Cinematic Blue Theme Splash Animation (#E3F2FD, #90CAF9, #2196F3, #0D47A1)
+   Splash Animation Overlay
    ========================================================================== */
 @keyframes splashFadeIn {
   from {
@@ -344,17 +354,6 @@ button:active:not(:disabled) {
   100% {
     transform: scale(1) translateY(0);
     filter: drop-shadow(0 10px 25px rgba(13, 71, 161, 0.35));
-  }
-}
-
-@keyframes textCardPopUp {
-  0% {
-    transform: translateY(22px) scale(0.94);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
   }
 }
 
@@ -502,5 +501,3 @@ button:active:not(:disabled) {
     animation: splashProgressCharge 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 }
-
-

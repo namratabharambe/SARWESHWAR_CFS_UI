@@ -4,6 +4,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { YardMapComponent } from './yard-map.component';
 import { YardMapService } from './yard-map.service';
+import { describe, expect, it, beforeEach } from 'vitest';
 
 describe('YardMapComponent', () => {
   let component: YardMapComponent;
@@ -24,24 +25,18 @@ describe('YardMapComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have telemetry data initialized', () => {
-    const telemetry = component.telemetry();
-    expect(telemetry.totalParkingBays).toBeGreaterThan(0);
-    expect(telemetry.teuCapacity).toBe(1200);
+  it('should initialize slots and locations', () => {
+    expect(component.allSlots().length).toBeGreaterThan(0);
+    expect(component.locationOptions().length).toBeGreaterThan(0);
   });
 
-  it('should filter slots by zone', () => {
-    component.setZoneFilter('truck-parking');
-    expect(component.activeZoneFilter()).toBe('truck-parking');
-    const filtered = component.slots();
-    expect(filtered.every((s) => s.zone === 'truck-parking')).toBe(true);
-  });
-
-  it('should zoom in and out properly', () => {
-    const initialZoom = component.zoomLevel();
-    component.zoomIn();
-    expect(component.zoomLevel()).toBeGreaterThan(initialZoom);
-    component.resetZoom();
-    expect(component.zoomLevel()).toBe(1);
+  it('should update filter on location and cycle change', () => {
+    component.onLocationChange('A-1 1');
+    expect(component.filterLocation()).toBe('A-1 1');
+    component.onCycleChange('Import Clearance Cycle');
+    expect(component.filterCycle()).toBe('Import Clearance Cycle');
+    component.resetFilters();
+    expect(component.filterLocation()).toBe('');
+    expect(component.filterCycle()).toBe('all');
   });
 });

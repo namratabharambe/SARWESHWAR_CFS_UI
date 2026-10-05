@@ -7,4 +7,5 @@ npm-debug.log
 CFS.Admin/
 CFS.Gate/
 *.zip
+/CFS_UI_dist/
 

@@ -297,7 +297,7 @@
                   title="Select all" />
               </th>
               <th class="col-time px-4 py-3.5">
-                <span>{{ 'GATE_EVENTS.COL_TIME' | translate }}</span>
+                <span>Created Date / Time</span>
                 <span class="sort-indicator ml-1 text-slate-400">↕</span>
               </th>
               <th class="col-cycle px-4 py-3.5">Cycle</th>
@@ -330,10 +330,10 @@
                     (change)="toggleSelect(event.id)" />
                 </td>
 
-                <!-- Event Time -->
+                <!-- Created Date / Time -->
                 <td class="col-time px-4 py-3.5">
                   <span class="cell-event-time font-medium text-slate-600 dark:text-slate-300">{{
-                    event.eventTime
+                    event.formattedCreatedAt || event.eventTime
                   }}</span>
                 </td>
 
@@ -504,7 +504,7 @@
                         type="button"
                         class="camera-photo-thumb group/thumb relative h-8 w-11 shrink-0 cursor-pointer overflow-hidden rounded-md border border-slate-200 bg-slate-100 p-0 transition-all hover:scale-105 hover:border-blue-500 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
                         [style.background-color]="event.photos[0].color"
-                        [title]="event.photos[0].label"
+                        [title]="event.photos[0].label + (event.photos[0].formattedCreatedAt ? ' • Created: ' + event.photos[0].formattedCreatedAt : '')"
                         (click)="openRowLightbox(event.photos, 0, event.containerNo || event.truckNo, $event)">
                         @if (event.photos[0].url) {
                           <img
@@ -526,7 +526,7 @@
                           type="button"
                           class="camera-photo-thumb group/thumb relative h-8 w-11 shrink-0 cursor-pointer overflow-hidden rounded-md border border-slate-200 bg-slate-100 p-0 transition-all hover:scale-105 hover:border-blue-500 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
                           [style.background-color]="event.photos[1].color"
-                          [title]="event.photos.length > 2 ? '+' + (event.photos.length - 2) + ' more photos (Click to view all ' + event.photos.length + ' photos)' : event.photos[1].label"
+                          [title]="(event.photos.length > 2 ? '+' + (event.photos.length - 2) + ' more photos • ' : '') + event.photos[1].label + (event.photos[1].formattedCreatedAt ? ' • Created: ' + event.photos[1].formattedCreatedAt : '')"
                           (click)="openRowLightbox(event.photos, 1, event.containerNo || event.truckNo, $event)">
                           @if (event.photos[1].url) {
                             <img
@@ -577,9 +577,10 @@
 
       <!-- Pagination Footer -->
       <app-pagination
-        [totalItems]="filteredEvents().length"
+        [totalItems]="searchQuery() || confidenceFilter() !== 'All' || dateFilter() ? filteredEvents().length : totalCount()"
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
+        [pageSizeOptions]="[10, 15, 25, 50, 100]"
         itemLabel="events"
         (pageChange)="setPage($event)"
         (pageSizeChange)="onPageSizeChange($event)" />
@@ -619,6 +620,9 @@
               <p class="text-[11px] text-slate-400">
                 @if (gallery.eventTitle) {
                   <span class="text-slate-300 font-semibold">{{ gallery.eventTitle }}</span> •
+                }
+                @if (currentLightboxPhoto()?.formattedCreatedAt || currentLightboxPhoto()?.createdAt) {
+                  <span class="text-emerald-400 font-semibold">Captured: {{ currentLightboxPhoto()?.formattedCreatedAt || currentLightboxPhoto()?.createdAt }}</span> •
                 }
                 Gate Optical Inspection • Full Resolution
               </p>

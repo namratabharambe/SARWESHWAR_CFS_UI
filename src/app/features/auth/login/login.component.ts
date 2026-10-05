@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'core/auth/auth.service';
-import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { FocusInvalidFieldDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -11,7 +10,7 @@ import { ThemeService } from 'core/services/theme.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CenteredDividerComponent, FocusInvalidFieldDirective, TranslatePipe],
+  imports: [ReactiveFormsModule, FocusInvalidFieldDirective, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

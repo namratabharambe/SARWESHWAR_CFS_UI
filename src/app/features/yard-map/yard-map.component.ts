@@ -91,38 +91,28 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       };
     }
 
-    const maxOccupiedTier = slot.status === 'occupied' ? (slot.tierLevel || 1) : 0;
-    const isOccupied = tier <= maxOccupiedTier;
+    const hasContainer = !!slot.containerNumber;
+    const isOccupied = hasContainer && slot.status === 'occupied' && (slot.tierLevel ? tier <= slot.tierLevel : tier === 1);
     const tierLabels = ['Ground (Tier 1)', 'Tier 2 (Mid Stack)', 'Tier 3 (Upper)', 'Tier 4 (Top Stack)'];
     const tierLabel = tierLabels[tier - 1] || `Tier ${tier}`;
 
-    if (isOccupied) {
-      const containerNo =
-        tier === slot.tierLevel
-          ? (slot.containerNumber || 'MSCU7091240')
-          : `${(slot.shippingLine || 'MSCU').substring(0, 4).toUpperCase()}U${7000000 + (tier * 3317) % 899999}`;
-
-      const cycle =
-        tier === 1
-          ? `${slot.cycle || 'Import Clearance Cycle'} • Ground Base Stacking`
-          : `${slot.cycle || 'General Yard Storage'} • Elevated Stacking Tier ${tier}`;
-
+    if (isOccupied && slot.containerNumber) {
       return {
         tier,
         tierLabel,
-        containerNumber: containerNo,
-        cycle,
+        containerNumber: slot.containerNumber,
+        cycle: slot.cycle || 'Yard Storage',
         isOccupied: true,
-        shippingLine: slot.shippingLine || 'MSCU',
-        isoCode: slot.isoCode || '40HC',
-        grossWeightKg: (slot.grossWeightKg || 22400) - (tier - 1) * 1200,
+        shippingLine: slot.shippingLine,
+        isoCode: slot.isoCode,
+        grossWeightKg: slot.grossWeightKg,
       };
     } else {
       return {
         tier,
         tierLabel,
-        containerNumber: 'Available / Vacant Level',
-        cycle: `Available for Inbound Allocation (Max Capacity: 4 Tiers)`,
+        containerNumber: 'Available / Empty Slot',
+        cycle: 'Available for Inbound Allocation (Max Capacity: 4 Tiers)',
         isOccupied: false,
         shippingLine: undefined,
         isoCode: undefined,

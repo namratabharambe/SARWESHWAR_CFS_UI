@@ -97,18 +97,6 @@ const cfsSlots = slots.map((s, idx) => {
     cycle = 'Customs Examination Cycle';
   }
 
-  const isOccupied = (idx * 7 + 13) % 10 < 6; // 60% realistic live occupancy
-  const status = isOccupied ? 'occupied' : 'available';
-  const shippingLine = isOccupied ? shippingLines[idx % shippingLines.length] : undefined;
-  const isoCode = isOccupied ? isoTypes[idx % isoTypes.length] : undefined;
-  const truckNumber = isOccupied ? `MH-46-AR-${1000 + (idx * 37) % 8999}` : undefined;
-  const containerNumber = isOccupied
-    ? `${(shippingLine || 'MSCU').substring(0, 4).toUpperCase()}U${7000000 + idx * 197}`
-    : undefined;
-  const isReefer = blockLetter === 'H' || (isOccupied && idx % 7 === 0);
-  const cargoType = isReefer ? 'Reefer' : blockLetter === 'C' ? 'Empty' : idx % 9 === 0 ? 'Hazardous' : 'Dry';
-  const temperature = isReefer ? `${-18.0 - (idx % 5) * 0.4}°C` : undefined;
-
   const polygon = [
     { lat: s.coords[0][0], lng: s.coords[0][1] },
     { lat: s.coords[1][0], lng: s.coords[1][1] },
@@ -130,25 +118,11 @@ const cfsSlots = slots.map((s, idx) => {
     bay,
     zoneType,
     cycle,
-    status,
+    status: 'available',
     center,
     polygon,
-    truckNumber,
-    driverName: isOccupied ? `Driver #${101 + (idx % 50)}` : undefined,
-    transporter: isOccupied ? 'Prosper Freight Logistics' : undefined,
-    containerNumber,
-    isoCode,
-    shippingLine,
-    cargoType,
-    temperature,
-    sealNumber: isOccupied ? `CFS-${88000 + idx}` : undefined,
-    grossWeightKg: isOccupied ? 18000 + (idx * 340) % 14000 : undefined,
-    dwellTime: isOccupied ? `${(idx % 48) + 2}h ${((idx * 17) % 60)}m` : undefined,
-    entryTime: isOccupied ? `2026-09-28 0${(idx % 8) + 1}:30` : undefined,
-    assignedTask: isOccupied ? tasks[idx % tasks.length] : undefined,
-    tierLevel: isOccupied ? (idx % 4) + 1 : undefined,
     maxTiers: 4,
-    priority: idx % 11 === 0,
+    priority: false,
   };
 });
 

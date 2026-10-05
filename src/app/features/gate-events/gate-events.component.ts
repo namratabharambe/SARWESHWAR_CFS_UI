@@ -57,6 +57,8 @@ export interface GateContainerRecord {
 export interface GateEventItem {
   id: string;
   eventTime: string;
+  createdAt?: string;
+  formattedCreatedAt?: string;
   timestamp: number;
   gate: string;
   direction: GateDirection;
@@ -314,7 +316,7 @@ export class GateEventsComponent implements OnInit {
       to: todayEndIso,
     });
 
-    // Current View / Filtered List
+    // Current View / Filtered List with dynamic active page and page size
     const currentVisits$ = this.gateEventService.getVisits({
       page: this.currentPage(),
       pageSize: this.pageSize(),
@@ -398,6 +400,7 @@ export class GateEventsComponent implements OnInit {
     totalContainers: number,
     rawImages: any[] = [],
     visitId?: string,
+    fallbackDate?: string,
   ): GateCameraPhoto[] {
     const photos: GateCameraPhoto[] = [];
     const prefix = totalContainers > 1 ? `Container ${index} (${containerNo.slice(0, 4)}) - ` : '';
@@ -422,11 +425,36 @@ export class GateEventsComponent implements OnInit {
 
         const tag = (img.cameraId ?? img.CameraId ?? img.deviceId ?? img.DeviceId ?? rawType) || `C${index}-CAM`;
 
+        const imgCapturedAt =
+          img.capturedAt ??
+          img.CapturedAt ??
+          img.createdAt ??
+          img.CreatedAt ??
+          img.timestamp ??
+          img.Timestamp ??
+          fallbackDate ??
+          '';
+
+        let formattedCreatedAt = '';
+        if (imgCapturedAt) {
+          const d = new Date(imgCapturedAt);
+          if (!isNaN(d.getTime())) {
+            formattedCreatedAt =
+              d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+              ', ' +
+              d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+          } else {
+            formattedCreatedAt = String(imgCapturedAt);
+          }
+        }
+
         photos.push({
           label: `${prefix}${rawType.includes('View') || rawType.includes('Scan') ? rawType : `${rawType} View`}`,
           color,
           tag: String(tag),
           url: String(url),
+          createdAt: imgCapturedAt || undefined,
+          formattedCreatedAt: formattedCreatedAt || undefined,
         });
       });
     }
@@ -556,7 +584,7 @@ export class GateEventsComponent implements OnInit {
       const cSize = c.size ?? c.Size ?? (isDualContainer ? '20 FT' : '40 FT');
       const cIso = c.isoCode ?? (cSize.includes('20') ? '22G1' : '45G1');
 
-      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id, capturedAt);
 
       return {
         index: idx + 1,
@@ -593,6 +621,8 @@ export class GateEventsComponent implements OnInit {
     return {
       id,
       eventTime,
+      createdAt: capturedAt,
+      formattedCreatedAt: eventTime,
       timestamp: dateObj.getTime() || Date.now(),
       gate,
       direction,
@@ -670,7 +700,7 @@ export class GateEventsComponent implements OnInit {
       const conf = Math.round(rawConf > 1 ? rawConf : rawConf * 100);
       const cSize = c.size ?? (isDualContainer ? '20 FT' : '40 FT');
       const cIso = cSize.includes('20') ? '22G1' : '45G1';
-      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id);
+      const cPhotos = this.buildContainerPhotos(cNo, idx + 1, totalContainers, c.images ?? [], id, capturedAt);
 
       return {
         index: idx + 1,
@@ -706,6 +736,8 @@ export class GateEventsComponent implements OnInit {
     return {
       id,
       eventTime,
+      createdAt: capturedAt,
+      formattedCreatedAt: eventTime,
       timestamp: dateObj.getTime() || Date.now(),
       gate,
       direction,
@@ -791,7 +823,7 @@ export class GateEventsComponent implements OnInit {
     };
   });
 
-  // Filtered dataset
+  // Filtered dataset across ALL pages and fields
   public readonly filteredEvents = computed<GateEventItem[]>(() => {
     const list = this.events();
     const cycle = this.cycleFilter();
@@ -829,7 +861,31 @@ export class GateEventsComponent implements OnInit {
         const matchesDriver = item.driver.toLowerCase().includes(query);
         const matchesGate = item.gate.toLowerCase().includes(query);
         const matchesOcr = item.ocrResult.toLowerCase().includes(query);
-        if (!matchesContainer && !matchesTruck && !matchesDriver && !matchesGate && !matchesOcr) {
+        const matchesStatus = item.status.toLowerCase().includes(query);
+        const matchesSize = item.size?.toLowerCase().includes(query);
+        const matchesNotes = item.notes?.toLowerCase().includes(query);
+        const matchesCreatedDate = (item.formattedCreatedAt || item.eventTime).toLowerCase().includes(query);
+        const matchesSubContainers = item.containers?.some(
+          (c) =>
+            c.containerNo.toLowerCase().includes(query) ||
+            c.cargoType.toLowerCase().includes(query) ||
+            c.fullOrEmpty.toLowerCase().includes(query) ||
+            c.sealNo1?.toLowerCase().includes(query) ||
+            c.sealNo2?.toLowerCase().includes(query) ||
+            c.location?.toLowerCase().includes(query),
+        );
+        if (
+          !matchesContainer &&
+          !matchesTruck &&
+          !matchesDriver &&
+          !matchesGate &&
+          !matchesOcr &&
+          !matchesStatus &&
+          !matchesSize &&
+          !matchesNotes &&
+          !matchesCreatedDate &&
+          !matchesSubContainers
+        ) {
           return false;
         }
       }
@@ -839,18 +895,20 @@ export class GateEventsComponent implements OnInit {
   });
 
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
-    const list = this.filteredEvents();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
+    return this.filteredEvents();
   });
 
   public readonly totalPages = computed<number>(() => {
-    return Math.max(1, Math.ceil(this.filteredEvents().length / this.pageSize()));
+    const total = this.searchQuery() || this.confidenceFilter() !== 'All' || this.dateFilter()
+      ? this.filteredEvents().length
+      : this.totalCount();
+    return Math.max(1, Math.ceil(total / this.pageSize()));
   });
 
   public setPage(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;
     this.currentPage.set(page);
+    this.loadGateEvents();
   }
 
   public prevPage(): void {
@@ -868,6 +926,7 @@ export class GateEventsComponent implements OnInit {
   public onPageSizeChange(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
+    this.loadGateEvents();
   }
 
   public onSearchChange(q: string): void {

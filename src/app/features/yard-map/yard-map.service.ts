@@ -110,7 +110,7 @@ export class YardMapService {
       operator: 'Mahesh Patil (Cert A)',
       status: 'active',
       currentLocation: 'Lane D-06 (Central Aisle)',
-      taskDescription: 'Stacking MAEU 991204-7 to Tier 3',
+      taskDescription: 'Equipment Ready / Standby',
       xPercent: 52,
       yPercent: 48,
       headingDeg: 45,
@@ -122,7 +122,7 @@ export class YardMapService {
       operator: 'Dilip Rane',
       status: 'active',
       currentLocation: 'Inspection Bay Ramp I-1',
-      taskDescription: 'Unloading Heavy Machinery Cargo',
+      taskDescription: 'Equipment Ready / Standby',
       xPercent: 18,
       yPercent: 86,
       headingDeg: 270,
@@ -133,8 +133,8 @@ export class YardMapService {
       type: 'Terminal Tractor',
       operator: 'Suresh More',
       status: 'active',
-      currentLocation: 'Main Transit Way (Block C to Gate)',
-      taskDescription: 'Hauling Empty Container to Block C-1',
+      currentLocation: 'Main Transit Way',
+      taskDescription: 'Equipment Ready / Standby',
       xPercent: 58,
       yPercent: 22,
       headingDeg: 180,
@@ -142,30 +142,7 @@ export class YardMapService {
   ]);
 
   // Moving Vehicles Animation State
-  public readonly movingVehicles = signal<MovingVehicle[]>([
-    {
-      id: 'MV-01',
-      truckNumber: 'MH-46-AR-8821',
-      containerNumber: 'MSKU 910283-4',
-      driverName: 'Rajesh Sharma',
-      source: 'Gate OCR Lane 1',
-      target: 'Slot C-1 8',
-      progressPercent: 72,
-      statusText: 'Navigating GPS Artery to Slot C-1 8',
-      type: 'ENTRY_TO_BAY',
-    },
-    {
-      id: 'MV-02',
-      truckNumber: 'GJ-06-TT-5510',
-      containerNumber: 'MEDU 839102-4',
-      driverName: 'Harish Patel',
-      source: 'Block B-3 (Export)',
-      target: 'Weighbridge Gate',
-      progressPercent: 38,
-      statusText: 'Container moving to weighbridge for gross certification',
-      type: 'INTERNAL_SHUFFLE',
-    },
-  ]);
+  public readonly movingVehicles = signal<MovingVehicle[]>([]);
 
   // Read-only accessors
   public readonly slots = this._slots.asReadonly();

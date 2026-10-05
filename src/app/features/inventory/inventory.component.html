@@ -108,13 +108,59 @@
     </div>
   </header>
 
-  <!-- 5 Top KPI Metric Cards (Hazardous card removed) -->
-  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
-    <!-- 1. Total Containers -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
+  <!-- Top KPI Metric Cards (Gate In, Gate Out, Total, Import, Export, Empty, Overstay) -->
+  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 min-w-0">
+    <!-- 1. Gate In Total Records -->
+    <div
+      (click)="selectGateMode('GATE_IN')"
+      class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
+      [class.ring-2]="inventoryService.activeGateMode() === 'GATE_IN'"
+      [class.ring-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_IN'">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
           class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400">
+          <span class="material-icons-outlined text-lg">login</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Total Gate In</span>
+          <div class="text-xl font-black leading-tight text-[#0f2851] dark:text-white">
+            {{ inventoryService.kpiMetrics().gateInCount | number }}
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
+        ↑ {{ inventoryService.todayGateInCount() }} arrivals today
+      </div>
+    </div>
+
+    <!-- 2. Gate Out Total Records -->
+    <div
+      (click)="selectGateMode('GATE_OUT')"
+      class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs cursor-pointer transition-all hover:scale-[1.02] active:scale-95"
+      [class.ring-2]="inventoryService.activeGateMode() === 'GATE_OUT'"
+      [class.ring-[#525EA7]]="inventoryService.activeGateMode() === 'GATE_OUT'">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
+          <span class="material-icons-outlined text-lg">logout</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Total Gate Out</span>
+          <div class="text-xl font-black leading-tight text-[#0f2851] dark:text-white">
+            {{ inventoryService.kpiMetrics().gateOutCount | number }}
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 text-[11px] font-bold text-purple-600 dark:text-purple-400 truncate">
+        ↑ {{ inventoryService.todayGateOutCount() }} departures today
+      </div>
+    </div>
+
+    <!-- 3. Total Containers -->
+    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
           <span class="material-icons-outlined text-lg">domain</span>
         </div>
         <div class="overflow-hidden min-w-0">
@@ -131,7 +177,7 @@
       </div>
     </div>
 
-    <!-- 2. Import -->
+    <!-- 4. Import -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -152,7 +198,7 @@
       </div>
     </div>
 
-    <!-- 3. Export -->
+    <!-- 5. Export -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -173,11 +219,11 @@
       </div>
     </div>
 
-    <!-- 4. Empty -->
+    <!-- 6. Empty -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
           <span class="material-icons-outlined text-lg">check_box</span>
         </div>
         <div class="overflow-hidden min-w-0">
@@ -194,7 +240,7 @@
       </div>
     </div>
 
-    <!-- 5. Overstay (>7 Days) -->
+    <!-- 7. Overstay (>7 Days) -->
     <div class="kpi-card flex flex-col justify-between rounded-[14px] p-3.5 shadow-xs">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -436,7 +482,7 @@
       class="flex flex-wrap items-center justify-between border-b border-slate-100 bg-slate-50/50 px-5 py-3 dark:border-slate-800 dark:bg-slate-800/30">
       <div class="flex items-center gap-2">
         <span class="text-xs font-bold text-[#0f2851] dark:text-slate-200">
-          Showing 1 to {{ inventoryService.paginatedContainers().length }} of {{ inventoryService.filteredContainers().length }} entries
+          Showing {{ inventoryService.pageStart() }} to {{ inventoryService.pageEnd() }} of {{ inventoryService.filteredContainers().length }} entries
         </span>
         <span
           class="inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold"
@@ -526,7 +572,7 @@
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.FULL_EMPTY' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LOCATION' | translate }}</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LAST_ACTION' | translate }}</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LAST_UPDATED' | translate }}</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Created Date / Time</th>
             <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.DAYS_IN_YARD' | translate }}</th>
           </tr>
         </thead>
@@ -588,12 +634,19 @@
                 </span>
               </td>
 
-              <!-- 4. Location: Shows "In Yard" -->
+              <!-- 4. Location: Shows "Gate Out" or "In Yard" -->
               <td class="whitespace-nowrap px-4 py-3 font-bold">
-                <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                  <span>In Yard</span>
-                </span>
+                @if (c.currentLocation === 'Gate Out' || c.lastAction === 'Gated Out' || inventoryService.activeGateMode() === 'GATE_OUT') {
+                  <span class="inline-flex items-center gap-1.5 rounded-md border border-purple-200 bg-purple-50 px-2.5 py-1 text-xs font-bold text-purple-700 dark:border-purple-800 dark:bg-purple-950/60 dark:text-purple-300">
+                    <span class="h-1.5 w-1.5 rounded-full bg-purple-500"></span>
+                    <span>Gate Out</span>
+                  </span>
+                } @else {
+                  <span class="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                    <span>In Yard</span>
+                  </span>
+                }
               </td>
 
               <!-- 5. Last Action -->
@@ -606,9 +659,12 @@
                 </span>
               </td>
 
-              <!-- 6. Arrival Date / Last Updated -->
-              <td class="whitespace-nowrap px-4 py-3 text-slate-500 font-medium dark:text-slate-400">
-                {{ c.lastUpdated }}
+              <!-- 6. Created Date / Time -->
+              <td class="whitespace-nowrap px-4 py-3 text-slate-600 font-medium dark:text-slate-300">
+                <span class="inline-flex items-center gap-1.5">
+                  <span class="material-icons-outlined text-xs text-slate-400">event</span>
+                  <span>{{ c.lastUpdated }}</span>
+                </span>
               </td>
 
               <!-- 7. Days in Yard (Depends upon arrival date) -->

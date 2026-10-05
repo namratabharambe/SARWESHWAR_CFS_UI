@@ -84,7 +84,7 @@
     "LOGIN_SUBTITLE": "Container Freight Station enterprise management console",
     "EMAIL": "Email address",
     "PASSWORD": "Password",
-    "SUBMIT_BUTTON": "Sign In to Admin",
+    "SUBMIT_BUTTON": "Sign In",
     "INVALID_CREDENTIALS": "Invalid email or password",
     "SIGNOUT_CONFIRM": "Are you sure you want to sign out?",
     "REMEMBER_DEVICE": "Remember this device",

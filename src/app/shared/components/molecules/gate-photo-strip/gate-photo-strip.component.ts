@@ -5,6 +5,8 @@ export interface GateCameraPhoto {
   color: string;
   tag: string;
   url?: string;
+  createdAt?: string;
+  formattedCreatedAt?: string;
 }
 
 @Component({

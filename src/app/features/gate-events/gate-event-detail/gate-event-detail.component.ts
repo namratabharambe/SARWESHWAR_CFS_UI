@@ -234,7 +234,7 @@ export class GateEventDetailComponent {
     const rawNumber = event.id.replace('evt-', '').padStart(6, '0');
     const eventId = event.id.length > 10 ? event.id : `GE-2025-05-17-${rawNumber}`;
     const cleanContainer = event.containerNo ? event.containerNo.replace(/\s+/g, '') : 'GESU2463138';
-    const cleanTruck = event.truckNo ? event.truckNo.replace(/\s+/g, '') : 'MH 12 AB 1234';
+    const cleanTruck = event.truckNo ? event.truckNo.replace(/\s+/g, '') : 'MH 46 AR 9921';
     const containerSize = event.rawVisit?.containerSize || event.rawDto?.container?.size || '40 FT';
     const isoCode = containerSize.includes('20') ? '22G1' : '45G1';
     const eventTime = event.eventTime || '22 Sept 2026, 11:37 AM';

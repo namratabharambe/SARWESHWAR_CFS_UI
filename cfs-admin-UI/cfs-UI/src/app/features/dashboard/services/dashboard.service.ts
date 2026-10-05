@@ -31,7 +31,7 @@ export const DEFAULT_EXCEPTION_ALERTS: ExceptionAlertItem[] = [
   {
     id: 'alert-2',
     title: 'Gate Delay - Truck not arrived',
-    description: 'MH 12 AB 1234 • Gate 02',
+    description: 'MH 46 AR 9921 • Gate 02',
     time: '8m ago',
     severity: 'warning',
   },
@@ -151,19 +151,6 @@ export class DashboardService {
 
   // Recent Gate Activity Table (Live API Data with instant initial state)
   private readonly _allGateActivities = signal<GateActivityItem[]>([
-    {
-      id: 'gate-1',
-      time: '29 Sept, 05:10 PM',
-      type: 'IN',
-      truckNo: 'MH 12 AB 1234',
-      containerNo: 'HLXU8247745',
-      sizeType: "40' FT",
-      direction: 'Import',
-      ocrResult: 'HLXU8247745',
-      ocrConfidence: 98,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
     {
       id: 'gate-2',
       time: '29 Sept, 04:54 PM',
@@ -464,7 +451,7 @@ export class DashboardService {
   public readonly gateLiveStages = this._gateLiveStages.asReadonly();
 
   private readonly _nextTruckInfo = signal<NextTruckInfo>({
-    truckNo: 'MH 12 AB 1234',
+    truckNo: 'MH 46 AR 9921',
     status: 'Scanning',
   });
   public readonly nextTruckInfo = this._nextTruckInfo.asReadonly();
@@ -474,7 +461,7 @@ export class DashboardService {
     {
       id: 'act-1',
       title: 'Truck In',
-      details: 'MH 12 AB 1234 • FCIU3627463',
+      details: 'MH 46 AR 9921 • FCIU3627463',
       subtitle: 'Gate 01 • 02:36 PM',
       time: '02:36 PM',
       status: 'Verified',
@@ -618,7 +605,7 @@ export class DashboardService {
               : rawItems;
 
           if (items && items.length > 0) {
-            const samplePlates = ['MH 12 AB 1234', 'MH 46 AR 9921', 'MH 04 FK 7720', 'MH 14 DT 5512', 'MH 43 BB 8804'];
+            const samplePlates = ['MH 46 AR 9921', 'MH 04 FK 7720', 'MH 14 DT 5512', 'MH 43 BB 8804', 'MH 12 CR 4519'];
             const mapped: GateActivityItem[] = items.map((visit, idx) => {
               const primaryEvent = visit.events?.[0];
               const rawType = (primaryEvent?.eventType ?? 'GATE_IN').toUpperCase();
