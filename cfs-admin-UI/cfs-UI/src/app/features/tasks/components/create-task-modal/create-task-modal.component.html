@@ -9,7 +9,7 @@
       <div class="flex items-center justify-between border-b border-gray-100 px-6 py-5 dark:border-gray-800">
         <div class="flex items-center gap-3">
           <div
-            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 dark:bg-blue-950/70 dark:text-blue-400">
+            class="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#525EA7]/10 text-[#525EA7] dark:bg-[#525EA7]/20 dark:text-[#a5affd]">
             <span class="material-icons-outlined text-2xl">add_task</span>
           </div>
           <div>
@@ -23,7 +23,7 @@
         <button
           type="button"
           (click)="close.emit()"
-          class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200">
+          class="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-100 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 cursor-pointer">
           <span class="material-icons-outlined text-lg">close</span>
         </button>
       </div>
@@ -39,30 +39,30 @@
           </div>
         }
 
-        <!-- 1. Task Type Selector Strip -->
+        <!-- 1. Task Type Selector Strip: Pickup & Drop -->
         <div>
           <label class="mb-2.5 block text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
             1. Select Task Type
           </label>
-          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-6">
+          <div class="grid grid-cols-2 gap-3">
             @for (t of taskTypes; track t.type) {
               <button
                 type="button"
                 (click)="selectTaskType(t.type)"
-                class="flex flex-col items-center justify-center gap-1.5 rounded-2xl border p-3 text-xs font-semibold transition-all duration-150"
+                class="flex items-center justify-center gap-2.5 rounded-2xl border p-3.5 text-xs font-bold transition-all duration-150 cursor-pointer"
                 [ngClass]="{
-                  'border-blue-600 bg-blue-50/80 text-blue-700 shadow-sm ring-2 ring-blue-500/20 dark:border-blue-500 dark:bg-blue-950/60 dark:text-blue-300':
+                  'border-[#525EA7] bg-[#525EA7]/10 text-[#525EA7] shadow-sm ring-2 ring-[#525EA7]/25 dark:border-[#525EA7] dark:bg-[#525EA7]/20 dark:text-[#a5affd]':
                     selectedTaskType() === t.type,
                   'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-800/40 dark:text-gray-300 dark:hover:bg-gray-800':
                     selectedTaskType() !== t.type,
                 }">
                 <span
                   class="material-icons-outlined text-xl"
-                  [class.text-blue-600]="selectedTaskType() === t.type"
-                  [class.dark:text-blue-400]="selectedTaskType() === t.type">
+                  [class.text-[#525EA7]]="selectedTaskType() === t.type"
+                  [class.dark:text-[#a5affd]]="selectedTaskType() === t.type">
                   {{ t.icon }}
                 </span>
-                <span class="text-center leading-tight">{{ t.label }}</span>
+                <span class="text-sm font-bold">{{ t.label }}</span>
               </button>
             }
           </div>
@@ -86,7 +86,7 @@
                 [ngModel]="containerNo()"
                 (ngModelChange)="containerNo.set($event)"
                 placeholder="e.g. MSCU 556123 4"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs font-bold uppercase text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs font-bold uppercase text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
 
             <!-- Size / Type -->
@@ -114,7 +114,7 @@
                 [ngModel]="bookingNo()"
                 (ngModelChange)="bookingNo.set($event)"
                 placeholder="e.g. BKGS2051709"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
 
             <!-- Cargo Type -->
@@ -127,7 +127,7 @@
                 [ngModel]="cargoType()"
                 (ngModelChange)="cargoType.set($event)"
                 placeholder="e.g. Industrial Machinery"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
 
             <!-- Gross Weight -->
@@ -138,7 +138,7 @@
                 [ngModel]="grossWeight()"
                 (ngModelChange)="grossWeight.set($event)"
                 placeholder="e.g. 24,500 KG"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
 
             <!-- Seal Number -->
@@ -151,7 +151,7 @@
                 [ngModel]="sealNo()"
                 (ngModelChange)="sealNo.set($event)"
                 placeholder="e.g. ML-IN-982341"
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
           </div>
         </div>
@@ -282,7 +282,7 @@
                 [ngModel]="notes()"
                 (ngModelChange)="notes.set($event)"
                 placeholder="e.g. Priority offload at Block C for customs verification."
-                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
+                class="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs text-gray-900 shadow-sm focus:border-[#525EA7] focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white" />
             </div>
           </div>
         </div>
@@ -307,7 +307,7 @@
           <button
             type="button"
             (click)="submitTask()"
-            class="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-2.5 text-xs font-semibold text-white shadow-md shadow-blue-500/20 transition-all hover:bg-blue-700 active:scale-95">
+            class="flex items-center gap-1.5 rounded-xl bg-[#525EA7] px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-[#525EA7]/20 transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer">
             <span class="material-icons-outlined text-sm">send</span>
             <span>{{ 'TASKS.CREATE_TASK' | translate }}</span>
           </button>

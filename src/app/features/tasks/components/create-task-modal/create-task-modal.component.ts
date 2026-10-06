@@ -19,7 +19,7 @@ export class CreateTaskModalComponent {
   public readonly taskCreated = output<CreateTaskFormData>();
 
   // Form Signals
-  public readonly selectedTaskType = signal<TaskType>('Import');
+  public readonly selectedTaskType = signal<TaskType>('Pickup');
   public readonly containerNo = signal<string>('');
   public readonly sizeType = signal<string>("40' HC");
   public readonly fromLocation = signal<string>('GATE-01');
@@ -39,12 +39,8 @@ export class CreateTaskModalComponent {
   public readonly errorMessage = signal<string>('');
 
   public readonly taskTypes: { type: TaskType; icon: string; label: string }[] = [
-    { type: 'Import', icon: 'input', label: 'Import' },
-    { type: 'Export', icon: 'output', label: 'Export' },
-    { type: 'Yard Move', icon: 'local_shipping', label: 'Yard Move' },
-    { type: 'Stack', icon: 'layers', label: 'Stack / Re-stack' },
-    { type: 'Gate Out', icon: 'logout', label: 'Gate Out' },
-    { type: 'Inspection', icon: 'verified', label: 'Customs Inspect' },
+    { type: 'Pickup', icon: 'local_shipping', label: 'Pickup' },
+    { type: 'Drop', icon: 'inventory_2', label: 'Drop' },
   ];
 
   public readonly sizeOptions = [
@@ -108,11 +104,11 @@ export class CreateTaskModalComponent {
     this.selectedTaskType.set(type);
 
     // Auto-populate sensible defaults based on task type
-    if (type === 'Import') {
+    if (type === 'Pickup' || type === 'Import') {
       this.fromLocation.set('GATE-01');
       this.toLocation.set('BLOCK C / 04-02');
       this.equipment.set('RS-07');
-    } else if (type === 'Export') {
+    } else if (type === 'Drop' || type === 'Export') {
       this.fromLocation.set('BLOCK A / 02-05');
       this.toLocation.set('GATE-02');
       this.equipment.set('RTG-03');
@@ -185,6 +181,6 @@ export class CreateTaskModalComponent {
     this.notes.set('');
     this.isHazardous.set(false);
     this.errorMessage.set('');
-    this.selectTaskType('Import');
+    this.selectTaskType('Pickup');
   }
 }

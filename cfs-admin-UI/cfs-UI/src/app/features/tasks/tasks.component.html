@@ -64,19 +64,6 @@
         }
       </div>
 
-      <!-- View Queue / View Table Toggle -->
-      <button
-        type="button"
-        (click)="toggleViewMode()"
-        class="flex items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3.5 py-2 text-xs font-bold text-blue-700 shadow-xs transition-all hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 cursor-pointer">
-        <span class="material-icons-outlined text-base">
-          {{ taskService.viewMode() === 'table' ? 'view_kanban' : 'table_rows' }}
-        </span>
-        <span>{{
-          taskService.viewMode() === 'table' ? ('TASKS.VIEW_QUEUE' | translate) : ('TASKS.VIEW_TABLE' | translate)
-        }}</span>
-      </button>
-
       <!-- + Create Task Button (Primary) -->
       <button
         type="button"
@@ -88,14 +75,14 @@
     </div>
   </header>
 
-  <!-- 7 KPI Metric Cards Strip -->
-  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 min-w-0">
-    <!-- 1. All Tasks -->
+  <!-- 5 KPI Metric Cards Strip -->
+  <section class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 min-w-0">
+    <!-- 1. All Task -->
     <div
-      (click)="selectKpiStatus('All')"
+      (click)="selectKpiCard('All')"
       class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
       [ngClass]="{
-        'ring-2 ring-blue-500 shadow-md': taskService.statusFilter() === 'All',
+        'ring-2 ring-blue-500 shadow-md': taskService.kpiFilter() === 'All',
       }">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -103,9 +90,7 @@
           <span class="material-icons-outlined text-lg">assignment</span>
         </div>
         <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.ALL_TASKS' | translate
-          }}</span>
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">All Task</span>
           <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ taskService.kpiMetrics().allTasks }}
           </span>
@@ -117,120 +102,62 @@
       </div>
     </div>
 
-    <!-- 2. New -->
+    <!-- 2. Pickup Task -->
     <div
-      (click)="selectKpiStatus('New')"
+      (click)="selectKpiCard('Pickup')"
       class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
       [ngClass]="{
-        'ring-2 ring-purple-500 shadow-md': taskService.statusFilter() === 'New',
+        'ring-2 ring-indigo-500 shadow-md': taskService.kpiFilter() === 'Pickup',
       }">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
-          <span class="material-icons-outlined text-lg">note_add</span>
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+          <span class="material-icons-outlined text-lg">local_shipping</span>
         </div>
         <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.NEW_TASKS' | translate
-          }}</span>
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Pickup Task</span>
           <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-            {{ taskService.kpiMetrics().newTaskCount }}
+            {{ taskService.kpiMetrics().pickupTasks }}
           </span>
         </div>
       </div>
       <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
         <span>↑</span>
-        <span>{{ taskService.kpiMetrics().newTaskTrend }}</span>
+        <span>{{ taskService.kpiMetrics().pickupTasksTrend }}</span>
       </div>
     </div>
 
-    <!-- 3. Assigned -->
+    <!-- 3. Drop Task -->
     <div
-      (click)="selectKpiStatus('Assigned')"
+      (click)="selectKpiCard('Drop')"
       class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
       [ngClass]="{
-        'ring-2 ring-blue-500 shadow-md': taskService.statusFilter() === 'Assigned',
-      }">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400">
-          <span class="material-icons-outlined text-lg">send</span>
-        </div>
-        <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.DISPATCHED' | translate
-          }}</span>
-          <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-            {{ taskService.kpiMetrics().assignedCount }}
-          </span>
-        </div>
-      </div>
-      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
-        <span>↑</span>
-        <span>{{ taskService.kpiMetrics().assignedTrend }}</span>
-      </div>
-    </div>
-
-    <!-- 4. In Progress -->
-    <div
-      (click)="selectKpiStatus('In Progress')"
-      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
-      [ngClass]="{
-        'ring-2 ring-cyan-500 shadow-md': taskService.statusFilter() === 'In Progress',
-      }">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cyan-50 text-cyan-600 dark:bg-cyan-950/60 dark:text-cyan-400">
-          <span class="material-icons-outlined text-lg">directions_run</span>
-        </div>
-        <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.IN_PROGRESS' | translate
-          }}</span>
-          <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-            {{ taskService.kpiMetrics().inProgressCount }}
-          </span>
-        </div>
-      </div>
-      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
-        <span>↑</span>
-        <span>{{ taskService.kpiMetrics().inProgressTrend }}</span>
-      </div>
-    </div>
-
-    <!-- 5. Awaiting Confirmation -->
-    <div
-      (click)="selectKpiStatus('Awaiting Confirmation')"
-      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
-      [ngClass]="{
-        'ring-2 ring-amber-500 shadow-md': taskService.statusFilter() === 'Awaiting Confirmation',
+        'ring-2 ring-amber-500 shadow-md': taskService.kpiFilter() === 'Drop',
       }">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
           class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400">
-          <span class="material-icons-outlined text-lg">schedule</span>
+          <span class="material-icons-outlined text-lg">inventory_2</span>
         </div>
         <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.AWAITING_CONFIRMATION' | translate
-          }}</span>
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Drop Task</span>
           <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-            {{ taskService.kpiMetrics().awaitingConfirmationCount }}
+            {{ taskService.kpiMetrics().dropTasks }}
           </span>
         </div>
       </div>
-      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-rose-600 dark:text-rose-400 truncate">
-        <span>↓</span>
-        <span>{{ taskService.kpiMetrics().awaitingConfirmationTrend }}</span>
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
+        <span>↑</span>
+        <span>{{ taskService.kpiMetrics().dropTasksTrend }}</span>
       </div>
     </div>
 
-    <!-- 6. Completed -->
+    <!-- 4. Completed -->
     <div
-      (click)="selectKpiStatus('Completed')"
+      (click)="selectKpiCard('Completed')"
       class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
       [ngClass]="{
-        'ring-2 ring-emerald-500 shadow-md': taskService.statusFilter() === 'Completed',
+        'ring-2 ring-emerald-500 shadow-md': taskService.kpiFilter() === 'Completed',
       }">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -238,9 +165,7 @@
           <span class="material-icons-outlined text-lg">check_circle</span>
         </div>
         <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.COMPLETED' | translate
-          }}</span>
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Completed</span>
           <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ taskService.kpiMetrics().completedCount }}
           </span>
@@ -252,12 +177,12 @@
       </div>
     </div>
 
-    <!-- 7. Exceptions -->
+    <!-- 5. Exception -->
     <div
-      (click)="selectKpiStatus('Exception')"
+      (click)="selectKpiCard('Exception')"
       class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
       [ngClass]="{
-        'ring-2 ring-rose-500 shadow-md': taskService.statusFilter() === 'Exception',
+        'ring-2 ring-rose-500 shadow-md': taskService.kpiFilter() === 'Exception',
       }">
       <div class="flex items-center gap-2.5 min-w-0">
         <div
@@ -265,9 +190,7 @@
           <span class="material-icons-outlined text-lg">warning</span>
         </div>
         <div class="overflow-hidden min-w-0">
-          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">{{
-            'TASKS.EXCEPTIONS' | translate
-          }}</span>
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">Exception</span>
           <span class="text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ taskService.kpiMetrics().exceptionsCount }}
           </span>
@@ -313,15 +236,6 @@
               [value]="taskService.typeFilter()"
               (valueChange)="taskService.setTypeFilter($event)"
               placeholder="All Types" />
-          </div>
-
-          <!-- Priority Filter -->
-          <div class="w-36">
-            <app-dropdown
-              [options]="priorityOptions"
-              [value]="taskService.priorityFilter()"
-              (valueChange)="taskService.setPriorityFilter($event)"
-              placeholder="All Priorities" />
           </div>
 
           <!-- Equipment Filter -->
@@ -447,23 +361,20 @@
                       (change)="toggleSelectAll($event)"
                       class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800" />
                   </th>
-                  <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TASKS.TASK_NO' | translate }}</th>
+                  <th class="px-4 py-3.5 whitespace-nowrap">Event Type</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.TYPE' | translate }}</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.CONTAINER_NO' | translate }}</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.SIZE_TYPE' | translate }}</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LOCATION' | translate }} (From)</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.LOCATION' | translate }} (To)</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.EQUIPMENT' | translate }}</th>
-                  <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.PRIORITY' | translate }}</th>
-                  <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.SLA' | translate }}</th>
                   <th class="px-4 py-3.5 whitespace-nowrap">{{ 'TABLE.STATUS' | translate }}</th>
-                  <th class="px-4 py-3.5 text-right whitespace-nowrap">{{ 'TABLE.ACTIONS' | translate }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
                 @if (taskService.paginatedTasks().length === 0) {
                   <tr>
-                    <td colspan="12" class="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
+                    <td colspan="9" class="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
                       <span class="material-icons-outlined mb-2 text-3xl text-slate-400">search_off</span>
                       <p>{{ 'TASKS.EMPTY_DESC' | translate }}</p>
                     </td>
@@ -486,7 +397,7 @@
                         class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800" />
                     </td>
 
-                    <!-- Task No. Link -->
+                    <!-- Task No. Link (Event Type) -->
                     <td
                       class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 hover:underline dark:text-blue-400">
                       {{ task.taskNo }}
@@ -497,6 +408,10 @@
                       <span
                         class="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-bold"
                         [ngClass]="{
+                          'bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300':
+                            task.taskType === 'Pickup',
+                          'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300':
+                            task.taskType === 'Drop' || task.taskType === 'Inspection',
                           'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300': task.taskType === 'Import',
                           'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300': task.taskType === 'Export',
                           'bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300': task.taskType === 'Yard Move',
@@ -504,22 +419,24 @@
                             task.taskType === 'Stack',
                           'bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300':
                             task.taskType === 'Gate Out',
-                          'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300':
-                            task.taskType === 'Inspection',
                         }">
                         <span class="material-icons-outlined text-xs">
                           {{
-                            task.taskType === 'Import'
-                              ? 'input'
-                              : task.taskType === 'Export'
-                                ? 'output'
-                                : task.taskType === 'Yard Move'
-                                  ? 'local_shipping'
-                                  : task.taskType === 'Stack'
-                                    ? 'layers'
-                                    : task.taskType === 'Gate Out'
-                                      ? 'logout'
-                                      : 'verified'
+                            task.taskType === 'Pickup'
+                              ? 'local_shipping'
+                              : task.taskType === 'Drop'
+                                ? 'inventory_2'
+                                : task.taskType === 'Import'
+                                  ? 'input'
+                                  : task.taskType === 'Export'
+                                    ? 'output'
+                                    : task.taskType === 'Yard Move'
+                                      ? 'local_shipping'
+                                      : task.taskType === 'Stack'
+                                        ? 'layers'
+                                        : task.taskType === 'Gate Out'
+                                          ? 'logout'
+                                          : 'verified'
                           }}
                         </span>
                         <span>{{ task.taskType }}</span>
@@ -560,44 +477,6 @@
                       </span>
                     </td>
 
-                    <!-- Priority Badge -->
-                    <td class="whitespace-nowrap px-4 py-3">
-                      <span
-                        class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-bold"
-                        [ngClass]="{
-                          'border border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-900 dark:bg-rose-950/60 dark:text-rose-400':
-                            task.priority === 'High' || task.priority === 'Critical',
-                          'border border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-900 dark:bg-amber-950/60 dark:text-amber-400':
-                            task.priority === 'Medium',
-                          'border border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-400':
-                            task.priority === 'Low',
-                        }">
-                        <span class="h-1.5 w-1.5 rounded-full"
-                          [ngClass]="{
-                            'bg-rose-500': task.priority === 'High' || task.priority === 'Critical',
-                            'bg-amber-500': task.priority === 'Medium',
-                            'bg-emerald-500': task.priority === 'Low',
-                          }"></span>
-                        <span>{{ task.priority }}</span>
-                      </span>
-                    </td>
-
-                    <!-- SLA -->
-                    <td class="whitespace-nowrap px-4 py-3 font-mono">
-                      <span
-                        class="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-bold"
-                        [ngClass]="{
-                          'border border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-900 dark:bg-rose-950/60 dark:text-rose-400':
-                            task.isOverdue || task.slaMinutes <= 10,
-                          'border border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-900 dark:bg-amber-950/60 dark:text-amber-400':
-                            !task.isOverdue && task.slaMinutes > 10 && task.slaMinutes <= 60,
-                          'border border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-400':
-                            !task.isOverdue && task.slaMinutes > 60,
-                        }">
-                        <span>{{ task.slaDisplay }}</span>
-                      </span>
-                    </td>
-
                     <!-- Status -->
                     <td class="whitespace-nowrap px-4 py-3">
                       <span
@@ -618,17 +497,6 @@
                         }">
                         {{ task.status }}
                       </span>
-                    </td>
-
-                    <!-- Action Quick View Eye Icon -->
-                    <td class="whitespace-nowrap px-4 py-3 text-right" (click)="$event.stopPropagation()">
-                      <button
-                        type="button"
-                        (click)="taskService.selectTask(task)"
-                        class="inline-flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600 dark:hover:bg-slate-800 dark:hover:text-blue-400 cursor-pointer"
-                        title="View Task Details">
-                        <span class="material-icons-outlined text-base">visibility</span>
-                      </button>
                     </td>
                   </tr>
                 }

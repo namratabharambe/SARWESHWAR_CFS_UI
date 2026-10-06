@@ -244,6 +244,7 @@ export class AlertService {
   public readonly isDetailModalOpen = signal<boolean>(false);
 
   // Filters
+  public readonly categoryFilter = signal<'All' | 'Gate' | 'Move'>('All');
   public readonly severityFilter = signal<string>('All');
   public readonly typeFilter = signal<string>('All');
   public readonly statusFilter = signal<string>('All');
@@ -255,10 +256,25 @@ export class AlertService {
   // Filtered Alerts
   public readonly filteredAlerts = computed<ContainerMismatchAlert[]>(() => {
     let list = this.alerts();
+    const cat = this.categoryFilter();
     const sev = this.severityFilter();
     const type = this.typeFilter();
     const status = this.statusFilter();
     const q = this.searchQuery().trim().toLowerCase();
+
+    if (cat === 'Gate') {
+      list = list.filter(
+        (a) =>
+          a.gateLocation.toLowerCase().includes('gate') &&
+          a.alertType !== 'Bay Stacking Conflict',
+      );
+    } else if (cat === 'Move') {
+      list = list.filter(
+        (a) =>
+          a.gateLocation.toLowerCase().includes('yard') ||
+          a.alertType === 'Bay Stacking Conflict',
+      );
+    }
 
     if (sev !== 'All') {
       list = list.filter((a) => a.severity.toLowerCase() === sev.toLowerCase());
@@ -292,6 +308,16 @@ export class AlertService {
   public readonly kpiMetrics = computed<AlertKpiMetrics>(() => {
     const list = this.alerts();
     const total = list.length;
+    const gateCount = list.filter(
+      (a) =>
+        a.gateLocation.toLowerCase().includes('gate') &&
+        a.alertType !== 'Bay Stacking Conflict',
+    ).length;
+    const moveCount = list.filter(
+      (a) =>
+        a.gateLocation.toLowerCase().includes('yard') ||
+        a.alertType === 'Bay Stacking Conflict',
+    ).length;
     const critical = list.filter((a) => a.severity === 'Critical' && a.status !== 'Resolved').length;
     const mismatches = list.filter(
       (a) => a.alertType === 'Container Number Mismatch' && a.status !== 'Resolved',
@@ -302,6 +328,10 @@ export class AlertService {
     return {
       totalAlerts: total,
       totalAlertsTrend: '14% vs yesterday',
+      gateOutAlerts: gateCount,
+      gateOutAlertsTrend: '8% vs yesterday',
+      movesAlerts: moveCount,
+      movesAlertsTrend: '5% vs yesterday',
       criticalCount: critical,
       criticalTrend: '2 open critical',
       mismatchCount: mismatches,
@@ -314,6 +344,14 @@ export class AlertService {
   });
 
   // Actions
+  public setCategoryFilter(filter: 'All' | 'Gate' | 'Move'): void {
+    if (this.categoryFilter() === filter) {
+      this.categoryFilter.set('All');
+    } else {
+      this.categoryFilter.set(filter);
+    }
+  }
+
   public selectAlert(alert: ContainerMismatchAlert): void {
     this.selectedAlert.set(alert);
     this.isDetailModalOpen.set(true);
@@ -326,6 +364,45 @@ export class AlertService {
 
   public closeAlertModal(): void {
     this.isDetailModalOpen.set(false);
+  }
+
+  public refreshAlerts(): void {
+    this.alerts.update((list) => [...list]);
+  }
+
+  public exportAlertsToCsv(): void {
+    const list = this.filteredAlerts();
+    const headers = [
+      'Alert Code',
+      'Alert Type',
+      'Scanned Container No (OCR)',
+      'Manifest Expected No',
+      'Truck No',
+      'Gate Location',
+      'OCR Confidence',
+      'Status',
+    ];
+    const rows = list.map((a) => [
+      a.alertCode,
+      a.alertType,
+      a.scannedContainerNo,
+      a.expectedContainerNo,
+      a.truckNo,
+      a.gateLocation,
+      `${a.ocrConfidence}%`,
+      a.status,
+    ]);
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      [headers.join(','), ...rows.map((e) => e.map((val) => `"${val}"`).join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `cfs-alerts-export-${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.showToast('Alerts exported successfully.');
   }
 
   public setSeverityFilter(sev: string): void {

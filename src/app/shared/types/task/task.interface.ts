@@ -1,4 +1,4 @@
-export type TaskType = 'Import' | 'Export' | 'Yard Move' | 'Stack' | 'Gate Out' | 'De-stack' | 'Inspection';
+export type TaskType = 'Import' | 'Export' | 'Yard Move' | 'Stack' | 'Gate Out' | 'De-stack' | 'Inspection' | 'Pickup' | 'Drop';
 
 export type TaskPriority = 'High' | 'Medium' | 'Low' | 'Critical';
 
@@ -37,18 +37,22 @@ export interface TaskItem {
 export interface TaskKpiMetrics {
   allTasks: number;
   allTasksTrend: string;
-  newTaskCount: number;
-  newTaskTrend: string;
-  assignedCount: number;
-  assignedTrend: string;
-  inProgressCount: number;
-  inProgressTrend: string;
-  awaitingConfirmationCount: number;
-  awaitingConfirmationTrend: string;
+  pickupTasks: number;
+  pickupTasksTrend: string;
+  dropTasks: number;
+  dropTasksTrend: string;
   completedCount: number;
   completedTrend: string;
   exceptionsCount: number;
   exceptionsTrend: string;
+  newTaskCount?: number;
+  newTaskTrend?: string;
+  assignedCount?: number;
+  assignedTrend?: string;
+  inProgressCount?: number;
+  inProgressTrend?: string;
+  awaitingConfirmationCount?: number;
+  awaitingConfirmationTrend?: string;
 }
 
 export interface CreateTaskFormData {

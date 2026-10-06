@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from 'shared/pipes';
 
+import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
+
 export interface NonErpContainerItem {
   id: string;
   eventTime: string;
@@ -28,7 +30,7 @@ export interface NonErpContainerItem {
 @Component({
   selector: 'app-non-erp-container',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe],
+  imports: [CommonModule, FormsModule, TranslatePipe, PaginationComponent],
   templateUrl: './non-erp-container.component.html',
   styleUrls: ['./non-erp-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +50,10 @@ export class NonErpContainerComponent {
   public readonly statusFilter = signal<string>('ALL');
   public readonly gateFilter = signal<string>('ALL');
   public readonly selectedIds = signal<Set<string>>(new Set());
+
+  // Pagination signals
+  public readonly currentPage = signal<number>(1);
+  public readonly pageSize = signal<number>(10);
 
   // Modal / Detail states
   public readonly isAddModalOpen = signal<boolean>(false);
@@ -303,6 +309,39 @@ export class NonErpContainerComponent {
       return matchesQuery && matchesStatus && matchesGate;
     });
   });
+
+  /** Paginated events slice for table display */
+  public readonly paginatedEvents = computed(() => {
+    const list = this.filteredEvents();
+    const page = this.currentPage();
+    const size = this.pageSize();
+    const start = (page - 1) * size;
+    return list.slice(start, start + size);
+  });
+
+  public setPage(page: number): void {
+    this.currentPage.set(page);
+  }
+
+  public onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+
+  public onSearchChange(val: string): void {
+    this.searchQuery.set(val);
+    this.currentPage.set(1);
+  }
+
+  public onStatusFilterChange(val: string): void {
+    this.statusFilter.set(val);
+    this.currentPage.set(1);
+  }
+
+  public onGateFilterChange(val: string): void {
+    this.gateFilter.set(val);
+    this.currentPage.set(1);
+  }
 
   /** Dynamic KPI metrics */
   public readonly metrics = computed(() => {

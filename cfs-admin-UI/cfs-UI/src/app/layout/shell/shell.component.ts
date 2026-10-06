@@ -247,6 +247,7 @@ export class ShellComponent {
       this.repository.loadClients();
     }
 
+
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {

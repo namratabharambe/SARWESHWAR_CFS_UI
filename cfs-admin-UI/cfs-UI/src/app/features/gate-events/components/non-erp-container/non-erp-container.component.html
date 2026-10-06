@@ -1,15 +1,15 @@
 <div class="non-erp-container-view flex flex-col gap-5">
   <!-- ========================================================================= -->
-  <!-- 1. PAGE HEADER WITH TOP-LEFT BACK ARROW                                   -->
+  <!-- 1. PAGE HEADER WITH TOP-LEFT BACK ARROW & ACTIONS                         -->
   <!-- ========================================================================= -->
-  <header class="page-title-header flex flex-col gap-3">
+  <header class="page-title-header flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
     <!-- Top-Left Navigation & Title -->
     <div class="header-title-content flex flex-wrap items-center gap-3.5">
-      <!-- Back Arrow to return to Gate In / Gate Out (Top Left Corner) -->
+      <!-- Back Arrow to return to Gate In / Gate Out -->
       <button
         type="button"
         (click)="back.emit()"
-        class="btn-back-to-gate group flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:border-blue-500 hover:bg-blue-50/50 hover:text-blue-600 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-blue-500 dark:hover:bg-slate-700"
+        class="btn-back-to-gate group flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-[#0f2851] shadow-xs transition-all hover:border-[#525EA7] hover:bg-slate-50 hover:text-[#525EA7] active:scale-95 cursor-pointer dark:border-slate-700 dark:bg-[#111a2e] dark:text-slate-200 dark:hover:border-blue-400 dark:hover:text-blue-300"
         [title]="
           gateMode() === 'out'
             ? ('GATE_EVENTS.BACK_TO_GATE_OUT' | translate)
@@ -37,7 +37,7 @@
 
       <div>
         <div class="flex items-center gap-2.5">
-          <h1 class="page-title text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <h1 class="page-title text-[28px] md:text-3xl font-black tracking-tight text-[#0f2851] leading-tight dark:text-white">
             {{
               gateMode() === 'out'
                 ? ('GATE_EVENTS.NON_ERP_OUT_TITLE' | translate)
@@ -45,11 +45,11 @@
             }}
           </h1>
           <span
-            class="inline-flex items-center rounded-md border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-bold tracking-wide text-amber-700 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-300">
+            class="inline-flex items-center rounded-lg border border-amber-300/80 bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold tracking-wide text-amber-800 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-300">
             {{ 'GATE_EVENTS.NON_ERP_BADGE' | translate }}
           </span>
         </div>
-        <p class="page-subtitle mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        <p class="page-subtitle mt-0.5 text-xs md:text-sm font-medium text-slate-500 dark:text-slate-400">
           {{
             gateMode() === 'out'
               ? ('GATE_EVENTS.NON_ERP_OUT_SUBTITLE' | translate)
@@ -58,24 +58,39 @@
         </p>
       </div>
     </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions flex flex-wrap items-center gap-2.5">
+      <button
+        type="button"
+        class="btn-add-non-erp flex items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+        (click)="openAddModal()"
+        title="Add Non ERP Container">
+        <svg class="h-4 w-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        <span>Add Non ERP Container</span>
+      </button>
+    </div>
   </header>
 
   <!-- ========================================================================= -->
-  <!-- 2. 4 KPI METRIC CARDS (Using universal .kpi-card hover)                   -->
+  <!-- 2. 4 KPI METRIC CARDS (Using CFS gradient & border architecture)          -->
   <!-- ========================================================================= -->
   <section
-    class="kpi-metrics-grid grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+    class="kpi-metrics-grid grid grid-cols-2 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
     aria-label="Non-ERP KPI Summary">
     <!-- Card 1: Today's Non-ERP In/Out -->
     <div
-      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)]">
       <div class="flex items-center gap-3">
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-xl"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
           [ngClass]="
             gateMode() === 'out'
-              ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400'
-              : 'bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400'
+              ? 'bg-orange-50 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400'
+              : 'bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400'
           ">
           @if (gateMode() === 'out') {
             <!-- Gate Out Departure Symbol -->
@@ -108,79 +123,79 @@
           }
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
             {{
               gateMode() === 'out'
                 ? ('GATE_EVENTS.NON_ERP_DEPARTURES' | translate)
                 : ('GATE_EVENTS.NON_ERP_ARRIVALS' | translate)
             }}
           </span>
-          <strong class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <strong class="text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ metrics().total }}
           </strong>
         </div>
       </div>
-      <div class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+      <div class="mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
         ↑ Live Non-ERP Stream
       </div>
     </div>
 
     <!-- Card 2: OCR Verified -->
     <div
-      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)]">
       <div class="flex items-center gap-3">
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             <polyline points="9 12 11 14 15 10" />
           </svg>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
             {{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}
           </span>
-          <strong class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <strong class="text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ metrics().verified }}
           </strong>
         </div>
       </div>
-      <div class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+      <div class="mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
         ✓ {{ metrics().avgConfidence }}% Accuracy
       </div>
     </div>
 
     <!-- Card 3: Pending Review -->
     <div
-      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)]">
       <div class="flex items-center gap-3">
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
             {{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}
           </span>
-          <strong class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <strong class="text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ metrics().review }}
           </strong>
         </div>
       </div>
-      <div class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
+      <div class="mt-2.5 flex items-center gap-1 text-xs font-bold text-amber-600 dark:text-amber-400">
         ● Needs Clearance
       </div>
     </div>
 
     <!-- Card 4: Exceptions / Hold -->
     <div
-      class="kpi-card rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-[#111a2e]">
+      class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)]">
       <div class="flex items-center gap-3">
         <div
-          class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400">
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
             <line x1="12" y1="8" x2="12" y2="12" />
@@ -188,305 +203,520 @@
           </svg>
         </div>
         <div class="overflow-hidden">
-          <span class="block truncate text-xs font-medium text-slate-500 dark:text-slate-400">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
             {{ 'GATE_EVENTS.EXCEPTIONS_HOLD' | translate }}
           </span>
-          <strong class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <strong class="text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
             {{ metrics().hold }}
           </strong>
         </div>
       </div>
-      <div class="mt-2.5 flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400">
+      <div class="mt-2.5 flex items-center gap-1 text-xs font-bold text-rose-600 dark:text-rose-400">
         ▲ Flagged Containers
       </div>
     </div>
   </section>
 
   <!-- ========================================================================= -->
-  <!-- 3. FILTER & SEARCH BAR                                                    -->
-  <!-- ========================================================================= -->
-  <section
-    class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-    <div class="flex flex-1 flex-wrap items-center gap-3">
-      <!-- Search Input -->
-      <div class="relative min-w-[220px] flex-1 sm:max-w-xs">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
-          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </span>
-        <input
-          type="text"
-          [ngModel]="searchQuery()"
-          (ngModelChange)="searchQuery.set($event)"
-          [placeholder]="'GATE_EVENTS.SEARCH_NON_ERP_PLACEHOLDER' | translate"
-          class="h-8 w-full rounded-lg border border-slate-300 bg-white pl-8 pr-3 text-xs font-semibold text-slate-800 placeholder-slate-400 transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-[#111a2d]/85 dark:text-slate-200 dark:placeholder-slate-500" />
-      </div>
-
-      <!-- Gate Lane Filter -->
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
-          {{ 'GATE_EVENTS.FILTER_GATE' | translate }}:
-        </span>
-        <select
-          [ngModel]="gateFilter()"
-          (ngModelChange)="gateFilter.set($event)"
-          class="h-8 rounded-lg border border-slate-300 bg-white px-2.5 text-xs font-semibold text-slate-800 transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-[#111a2d]/85 dark:text-slate-200">
-          <option value="ALL">{{ 'GATE_EVENTS.ALL_GATES' | translate }}</option>
-          <option value="Gate 01">Gate 01</option>
-          <option value="Gate 02">Gate 02</option>
-          <option value="Gate 03">Gate 03</option>
-        </select>
-      </div>
-
-      <!-- Status Filter -->
-      <div class="flex items-center gap-2">
-        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">
-          {{ 'COMMON.STATUS' | translate }}:
-        </span>
-        <select
-          [ngModel]="statusFilter()"
-          (ngModelChange)="statusFilter.set($event)"
-          class="h-8 rounded-lg border border-slate-300 bg-white px-2.5 text-xs font-semibold text-slate-800 transition-colors focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-[#111a2d]/85 dark:text-slate-200">
-          <option value="ALL">{{ 'GATE_EVENTS.ALL_STATUS' | translate }}</option>
-          <option value="VERIFIED">{{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}</option>
-          <option value="REVIEW">{{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}</option>
-          <option value="HOLD">{{ 'GATE_EVENTS.EXCEPTIONS_HOLD' | translate }}</option>
-        </select>
-      </div>
-
-      <!-- Clear Filters -->
-      @if (searchQuery() || statusFilter() !== 'ALL' || gateFilter() !== 'ALL') {
-        <button
-          type="button"
-          (click)="searchQuery.set(''); statusFilter.set('ALL'); gateFilter.set('ALL')"
-          class="h-8 rounded-lg border border-slate-300 bg-slate-100 px-3 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-200 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
-          {{ 'COMMON.CLEAR' | translate }}
-        </button>
-      }
-    </div>
-
-    <!-- Export Action -->
-    <button
-      type="button"
-      (click)="exportCsv()"
-      class="flex h-8 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-      [title]="'GATE_EVENTS.EXPORT_CSV' | translate">
-      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-        <polyline points="7 10 12 15 17 10"></polyline>
-        <line x1="12" y1="15" x2="12" y2="3"></line>
-      </svg>
-      <span>{{ 'GATE_EVENTS.EXPORT_CSV' | translate }}</span>
-    </button>
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- 4. NON-ERP CONTAINER DATA TABLE                                           -->
+  <!-- 3. UNIFIED TABLE CARD WITH TOOLBAR & FILTERS                              -->
   <!-- ========================================================================= -->
   <div
-    class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#111a2e]">
-    <table class="w-full border-collapse text-left text-xs">
-      <thead>
-        <tr
-          class="border-b border-slate-200 bg-slate-50 text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-400">
-          <th class="w-10 px-3 py-3 text-center">
-            <input
-              type="checkbox"
-              [checked]="selectedIds().size === filteredEvents().length && filteredEvents().length > 0"
-              (change)="toggleSelectAll()"
-              class="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800" />
-          </th>
-          <th class="min-w-[80px] px-3 py-3">{{ 'GATE_EVENTS.COL_TIME' | translate }}</th>
-          <th class="min-w-[80px] px-3 py-3">{{ 'GATE_EVENTS.COL_GATE' | translate }}</th>
-          <th class="min-w-[60px] px-2 py-3 text-center">{{ 'GATE_EVENTS.COL_DIR' | translate }}</th>
-          <th class="min-w-[120px] px-3 py-3">{{ 'GATE_EVENTS.COL_TRUCK' | translate }}</th>
-          <th class="min-w-[150px] px-3 py-3">{{ 'GATE_EVENTS.COL_CONTAINER' | translate }}</th>
-          <th class="min-w-[90px] px-3 py-3">{{ 'GATE_EVENTS.COL_SIZE_TYPE' | translate }}</th>
-          <th class="min-w-[130px] px-3 py-3">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</th>
-          <th class="min-w-[160px] px-3 py-3">{{ 'GATE_EVENTS.CATEGORY_REASON' | translate }}</th>
-          <th class="min-w-[95px] px-3 py-3">{{ 'GATE_EVENTS.COL_STATUS' | translate }}</th>
-          <th class="min-w-[70px] px-3 py-3 text-center">{{ 'GATE_EVENTS.COL_PHOTOS' | translate }}</th>
-          <th class="min-w-[120px] px-3 py-3 text-right">{{ 'COMMON.ACTIONS' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100 dark:divide-slate-800/80">
-        @for (item of filteredEvents(); track item.id) {
-          <tr
-            class="group cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
-            [class.bg-blue-50/40]="isSelected(item.id)"
-            [class.dark:bg-blue-950/20]="isSelected(item.id)">
-            <!-- Checkbox -->
-            <td class="px-3 py-3 text-center" (click)="$event.stopPropagation()">
+    class="gate-events-card rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white shadow-xs overflow-hidden dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+    <!-- Streamlined Toolbar: Search on Left, Filter Options & Export on Right -->
+    <div
+      class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-[#111a2e]">
+      <!-- Left Corner: Live Search Box -->
+      <div class="search-field-wrapper relative flex flex-1 min-w-[260px] max-w-lg items-center">
+        <svg
+          class="pointer-events-none absolute left-3 h-4 w-4 text-slate-400"
+          viewBox="0 0 20 20"
+          fill="currentColor">
+          <path
+            fill-rule="evenodd"
+            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+            clip-rule="evenodd" />
+        </svg>
+        <input
+          type="text"
+          class="gate-search-input h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 pl-9 pr-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          [placeholder]="'GATE_EVENTS.SEARCH_NON_ERP_PLACEHOLDER' | translate"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)" />
+        @if (searchQuery()) {
+          <button
+            type="button"
+            class="absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+            (click)="onSearchChange('')">
+            ✕
+          </button>
+        }
+      </div>
+
+      <!-- Right Corner: Gate Lane + Status Filter + Export CSV -->
+      <div class="filter-controls-right flex flex-wrap items-center gap-2.5 shrink-0">
+        <!-- Gate Lane Filter -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
+            {{ 'GATE_EVENTS.FILTER_GATE' | translate }}:
+          </span>
+          <select
+            [ngModel]="gateFilter()"
+            (ngModelChange)="onGateFilterChange($event)"
+            class="h-9 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+            <option value="ALL">{{ 'GATE_EVENTS.ALL_GATES' | translate }}</option>
+            <option value="Gate 01">Gate 01</option>
+            <option value="Gate 02">Gate 02</option>
+            <option value="Gate 03">Gate 03</option>
+          </select>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
+            {{ 'COMMON.STATUS' | translate }}:
+          </span>
+          <select
+            [ngModel]="statusFilter()"
+            (ngModelChange)="onStatusFilterChange($event)"
+            class="h-9 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+            <option value="ALL">{{ 'GATE_EVENTS.ALL_STATUS' | translate }}</option>
+            <option value="VERIFIED">{{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}</option>
+            <option value="REVIEW">{{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}</option>
+            <option value="HOLD">{{ 'GATE_EVENTS.EXCEPTIONS_HOLD' | translate }}</option>
+          </select>
+        </div>
+
+        <!-- Clear Filters -->
+        @if (searchQuery() || statusFilter() !== 'ALL' || gateFilter() !== 'ALL') {
+          <button
+            type="button"
+            (click)="searchQuery.set(''); statusFilter.set('ALL'); gateFilter.set('ALL'); currentPage.set(1)"
+            class="h-9 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-[#0f2851] shadow-xs transition-colors hover:border-[#525EA7] hover:text-[#525EA7] hover:bg-slate-50 active:scale-95 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
+            {{ 'COMMON.CLEAR' | translate }}
+          </button>
+        }
+
+        <!-- Export CSV Button -->
+        <button
+          type="button"
+          (click)="exportCsv()"
+          class="btn-export-main flex h-9 items-center gap-2 rounded-xl bg-[#525EA7] px-4 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+          [title]="'GATE_EVENTS.EXPORT_CSV' | translate">
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path
+              fill-rule="evenodd"
+              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>{{ 'GATE_EVENTS.EXPORT_CSV' | translate }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-responsive-wrapper overflow-x-auto">
+      <table class="w-full border-collapse text-left text-xs">
+        <thead
+          class="border-b border-slate-200/80 bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-300">
+          <tr>
+            <th class="w-10 px-4 py-3.5 text-center">
               <input
                 type="checkbox"
-                [checked]="isSelected(item.id)"
-                (change)="toggleSelect(item.id)"
-                class="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800" />
-            </td>
+                [checked]="selectedIds().size === filteredEvents().length && filteredEvents().length > 0"
+                (change)="toggleSelectAll()"
+                class="gate-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7] dark:border-slate-700 dark:bg-slate-800 cursor-pointer" />
+            </th>
+            <th class="min-w-[85px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_TIME' | translate }}</th>
+            <th class="min-w-[85px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_GATE' | translate }}</th>
+            <th class="min-w-[65px] px-3 py-3.5 text-center">{{ 'GATE_EVENTS.COL_DIR' | translate }}</th>
+            <th class="min-w-[120px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_TRUCK' | translate }}</th>
+            <th class="min-w-[170px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONTAINER' | translate }}</th>
+            <th class="min-w-[100px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_SIZE_TYPE' | translate }}</th>
+            <th class="min-w-[130px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</th>
+            <th class="min-w-[160px] px-4 py-3.5">{{ 'GATE_EVENTS.CATEGORY_REASON' | translate }}</th>
+            <th class="min-w-[110px] px-4 py-3.5">{{ 'GATE_EVENTS.COL_STATUS' | translate }}</th>
+            <th class="min-w-[80px] px-4 py-3.5 text-center">{{ 'GATE_EVENTS.COL_PHOTOS' | translate }}</th>
+            <th class="min-w-[140px] px-4 py-3.5 text-right">{{ 'COMMON.ACTIONS' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+          @for (item of paginatedEvents(); track item.id) {
+            <tr
+              class="gate-event-row cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+              [class.bg-blue-50/40]="isSelected(item.id)"
+              [class.dark:bg-blue-950/20]="isSelected(item.id)">
+              <!-- Checkbox -->
+              <td class="px-4 py-3.5 text-center" (click)="$event.stopPropagation()">
+                <input
+                  type="checkbox"
+                  [checked]="isSelected(item.id)"
+                  (change)="toggleSelect(item.id)"
+                  class="gate-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7] dark:border-slate-700 dark:bg-slate-800 cursor-pointer" />
+              </td>
 
-            <!-- Time -->
-            <td class="whitespace-nowrap px-3 py-3 font-semibold text-slate-700 dark:text-slate-300">
-              {{ item.eventTime }}
-            </td>
+              <!-- Time -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-semibold text-slate-700 dark:text-slate-300">
+                {{ item.eventTime }}
+              </td>
 
-            <!-- Gate -->
-            <td class="whitespace-nowrap px-3 py-3 font-bold text-slate-900 dark:text-white">
-              {{ item.gate }}
-            </td>
+              <!-- Gate -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-bold text-[#0f2851] dark:text-white">
+                {{ item.gate }}
+              </td>
 
-            <!-- Direction -->
-            <td class="px-2 py-3 text-center">
-              @if (item.direction === 'IN') {
-                <span
-                  class="inline-flex items-center rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  IN
-                </span>
-              } @else {
-                <span
-                  class="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-800 dark:bg-blue-950/60 dark:text-blue-300">
-                  OUT
-                </span>
-              }
-            </td>
-
-            <!-- Truck No -->
-            <td class="whitespace-nowrap px-3 py-3 font-bold text-slate-900 dark:text-white">
-              {{ item.truckNo }}
-            </td>
-
-            <!-- Container No + NON-ERP Pill -->
-            <td class="whitespace-nowrap px-3 py-3">
-              <div class="flex items-center gap-1.5">
-                <span
-                  class="inline-block rounded border border-blue-200/60 bg-blue-50 px-2 py-1 font-mono text-xs font-bold text-blue-700 transition-all group-hover:scale-105 group-hover:shadow-sm dark:border-blue-800/40 dark:bg-blue-950/40 dark:text-blue-300">
-                  {{ item.containerNo }}
-                </span>
-                <span
-                  class="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-extrabold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-                  {{ 'GATE_EVENTS.NON_ERP_BADGE' | translate }}
-                </span>
-              </div>
-            </td>
-
-            <!-- Size/Type -->
-            <td class="whitespace-nowrap px-3 py-3 font-semibold text-slate-700 dark:text-slate-300">
-              {{ item.sizeType }}
-            </td>
-
-            <!-- OCR Result & Confidence -->
-            <td class="px-3 py-3">
-              <div class="flex items-center gap-1.5 whitespace-nowrap">
-                <span
-                  class="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                  [class.bg-emerald-100]="item.confidence >= 95"
-                  [class.text-emerald-800]="item.confidence >= 95"
-                  [class.dark:bg-emerald-950/60]="item.confidence >= 95"
-                  [class.dark:text-emerald-300]="item.confidence >= 95"
-                  [class.bg-amber-100]="item.confidence < 95"
-                  [class.text-amber-800]="item.confidence < 95"
-                  [class.dark:bg-amber-950/60]="item.confidence < 95"
-                  [class.dark:text-amber-300]="item.confidence < 95">
-                  {{ item.confidence }}%
-                </span>
-                <span class="font-mono text-xs text-slate-500 dark:text-slate-400">
-                  {{ item.isoCode }}
-                </span>
-              </div>
-            </td>
-
-            <!-- Category / Reason -->
-            <td class="whitespace-nowrap px-3 py-3 font-medium text-slate-800 dark:text-slate-200">
-              <span class="block max-w-[180px] truncate" [title]="item.remarks">
-                {{ item.category }}
-              </span>
-            </td>
-
-            <!-- Status -->
-            <td class="whitespace-nowrap px-3 py-3">
-              @if (item.status === 'Verified') {
-                <span
-                  class="inline-flex items-center rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                  ● {{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}
-                </span>
-              } @else if (item.status === 'Review') {
-                <span
-                  class="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
-                  ▲ {{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}
-                </span>
-              } @else {
-                <span
-                  class="inline-flex items-center rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 dark:border-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
-                  ✕ {{ 'GATE_EVENTS.EXCEPTIONS_HOLD' | translate }}
-                </span>
-              }
-            </td>
-
-            <!-- Photo Preview Thumbnail -->
-            <td class="px-3 py-3 text-center" (click)="$event.stopPropagation()">
-              <div
-                (click)="openLightbox(item.imageUrl, item.containerNo)"
-                class="group/thumb relative mx-auto h-8 w-12 cursor-pointer overflow-hidden rounded-lg border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:scale-110 hover:border-blue-500 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
-                [title]="'GATE_EVENTS.VIEW_DETAILS' | translate">
-                @if (item.imageUrl) {
-                  <img
-                    [src]="item.imageUrl"
-                    [alt]="item.containerNo"
-                    class="h-full w-full object-cover transition-transform duration-200 group-hover/thumb:scale-110"
-                    loading="lazy" />
+              <!-- Direction -->
+              <td class="px-3 py-3.5 text-center">
+                @if (item.direction === 'IN') {
+                  <span
+                    class="inline-flex items-center rounded-md bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                    IN
+                  </span>
                 } @else {
-                  <div class="flex h-full w-full items-center justify-center text-[10px] font-bold text-slate-400">
-                    N/A
-                  </div>
+                  <span
+                    class="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-xs font-bold text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-300">
+                    OUT
+                  </span>
                 }
-              </div>
-            </td>
+              </td>
 
-            <!-- Actions -->
-            <td class="whitespace-nowrap px-3 py-3 text-right" (click)="$event.stopPropagation()">
-              <div class="flex items-center justify-end gap-1.5">
-                @if (item.status !== 'Verified') {
-                  <button
-                    type="button"
-                    (click)="approveEvent(item)"
-                    class="rounded-md border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 transition-colors hover:bg-emerald-100 active:scale-95 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300"
-                    [title]="'GATE_EVENTS.APPROVE' | translate">
-                    {{ 'GATE_EVENTS.APPROVE' | translate }}
-                  </button>
+              <!-- Truck No -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-bold text-[#0f2851] dark:text-white">
+                {{ item.truckNo }}
+              </td>
+
+              <!-- Container No + NON-ERP Pill -->
+              <td class="whitespace-nowrap px-4 py-3.5">
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="inline-block rounded-md border border-[#525EA7]/25 bg-[#525EA7]/10 px-2 py-1 font-mono text-xs font-bold text-[#525EA7] transition-all group-hover:scale-105 group-hover:shadow-sm dark:border-blue-400/30 dark:bg-blue-900/30 dark:text-blue-300">
+                    {{ item.containerNo }}
+                  </span>
+                  <span
+                    class="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-extrabold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                    {{ 'GATE_EVENTS.NON_ERP_BADGE' | translate }}
+                  </span>
+                </div>
+              </td>
+
+              <!-- Size/Type -->
+              <td class="whitespace-nowrap px-4 py-3.5">
+                <span class="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 font-mono text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                  {{ item.sizeType }}
+                </span>
+              </td>
+
+              <!-- OCR Result & Confidence -->
+              <td class="px-4 py-3.5">
+                <div class="flex items-center gap-1.5 whitespace-nowrap">
+                  <span
+                    class="rounded-full px-2 py-0.5 text-xs font-extrabold"
+                    [class.bg-emerald-100]="item.confidence >= 95"
+                    [class.text-emerald-800]="item.confidence >= 95"
+                    [class.dark:bg-emerald-950/60]="item.confidence >= 95"
+                    [class.dark:text-emerald-300]="item.confidence >= 95"
+                    [class.bg-amber-100]="item.confidence < 95"
+                    [class.text-amber-800]="item.confidence < 95"
+                    [class.dark:bg-amber-950/60]="item.confidence < 95"
+                    [class.dark:text-amber-300]="item.confidence < 95">
+                    {{ item.confidence }}%
+                  </span>
+                  <span class="font-mono text-xs text-slate-500 dark:text-slate-400">
+                    {{ item.isoCode }}
+                  </span>
+                </div>
+              </td>
+
+              <!-- Category / Reason -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-medium text-slate-800 dark:text-slate-200">
+                <span class="block max-w-[180px] truncate" [title]="item.remarks">
+                  {{ item.category }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td class="whitespace-nowrap px-4 py-3.5">
+                @if (item.status === 'Verified') {
+                  <span
+                    class="inline-flex items-center rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                    ● {{ 'GATE_EVENTS.OCR_VERIFIED' | translate }}
+                  </span>
+                } @else if (item.status === 'Review') {
+                  <span
+                    class="inline-flex items-center rounded-full border border-amber-300 bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-300">
+                    ▲ {{ 'GATE_EVENTS.PENDING_REVIEW' | translate }}
+                  </span>
+                } @else {
+                  <span
+                    class="inline-flex items-center rounded-full border border-rose-300 bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 dark:border-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
+                    ✕ {{ 'GATE_EVENTS.EXCEPTIONS_HOLD' | translate }}
+                  </span>
                 }
+              </td>
+
+              <!-- Photo Preview Thumbnail -->
+              <td class="px-4 py-3.5 text-center" (click)="$event.stopPropagation()">
                 <button
                   type="button"
-                  (click)="openDetails(item)"
-                  class="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-100 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                  [title]="'COMMON.VIEW_DETAILS' | translate">
-                  {{ 'COMMON.VIEW_DETAILS' | translate }}
+                  (click)="openLightbox(item.imageUrl, item.containerNo)"
+                  class="camera-photo-thumb group/thumb relative mx-auto h-8 w-11 shrink-0 cursor-pointer overflow-hidden rounded-md border border-slate-200 bg-slate-100 p-0 transition-all hover:scale-105 hover:border-[#525EA7] hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                  [title]="'GATE_EVENTS.VIEW_DETAILS' | translate">
+                  @if (item.imageUrl) {
+                    <img
+                      [src]="item.imageUrl"
+                      [alt]="item.containerNo"
+                      class="h-full w-full object-cover transition-transform duration-200 group-hover/thumb:scale-110"
+                      loading="lazy" />
+                  } @else {
+                    <div class="flex h-full w-full items-center justify-center text-[10px] font-bold text-slate-400">
+                      N/A
+                    </div>
+                  }
                 </button>
-              </div>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="12" class="py-12 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
-              {{ 'GATE_EVENTS.NO_NON_ERP_FOUND' | translate }}
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+              </td>
+
+              <!-- Actions -->
+              <td class="whitespace-nowrap px-4 py-3.5 text-right" (click)="$event.stopPropagation()">
+                <div class="flex items-center justify-end gap-1.5">
+                  @if (item.status !== 'Verified') {
+                    <button
+                      type="button"
+                      (click)="approveEvent(item)"
+                      class="rounded-xl bg-[#525EA7] px-3 py-1 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+                      [title]="'GATE_EVENTS.APPROVE' | translate">
+                      {{ 'GATE_EVENTS.APPROVE' | translate }}
+                    </button>
+                  }
+                  <button
+                    type="button"
+                    (click)="openDetails(item)"
+                    class="rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-[#0f2851] shadow-xs transition-all hover:border-[#525EA7] hover:text-[#525EA7] hover:bg-slate-50 active:scale-95 cursor-pointer dark:border-slate-700 dark:bg-[#111a2e] dark:text-slate-200 dark:hover:border-blue-400 dark:hover:text-blue-300"
+                    [title]="'COMMON.VIEW_DETAILS' | translate">
+                    {{ 'COMMON.VIEW_DETAILS' | translate }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="12" class="p-8 text-center">
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <span class="text-3xl">🔍</span>
+                  <strong class="text-sm font-semibold text-slate-900 dark:text-white">
+                    {{ 'GATE_EVENTS.NO_NON_ERP_FOUND' | translate }}
+                  </strong>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Try adjusting your filters or search term to see records.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Universal Pagination Footer -->
+    <app-pagination
+      [totalItems]="filteredEvents().length"
+      [currentPage]="currentPage()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 15, 25, 50]"
+      itemLabel="containers"
+      (pageChange)="setPage($event)"
+      (pageSizeChange)="onPageSizeChange($event)" />
   </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. ADD NON ERP CONTAINER MODAL                                            -->
+  <!-- ========================================================================= -->
+  @if (isAddModalOpen()) {
+    <div
+      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md"
+      (click)="closeAddModal()"
+      role="dialog"
+      aria-modal="true">
+      <div
+        class="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-[#111a2e]"
+        (click)="$event.stopPropagation()">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-6 py-4 dark:border-slate-800 dark:bg-[#0f172a]">
+          <div class="flex items-center gap-3">
+            <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#525EA7]/10 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400">
+              <svg class="h-5 w-5 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-[#0f2851] dark:text-white">
+                Add Non ERP Container
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Register an off-ERP container directly for {{ gateMode() === 'out' ? 'Gate Out' : 'Gate In' }}
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            (click)="closeAddModal()"
+            class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white cursor-pointer"
+            [title]="'COMMON.CLOSE' | translate">
+            ✕
+          </button>
+        </div>
+
+        <!-- Form Body -->
+        <div class="grid grid-cols-1 gap-4 overflow-y-auto p-6 text-xs sm:grid-cols-2">
+          <!-- Container Number -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Container Number <span class="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="newContainerForm.containerNo"
+              placeholder="e.g. MSCU7823412"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 font-mono text-xs font-semibold uppercase text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" />
+          </div>
+
+          <!-- Truck Number -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Truck Number <span class="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="newContainerForm.truckNo"
+              placeholder="e.g. MH 12 RN 4589"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 font-mono text-xs font-semibold uppercase text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" />
+          </div>
+
+          <!-- Size / Type -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Size / Type
+            </label>
+            <select
+              [(ngModel)]="newContainerForm.sizeType"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-semibold text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+              <option value="20FT GP">20FT GP</option>
+              <option value="40FT GP">40FT GP</option>
+              <option value="40FT HC">40FT HC</option>
+              <option value="45FT HC">45FT HC</option>
+              <option value="20FT Open Top">20FT Open Top</option>
+            </select>
+          </div>
+
+          <!-- Gate Lane -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Gate Lane
+            </label>
+            <select
+              [(ngModel)]="newContainerForm.gate"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-semibold text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+              <option value="Gate 01">Gate 01</option>
+              <option value="Gate 02">Gate 02</option>
+              <option value="Gate 03">Gate 03</option>
+            </select>
+          </div>
+
+          <!-- Reason / Category -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Category / Reason
+            </label>
+            <select
+              [(ngModel)]="newContainerForm.category"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-semibold text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
+              <option value="Direct Shipper Drop">Direct Shipper Drop</option>
+              <option value="Sub-contractor Repositioning">Sub-contractor Repositioning</option>
+              <option value="Empty Depot Transfer">Empty Depot Transfer</option>
+              <option value="Customs Physical Inspection">Customs Physical Inspection</option>
+              <option value="Maintenance / Workshop Relocation">Maintenance / Workshop Relocation</option>
+            </select>
+          </div>
+
+          <!-- Transporter -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Transporter
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="newContainerForm.transporter"
+              placeholder="e.g. Trans India Logistics"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" />
+          </div>
+
+          <!-- Driver Name -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Driver Name
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="newContainerForm.driver"
+              placeholder="e.g. Rameshwar Singh"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" />
+          </div>
+
+          <!-- Driver Phone -->
+          <div>
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Driver Contact Phone
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="newContainerForm.driverPhone"
+              placeholder="e.g. +91 98220 12345"
+              class="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" />
+          </div>
+
+          <!-- Remarks -->
+          <div class="sm:col-span-2">
+            <label class="mb-1 block font-bold text-[#0f2851] dark:text-slate-200">
+              Remarks / Justification
+            </label>
+            <textarea
+              rows="2"
+              [(ngModel)]="newContainerForm.remarks"
+              placeholder="Provide reason for non-ERP manual entry..."
+              class="w-full rounded-xl border border-slate-200 bg-slate-50/70 p-2.5 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"></textarea>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/70 px-6 py-3.5 dark:border-slate-800 dark:bg-[#0f172a]">
+          <button
+            type="button"
+            (click)="closeAddModal()"
+            class="rounded-xl border border-slate-200 bg-white px-5 py-2 text-xs font-bold text-slate-700 shadow-xs transition-colors hover:bg-slate-50 active:scale-95 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            {{ 'COMMON.CANCEL' | translate }}
+          </button>
+          <button
+            type="button"
+            (click)="saveNewContainer()"
+            class="rounded-xl bg-[#525EA7] px-5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer">
+            Save Container
+          </button>
+        </div>
+      </div>
+    </div>
+  }
 
   <!-- ========================================================================= -->
   <!-- 5. DETAILS MODAL / DRAWER                                                 -->
   <!-- ========================================================================= -->
   @if (selectedEventForDetails(); as detail) {
     <div
-      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
+      class="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-slate-950/65 p-4 backdrop-blur-md">
       <div
         class="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-[#111a2e]">
         <div class="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
           <div class="flex items-center gap-2.5">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+            <h2 class="text-lg font-bold text-[#0f2851] dark:text-white">
               {{ 'GATE_EVENTS.DETAILS_TITLE' | translate }}: {{ detail.containerNo }}
             </h2>
             <span
@@ -497,7 +727,7 @@
           <button
             type="button"
             (click)="closeDetails()"
-            class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200 cursor-pointer"
             [title]="'COMMON.CLOSE' | translate">
             ✕
           </button>
@@ -506,25 +736,25 @@
         <div class="grid grid-cols-2 gap-4 py-4 text-xs sm:grid-cols-3">
           <div>
             <span class="text-slate-400">{{ 'GATE_EVENTS.COL_TRUCK' | translate }}</span>
-            <div class="font-bold text-slate-900 dark:text-white">{{ detail.truckNo }}</div>
+            <div class="font-bold text-[#0f2851] dark:text-white">{{ detail.truckNo }}</div>
           </div>
           <div>
             <span class="text-slate-400">{{ 'GATE_EVENTS.COL_SIZE_TYPE' | translate }}</span>
-            <div class="font-bold text-slate-900 dark:text-white">{{ detail.sizeType }} ({{ detail.isoCode }})</div>
+            <div class="font-bold text-[#0f2851] dark:text-white">{{ detail.sizeType }} ({{ detail.isoCode }})</div>
           </div>
           <div>
             <span class="text-slate-400">
               {{ 'GATE_EVENTS.COL_GATE' | translate }} & {{ 'GATE_EVENTS.COL_TIME' | translate }}
             </span>
-            <div class="font-bold text-slate-900 dark:text-white">{{ detail.gate }} • {{ detail.eventTime }}</div>
+            <div class="font-bold text-[#0f2851] dark:text-white">{{ detail.gate }} • {{ detail.eventTime }}</div>
           </div>
           <div>
             <span class="text-slate-400">{{ 'GATE_EVENTS.COL_DRIVER' | translate }}</span>
-            <div class="font-bold text-slate-900 dark:text-white">{{ detail.driver }} ({{ detail.driverPhone }})</div>
+            <div class="font-bold text-[#0f2851] dark:text-white">{{ detail.driver }} ({{ detail.driverPhone }})</div>
           </div>
           <div>
             <span class="text-slate-400">{{ 'GATE_EVENTS.TRANSPORTER' | translate }}</span>
-            <div class="font-bold text-slate-900 dark:text-white">{{ detail.transporter }}</div>
+            <div class="font-bold text-[#0f2851] dark:text-white">{{ detail.transporter }}</div>
           </div>
           <div>
             <span class="text-slate-400">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</span>
@@ -532,11 +762,11 @@
               {{ detail.confidence }}% ({{ 'GATE_EVENTS.OCR_VERIFIED' | translate }})
             </div>
           </div>
-          <div class="col-span-2 rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60 sm:col-span-3">
-            <span class="font-semibold text-slate-500 dark:text-slate-400">
+          <div class="col-span-2 rounded-xl bg-slate-50 p-3.5 dark:bg-slate-800/60 sm:col-span-3 border border-slate-100 dark:border-slate-800">
+            <span class="font-bold text-slate-500 dark:text-slate-400">
               {{ 'GATE_EVENTS.CATEGORY_REASON' | translate }}:
             </span>
-            <span class="ml-1 font-bold text-slate-800 dark:text-slate-200">{{ detail.category }}</span>
+            <span class="ml-1 font-bold text-[#0f2851] dark:text-slate-200">{{ detail.category }}</span>
             <p class="mt-1 text-slate-600 dark:text-slate-400">{{ detail.remarks }}</p>
           </div>
         </div>
@@ -544,7 +774,7 @@
         <!-- Photos -->
         @if (detail.capturedPhotos && detail.capturedPhotos.length > 0) {
           <div class="border-t border-slate-100 pt-3 dark:border-slate-800">
-            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">
+            <span class="text-xs font-bold text-[#0f2851] dark:text-slate-200">
               {{ 'GATE_EVENTS.CAMERA_CAPTURES' | translate }}:
             </span>
             <div class="mt-2 flex gap-3 overflow-x-auto">
@@ -567,18 +797,18 @@
           </div>
         }
 
-        <div class="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+        <div class="mt-4 flex justify-end gap-2.5 border-t border-slate-100 pt-3.5 dark:border-slate-800">
           <button
             type="button"
             (click)="closeDetails()"
-            class="rounded-lg bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 active:scale-95 dark:bg-slate-800 dark:text-slate-300">
+            class="rounded-xl border border-slate-200 bg-white px-5 py-2 text-xs font-bold text-slate-700 shadow-xs transition-colors hover:bg-slate-50 active:scale-95 cursor-pointer dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
             {{ 'COMMON.CLOSE' | translate }}
           </button>
           @if (detail.status !== 'Verified') {
             <button
               type="button"
               (click)="approveEvent(detail); closeDetails()"
-              class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-blue-700 active:scale-95">
+              class="rounded-xl bg-[#525EA7] px-5 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer">
               {{ 'GATE_EVENTS.APPROVE' | translate }}
             </button>
           }
@@ -588,21 +818,21 @@
   }
 
   <!-- ========================================================================= -->
-  <!-- 7. LIGHTBOX IMAGE PREVIEW                                                 -->
+  <!-- 6. LIGHTBOX IMAGE PREVIEW                                                 -->
   <!-- ========================================================================= -->
   @if (activeLightboxImage(); as lb) {
     <div
-      class="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+      class="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md"
       (click)="closeLightbox()">
       <div
-        class="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-2xl bg-slate-900 p-2 shadow-2xl"
+        class="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-2 shadow-2xl"
         (click)="$event.stopPropagation()">
         <div class="flex items-center justify-between px-3 py-2 text-white">
           <span class="text-xs font-bold">{{ lb.title }}</span>
           <button
             type="button"
             (click)="closeLightbox()"
-            class="rounded-lg p-1 text-slate-400 hover:text-white"
+            class="rounded-lg p-1 text-slate-400 hover:text-white cursor-pointer"
             [title]="'COMMON.CLOSE' | translate">
             ✕
           </button>

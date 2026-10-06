@@ -354,6 +354,7 @@ export class TaskService {
   public readonly isDetailDrawerOpen = signal<boolean>(true);
 
   // Filter Signals
+  public readonly kpiFilter = signal<'All' | 'Pickup' | 'Drop' | 'Completed' | 'Exception'>('All');
   public readonly statusFilter = signal<string>('All');
   public readonly typeFilter = signal<string>('All');
   public readonly priorityFilter = signal<string>('All');
@@ -371,11 +372,33 @@ export class TaskService {
   // Filtered tasks computation
   public readonly filteredTasks = computed<TaskItem[]>(() => {
     let list = this.allTasks();
+    const kpi = this.kpiFilter();
     const status = this.statusFilter();
     const type = this.typeFilter();
     const priority = this.priorityFilter();
     const equipment = this.equipmentFilter();
     const query = this.searchQuery().trim().toLowerCase();
+
+    if (kpi === 'Pickup') {
+      list = list.filter(
+        (t) =>
+          t.taskType === 'Import' ||
+          t.taskType === 'Gate Out' ||
+          t.taskType === 'De-stack' ||
+          t.fromLocation.includes('GATE'),
+      );
+    } else if (kpi === 'Drop') {
+      list = list.filter(
+        (t) =>
+          t.taskType === 'Export' ||
+          t.taskType === 'Stack' ||
+          t.toLocation.includes('GATE'),
+      );
+    } else if (kpi === 'Completed') {
+      list = list.filter((t) => t.status === 'Completed');
+    } else if (kpi === 'Exception') {
+      list = list.filter((t) => t.status === 'Exception' || t.isOverdue);
+    }
 
     if (status !== 'All') {
       list = list.filter((t) => t.status.toLowerCase() === status.toLowerCase());
@@ -412,31 +435,44 @@ export class TaskService {
   // KPI Metrics matching the design mockup values (with dynamic calculation backup)
   public readonly kpiMetrics = computed<TaskKpiMetrics>(() => {
     const list = this.allTasks();
-    const newCount = list.filter((t) => t.status === 'New').length;
-    const assignedCount = list.filter((t) => t.status === 'Assigned').length;
-    const inProgressCount = list.filter((t) => t.status === 'In Progress').length;
-    const awaitingConfCount = list.filter((t) => t.status === 'Awaiting Confirmation').length;
+    const pickupCount = list.filter(
+      (t) =>
+        t.taskType === 'Import' ||
+        t.taskType === 'Gate Out' ||
+        t.taskType === 'De-stack' ||
+        t.fromLocation.includes('GATE'),
+    ).length;
+    const dropCount = list.filter(
+      (t) =>
+        t.taskType === 'Export' ||
+        t.taskType === 'Stack' ||
+        t.toLocation.includes('GATE'),
+    ).length;
     const completedCount = list.filter((t) => t.status === 'Completed').length;
     const exceptionsCount = list.filter((t) => t.status === 'Exception' || t.isOverdue).length;
 
-    // Fixed realistic totals matching screenshot 126 All, 28 New, 34 Assigned, etc.
+    // Fixed realistic totals matching screenshot 126 All
     const allTotal = 126 + (list.length - this.initialTasks.length);
 
     return {
       allTasks: allTotal,
       allTasksTrend: '12% vs yesterday',
-      newTaskCount: 28 + (newCount - 2),
-      newTaskTrend: '16% vs yesterday',
-      assignedCount: 34 + (assignedCount - 3),
-      assignedTrend: '8% vs yesterday',
-      inProgressCount: 31 + (inProgressCount - 4),
-      inProgressTrend: '6% vs yesterday',
-      awaitingConfirmationCount: 14 + (awaitingConfCount - 2),
-      awaitingConfirmationTrend: '7% vs yesterday',
+      pickupTasks: 58 + (pickupCount - 5),
+      pickupTasksTrend: '14% vs yesterday',
+      dropTasks: 49 + (dropCount - 4),
+      dropTasksTrend: '8% vs yesterday',
       completedCount: 15 + (completedCount - 1),
       completedTrend: '20% vs yesterday',
       exceptionsCount: 4 + (exceptionsCount - 3),
       exceptionsTrend: '20% vs yesterday',
+      newTaskCount: 28,
+      newTaskTrend: '16% vs yesterday',
+      assignedCount: 34,
+      assignedTrend: '8% vs yesterday',
+      inProgressCount: 31,
+      inProgressTrend: '6% vs yesterday',
+      awaitingConfirmationCount: 14,
+      awaitingConfirmationTrend: '7% vs yesterday',
     };
   });
 
@@ -456,6 +492,23 @@ export class TaskService {
   });
 
   // Actions
+  public setKpiFilter(filter: 'All' | 'Pickup' | 'Drop' | 'Completed' | 'Exception'): void {
+    if (this.kpiFilter() === filter) {
+      this.kpiFilter.set('All');
+    } else {
+      this.kpiFilter.set(filter);
+    }
+    this.currentPage.set(1);
+    const visible = this.filteredTasks();
+    if (visible.length > 0) {
+      this.selectedTask.set(visible[0]);
+    }
+  }
+
+  public refreshTasks(): void {
+    this.allTasks.update((tasks) => [...tasks]);
+  }
+
   public setStatusFilter(status: string): void {
     this.statusFilter.set(status);
     this.currentPage.set(1);

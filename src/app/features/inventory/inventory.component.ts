@@ -39,8 +39,13 @@ export class InventoryComponent {
     { value: 50, label: '50' },
   ];
 
-  public selectGateMode(mode: 'GATE_IN' | 'GATE_OUT'): void {
+  public selectGateMode(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): void {
     this.inventoryService.setGateMode(mode);
+  }
+
+  public resetFilters(): void {
+    this.inventoryService.setGateMode('ALL');
+    this.inventoryService.setSearchQuery('');
   }
 
   public openAddModal(): void {

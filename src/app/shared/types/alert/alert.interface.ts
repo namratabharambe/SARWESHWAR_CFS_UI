@@ -53,14 +53,18 @@ export interface ContainerMismatchAlert {
 export interface AlertKpiMetrics {
   totalAlerts: number;
   totalAlertsTrend: string;
-  criticalCount: number;
-  criticalTrend: string;
-  mismatchCount: number;
-  mismatchTrend: string;
-  underReviewCount: number;
-  underReviewTrend: string;
-  resolvedTodayCount: number;
-  resolvedTodayTrend: string;
+  gateOutAlerts: number;
+  gateOutAlertsTrend: string;
+  movesAlerts: number;
+  movesAlertsTrend: string;
+  criticalCount?: number;
+  criticalTrend?: string;
+  mismatchCount?: number;
+  mismatchTrend?: string;
+  underReviewCount?: number;
+  underReviewTrend?: string;
+  resolvedTodayCount?: number;
+  resolvedTodayTrend?: string;
 }
 
 export interface AlertResolutionRequest {

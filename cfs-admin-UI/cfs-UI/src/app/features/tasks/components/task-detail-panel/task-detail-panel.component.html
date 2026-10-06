@@ -57,31 +57,35 @@
           <div class="flex items-center gap-1.5 font-bold text-[#0f2851] dark:text-white">
             <span class="material-icons-outlined text-base text-blue-600 dark:text-blue-400">
               {{
-                currentTask.taskType === 'Import'
-                  ? 'input'
-                  : currentTask.taskType === 'Export'
-                    ? 'output'
-                    : currentTask.taskType === 'Yard Move'
-                      ? 'local_shipping'
-                      : currentTask.taskType === 'Stack'
-                        ? 'layers'
-                        : 'logout'
+                currentTask.taskType === 'Pickup'
+                  ? 'local_shipping'
+                  : currentTask.taskType === 'Drop'
+                    ? 'inventory_2'
+                    : currentTask.taskType === 'Import'
+                      ? 'input'
+                      : currentTask.taskType === 'Export'
+                        ? 'output'
+                        : currentTask.taskType === 'Yard Move'
+                          ? 'local_shipping'
+                          : currentTask.taskType === 'Stack'
+                            ? 'layers'
+                            : 'logout'
               }}
             </span>
             <span class="text-[13px] font-bold">{{ currentTask.taskType }}</span>
           </div>
         </div>
 
-        <!-- Task No Row -->
+        <!-- Event Type / Task No Row -->
         <div class="flex items-center justify-between py-0.5">
-          <span class="text-[13px] font-bold text-slate-500 dark:text-slate-400">{{ 'TASKS.TASK_NO' | translate }}</span>
+          <span class="text-[13px] font-bold text-slate-500 dark:text-slate-400">Event Type</span>
           <div class="flex items-center gap-1.5 font-mono text-[13px] font-bold text-blue-600 dark:text-blue-400">
             <span>{{ currentTask.taskNo }}</span>
             <button
               type="button"
               (click)="copyToClipboard(currentTask.taskNo, 'taskNo')"
               class="text-slate-400 hover:text-blue-600 dark:hover:text-slate-200 cursor-pointer"
-              title="Copy Task No">
+              title="Copy Event Type / Task No">
               <span class="material-icons-outlined text-sm">
                 {{ copiedField() === 'taskNo' ? 'check' : 'content_copy' }}
               </span>
@@ -104,6 +108,12 @@
               </span>
             </button>
           </div>
+        </div>
+
+        <!-- Size / Type Row -->
+        <div class="flex items-center justify-between py-0.5">
+          <span class="text-[13px] font-bold text-slate-500 dark:text-slate-400">{{ 'TABLE.SIZE_TYPE' | translate }}</span>
+          <span class="font-mono text-[13px] font-bold text-slate-800 dark:text-slate-200">{{ currentTask.sizeType }}</span>
         </div>
 
         <!-- Booking No Row -->

@@ -62,7 +62,7 @@
         <button
           type="button"
           (click)="isExportDropdownOpen.set(!isExportDropdownOpen()); isDateDropdownOpen.set(false)"
-          class="flex h-9 items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 text-xs font-bold text-white shadow-xs hover:bg-blue-700 active:scale-95 cursor-pointer">
+          class="flex h-9 items-center gap-1.5 rounded-xl bg-[#525EA7] px-3.5 text-xs font-bold text-white shadow-xs hover:bg-[#434d8a] active:scale-95 cursor-pointer">
           <span class="material-icons-outlined text-sm">download</span>
           <span>Export</span>
           <span class="material-icons text-sm">expand_more</span>
@@ -96,114 +96,149 @@
     </div>
   </header>
 
-  <!-- 2. Report Category Selection Tabs (Horizontally Scrollable, No Page Overflow) -->
+  <!-- 2. Report Category Selection (Single Gate Operation Button) -->
   <section class="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar w-full max-w-full">
-    @for (cat of categories; track cat.id) {
-      <button
-        type="button"
-        (click)="setCategory(cat.id)"
-        class="flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all duration-150 cursor-pointer"
-        [ngClass]="
-          reportService.selectedCategory() === cat.id
-            ? 'border-2 border-[#0f2851] bg-[#0f2851] text-white shadow-md shadow-[#0f2851]/25 dark:border-blue-500 dark:bg-blue-600'
-            : 'border border-slate-200 bg-white text-slate-700 shadow-xs hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-[#111a2e] dark:text-slate-300 dark:hover:bg-slate-800'
-        ">
-        <span class="material-icons-outlined text-base">{{ cat.icon }}</span>
-        <span>{{ cat.label }}</span>
-        @if (cat.countBadge) {
-          <span
-            class="rounded-full px-2 py-0.5 text-[10px] font-bold"
-            [ngClass]="
-              reportService.selectedCategory() === cat.id
-                ? 'bg-white/20 text-white'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
-            ">
-            {{ cat.countBadge }}
-          </span>
-        }
-      </button>
-    }
+    <button
+      type="button"
+      (click)="setCategory('gate-operations')"
+      class="flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all duration-150 cursor-pointer border-2 border-[#0f2851] bg-[#0f2851] text-white shadow-md shadow-[#0f2851]/25 dark:border-blue-500 dark:bg-blue-600">
+      <span class="material-icons-outlined text-base">sensor_occupied</span>
+      <span>Gate Operation</span>
+      <span class="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
+        {{ reportService.gateOperationsData().length }}
+      </span>
+    </button>
   </section>
 
-  <!-- 3. Dynamic KPI Summary Cards (4 Desktop, 2 Tablet, 1 Mobile) -->
-  <section class="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-    <!-- Metric 1 -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
-          {{ reportService.activeKpis().metric1Label }}
-        </span>
-        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">trending_up</span>
+  <!-- 3. New Gate Operation 5 KPI Summary Cards (Interactive Filtering like Task KPI Cards) -->
+  <section class="grid grid-cols-2 gap-3.5 sm:grid-cols-3 lg:grid-cols-5 min-w-0" aria-label="Gate Operation KPI Metrics">
+    <!-- Card 1: Gate In -->
+    <div
+      (click)="selectKpiFilter('GATE_IN')"
+      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
+      [ngClass]="{
+        'ring-2 ring-blue-500 shadow-md !border-blue-600': selectedKpiFilter() === 'GATE_IN',
+      }">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400">
+          <span class="material-icons-outlined text-lg">login</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+            Gate In
+          </span>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+            {{ gateOpKpis().gateIn }}
+          </span>
+        </div>
       </div>
-      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
-        {{ reportService.activeKpis().metric1Value }}
-      </div>
-      <div
-        class="mt-2 flex items-center gap-1 text-xs font-bold"
-        [class.text-emerald-600]="reportService.activeKpis().metric1IsPositive"
-        [class.dark:text-emerald-400]="reportService.activeKpis().metric1IsPositive"
-        [class.text-rose-600]="!reportService.activeKpis().metric1IsPositive">
-        <span>{{ reportService.activeKpis().metric1Trend }}</span>
-      </div>
-    </div>
-
-    <!-- Metric 2 -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
-          {{ reportService.activeKpis().metric2Label }}
-        </span>
-        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">speed</span>
-      </div>
-      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
-        {{ reportService.activeKpis().metric2Value }}
-      </div>
-      <div
-        class="mt-2 flex items-center gap-1 text-xs font-bold"
-        [class.text-emerald-600]="reportService.activeKpis().metric2IsPositive"
-        [class.dark:text-emerald-400]="reportService.activeKpis().metric2IsPositive"
-        [class.text-rose-600]="!reportService.activeKpis().metric2IsPositive">
-        <span>{{ reportService.activeKpis().metric2Trend }}</span>
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 truncate">
+        <span>↓ Standard Inbound</span>
       </div>
     </div>
 
-    <!-- Metric 3 -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
-          {{ reportService.activeKpis().metric3Label }}
-        </span>
-        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">verified</span>
+    <!-- Card 2: Gate Out -->
+    <div
+      (click)="selectKpiFilter('GATE_OUT')"
+      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
+      [ngClass]="{
+        'ring-2 ring-teal-500 shadow-md !border-teal-600': selectedKpiFilter() === 'GATE_OUT',
+      }">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600 dark:bg-teal-950/60 dark:text-teal-400">
+          <span class="material-icons-outlined text-lg">logout</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+            Gate Out
+          </span>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+            {{ gateOpKpis().gateOut }}
+          </span>
+        </div>
       </div>
-      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
-        {{ reportService.activeKpis().metric3Value }}
-      </div>
-      <div
-        class="mt-2 flex items-center gap-1 text-xs font-bold"
-        [class.text-emerald-600]="reportService.activeKpis().metric3IsPositive"
-        [class.dark:text-emerald-400]="reportService.activeKpis().metric3IsPositive"
-        [class.text-rose-600]="!reportService.activeKpis().metric3IsPositive">
-        <span>{{ reportService.activeKpis().metric3Trend }}</span>
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-teal-600 dark:text-teal-400 truncate">
+        <span>↑ Standard Outbound</span>
       </div>
     </div>
 
-    <!-- Metric 4 -->
-    <div class="kpi-card flex flex-col justify-between rounded-[14px] p-4 min-h-[110px] shadow-xs">
-      <div class="flex items-center justify-between gap-2">
-        <span class="text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 truncate">
-          {{ reportService.activeKpis().metric4Label }}
-        </span>
-        <span class="material-icons-outlined text-lg text-blue-600 dark:text-blue-400">bolt</span>
+    <!-- Card 3: Non ERP Gate In -->
+    <div
+      (click)="selectKpiFilter('NON_ERP_GATE_IN')"
+      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
+      [ngClass]="{
+        'ring-2 ring-purple-500 shadow-md !border-purple-600': selectedKpiFilter() === 'NON_ERP_GATE_IN',
+      }">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
+          <span class="material-icons-outlined text-lg">inventory_2</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+            Non ERP Gate In
+          </span>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+            {{ gateOpKpis().nonErpGateIn }}
+          </span>
+        </div>
       </div>
-      <div class="mt-2 text-2xl sm:text-3xl font-black text-[#0f2851] dark:text-white leading-tight">
-        {{ reportService.activeKpis().metric4Value }}
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-purple-600 dark:text-purple-400 truncate">
+        <span>↓ Off-ERP Inbound</span>
       </div>
-      <div
-        class="mt-2 flex items-center gap-1 text-xs font-bold"
-        [class.text-emerald-600]="reportService.activeKpis().metric4IsPositive"
-        [class.dark:text-emerald-400]="reportService.activeKpis().metric4IsPositive"
-        [class.text-rose-600]="!reportService.activeKpis().metric4IsPositive">
-        <span>{{ reportService.activeKpis().metric4Trend }}</span>
+    </div>
+
+    <!-- Card 4: Non ERP Gate Out -->
+    <div
+      (click)="selectKpiFilter('NON_ERP_GATE_OUT')"
+      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
+      [ngClass]="{
+        'ring-2 ring-indigo-500 shadow-md !border-indigo-600': selectedKpiFilter() === 'NON_ERP_GATE_OUT',
+      }">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+          <span class="material-icons-outlined text-lg">local_shipping</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+            Non ERP Gate Out
+          </span>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+            {{ gateOpKpis().nonErpGateOut }}
+          </span>
+        </div>
+      </div>
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 truncate">
+        <span>↑ Off-ERP Outbound</span>
+      </div>
+    </div>
+
+    <!-- Card 5: Exception -->
+    <div
+      (click)="selectKpiFilter('EXCEPTION')"
+      class="kpi-card group cursor-pointer rounded-[14px] p-3.5 transition-all flex flex-col justify-between"
+      [ngClass]="{
+        'ring-2 ring-rose-500 shadow-md !border-rose-600': selectedKpiFilter() === 'EXCEPTION',
+      }">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400">
+          <span class="material-icons-outlined text-lg">warning</span>
+        </div>
+        <div class="overflow-hidden min-w-0">
+          <span class="block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
+            Exception
+          </span>
+          <span class="text-xl sm:text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
+            {{ gateOpKpis().exception }}
+          </span>
+        </div>
+      </div>
+      <div class="mt-2 flex items-center gap-1 text-[11px] font-bold text-rose-600 dark:text-rose-400 truncate">
+        <span>▲ Held / Inspection</span>
       </div>
     </div>
   </section>
@@ -220,8 +255,18 @@
         class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-4 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
     </div>
 
-    <!-- Quick Secondary Export Pills -->
+    <!-- Active KPI Filter indicator & Quick Secondary Export Pills -->
     <div class="flex items-center gap-2">
+      @if (selectedKpiFilter() !== 'ALL') {
+        <button
+          type="button"
+          (click)="selectedKpiFilter.set('ALL'); currentPage.set(1)"
+          class="flex h-9 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-bold text-blue-700 shadow-xs hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 cursor-pointer">
+          <span>Filter: {{ selectedKpiFilter() }}</span>
+          <span class="text-xs">✕</span>
+        </button>
+      }
+
       <button
         type="button"
         (click)="exportCsv()"
@@ -239,359 +284,131 @@
     </div>
   </section>
 
-  <!-- 5. Main Report Table Container (Internal Horizontal Scroll Only, Never Page Scroll) -->
+  <!-- 5. Main Report Table Container (Gate Operation Table without Gate Lane, Line, TAT, Weighbridge; Dwell Time Added) -->
   <section class="reports-table-card overflow-hidden rounded-[14px] shadow-xs">
     <div class="overflow-x-auto">
-      <!-- 1. Gate Operations Table -->
-      @if (reportService.selectedCategory() === 'gate-operations') {
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
-            <tr>
-              <th class="px-4 py-3.5 whitespace-nowrap">Visit No</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Gate / Lane</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Direction</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Truck / Driver</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Line</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">OCR Status</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">TAT (Mins)</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Weighbridge</th>
-              <th class="px-4 py-3.5 whitespace-nowrap text-right">Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of paginatedGateOps(); track row.id) {
-              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
-                  {{ row.visitNo }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{{ row.timestamp }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-800 dark:text-slate-200">{{ row.gateLane }}</td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <span
-                    class="rounded-md px-2 py-0.5 text-[10px] font-bold"
-                    [class.bg-blue-50]="row.direction === 'IN'"
-                    [class.text-blue-700]="row.direction === 'IN'"
-                    [class.dark:bg-blue-950]="row.direction === 'IN'"
-                    [class.dark:text-blue-300]="row.direction === 'IN'"
-                    [class.bg-teal-50]="row.direction === 'OUT'"
-                    [class.text-teal-700]="row.direction === 'OUT'"
-                    [class.dark:bg-teal-950]="row.direction === 'OUT'"
-                    [class.dark:text-teal-300]="row.direction === 'OUT'">
-                    {{ row.direction === 'IN' ? '↓ INBOUND' : '↑ OUTBOUND' }}
-                  </span>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <div class="font-bold text-slate-900 dark:text-white">{{ row.truckNo }}</div>
-                  <div class="text-[10px] text-slate-400 truncate max-w-[140px]" [title]="row.driverName">{{ row.driverName }}</div>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
-                  {{ row.containerNo }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-700 dark:text-slate-300">{{ row.shippingLine }}</td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <span
-                    class="rounded-md px-2 py-0.5 text-[10px] font-bold"
-                    [class.bg-emerald-50]="row.ocrStatus === 'Auto-Matched'"
-                    [class.text-emerald-700]="row.ocrStatus === 'Auto-Matched'"
-                    [class.dark:bg-emerald-950]="row.ocrStatus === 'Auto-Matched'"
-                    [class.dark:text-emerald-300]="row.ocrStatus === 'Auto-Matched'"
-                    [class.bg-amber-50]="row.ocrStatus === 'Manual Verified'"
-                    [class.text-amber-700]="row.ocrStatus === 'Manual Verified'"
-                    [class.dark:bg-amber-950]="row.ocrStatus === 'Manual Verified'"
-                    [class.dark:text-amber-300]="row.ocrStatus === 'Manual Verified'"
-                    [class.bg-rose-50]="row.ocrStatus === 'Exception'"
-                    [class.text-rose-700]="row.ocrStatus === 'Exception'"
-                    [class.dark:bg-rose-950]="row.ocrStatus === 'Exception'"
-                    [class.dark:text-rose-300]="row.ocrStatus === 'Exception'">
-                    {{ row.ocrStatus }}
-                  </span>
-                </td>
-                <td
-                  class="whitespace-nowrap px-4 py-3 font-mono font-bold"
-                  [class.text-emerald-600]="row.turnaroundMinutes <= 10"
-                  [class.text-amber-600]="row.turnaroundMinutes > 10 && row.turnaroundMinutes <= 20"
-                  [class.text-rose-600]="row.turnaroundMinutes > 20">
-                  {{ row.turnaroundMinutes }}m
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
-                  {{ row.weighbridgeKg | number }} KG
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 text-right">
-                  <span
-                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
-                    [class.bg-emerald-50]="row.status === 'Completed' || row.status === 'Gate Passed'"
-                    [class.text-emerald-700]="row.status === 'Completed' || row.status === 'Gate Passed'"
-                    [class.dark:bg-emerald-950]="row.status === 'Completed' || row.status === 'Gate Passed'"
-                    [class.dark:text-emerald-300]="row.status === 'Completed' || row.status === 'Gate Passed'"
-                    [class.bg-rose-50]="row.status === 'Held'"
-                    [class.text-rose-700]="row.status === 'Held'"
-                    [class.dark:bg-rose-950]="row.status === 'Held'"
-                    [class.dark:text-rose-300]="row.status === 'Held'">
-                    {{ row.status }}
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+      <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
+        <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300">
+          <tr>
+            <th class="px-4 py-3.5 whitespace-nowrap">Visit No</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Direction</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Truck / Driver</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">OCR Status</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Dwell Time</th>
+            <th class="px-4 py-3.5 whitespace-nowrap text-right">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+          @for (row of paginatedGateOps(); track row.id) {
+            <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+              <!-- Visit No -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
+                {{ row.visitNo }}
+              </td>
 
-      <!-- 2. Container Mismatch & OCR Audit Table -->
-      @if (reportService.selectedCategory() === 'container-mismatch') {
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
-            <tr>
-              <th class="px-4 py-3.5 whitespace-nowrap">Alert Code</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Gate Lane</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Scanned Reality (OCR)</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Manifest Record</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Discrepancy Detail</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Vision Conf.</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Line / BL</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Resolution SLA</th>
-              <th class="px-4 py-3.5 whitespace-nowrap text-right">Status</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of paginatedMismatches(); track row.id) {
-              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
-                  {{ row.alertCode }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{{ row.timestamp }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-medium">{{ row.gateLane }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-rose-600 dark:text-rose-400">
-                  {{ row.scannedContainerNo }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                  {{ row.manifestContainerNo }}
-                </td>
-                <td class="px-4 py-3 max-w-[200px]">
-                  <div class="font-bold text-slate-800 dark:text-slate-200 truncate" [title]="row.discrepancyType">{{ row.discrepancyType }}</div>
-                  <div class="text-[10px] text-slate-400 truncate" [title]="row.varianceDescription">{{ row.varianceDescription }}</div>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-slate-800 dark:text-slate-200">{{ row.ocrConfidence }}%</td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <div class="font-semibold text-slate-800 dark:text-slate-200">{{ row.shippingLine }}</div>
-                  <div class="font-mono text-[10px] text-slate-400">{{ row.bookingNo }}</div>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
-                  {{ row.resolutionDurationMins }} mins
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 text-right">
-                  <span
-                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
-                    [class.bg-emerald-50]="row.resolutionStatus === 'Resolved'"
-                    [class.text-emerald-700]="row.resolutionStatus === 'Resolved'"
-                    [class.dark:bg-emerald-950]="row.resolutionStatus === 'Resolved'"
-                    [class.dark:text-emerald-300]="row.resolutionStatus === 'Resolved'"
-                    [class.bg-blue-50]="row.resolutionStatus === 'Overridden'"
-                    [class.text-blue-700]="row.resolutionStatus === 'Overridden'"
-                    [class.dark:bg-blue-950]="row.resolutionStatus === 'Overridden'"
-                    [class.dark:text-blue-300]="row.resolutionStatus === 'Overridden'"
-                    [class.bg-amber-50]="row.resolutionStatus === 'Pending Inspection'"
-                    [class.text-amber-700]="row.resolutionStatus === 'Pending Inspection'"
-                    [class.dark:bg-amber-950]="row.resolutionStatus === 'Pending Inspection'"
-                    [class.dark:text-amber-300]="row.resolutionStatus === 'Pending Inspection'">
-                    {{ row.resolutionStatus }}
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+              <!-- Timestamp -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">
+                {{ row.timestamp }}
+              </td>
 
-      <!-- 3. Yard Occupancy & Dwell Table -->
-      @if (reportService.selectedCategory() === 'yard-occupancy') {
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
-            <tr>
-              <th class="px-4 py-3.5 whitespace-nowrap">Block Name</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Zone</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Total Capacity</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Occupied (TEU)</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Occupancy Rate</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Reefer Slots</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Avg Dwell</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Long-Stay (>30d)</th>
-              <th class="px-4 py-3.5 whitespace-nowrap text-right">Last Audit</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of paginatedYardOccupancy(); track row.id) {
-              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white">{{ row.blockName }}</td>
-                <td class="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">{{ row.yardZone }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium">{{ row.totalCapacityTeu | number }} TEU</td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">{{ row.occupiedTeu | number }} TEU</td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <div class="flex items-center gap-2">
-                    <div class="h-2 w-20 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-                      <div
-                        class="h-full rounded-full"
-                        [class.bg-emerald-500]="row.occupancyRatePercent <= 75"
-                        [class.bg-amber-500]="row.occupancyRatePercent > 75 && row.occupancyRatePercent <= 90"
-                        [class.bg-rose-500]="row.occupancyRatePercent > 90"
-                        [style.width.%]="row.occupancyRatePercent"></div>
-                    </div>
-                    <span class="font-mono text-xs font-black text-slate-800 dark:text-slate-200">{{ row.occupancyRatePercent }}%</span>
-                  </div>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
-                  {{ row.reeferSlotsOccupied }} / {{ row.reeferSlotsTotal }} plugs
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-800 dark:text-slate-200">{{ row.averageDwellDays }} Days</td>
-                <td
-                  class="whitespace-nowrap px-4 py-3 font-mono font-bold"
-                  [class.text-rose-600]="row.longStayOver30DaysCount > 5"
-                  [class.text-slate-700]="row.longStayOver30DaysCount <= 5"
-                  [class.dark:text-slate-300]="row.longStayOver30DaysCount <= 5">
-                  {{ row.longStayOver30DaysCount }} units
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 text-right font-mono text-slate-500 dark:text-slate-400">{{ row.lastAuditedTime }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+              <!-- Direction -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <span
+                  class="rounded-md px-2 py-0.5 text-[10px] font-bold"
+                  [class.bg-blue-50]="row.direction === 'IN'"
+                  [class.text-blue-700]="row.direction === 'IN'"
+                  [class.dark:bg-blue-950]="row.direction === 'IN'"
+                  [class.dark:text-blue-300]="row.direction === 'IN'"
+                  [class.bg-teal-50]="row.direction === 'OUT'"
+                  [class.text-teal-700]="row.direction === 'OUT'"
+                  [class.dark:bg-teal-950]="row.direction === 'OUT'"
+                  [class.dark:text-teal-300]="row.direction === 'OUT'">
+                  {{ row.direction === 'IN' ? '↓ INBOUND' : '↑ OUTBOUND' }}
+                </span>
+              </td>
 
-      <!-- 4. Equipment Productivity Table -->
-      @if (reportService.selectedCategory() === 'equipment-productivity') {
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
-            <tr>
-              <th class="px-4 py-3.5 whitespace-nowrap">Equipment Code</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Type</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Operator</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Shift</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Total Moves</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Moves / Hour</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Operating Hrs</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Fuel (L)</th>
-              <th class="px-4 py-3.5 whitespace-nowrap text-right">Rating</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of paginatedEquipment(); track row.id) {
-              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
-                  {{ row.equipmentCode }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-semibold text-slate-700 dark:text-slate-300">{{ row.equipmentType }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white">{{ row.assignedOperator }}</td>
-                <td class="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">{{ row.shift }}</td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-blue-600 dark:text-blue-400">
-                  {{ row.totalMoves }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-black text-emerald-600 dark:text-emerald-400">
-                  {{ row.movesPerHour }} MPH
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
-                  {{ row.operatingHours }} hrs ({{ row.idleHours }} idle)
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">{{ row.fuelConsumptionLitres }} L</td>
-                <td class="whitespace-nowrap px-4 py-3 text-right">
-                  <span
-                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
-                    [class.bg-emerald-50]="row.efficiencyRating === 'Optimal'"
-                    [class.text-emerald-700]="row.efficiencyRating === 'Optimal'"
-                    [class.dark:bg-emerald-950]="row.efficiencyRating === 'Optimal'"
-                    [class.dark:text-emerald-300]="row.efficiencyRating === 'Optimal'"
-                    [class.bg-blue-50]="row.efficiencyRating === 'Standard'"
-                    [class.text-blue-700]="row.efficiencyRating === 'Standard'"
-                    [class.dark:bg-blue-950]="row.efficiencyRating === 'Standard'"
-                    [class.dark:text-blue-300]="row.efficiencyRating === 'Standard'"
-                    [class.bg-amber-50]="row.efficiencyRating === 'Needs Attention'"
-                    [class.text-amber-700]="row.efficiencyRating === 'Needs Attention'"
-                    [class.dark:bg-amber-950]="row.efficiencyRating === 'Needs Attention'"
-                    [class.dark:text-amber-300]="row.efficiencyRating === 'Needs Attention'">
-                    {{ row.efficiencyRating }}
-                  </span>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+              <!-- Truck / Driver -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <div class="font-bold text-slate-900 dark:text-white">{{ row.truckNo }}</div>
+                <div class="text-[10px] text-slate-400 truncate max-w-[140px]" [title]="row.driverName">{{ row.driverName }}</div>
+              </td>
 
-      <!-- 5. Customs & Billing Table -->
-      @if (reportService.selectedCategory() === 'customs-billing') {
-        <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-          <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-400">
-            <tr>
-              <th class="px-4 py-3.5 whitespace-nowrap">Dossier No</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">BL Number</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Importer / Exporter</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Cargo Description</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Gross Weight</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Customs Status</th>
-              <th class="px-4 py-3.5 whitespace-nowrap">Bonded Days</th>
-              <th class="px-4 py-3.5 whitespace-nowrap text-right">Demurrage (INR)</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-            @for (row of paginatedCustoms(); track row.id) {
-              <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
-                  {{ row.dossierNo }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">
-                  {{ row.containerNo }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
-                  {{ row.blNumber }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-bold text-slate-900 dark:text-white truncate max-w-[170px]" [title]="row.importerExporterName">
-                  {{ row.importerExporterName }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 text-slate-600 dark:text-slate-400 truncate max-w-[180px]" [title]="row.cargoDescription">
-                  {{ row.cargoDescription }}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-700 dark:text-slate-300">{{ row.grossWeightKg | number }} KG</td>
-                <td class="whitespace-nowrap px-4 py-3">
-                  <span
-                    class="rounded-md px-2.5 py-1 text-[11px] font-bold"
-                    [class.bg-emerald-50]="row.customsStatus === 'Cleared'"
-                    [class.text-emerald-700]="row.customsStatus === 'Cleared'"
-                    [class.dark:bg-emerald-950]="row.customsStatus === 'Cleared'"
-                    [class.dark:text-emerald-300]="row.customsStatus === 'Cleared'"
-                    [class.bg-amber-50]="
-                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
-                    "
-                    [class.text-amber-700]="
-                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
-                    "
-                    [class.dark:bg-amber-950]="
-                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
-                    "
-                    [class.dark:text-amber-300]="
-                      row.customsStatus === 'Under Examination' || row.customsStatus === 'Duty Pending'
-                    "
-                    [class.bg-rose-50]="row.customsStatus === 'Detained'"
-                    [class.text-rose-700]="row.customsStatus === 'Detained'"
-                    [class.dark:bg-rose-950]="row.customsStatus === 'Detained'"
-                    [class.dark:text-rose-300]="row.customsStatus === 'Detained'">
-                    {{ row.customsStatus }}
+              <!-- Container No + Non-ERP Badge -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-mono font-bold text-slate-900 dark:text-white">
+                    {{ row.containerNo }}
                   </span>
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 font-mono font-medium text-slate-700 dark:text-slate-300">{{ row.bondedWarehouseDays }} Days</td>
-                <td
-                  class="whitespace-nowrap px-4 py-3 text-right font-mono font-bold"
-                  [class.text-emerald-600]="row.demurrageAccruedInr === 0"
-                  [class.text-amber-600]="row.demurrageAccruedInr > 0 && row.demurrageAccruedInr <= 10000"
-                  [class.text-rose-600]="row.demurrageAccruedInr > 10000">
-                  ₹{{ row.demurrageAccruedInr | number }}
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      }
+                  @if (row.isNonErp) {
+                    <span class="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-extrabold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                      NON-ERP
+                    </span>
+                  }
+                </div>
+              </td>
+
+              <!-- OCR Status -->
+              <td class="whitespace-nowrap px-4 py-3">
+                <span
+                  class="rounded-md px-2 py-0.5 text-[10px] font-bold"
+                  [class.bg-emerald-50]="row.ocrStatus === 'Auto-Matched'"
+                  [class.text-emerald-700]="row.ocrStatus === 'Auto-Matched'"
+                  [class.dark:bg-emerald-950]="row.ocrStatus === 'Auto-Matched'"
+                  [class.dark:text-emerald-300]="row.ocrStatus === 'Auto-Matched'"
+                  [class.bg-amber-50]="row.ocrStatus === 'Manual Verified'"
+                  [class.text-amber-700]="row.ocrStatus === 'Manual Verified'"
+                  [class.dark:bg-amber-950]="row.ocrStatus === 'Manual Verified'"
+                  [class.dark:text-amber-300]="row.ocrStatus === 'Manual Verified'"
+                  [class.bg-rose-50]="row.ocrStatus === 'Exception'"
+                  [class.text-rose-700]="row.ocrStatus === 'Exception'"
+                  [class.dark:bg-rose-950]="row.ocrStatus === 'Exception'"
+                  [class.dark:text-rose-300]="row.ocrStatus === 'Exception'">
+                  {{ row.ocrStatus }}
+                </span>
+              </td>
+
+              <!-- Dwell Time Column (In place of TAT) -->
+              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold">
+                <span class="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                  {{ row.dwellTime || (row.turnaroundMinutes ? (row.turnaroundMinutes > 15 ? '4.5 Days' : '1.8 Days') : '2.0 Days') }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td class="whitespace-nowrap px-4 py-3 text-right">
+                <span
+                  class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+                  [class.bg-emerald-50]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                  [class.text-emerald-700]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                  [class.dark:bg-emerald-950/60]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                  [class.dark:text-emerald-300]="row.status === 'Completed' || row.status === 'Gate Passed'"
+                  [class.bg-rose-50]="row.status === 'Held'"
+                  [class.text-rose-700]="row.status === 'Held'"
+                  [class.dark:bg-rose-950/60]="row.status === 'Held'"
+                  [class.dark:text-rose-300]="row.status === 'Held'">
+                  ● {{ row.status }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="p-8 text-center">
+                <div class="flex flex-col items-center justify-center gap-2">
+                  <span class="text-3xl">🔍</span>
+                  <strong class="text-sm font-semibold text-slate-900 dark:text-white">
+                    No Gate Operation records match your filter criteria
+                  </strong>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Try clearing the KPI filter or adjusting your search term.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
 
     <!-- Pagination Footer -->
@@ -599,6 +416,7 @@
       [totalItems]="totalItems()"
       [currentPage]="currentPage()"
       [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50]"
       itemLabel="records"
       (pageChange)="setPage($event)"
       (pageSizeChange)="setPageSize($event)" />
