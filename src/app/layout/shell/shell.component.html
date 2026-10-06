@@ -18,32 +18,11 @@
         <span class="nav-label-text">{{ 'NAV.DASHBOARD' | translate }}</span>
       </a>
 
-      <!-- Gate Events (Parent) -->
-      <div class="nav-parent-group">
-        <button type="button" class="nav-item nav-parent-btn" [class.active]="isGateEventsRoute()"
-          (click)="toggleGateEvents()">
-          <div class="nav-left-part">
-            <span class="material-icons-outlined text-lg">published_with_changes</span>
-            <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
-          </div>
-          <span class="material-icons-outlined text-base nav-chevron"
-            [class.rotated]="gateEventsExpanded()">expand_more</span>
-        </button>
-
-        <!-- Gate Events Submenu -->
-        @if (gateEventsExpanded()) {
-        <div class="sub-nav-container">
-          <a routerLink="/gate-events/in" routerLinkActive="sub-active" class="sub-nav-item"
-            (click)="mobileOpen.set(false)">
-            <span class="sub-nav-label">{{ 'NAV.GATE_IN' | translate }}</span>
-          </a>
-          <a routerLink="/gate-events/out" routerLinkActive="sub-active" class="sub-nav-item"
-            (click)="mobileOpen.set(false)">
-            <span class="sub-nav-label">{{ 'NAV.GATE_OUT' | translate }}</span>
-          </a>
-        </div>
-        }
-      </div>
+      <!-- Gate Events -->
+      <a routerLink="/gate-events" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">
+        <span class="material-icons-outlined text-lg">published_with_changes</span>
+        <span class="nav-label-text">{{ 'NAV.GATE_EVENTS' | translate }}</span>
+      </a>
 
       <!-- Tasks -->
       <a routerLink="/tasks" routerLinkActive="active" class="nav-item" (click)="mobileOpen.set(false)">

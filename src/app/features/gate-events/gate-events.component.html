@@ -14,7 +14,7 @@
   <!-- 1. NON ERP CONTAINER VIEW (Modular Component)                              -->
   <!-- ========================================================================= -->
   @if (isNonErpView()) {
-    <app-non-erp-container [gateMode]="gateMode()" (back)="closeNonErpView()" (toast)="handleNonErpToast($event)">
+    <app-non-erp-container [gateMode]="gateMode() === 'out' ? 'out' : 'in'" (back)="closeNonErpView()" (toast)="handleNonErpToast($event)">
     </app-non-erp-container>
   } @else if (selectedEventForDetails(); as selectedEvent) {
     <!-- ========================================================================= -->
@@ -33,37 +33,78 @@
     <!-- ========================================================================= -->
     <!-- 3. GATE EVENTS TABLE VIEW                                                 -->
     <!-- ========================================================================= -->
-    <!-- Page Header with Action Buttons: Non ERP Container & Manual Gate Entry -->
+    <!-- Page Header with 3 Mode Buttons (All, Gate In, Gate Out) & Action Buttons -->
     <header class="page-title-header flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <div class="header-title-content">
+      <div class="header-title-content flex flex-col gap-3">
         <h1 class="page-title text-[28px] md:text-3xl font-black tracking-tight text-[#0f2851] leading-tight dark:text-white">
-          {{ gateMode() === 'out' ? 'Gate Out' : 'Gate In' }}
+          {{ gateMode() === 'all' ? 'Gate Events' : (gateMode() === 'out' ? 'Gate Out' : 'Gate In') }}
         </h1>
-        <p class="page-subtitle mt-0.5 text-xs md:text-sm font-medium text-slate-500 dark:text-slate-400">
-          {{
-            gateMode() === 'out'
-              ? 'Real-time OCR event monitoring & Gate Out verification'
-              : 'Real-time OCR event monitoring & Gate In verification'
-          }}
-        </p>
-      </div>
-      <div class="header-actions flex flex-wrap items-center gap-2.5">
-        <!-- Non ERP Container Button (Available in both Gate In and Gate Out) -->
-        <button
-          type="button"
-          class="btn-non-erp-container flex items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
-          (click)="openNonErpContainerModal()"
-          title="Non ERP Container">
-          <svg class="btn-non-erp-svg h-4 w-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2">
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-            <line x1="12" y1="22.08" x2="12" y2="12" />
-          </svg>
-          <span>Non ERP Container</span>
-        </button>
 
-        <!-- Manual Gate Entry (Gate In only) -->
+        <!-- 3 Top Mode Buttons: All | Gate In | Gate Out (Shown below the heading) -->
+        <div class="inline-flex items-center self-start rounded-xl bg-slate-100 p-1 dark:bg-slate-800 shadow-2xs border border-slate-200/60 dark:border-slate-700/60">
+          <button
+            type="button"
+            (click)="setMode('all')"
+            class="flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer"
+            [class.bg-[#525EA7]]="gateMode() === 'all'"
+            [class.text-white]="gateMode() === 'all'"
+            [class.shadow-xs]="gateMode() === 'all'"
+            [class.hover:bg-[#434d8a]]="gateMode() === 'all'"
+            [class.text-slate-600]="gateMode() !== 'all'"
+            [class.dark:text-slate-300]="gateMode() !== 'all'"
+            [class.hover:text-[#525EA7]]="gateMode() !== 'all'">
+            <span>All</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="setMode('in')"
+            class="flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer"
+            [class.bg-[#525EA7]]="gateMode() === 'in'"
+            [class.text-white]="gateMode() === 'in'"
+            [class.shadow-xs]="gateMode() === 'in'"
+            [class.hover:bg-[#434d8a]]="gateMode() === 'in'"
+            [class.text-slate-600]="gateMode() !== 'in'"
+            [class.dark:text-slate-300]="gateMode() !== 'in'"
+            [class.hover:text-[#525EA7]]="gateMode() !== 'in'">
+            <span>Gate In</span>
+          </button>
+
+          <button
+            type="button"
+            (click)="setMode('out')"
+            class="flex items-center gap-1.5 rounded-lg px-4 py-1.5 text-xs font-bold transition-all cursor-pointer"
+            [class.bg-[#525EA7]]="gateMode() === 'out'"
+            [class.text-white]="gateMode() === 'out'"
+            [class.shadow-xs]="gateMode() === 'out'"
+            [class.hover:bg-[#434d8a]]="gateMode() === 'out'"
+            [class.text-slate-600]="gateMode() !== 'out'"
+            [class.dark:text-slate-300]="gateMode() !== 'out'"
+            [class.hover:text-[#525EA7]]="gateMode() !== 'out'">
+            <span>Gate Out</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-actions flex flex-wrap items-center gap-2.5">
+        <!-- Non ERP Container Button (Hidden in 'All' mode) -->
+        @if (gateMode() !== 'all') {
+          <button
+            type="button"
+            class="btn-non-erp-container flex items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+            (click)="openNonErpContainerModal()"
+            title="Non ERP Container">
+            <svg class="btn-non-erp-svg h-4 w-4 stroke-current fill-none" viewBox="0 0 24 24" stroke-width="2">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
+            <span>Non ERP Container</span>
+          </button>
+        }
+
+        <!-- Manual Gate Entry (Gate In only, hidden in 'All' and 'Gate Out' mode) -->
         @if (gateMode() === 'in') {
           <button
             type="button"
@@ -80,19 +121,24 @@
       </div>
     </header>
 
-    <!-- 4 KPI Metrics Cards Grid -->
+    <!-- 4 KPI Metrics Cards Grid with Click-to-Filter (Works like Tasks) -->
     <section
       class="kpi-metrics-grid grid grid-cols-2 gap-3.5 sm:grid-cols-2 lg:grid-cols-4"
       aria-label="Gate KPI Summary">
-      <!-- Card 1: Today's Gate In (on Gate In page) OR Today's Gate Out (on Gate Out page) -->
+      <!-- Card 1: Total Gate In (All mode) OR Today's Gate In (Gate In mode) OR Today's Gate Out (Gate Out mode) -->
+      @let card1Key = gateMode() === 'all' ? 'Total Gate In' : (gateMode() === 'out' ? "Today's Gate Out" : "Today's Gate In");
       <div
-        class="kpi-card card-direction-today flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        (click)="selectKpiCard(card1Key)"
+        class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] cursor-pointer hover:shadow-md hover:border-[#525EA7]/40"
+        [class.ring-2]="selectedKpiFilter() === card1Key"
+        [class.ring-[#525EA7]]="selectedKpiFilter() === card1Key"
+        [class.bg-blue-50/20]="selectedKpiFilter() === card1Key">
         <div class="flex items-center gap-3">
           <div
             class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
             [ngClass]="gateMode() === 'out' ? 'bg-orange-50 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400' : 'bg-blue-50 text-[#525EA7] dark:bg-blue-950/60 dark:text-blue-400'">
             @if (gateMode() === 'out') {
-              <!-- Departure Symbol (Gate Out / Outbound Exit) -->
+              <!-- Departure Symbol -->
               <svg
                 class="kpi-svg h-5 w-5"
                 viewBox="0 0 24 24"
@@ -106,7 +152,7 @@
                 <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
             } @else {
-              <!-- Arrival Symbol (Gate In / Inbound Entry) -->
+              <!-- Arrival Symbol -->
               <svg
                 class="kpi-svg h-5 w-5"
                 viewBox="0 0 24 24"
@@ -123,48 +169,73 @@
           </div>
           <div class="kpi-content overflow-hidden">
             <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
-              {{ gateMode() === 'out' ? "Today's Gate Out" : "Today's Gate In" }}
+              {{ card1Key }}
             </span>
             <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-              {{ gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals }}
+              {{ gateMode() === 'all' ? metrics().totalCheckin : (gateMode() === 'out' ? metrics().todayDepartures : metrics().todayArrivals) }}
             </strong>
           </div>
         </div>
         <div
           class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-          ↑ {{ gateMode() === 'out' ? metrics().departuresTrend : metrics().arrivalsTrend }}
+          ↑ {{ gateMode() === 'all' ? metrics().totalCheckinTrend : (gateMode() === 'out' ? metrics().departuresTrend : metrics().arrivalsTrend) }}
         </div>
       </div>
 
-      <!-- Card 2: Total Gate In (on Gate In page) OR Total Gate Out (on Gate Out page) -->
+      <!-- Card 2: Total Gate Out (All or Out mode) OR Total Gate In (Gate In mode) -->
+      @let card2Key = gateMode() === 'in' ? 'Total Gate In' : 'Total Gate Out';
       <div
-        class="kpi-card card-total flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        (click)="selectKpiCard(card2Key)"
+        class="kpi-card flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] cursor-pointer hover:shadow-md hover:border-[#525EA7]/40"
+        [class.ring-2]="selectedKpiFilter() === card2Key"
+        [class.ring-[#525EA7]]="selectedKpiFilter() === card2Key"
+        [class.bg-blue-50/20]="selectedKpiFilter() === card2Key">
         <div class="flex items-center gap-3">
           <div
-            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400">
-            <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-            </svg>
+            class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            [ngClass]="card2Key === 'Total Gate Out' ? 'bg-orange-50 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400' : 'bg-sky-50 text-sky-600 dark:bg-sky-950/60 dark:text-sky-400'">
+            @if (card2Key === 'Total Gate Out') {
+              <svg
+                class="kpi-svg h-5 w-5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            } @else {
+              <svg class="kpi-svg h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            }
           </div>
           <div class="kpi-content overflow-hidden">
             <span class="kpi-label block truncate text-xs font-bold text-slate-500 dark:text-slate-400">
-              {{ gateMode() === 'out' ? "Total Gate Out" : "Total Gate In" }}
+              {{ card2Key }}
             </span>
             <strong class="kpi-value text-2xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight">
-              {{ gateMode() === 'out' ? metrics().totalCheckout : metrics().totalCheckin }}
+              {{ card2Key === 'Total Gate Out' ? metrics().totalCheckout : metrics().totalCheckin }}
             </strong>
           </div>
         </div>
         <div
           class="kpi-trend trend-positive mt-2.5 flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
-          ↑ {{ gateMode() === 'out' ? metrics().totalCheckoutTrend : metrics().totalCheckinTrend }}
+          ↑ {{ card2Key === 'Total Gate Out' ? metrics().totalCheckoutTrend : metrics().totalCheckinTrend }}
         </div>
       </div>
 
       <!-- Card 3: OCR Verified -->
       <div
-        class="kpi-card card-ocr flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        (click)="selectKpiCard('OCR Verified')"
+        class="kpi-card card-ocr flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] cursor-pointer hover:shadow-md hover:border-[#525EA7]/40"
+        [class.ring-2]="selectedKpiFilter() === 'OCR Verified'"
+        [class.ring-[#525EA7]]="selectedKpiFilter() === 'OCR Verified'"
+        [class.bg-purple-50/20]="selectedKpiFilter() === 'OCR Verified'">
         <div class="flex items-center gap-3">
           <div
             class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400">
@@ -190,7 +261,11 @@
 
       <!-- Card 4: In Review / Pending Review Count -->
       <div
-        class="kpi-card card-review flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+        (click)="selectKpiCard('In Review')"
+        class="kpi-card card-review flex flex-col justify-between rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs transition-all dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] cursor-pointer hover:shadow-md hover:border-[#525EA7]/40"
+        [class.ring-2]="selectedKpiFilter() === 'In Review'"
+        [class.ring-[#525EA7]]="selectedKpiFilter() === 'In Review'"
+        [class.bg-amber-50/20]="selectedKpiFilter() === 'In Review'">
         <div class="flex items-center gap-3">
           <div
             class="kpi-icon-wrapper flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400">
@@ -215,6 +290,17 @@
         </div>
       </div>
     </section>
+
+    <!-- Active KPI Filter Banner (If KPI card is selected to filter list) -->
+    @if (selectedKpiFilter() !== 'All') {
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Active filter:</span>
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-[#525EA7]/30 bg-[#525EA7]/10 px-3 py-1 text-xs font-bold text-[#525EA7] dark:bg-[#525EA7]/20 dark:text-blue-300">
+          <span>{{ selectedKpiFilter() }}</span>
+          <button type="button" class="cursor-pointer hover:opacity-70 ml-1 text-sm font-black leading-none" (click)="selectKpiCard('All')" title="Clear filter">✕</button>
+        </span>
+      </div>
+    }
 
     <!-- Main Table Card Container -->
     <div
@@ -307,7 +393,6 @@
               <th class="col-size px-4 py-3.5 whitespace-nowrap">Size</th>
               <th class="col-ocr px-4 py-3.5">{{ 'GATE_EVENTS.COL_OCR_RESULT' | translate }}</th>
               <th class="col-confidence px-4 py-3.5">{{ 'GATE_EVENTS.COL_CONFIDENCE' | translate }}</th>
-              <th class="col-driver px-4 py-3.5">{{ 'GATE_EVENTS.COL_DRIVER' | translate }}</th>
               <th class="col-status px-4 py-3.5">{{ 'GATE_EVENTS.COL_STATUS' | translate }}</th>
               <th class="col-damage px-4 py-3.5">{{ 'GATE_EVENTS.COL_DAMAGE' | translate }}</th>
               <th class="col-photos px-4 py-3.5">{{ 'GATE_EVENTS.COL_PHOTOS' | translate }}</th>
@@ -471,10 +556,6 @@
                   </div>
                 </td>
 
-                <!-- Driver Name -->
-                <td class="col-driver px-4 py-3.5">
-                  <span class="driver-name-text text-xs text-slate-600 dark:text-slate-300">{{ event.driver }}</span>
-                </td>
 
                 <!-- Status Badge -->
                 <td class="col-status px-4 py-3.5">
@@ -577,7 +658,7 @@
 
       <!-- Pagination Footer -->
       <app-pagination
-        [totalItems]="searchQuery() || confidenceFilter() !== 'All' || dateFilter() ? filteredEvents().length : totalCount()"
+        [totalItems]="searchQuery() || confidenceFilter() !== 'All' || dateFilter() || selectedKpiFilter() !== 'All' ? filteredEvents().length : totalCount()"
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [pageSizeOptions]="[10, 15, 25, 50, 100]"

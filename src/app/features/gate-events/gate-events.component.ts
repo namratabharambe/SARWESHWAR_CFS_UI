@@ -104,7 +104,8 @@ export class GateEventsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute, { optional: true });
   private readonly router = inject(Router, { optional: true });
 
-  public readonly gateMode = signal<'in' | 'out'>('in');
+  public readonly gateMode = signal<'all' | 'in' | 'out'>('all');
+  public readonly selectedKpiFilter = signal<string>('All');
   public readonly isNonErpView = signal<boolean>(false);
   public readonly events = signal<GateEventItem[]>([]);
   public readonly isLoading = signal<boolean>(false);
@@ -203,13 +204,46 @@ export class GateEventsComponent implements OnInit {
   private syncGateMode(): void {
     const url = this.router?.url ?? '';
     const routeMode = this.route?.snapshot?.data?.['mode'];
-    const isOut = url.includes('/gate-events/out') || routeMode === 'out';
-    this.gateMode.set(isOut ? 'out' : 'in');
-    this.cycleFilter.set(isOut ? 'OUT' : 'IN');
+    if (url.includes('/gate-events/out') || routeMode === 'out') {
+      this.gateMode.set('out');
+      this.cycleFilter.set('OUT');
+    } else if (url.includes('/gate-events/in') || routeMode === 'in') {
+      this.gateMode.set('in');
+      this.cycleFilter.set('IN');
+    } else {
+      this.gateMode.set('all');
+      this.cycleFilter.set('All');
+    }
+    this.selectedKpiFilter.set('All');
     this.currentPage.set(1);
     this.isNonErpView.set(false);
     this.selectedEventForDetails.set(null);
     this.loadGateEvents();
+  }
+
+  public setMode(mode: 'all' | 'in' | 'out'): void {
+    this.gateMode.set(mode);
+    if (mode === 'all') {
+      this.cycleFilter.set('All');
+    } else if (mode === 'in') {
+      this.cycleFilter.set('IN');
+    } else {
+      this.cycleFilter.set('OUT');
+    }
+    this.selectedKpiFilter.set('All');
+    this.currentPage.set(1);
+    this.isNonErpView.set(false);
+    this.selectedEventForDetails.set(null);
+    this.loadGateEvents();
+  }
+
+  public selectKpiCard(kpi: string): void {
+    if (this.selectedKpiFilter() === kpi) {
+      this.selectedKpiFilter.set('All');
+    } else {
+      this.selectedKpiFilter.set(kpi);
+    }
+    this.currentPage.set(1);
   }
 
   public readonly fromDate = signal<string | undefined>(undefined);
@@ -786,8 +820,9 @@ export class GateEventsComponent implements OnInit {
       return d.toDateString() === new Date().toDateString() && e.direction === 'OUT';
     }).length || (mode === 'out' && !this.fromDate() ? total : 0);
 
-    const totalCurrentMode = mode === 'out' ? (totalOut || total) : (totalIn || total);
-    const ocrVerified = totalCurrentMode;
+    const totalCurrentMode = mode === 'out' ? (totalOut || total) : (mode === 'all' ? (totalIn + totalOut || total) : (totalIn || total));
+    const verifiedItems = list.filter((e) => e.status === 'Verified').length;
+    const ocrVerified = verifiedItems > 0 ? verifiedItems : totalCurrentMode;
     const pendingReview = list.filter((e) => e.status === 'Review').length;
     const damagedCaptures = list.filter((e) => e.damageFlag).length;
 
@@ -803,9 +838,9 @@ export class GateEventsComponent implements OnInit {
       totalAll: totalCurrentMode,
       totalAllTrend: totalCurrentMode > 0 ? `${totalCurrentMode} total operations` : '0 total operations',
       ocrVerified: ocrVerified,
-      ocrVerifiedPercent: totalCurrentMode > 0 ? '100% verified' : '0% verified',
+      ocrVerifiedPercent: totalCurrentMode > 0 ? `${Math.round((ocrVerified / totalCurrentMode) * 100)}% verified` : '100% verified',
       pendingReview: pendingReview,
-      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending` : '0 pending',
+      pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending review` : '0 pending',
       damagedCaptures: damagedCaptures,
       damagedTrend: damagedCaptures > 0 ? `${damagedCaptures} flagged` : '0 detected',
     };
@@ -827,12 +862,29 @@ export class GateEventsComponent implements OnInit {
   public readonly filteredEvents = computed<GateEventItem[]>(() => {
     const list = this.events();
     const cycle = this.cycleFilter();
+    const kpi = this.selectedKpiFilter();
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
     const dateStr = this.dateFilter().trim();
 
     return list.filter((item) => {
       if (cycle !== 'All' && item.direction !== cycle) return false;
+
+      // Active KPI Card Filter (works like Tasks page)
+      if (kpi === 'Total Gate In' && item.direction !== 'IN') return false;
+      if (kpi === 'Total Gate Out' && item.direction !== 'OUT') return false;
+      if (kpi === "Today's Gate In") {
+        const itemDate = new Date(item.timestamp);
+        const today = new Date();
+        if (itemDate.toDateString() !== today.toDateString() || item.direction !== 'IN') return false;
+      }
+      if (kpi === "Today's Gate Out") {
+        const itemDate = new Date(item.timestamp);
+        const today = new Date();
+        if (itemDate.toDateString() !== today.toDateString() || item.direction !== 'OUT') return false;
+      }
+      if (kpi === 'OCR Verified' && item.status !== 'Verified') return false;
+      if (kpi === 'In Review' && item.status !== 'Review') return false;
 
       if (conf === 'High' && item.confidence < 95) return false;
       if (conf === 'Medium' && (item.confidence < 90 || item.confidence >= 95)) return false;
@@ -899,9 +951,13 @@ export class GateEventsComponent implements OnInit {
   });
 
   public readonly totalPages = computed<number>(() => {
-    const total = this.searchQuery() || this.confidenceFilter() !== 'All' || this.dateFilter()
-      ? this.filteredEvents().length
-      : this.totalCount();
+    const total =
+      this.searchQuery() ||
+      this.confidenceFilter() !== 'All' ||
+      this.dateFilter() ||
+      this.selectedKpiFilter() !== 'All'
+        ? this.filteredEvents().length
+        : this.totalCount();
     return Math.max(1, Math.ceil(total / this.pageSize()));
   });
 
@@ -1038,11 +1094,11 @@ export class GateEventsComponent implements OnInit {
     const data = this.filteredEvents();
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      ['Event Time,Gate,Direction,Truck No,Container No,OCR Result,Confidence,Driver,Status,Damage Flag']
+      ['Event Time,Cycle,Direction,Truck No,Container No,OCR Result,Confidence,Status,Damage Flag']
         .concat(
           data.map(
             (e) =>
-              `"${e.eventTime}","${e.gate}","${e.direction}","${e.truckNo}","${e.containerNo}","${e.ocrResult}",${e.confidence}%,"${e.driver}","${e.status}","${e.damageFlag ? 'Yes' : 'No'}"`,
+              `"${e.eventTime}","${e.gate}","${e.direction}","${e.truckNo}","${e.containerNo}","${e.ocrResult}",${e.confidence}%,"${e.status}","${e.damageFlag ? 'Yes' : 'No'}"`,
           ),
         )
         .join('\n');

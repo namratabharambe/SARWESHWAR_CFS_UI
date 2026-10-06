@@ -450,6 +450,12 @@ export class DashboardService {
   ]);
   public readonly gateLiveStages = this._gateLiveStages.asReadonly();
 
+  private readonly _gateInCount = signal<number>(0);
+  public readonly gateInCount = this._gateInCount.asReadonly();
+
+  private readonly _gateOutCount = signal<number>(0);
+  public readonly gateOutCount = this._gateOutCount.asReadonly();
+
   private readonly _nextTruckInfo = signal<NextTruckInfo>({
     truckNo: 'MH 46 AR 9921',
     status: 'Scanning',
@@ -649,6 +655,20 @@ export class DashboardService {
             const verified = mapped.filter((a) => a.status === 'Verified').length;
             const departed = items.filter((v) => v.status === 'DEPARTED').length;
 
+            const totalGateIn = (inRes?.totalCount && inRes.totalCount > 0)
+              ? inRes.totalCount
+              : (todayInRes?.totalCount && todayInRes.totalCount > 0)
+                ? todayInRes.totalCount
+                : arrivals;
+            const totalGateOut = (outRes?.totalCount && outRes.totalCount > 0)
+              ? outRes.totalCount
+              : (todayOutRes?.totalCount && todayOutRes.totalCount > 0)
+                ? todayOutRes.totalCount
+                : departures;
+
+            this._gateInCount.set(totalGateIn);
+            this._gateOutCount.set(totalGateOut);
+
             // 1. Top KPI Metrics - Real data without inventing comparison or fake alerts
             const openTasksCount = this.taskService
               ? this.taskService.allTasks().filter((t) => t.status !== 'Completed').length
@@ -844,6 +864,8 @@ export class DashboardService {
             });
           } else {
             // Zero visits state
+            this._gateInCount.set(inRes?.totalCount || todayInRes?.totalCount || 0);
+            this._gateOutCount.set(outRes?.totalCount || todayOutRes?.totalCount || 0);
             this._allGateActivities.set([]);
             const openTasksCount = this.taskService
               ? this.taskService.allTasks().filter((t) => t.status !== 'Completed').length
@@ -938,10 +960,14 @@ export class DashboardService {
               currentTeu: 816,
               utilizationPercentage: 68,
             });
+            this._gateInCount.set(0);
+            this._gateOutCount.set(0);
           }
         },
         error: () => {
           this._allGateActivities.set([]);
+          this._gateInCount.set(0);
+          this._gateOutCount.set(0);
         },
       });
   }
