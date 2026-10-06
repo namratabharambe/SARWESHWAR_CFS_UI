@@ -5,7 +5,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AlertService } from 'shared/services/alert.service';
 import { AlertResolutionRequest, ContainerMismatchAlert } from 'shared/types/alert/alert.interface';
 import { MismatchDetailModalComponent } from './components/mismatch-detail-modal/mismatch-detail-modal.component';
-import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { TranslatePipe } from 'shared/pipes';
 
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
@@ -13,7 +12,7 @@ import { PaginationComponent } from 'shared/components/molecules/pagination/pagi
 @Component({
   selector: 'app-alerts',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MismatchDetailModalComponent, DropdownComponent, PaginationComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, RouterLink, MismatchDetailModalComponent, PaginationComponent, TranslatePipe],
   templateUrl: './alerts.component.html',
   styleUrls: ['./alerts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +22,7 @@ export class AlertsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
 
   public readonly isFilterVisible = signal<boolean>(false);
+  public readonly isExportMenuOpen = signal<boolean>(false);
 
   // Pagination
   public readonly currentPage = signal<number>(1);
@@ -41,6 +41,21 @@ export class AlertsComponent implements OnInit {
   public setPageSize(size: number): void {
     this.pageSize.set(size);
     this.currentPage.set(1);
+  }
+
+  public setCategoryFilter(cat: 'All' | 'Gate' | 'Move'): void {
+    this.alertService.setCategoryFilter(cat);
+    this.currentPage.set(1);
+  }
+
+  public onSearchInput(query: string): void {
+    this.alertService.setSearchQuery(query);
+    this.currentPage.set(1);
+  }
+
+  public exportAlerts(format: 'csv' | 'excel'): void {
+    this.alertService.exportAlertsToCsv();
+    this.isExportMenuOpen.set(false);
   }
 
   public readonly activeFilterCount = computed(() => {
@@ -119,6 +134,7 @@ export class AlertsComponent implements OnInit {
   }
 
   public resetFilters(): void {
+    this.alertService.setCategoryFilter('All');
     this.alertService.setSeverityFilter('All');
     this.alertService.setTypeFilter('All');
     this.alertService.setStatusFilter('All');

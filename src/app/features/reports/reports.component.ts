@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReportService } from 'shared/services/report.service';
 import { ReportCategory } from 'shared/types/report/report.interface';
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
+
+export type GateOperationKpiFilter = 'ALL' | 'GATE_IN' | 'GATE_OUT' | 'NON_ERP_GATE_IN' | 'NON_ERP_GATE_OUT' | 'EXCEPTION';
 
 @Component({
   selector: 'app-reports',
@@ -13,105 +15,82 @@ import { PaginationComponent } from 'shared/components/molecules/pagination/pagi
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReportsComponent {
+export class ReportsComponent implements OnInit {
   public readonly reportService = inject(ReportService);
+
+  public ngOnInit(): void {
+    this.reportService.loadGateOperationsData();
+  }
 
   public readonly isDateDropdownOpen = signal<boolean>(false);
   public readonly isExportDropdownOpen = signal<boolean>(false);
   public readonly isMoreMenuOpen = signal<boolean>(false);
 
+  // Active KPI Filter (like Tasks KPI Cards)
+  public readonly selectedKpiFilter = signal<GateOperationKpiFilter>('ALL');
+
   // Pagination
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(10);
 
+  // Dynamic Gate Operation KPI counts
+  public readonly gateOpKpis = computed(() => {
+    const rows = this.reportService.gateOperationsData();
+    const gateIn = rows.filter((r) => r.direction === 'IN' && !r.isNonErp).length;
+    const gateOut = rows.filter((r) => r.direction === 'OUT' && !r.isNonErp).length;
+    const nonErpGateIn = rows.filter((r) => r.direction === 'IN' && r.isNonErp).length;
+    const nonErpGateOut = rows.filter((r) => r.direction === 'OUT' && r.isNonErp).length;
+    const exception = rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length;
+
+    return {
+      gateIn,
+      gateOut,
+      nonErpGateIn,
+      nonErpGateOut,
+      exception,
+    };
+  });
+
+  // Filtered rows applying both search query and active KPI card filter
+  public readonly filteredGateOpsWithKpi = computed(() => {
+    let rows = this.reportService.filteredGateRows();
+    const kpi = this.selectedKpiFilter();
+    if (kpi === 'GATE_IN') {
+      rows = rows.filter((r) => r.direction === 'IN' && !r.isNonErp);
+    } else if (kpi === 'GATE_OUT') {
+      rows = rows.filter((r) => r.direction === 'OUT' && !r.isNonErp);
+    } else if (kpi === 'NON_ERP_GATE_IN') {
+      rows = rows.filter((r) => r.direction === 'IN' && r.isNonErp);
+    } else if (kpi === 'NON_ERP_GATE_OUT') {
+      rows = rows.filter((r) => r.direction === 'OUT' && r.isNonErp);
+    } else if (kpi === 'EXCEPTION') {
+      rows = rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held');
+    }
+    return rows;
+  });
+
   public readonly paginatedGateOps = computed(() => {
-    const list = this.reportService.filteredGateRows();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
-  });
-
-  public readonly paginatedMismatches = computed(() => {
-    const list = this.reportService.filteredMismatchRows();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
-  });
-
-  public readonly paginatedYardOccupancy = computed(() => {
-    const list = this.reportService.filteredYardRows();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
-  });
-
-  public readonly paginatedEquipment = computed(() => {
-    const list = this.reportService.filteredEquipmentRows();
-    const start = (this.currentPage() - 1) * this.pageSize();
-    return list.slice(start, start + this.pageSize());
-  });
-
-  public readonly paginatedCustoms = computed(() => {
-    const list = this.reportService.filteredCustomsRows();
+    const list = this.filteredGateOpsWithKpi();
     const start = (this.currentPage() - 1) * this.pageSize();
     return list.slice(start, start + this.pageSize());
   });
 
   public readonly totalItems = computed(() => {
-    switch (this.reportService.selectedCategory()) {
-      case 'gate-operations':
-        return this.reportService.filteredGateRows().length;
-      case 'container-mismatch':
-        return this.reportService.filteredMismatchRows().length;
-      case 'yard-occupancy':
-        return this.reportService.filteredYardRows().length;
-      case 'equipment-productivity':
-        return this.reportService.filteredEquipmentRows().length;
-      case 'customs-billing':
-        return this.reportService.filteredCustomsRows().length;
-      default:
-        return 0;
-    }
+    return this.filteredGateOpsWithKpi().length;
   });
 
+  // Single category button: Gate Operation
   public readonly categories: {
     id: ReportCategory;
     transKey: string;
     label: string;
     icon: string;
-    countBadge?: string;
   }[] = [
     {
       id: 'gate-operations',
       transKey: 'REPORTS.GATE_OPERATIONS',
-      label: 'Gate Operations & Turnaround',
+      label: 'Gate Operation',
       icon: 'sensor_occupied',
-      countBadge: '7',
-    },
-    {
-      id: 'container-mismatch',
-      transKey: 'REPORTS.CONTAINER_MISMATCH',
-      label: 'Container Mismatch & OCR Audit',
-      icon: 'gpp_maybe',
-      countBadge: '5',
-    },
-    {
-      id: 'yard-occupancy',
-      transKey: 'REPORTS.YARD_OCCUPANCY',
-      label: 'Yard Occupancy & Dwell Time',
-      icon: 'grid_view',
-      countBadge: '5',
-    },
-    {
-      id: 'equipment-productivity',
-      transKey: 'REPORTS.EQUIPMENT_PRODUCTIVITY',
-      label: 'Equipment & Operator Productivity',
-      icon: 'precision_manufacturing',
-      countBadge: '5',
-    },
-    {
-      id: 'customs-billing',
-      transKey: 'REPORTS.CUSTOMS_BILLING',
-      label: 'Customs & Billing Dossier',
-      icon: 'receipt_long',
-      countBadge: '5',
     },
   ];
 
@@ -131,6 +110,15 @@ export class ReportsComponent {
 
   public setCategory(cat: ReportCategory): void {
     this.reportService.setCategory(cat);
+    this.currentPage.set(1);
+  }
+
+  public selectKpiFilter(filter: GateOperationKpiFilter): void {
+    if (this.selectedKpiFilter() === filter) {
+      this.selectedKpiFilter.set('ALL');
+    } else {
+      this.selectedKpiFilter.set(filter);
+    }
     this.currentPage.set(1);
   }
 
@@ -161,4 +149,3 @@ export class ReportsComponent {
     this.reportService.exportCurrentReportToXls();
   }
 }
-

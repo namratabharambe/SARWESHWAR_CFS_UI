@@ -24,6 +24,8 @@ export interface GateOperationsReportRow {
   turnaroundMinutes: number;
   weighbridgeKg: number;
   status: 'Completed' | 'Gate Passed' | 'Held';
+  dwellTime?: string;
+  isNonErp?: boolean;
 }
 
 export interface ContainerMismatchReportRow {

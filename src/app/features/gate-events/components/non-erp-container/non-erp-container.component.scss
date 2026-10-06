@@ -4,13 +4,83 @@
 }
 
 .non-erp-container-view {
-  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 100%;
+  padding-bottom: 1.5rem;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// Light Blue Color Shade Gradient + Solid Dark Blue Border + Hover Shadow (Matching CFS gate-events theme)
+.kpi-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e2f0fd 100%) !important;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+  }
+
+  :host-context(.dark) & {
+    background: linear-gradient(135deg, #111a2e 0%, #0d1527 100%) !important;
+    border: 2px solid #1e3a8a !important;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.45) !important;
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.75) !important;
+    }
+  }
+}
+
+// CFS Card Container (Matching gate-events-card theme)
+.gate-events-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fe 100%) !important;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  .filters-bar-container {
+    background: linear-gradient(180deg, #f0f7ff 0%, #e6f1fe 100%) !important;
+  }
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+  }
+
+  :host-context(.dark) & {
+    background: #111a2e !important;
+    border: 2px solid #1e3a8a !important;
+
+    .filters-bar-container {
+      background: #0f172a !important;
+    }
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.6) !important;
+    }
+  }
+}
+
+.camera-photo-thumb {
+  min-width: 44px;
+  max-width: 44px;
+  height: 32px;
+  border-radius: 6px;
+  outline: none;
+  border: 1px solid #e2e8f0;
+
+  :host-context(.dark) & {
+    border-color: #334155;
+  }
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;

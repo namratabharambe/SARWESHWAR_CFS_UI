@@ -19,8 +19,8 @@ export class InventoryService {
   private readonly gateEventService = inject(GateEventService);
   private readonly authService = inject(AuthService);
 
-  // Active Gate Mode ('GATE_IN' or 'GATE_OUT')
-  public readonly activeGateMode = signal<'GATE_IN' | 'GATE_OUT'>('GATE_IN');
+  // Active Gate Mode ('ALL' | 'GATE_IN' | 'GATE_OUT')
+  public readonly activeGateMode = signal<'ALL' | 'GATE_IN' | 'GATE_OUT'>('ALL');
 
   // Loading state for live API fetching
   public readonly isLoading = signal<boolean>(false);
@@ -125,14 +125,19 @@ export class InventoryService {
     return items;
   }
 
-  // Collection signal initialized with Gate In items
-  public readonly containers = signal<ContainerInventoryItem[]>(
-    this.fallbackGateInContainers.map((c) => ({
+  // Collection signal initialized with all items (both Gate In and Gate Out)
+  public readonly containers = signal<ContainerInventoryItem[]>([
+    ...this.fallbackGateInContainers.map((c) => ({
       ...c,
       currentLocation: 'In Yard',
       daysInYard: this.calculateDaysInYard(c.arrivalDate),
     })),
-  );
+    ...this.fallbackGateOutContainers.map((c) => ({
+      ...c,
+      currentLocation: 'Gate Out',
+      daysInYard: this.calculateDaysInYard(c.arrivalDate),
+    })),
+  ]);
 
   // Active Selected Container for Drawer / Details
   public readonly selectedContainer = signal<ContainerInventoryItem | null>(this.fallbackGateInContainers[0]);
@@ -166,8 +171,8 @@ export class InventoryService {
   public readonly toastMessage = signal<string | null>(null);
 
   constructor() {
-    // Automatically load live gate-in data on initialization
-    this.loadLiveGateData('GATE_IN');
+    // Automatically load live data on initialization (ALL by default)
+    this.loadLiveGateData('ALL');
 
     // Reactively refresh when active site or client changes
     effect(() => {
@@ -180,18 +185,26 @@ export class InventoryService {
   }
 
   /**
-   * Switches active gate mode ('GATE_IN' or 'GATE_OUT') and triggers live API fetch
+   * Switches active gate mode ('ALL' | 'GATE_IN' | 'GATE_OUT') and triggers live API fetch
    */
-  public setGateMode(mode: 'GATE_IN' | 'GATE_OUT'): void {
-    this.activeGateMode.set(mode);
+  public setGateMode(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): void {
+    if (this.activeGateMode() === mode) {
+      this.activeGateMode.set('ALL');
+    } else {
+      this.activeGateMode.set(mode);
+    }
     this.currentPage.set(1);
-    this.loadLiveGateData(mode);
+    this.loadLiveGateData(this.activeGateMode());
+  }
+
+  public loadVisitsData(): void {
+    this.loadLiveGateData();
   }
 
   /**
    * Fetches live data from backend Gate API with full counts and date filters
    */
-  public loadLiveGateData(mode: 'GATE_IN' | 'GATE_OUT' = this.activeGateMode()): void {
+  public loadLiveGateData(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT' = this.activeGateMode()): void {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
@@ -241,7 +254,7 @@ export class InventoryService {
       pageSize: 100,
       siteId,
       clientId,
-      eventType: mode,
+      eventType: mode === 'ALL' ? undefined : mode,
     });
 
     forkJoin({
@@ -290,7 +303,12 @@ export class InventoryService {
     });
   }
 
-  private getFallbackContainersForMode(mode: 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+  private getFallbackContainersForMode(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+    if (mode === 'ALL') {
+      const ins = this.getFallbackContainersForMode('GATE_IN');
+      const outs = this.getFallbackContainersForMode('GATE_OUT');
+      return [...ins, ...outs];
+    }
     const list = mode === 'GATE_OUT' ? this.fallbackGateOutContainers : this.fallbackGateInContainers;
     return list.map((c) => ({
       ...c,
@@ -300,7 +318,7 @@ export class InventoryService {
     }));
   }
 
-  private mapVisitsToInventoryItems(visits: any[], mode: 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
+  private mapVisitsToInventoryItems(visits: any[], mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
     const result: ContainerInventoryItem[] = [];
 
     visits.forEach((v, index) => {
@@ -344,6 +362,9 @@ export class InventoryService {
             else if (ct.includes('import')) cargoType = 'Import';
           }
 
+          const rawType = (primaryEvent?.eventType ?? '').toUpperCase();
+          const isOut = mode === 'GATE_OUT' || rawType.includes('OUT') || rawType.includes('EXIT');
+
           result.push({
             id: `${v.visitId || v.VisitId || index}-${cIdx}`,
             containerNo: String(cNumber).toUpperCase(),
@@ -351,13 +372,13 @@ export class InventoryService {
             line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
             fullEmpty,
             cargoType,
-            currentLocation: mode === 'GATE_OUT' ? 'Gate Out' : 'In Yard',
+            currentLocation: isOut ? 'Gate Out' : 'In Yard',
             block: 'A',
             row: '01',
             bay: '01',
             tier: '01',
-            yardStatus: mode === 'GATE_OUT' ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
-            lastAction: mode === 'GATE_OUT' ? 'Gated Out' : 'Gated In',
+            yardStatus: isOut ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
+            lastAction: isOut ? 'Gated Out' : 'Gated In',
             arrivalDate,
             lastUpdated: formattedDate,
             daysInYard,
@@ -380,8 +401,10 @@ export class InventoryService {
           primaryEvent?.DetectedContainerSize ||
           "40' HC";
 
+        const rawType = (primaryEvent?.eventType ?? '').toUpperCase();
+        const isOut = mode === 'GATE_OUT' || rawType.includes('OUT') || rawType.includes('EXIT');
         const fullEmpty = 'Full';
-        const cargoType: 'Export' | 'Import' | 'Empty' = mode === 'GATE_OUT' ? 'Export' : 'Import';
+        const cargoType: 'Export' | 'Import' | 'Empty' = isOut ? 'Export' : 'Import';
 
         result.push({
           id: v.visitId || v.VisitId || `live-${index}`,
@@ -390,13 +413,13 @@ export class InventoryService {
           line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
           fullEmpty,
           cargoType,
-          currentLocation: mode === 'GATE_OUT' ? 'Gate Out' : 'In Yard',
+          currentLocation: isOut ? 'Gate Out' : 'In Yard',
           block: 'A',
           row: '01',
           bay: '01',
           tier: '01',
-          yardStatus: mode === 'GATE_OUT' ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
-          lastAction: mode === 'GATE_OUT' ? 'Gated Out' : 'Gated In',
+          yardStatus: isOut ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
+          lastAction: isOut ? 'Gated Out' : 'Gated In',
           arrivalDate,
           lastUpdated: formattedDate,
           daysInYard,
@@ -448,6 +471,14 @@ export class InventoryService {
   // Filtered list across ALL records and pages
   public readonly filteredContainers = computed<ContainerInventoryItem[]>(() => {
     let list = this.containers();
+    const mode = this.activeGateMode();
+
+    if (mode === 'GATE_IN') {
+      list = list.filter((c) => c.lastAction === 'Gated In' || c.currentLocation !== 'Gate Out');
+    } else if (mode === 'GATE_OUT') {
+      list = list.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out');
+    }
+
     const q = this.filter().searchQuery?.trim().toLowerCase();
 
     if (q) {

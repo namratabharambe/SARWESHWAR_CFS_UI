@@ -113,6 +113,10 @@ export class TasksComponent {
   });
 
   // Active KPI card filter helper
+  public selectKpiCard(kpi: 'All' | 'Pickup' | 'Drop' | 'Completed' | 'Exception'): void {
+    this.taskService.setKpiFilter(kpi);
+  }
+
   public selectKpiStatus(status: string): void {
     if (this.taskService.statusFilter() === status) {
       this.taskService.setStatusFilter('All');
@@ -153,6 +157,7 @@ export class TasksComponent {
   }
 
   public resetAllFilters(): void {
+    this.taskService.setKpiFilter('All');
     this.taskService.setStatusFilter('All');
     this.taskService.setTypeFilter('All');
     this.taskService.setPriorityFilter('All');
@@ -163,6 +168,7 @@ export class TasksComponent {
 
   public hasActiveFilters(): boolean {
     return (
+      this.taskService.kpiFilter() !== 'All' ||
       this.taskService.statusFilter() !== 'All' ||
       this.taskService.typeFilter() !== 'All' ||
       this.taskService.priorityFilter() !== 'All' ||
