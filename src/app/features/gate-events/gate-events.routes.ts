@@ -4,8 +4,13 @@ import { GateEventsComponent } from './gate-events.component';
 export const GATE_EVENTS_ROUTES: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'in',
+    component: GateEventsComponent,
+    data: { mode: 'all' },
+  },
+  {
+    path: 'all',
+    component: GateEventsComponent,
+    data: { mode: 'all' },
   },
   {
     path: 'in',

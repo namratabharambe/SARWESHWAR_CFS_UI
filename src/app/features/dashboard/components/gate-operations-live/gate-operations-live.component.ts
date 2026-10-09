@@ -19,31 +19,31 @@ export class GateOperationsLiveComponent {
   public readonly gateTabChange = output<string>();
 
   // Custom counts for Gate In and Gate Out tabs
-  public readonly gateInCount = input<number>(30);
-  public readonly gateOutCount = input<number>(24);
+  public readonly gateInCount = input<number>(0);
+  public readonly gateOutCount = input<number>(0);
 
   // Active operation mode tab: 'in' | 'out'
   public readonly activeMode = signal<'in' | 'out'>('in');
 
-  // Stages computed dynamically: Gate Out shares the exact same 4 stages as Gate In (Arrived, OCR Scan, Verification, Gate Out) with Gate Out specific data
+  // Stages computed dynamically: Gate Out has Departed in place of Arrived, with counts from Gate In & Gate Out
   public readonly activeStages = computed<GateLiveStageItem[]>(() => {
     if (this.activeMode() === 'out') {
       const outTotal = this.gateOutCount();
       return [
         {
-          id: 'arrived-out',
-          label: 'Arrived',
+          id: 'departed-out',
+          label: 'Departed',
           count: outTotal,
-          percentage: 54,
+          percentage: outTotal > 0 ? 100 : 0,
           trendText: '10%',
           trendDirection: 'positive',
           colorTheme: 'blue',
-          iconType: 'truck-in',
+          iconType: 'truck-out',
         },
         {
           id: 'ocr-scan-out',
           label: 'OCR Scan',
-          count: Math.max(1, Math.round(outTotal * 0.83)),
+          count: outTotal > 0 ? Math.round(outTotal * 0.83) : 0,
           percentage: 45,
           trendText: '7%',
           trendDirection: 'positive',
@@ -53,7 +53,7 @@ export class GateOperationsLiveComponent {
         {
           id: 'verification-out',
           label: 'Verification',
-          count: Math.max(1, Math.round(outTotal * 0.75)),
+          count: outTotal > 0 ? Math.round(outTotal * 0.75) : 0,
           percentage: 40,
           trendText: '4%',
           trendDirection: 'positive',
@@ -63,7 +63,7 @@ export class GateOperationsLiveComponent {
         {
           id: 'gate-out-stage',
           label: 'Gate Out',
-          count: Math.max(1, Math.round(outTotal * 0.58)),
+          count: outTotal > 0 ? Math.round(outTotal * 0.58) : 0,
           percentage: 30,
           trendText: '2%',
           trendDirection: 'positive',
@@ -74,17 +74,12 @@ export class GateOperationsLiveComponent {
     }
 
     const inTotal = this.gateInCount();
-    const incoming = this.stages();
-    if (incoming && incoming.length > 0) {
-      return incoming;
-    }
-
     return [
       {
         id: 'arrived',
         label: 'Arrived',
         count: inTotal,
-        percentage: 55,
+        percentage: inTotal > 0 ? 100 : 0,
         trendText: '12%',
         trendDirection: 'positive',
         colorTheme: 'blue',
@@ -93,7 +88,7 @@ export class GateOperationsLiveComponent {
       {
         id: 'ocr-scan',
         label: 'OCR Scan',
-        count: Math.max(1, Math.round(inTotal * 0.93)),
+        count: inTotal > 0 ? Math.round(inTotal * 0.93) : 0,
         percentage: 51,
         trendText: '8%',
         trendDirection: 'positive',
@@ -103,7 +98,7 @@ export class GateOperationsLiveComponent {
       {
         id: 'verification',
         label: 'Verification',
-        count: Math.max(1, Math.round(inTotal * 0.73)),
+        count: inTotal > 0 ? Math.round(inTotal * 0.73) : 0,
         percentage: 40,
         trendText: '5%',
         trendDirection: 'positive',
@@ -113,7 +108,7 @@ export class GateOperationsLiveComponent {
       {
         id: 'gate-in',
         label: 'Gate In',
-        count: Math.max(1, Math.round(inTotal * 0.53)),
+        count: inTotal > 0 ? Math.round(inTotal * 0.53) : 0,
         percentage: 29,
         trendText: '2%',
         trendDirection: 'positive',
@@ -129,10 +124,13 @@ export class GateOperationsLiveComponent {
   }
 
   public getStageWidth(stage: GateLiveStageItem): number {
-    if (stage.count && stage.count > 0) {
-      // Scale against standard max batch of 55 trucks for proportional width matching reference image
-      return Math.min(100, Math.max(12, Math.round((stage.count / 55) * 100)));
+    const total = this.activeMode() === 'out' ? this.gateOutCount() : this.gateInCount();
+    if (!stage.count || stage.count <= 0) {
+      return 0;
     }
-    return stage.percentage || 45;
+    if (total > 0) {
+      return Math.min(100, Math.max(12, Math.round((stage.count / total) * 100)));
+    }
+    return stage.percentage || 0;
   }
 }

@@ -111,8 +111,13 @@
         class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
 
       <!-- Row 2, Col 1: Gate Operations (Live) -->
-      <app-gate-operations-live [tabs]="dashboardService.gateTabs()" [stages]="dashboardService.gateLiveStages()"
-        [nextTruck]="dashboardService.nextTruckInfo()" [selectedGateId]="dashboardService.selectedGateId()"
+      <app-gate-operations-live
+        [tabs]="dashboardService.gateTabs()"
+        [stages]="dashboardService.gateLiveStages()"
+        [gateInCount]="dashboardService.gateInCount()"
+        [gateOutCount]="dashboardService.gateOutCount()"
+        [nextTruck]="dashboardService.nextTruckInfo()"
+        [selectedGateId]="dashboardService.selectedGateId()"
         (gateTabChange)="dashboardService.selectGateTab($event)"
         class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
 

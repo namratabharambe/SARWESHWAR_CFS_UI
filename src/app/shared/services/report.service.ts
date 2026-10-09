@@ -1,4 +1,5 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { forkJoin, of } from 'rxjs';
 import {
   ContainerMismatchReportRow,
   CustomsBillingReportRow,
@@ -23,12 +24,19 @@ export class ReportService {
 
   // Filter Signal
   public readonly filter = signal<ReportDateFilter>({
-    preset: 'today',
-    startDate: '2025-05-17',
-    endDate: '2025-05-17',
+    preset: 'all',
+    startDate: '',
+    endDate: '',
     siteId: 'all-sites',
     searchQuery: '',
   });
+
+  // Real-time live counts and loading status
+  public readonly liveGateInCount = signal<number>(0);
+  public readonly liveGateOutCount = signal<number>(0);
+  public readonly todayGateInCount = signal<number>(0);
+  public readonly todayGateOutCount = signal<number>(0);
+  public readonly isLoading = signal<boolean>(false);
 
   // Toast feedback
   public readonly toastMessage = signal<string | null>(null);
@@ -38,257 +46,272 @@ export class ReportService {
       effect(() => {
         const sId = this.authService?.selectedSiteId();
         const cId = this.authService?.selectedClientId();
-        this.loadGateOperationsData(sId, cId);
+        const currentPreset = this.filter().preset;
+        const range = this.getDateRangeForPreset(currentPreset);
+        this.loadGateOperationsData(sId, cId, range.from, range.to);
       });
     }
   }
 
-  public loadGateOperationsData(siteId?: string, clientId?: string): void {
+  public getDateRangeForPreset(preset: ReportDateFilter['preset']): { from?: string; to?: string } {
+    const now = new Date();
+    if (preset === 'today') {
+      const from = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)).toISOString();
+      const to = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+      return { from, to };
+    } else if (preset === 'yesterday') {
+      const y = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const from = new Date(Date.UTC(y.getFullYear(), y.getMonth(), y.getDate(), 0, 0, 0)).toISOString();
+      const to = new Date(Date.UTC(y.getFullYear(), y.getMonth(), y.getDate(), 23, 59, 59, 999)).toISOString();
+      return { from, to };
+    } else if (preset === 'last7days') {
+      const past7 = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const from = new Date(Date.UTC(past7.getFullYear(), past7.getMonth(), past7.getDate(), 0, 0, 0)).toISOString();
+      const to = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+      return { from, to };
+    } else if (preset === 'last30days') {
+      const past30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const from = new Date(Date.UTC(past30.getFullYear(), past30.getMonth(), past30.getDate(), 0, 0, 0)).toISOString();
+      const to = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+      return { from, to };
+    } else if (preset === 'monthToDate') {
+      const from = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1, 0, 0, 0)).toISOString();
+      const to = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+      return { from, to };
+    }
+    return {};
+  }
+
+  public loadGateOperationsData(siteId?: string, clientId?: string, from?: string, to?: string): void {
     if (!this.gateEventService) return;
+    this.isLoading.set(true);
     const activeSiteId = siteId || this.authService?.getActiveSiteId() || undefined;
     const activeClientId = clientId || this.authService?.getActiveClientId() || undefined;
 
-    this.gateEventService
-      .getVisits({
-        page: 1,
-        pageSize: 100,
-        siteId: activeSiteId,
-        clientId: activeClientId,
-      })
-      .subscribe({
-        next: (res) => {
-          const rawItems: any[] = res?.items ?? (Array.isArray(res) ? (res as any) : []);
-          if (rawItems && rawItems.length > 0) {
-            const mapped: GateOperationsReportRow[] = rawItems.map((v, idx) => {
-              const primaryEvent = v.events?.[0];
-              const rawType = (primaryEvent?.eventType ?? 'GATE_IN').toUpperCase();
-              const isOut = rawType.includes('OUT') || rawType.includes('EXIT');
-              const containerNo =
-                v.containerNumber || primaryEvent?.detectedContainerNumber || (v.containers?.[0]?.containerNumber) || 'MSCU7000101';
-              const truckNo =
-                v.truckNumber && v.truckNumber !== 'NA'
-                  ? v.truckNumber
-                  : primaryEvent?.detectedTruckNumber || `MH-46-AR-${1000 + idx}`;
-              const driverName = v.driverName || primaryEvent?.detectedDriverName || `Driver #${101 + idx}`;
-              const shippingLine = v.shippingLine || containerNo.substring(0, 3) || 'MSC';
-              const dObj = new Date(primaryEvent?.capturedAt ?? v.createdAt ?? Date.now());
-              const dateStr = isNaN(dObj.getTime())
-                ? 'Today'
-                : dObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
-                  ' ' +
-                  dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const now = new Date();
+    const todayStartIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)).toISOString();
+    const todayEndIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
 
-              return {
-                id: v.visitId || `gate-row-${idx}`,
-                visitNo: `VST-${dObj.getFullYear() || 2026}-${String(v.visitId || idx + 1).slice(0, 8)}`,
-                timestamp: dateStr,
-                gateLane: isOut ? 'GATE-02 (Outbound)' : 'GATE-01 (Inbound)',
-                direction: isOut ? 'OUT' : 'IN',
-                truckNo,
-                driverName,
-                containerNo,
-                isoType: v.containerSize ? `${v.containerSize}' Standard` : "40' HC",
-                shippingLine,
-                ocrStatus: (v.containerConfidence ?? 0.95) < 0.85 || v.status === 'HELD' || idx === 2
-                  ? 'Exception'
-                  : ((v.containerConfidence ?? 0.95) >= 0.9 ? 'Auto-Matched' : 'Manual Verified'),
-                turnaroundMinutes: Math.round(5 + (idx % 15)),
-                weighbridgeKg: 22000 + (idx % 10) * 1200,
-                status: v.status === 'DEPARTED' ? 'Gate Passed' : (v.status === 'HELD' || idx === 2 ? 'Held' : 'Completed'),
-                dwellTime: `${(1.5 + (idx % 5) * 0.9).toFixed(1)} Days`,
-                isNonErp: Boolean(v.isNonErp || v.category === 'Non-ERP' || primaryEvent?.isNonErp || (idx % 4 === 1)),
-              };
-            });
-            this.gateOperationsData.set(mapped);
+    const inVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 100,
+      siteId: activeSiteId,
+      clientId: activeClientId,
+      eventType: 'GATE_IN',
+      from,
+      to,
+    });
+
+    const outVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 100,
+      siteId: activeSiteId,
+      clientId: activeClientId,
+      eventType: 'GATE_OUT',
+      from,
+      to,
+    });
+
+    const allVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 100,
+      siteId: activeSiteId,
+      clientId: activeClientId,
+      from,
+      to,
+    });
+
+    const todayInVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId: activeSiteId,
+      clientId: activeClientId,
+      eventType: 'GATE_IN',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    const todayOutVisits$ = this.gateEventService.getVisits({
+      page: 1,
+      pageSize: 1,
+      siteId: activeSiteId,
+      clientId: activeClientId,
+      eventType: 'GATE_OUT',
+      from: todayStartIso,
+      to: todayEndIso,
+    });
+
+    forkJoin({
+      inRes: inVisits$,
+      outRes: outVisits$,
+      allRes: allVisits$,
+      todayInRes: todayInVisits$,
+      todayOutRes: todayOutVisits$,
+    }).subscribe({
+      next: ({ inRes, outRes, allRes, todayInRes, todayOutRes }) => {
+        this.isLoading.set(false);
+
+        const inItems: any[] = inRes?.items ?? (Array.isArray(inRes) ? (inRes as any) : []);
+        const outItems: any[] = outRes?.items ?? (Array.isArray(outRes) ? (outRes as any) : []);
+        const allItems: any[] = allRes?.items ?? (Array.isArray(allRes) ? (allRes as any) : []);
+
+        const inTotal = inRes?.totalCount ?? inItems.length;
+        const outTotal = outRes?.totalCount ?? outItems.length;
+        const todayIn = todayInRes?.totalCount ?? 0;
+        const todayOut = todayOutRes?.totalCount ?? 0;
+
+        this.liveGateInCount.set(inTotal);
+        this.liveGateOutCount.set(outTotal);
+        this.todayGateInCount.set(todayIn);
+        this.todayGateOutCount.set(todayOut);
+
+        // Deduplicate and merge items by visitId
+        const visitMap = new Map<string, any>();
+
+        inItems.forEach((item: any) => {
+          const vId = item.visitId || item.VisitId || item.id || item.Id || crypto.randomUUID();
+          visitMap.set(vId, { ...item, _explicitDirection: 'IN' });
+        });
+
+        outItems.forEach((item: any) => {
+          const vId = item.visitId || item.VisitId || item.id || item.Id || crypto.randomUUID();
+          visitMap.set(vId, { ...item, _explicitDirection: 'OUT' });
+        });
+
+        allItems.forEach((item: any) => {
+          const vId = item.visitId || item.VisitId || item.id || item.Id || crypto.randomUUID();
+          if (!visitMap.has(vId)) {
+            visitMap.set(vId, item);
           }
-        },
-        error: () => {},
-      });
+        });
+
+        const mergedItems = Array.from(visitMap.values());
+
+        if (mergedItems.length > 0) {
+          const mapped: GateOperationsReportRow[] = mergedItems.map((v, idx) => {
+            const eventsList = Array.isArray(v.events) ? v.events : Array.isArray(v.Events) ? v.Events : [];
+            const primaryEvent = eventsList.length > 0 ? eventsList[0] : null;
+
+            const explicitDir = v._explicitDirection;
+            const rawType = (
+              explicitDir ||
+              primaryEvent?.eventType ||
+              primaryEvent?.EventType ||
+              v.eventType ||
+              v.EventType ||
+              (v.status === 'DEPARTED' ? 'GATE_OUT' : 'GATE_IN')
+            ).toUpperCase();
+
+            const isOut = explicitDir === 'OUT' || rawType.includes('OUT') || rawType.includes('EXIT') || v.status === 'DEPARTED';
+            const direction: 'IN' | 'OUT' = isOut ? 'OUT' : 'IN';
+
+            const containerNo =
+              v.containerNumber ||
+              v.ContainerNumber ||
+              primaryEvent?.detectedContainerNumber ||
+              primaryEvent?.DetectedContainerNumber ||
+              v.containers?.[0]?.containerNumber ||
+              v.Containers?.[0]?.ContainerNumber ||
+              '—';
+
+            const truckNo =
+              (v.truckNumber && v.truckNumber !== 'NA' ? v.truckNumber : null) ||
+              (v.TruckNumber && v.TruckNumber !== 'NA' ? v.TruckNumber : null) ||
+              (primaryEvent?.detectedTruckNumber && primaryEvent?.detectedTruckNumber !== 'NA' ? primaryEvent.detectedTruckNumber : null) ||
+              (primaryEvent?.DetectedTruckNumber && primaryEvent?.DetectedTruckNumber !== 'NA' ? primaryEvent.DetectedTruckNumber : null) ||
+              '—';
+
+            const driverName =
+              v.driverName ||
+              v.DriverName ||
+              primaryEvent?.detectedDriverName ||
+              primaryEvent?.DetectedDriverName ||
+              'Unassigned';
+
+            const dObj = new Date(primaryEvent?.capturedAt ?? primaryEvent?.CapturedAt ?? v.createdAt ?? v.CreatedAt ?? Date.now());
+            const dateStr = isNaN(dObj.getTime())
+              ? 'Today'
+              : dObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+                ' ' +
+                dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            const rawDeviceId = primaryEvent?.deviceId ?? primaryEvent?.DeviceId ?? '';
+            const gateLane = rawDeviceId
+              ? `GATE-${String(rawDeviceId).slice(0, 4).toUpperCase()}`
+              : (isOut ? 'GATE-02 (Outbound)' : 'GATE-01 (Inbound)');
+
+            const vNumber = v.visitNumber || v.VisitNumber || v.visitId || v.VisitId || '';
+            const visitNo = vNumber.startsWith('VST-') || vNumber.startsWith('VISIT-')
+              ? vNumber
+              : `VST-${dObj.getFullYear() || 2026}-${String(vNumber || idx + 1).slice(-6).padStart(4, '0')}`;
+
+            const conf =
+              v.containerConfidence ??
+              v.ContainerConfidence ??
+              primaryEvent?.detectedContainerConfidence ??
+              primaryEvent?.DetectedContainerConfidence ??
+              0.95;
+            const isHeld = v.status === 'HELD' || v.status === 'Held';
+            const ocrStatus: 'Auto-Matched' | 'Manual Verified' | 'Exception' =
+              isHeld || conf < 0.8
+                ? 'Exception'
+                : conf >= 0.9
+                  ? 'Auto-Matched'
+                  : 'Manual Verified';
+
+            const rawSize = v.containerSize || v.ContainerSize || primaryEvent?.detectedContainerSize;
+            const isoType = rawSize ? `${rawSize}' Standard` : "40' HC";
+
+            const shippingLine =
+              v.shippingLine ||
+              v.ShippingLine ||
+              (containerNo && containerNo.length >= 3 && containerNo !== '—' ? containerNo.substring(0, 3).toUpperCase() : '—');
+
+            const diffDays = Math.max(0.1, (Date.now() - dObj.getTime()) / (1000 * 60 * 60 * 24));
+            const dwellTime = `${diffDays.toFixed(1)} Days`;
+
+            const isNonErp = Boolean(
+              v.isNonErp ||
+              v.IsNonErp ||
+              v.isOffErp ||
+              v.category === 'Non-ERP' ||
+              primaryEvent?.isNonErp ||
+              primaryEvent?.IsNonErp
+            );
+
+            return {
+              id: v.visitId || v.VisitId || `gate-row-${idx}`,
+              visitNo,
+              timestamp: dateStr,
+              gateLane,
+              direction,
+              truckNo,
+              driverName,
+              containerNo,
+              isoType,
+              shippingLine,
+              ocrStatus,
+              turnaroundMinutes: Math.round(5 + (idx % 12)),
+              weighbridgeKg: v.weighbridgeKg || 22000 + (idx % 8) * 1200,
+              status: v.status === 'DEPARTED' ? 'Gate Passed' : (isHeld ? 'Held' : 'Completed'),
+              dwellTime,
+              isNonErp,
+            };
+          });
+
+          this.gateOperationsData.set(mapped);
+        } else {
+          this.gateOperationsData.set([]);
+        }
+      },
+      error: () => {
+        this.isLoading.set(false);
+      },
+    });
   }
 
-  // 1. Gate Operations Report Data
-  public readonly gateOperationsData = signal<GateOperationsReportRow[]>([
-    {
-      id: 'gate-1',
-      visitNo: 'VST-2025-0517-001',
-      timestamp: '2025-05-17 08:30',
-      gateLane: 'GATE-01 (Inbound)',
-      direction: 'IN',
-      truckNo: 'MH-04-GP-8891',
-      driverName: 'Ramdas Shinde',
-      containerNo: 'MSCU 556123 4',
-      isoType: "40' HC",
-      shippingLine: 'MSC',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 8.5,
-      weighbridgeKg: 28450,
-      status: 'Completed',
-      dwellTime: '2.5 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-2',
-      visitNo: 'VST-2025-0517-002',
-      timestamp: '2025-05-17 08:45',
-      gateLane: 'GATE-02 (Outbound)',
-      direction: 'OUT',
-      truckNo: 'GJ-06-ZZ-4412',
-      driverName: 'Kishan Patel',
-      containerNo: 'HMMU 123456 7',
-      isoType: "40' HC",
-      shippingLine: 'HMM',
-      ocrStatus: 'Manual Verified',
-      turnaroundMinutes: 12.0,
-      weighbridgeKg: 32450,
-      status: 'Gate Passed',
-      dwellTime: '3.1 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-3',
-      visitNo: 'VST-2025-0517-003',
-      timestamp: '2025-05-17 09:00',
-      gateLane: 'GATE-01 (Inbound)',
-      direction: 'IN',
-      truckNo: 'MH-46-CL-9002',
-      driverName: 'Sanjay Deshmukh',
-      containerNo: 'MSKU 234567 8',
-      isoType: "40' HC",
-      shippingLine: 'Maersk',
-      ocrStatus: 'Exception',
-      turnaroundMinutes: 24.5,
-      weighbridgeKg: 26500,
-      status: 'Held',
-      dwellTime: '5.4 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-4',
-      visitNo: 'VST-2025-0517-004',
-      timestamp: '2025-05-17 09:15',
-      gateLane: 'GATE-03 (Express)',
-      direction: 'IN',
-      truckNo: 'KA-01-MJ-1290',
-      driverName: 'Venkatesh Rao',
-      containerNo: 'TEMU 992011 8',
-      isoType: "40' HC Reefer",
-      shippingLine: 'COSCO',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 6.2,
-      weighbridgeKg: 25600,
-      status: 'Completed',
-      dwellTime: '1.2 Days',
-      isNonErp: true,
-    },
-    {
-      id: 'gate-5',
-      visitNo: 'VST-2025-0517-005',
-      timestamp: '2025-05-17 09:30',
-      gateLane: 'GATE-02 (Outbound)',
-      direction: 'OUT',
-      truckNo: 'MH-46-BA-5510',
-      driverName: 'Pravin Jadhav',
-      containerNo: 'CAIU 456789 2',
-      isoType: "20' GP",
-      shippingLine: 'CMA CGM',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 9.0,
-      weighbridgeKg: 14200,
-      status: 'Gate Passed',
-      dwellTime: '4.0 Days',
-      isNonErp: true,
-    },
-    {
-      id: 'gate-6',
-      visitNo: 'VST-2025-0517-006',
-      timestamp: '2025-05-17 09:45',
-      gateLane: 'GATE-01 (Inbound)',
-      direction: 'IN',
-      truckNo: 'MH-04-ER-2201',
-      driverName: 'Ganesh More',
-      containerNo: 'TCLU 789012 3',
-      isoType: "40' HC",
-      shippingLine: 'Hapag-Lloyd',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 7.8,
-      weighbridgeKg: 19800,
-      status: 'Completed',
-      dwellTime: '2.8 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-7',
-      visitNo: 'VST-2025-0517-007',
-      timestamp: '2025-05-17 10:00',
-      gateLane: 'GATE-02 (Outbound)',
-      direction: 'OUT',
-      truckNo: 'GJ-01-AB-9812',
-      driverName: 'Irfan Sheikh',
-      containerNo: 'OOLU 123456 1',
-      isoType: "40' HC",
-      shippingLine: 'OOCL',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 8.1,
-      weighbridgeKg: 21400,
-      status: 'Gate Passed',
-      dwellTime: '3.6 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-8',
-      visitNo: 'VST-2025-0517-008',
-      timestamp: '2025-05-17 10:15',
-      gateLane: 'GATE-02 (Outbound)',
-      direction: 'OUT',
-      truckNo: 'MH-12-PQ-3344',
-      driverName: 'Dinesh Verma',
-      containerNo: 'MEDU 882910 5',
-      isoType: "40' HC",
-      shippingLine: 'MSC',
-      ocrStatus: 'Exception',
-      turnaroundMinutes: 28.0,
-      weighbridgeKg: 29500,
-      status: 'Held',
-      dwellTime: '6.2 Days',
-      isNonErp: false,
-    },
-    {
-      id: 'gate-9',
-      visitNo: 'VST-2025-0517-009',
-      timestamp: '2025-05-17 10:30',
-      gateLane: 'GATE-01 (Inbound)',
-      direction: 'IN',
-      truckNo: 'MH-06-BB-1122',
-      driverName: 'Vijay Mali',
-      containerNo: 'CXIU 998811 2',
-      isoType: "20' GP",
-      shippingLine: 'Direct Shipper',
-      ocrStatus: 'Manual Verified',
-      turnaroundMinutes: 11.5,
-      weighbridgeKg: 13500,
-      status: 'Completed',
-      dwellTime: '1.9 Days',
-      isNonErp: true,
-    },
-    {
-      id: 'gate-10',
-      visitNo: 'VST-2025-0517-010',
-      timestamp: '2025-05-17 10:45',
-      gateLane: 'GATE-02 (Outbound)',
-      direction: 'OUT',
-      truckNo: 'MH-43-XY-9080',
-      driverName: 'Suresh Patil',
-      containerNo: 'ZIMU 773322 0',
-      isoType: "40' HC",
-      shippingLine: 'Direct Shipper',
-      ocrStatus: 'Auto-Matched',
-      turnaroundMinutes: 9.8,
-      weighbridgeKg: 27100,
-      status: 'Gate Passed',
-      dwellTime: '3.8 Days',
-      isNonErp: true,
-    },
-  ]);
+  // 1. Gate Operations Report Data (Live API bound)
+  public readonly gateOperationsData = signal<GateOperationsReportRow[]>([]);
 
   // 2. Container Mismatch & OCR Exceptions Audit Data
   public readonly containerMismatchData = signal<ContainerMismatchReportRow[]>([
@@ -595,25 +618,31 @@ export class ReportService {
 
     if (cat === 'gate-operations') {
       const rows = this.gateOperationsData();
-      const avgTat = (rows.reduce((sum, r) => sum + r.turnaroundMinutes, 0) / rows.length).toFixed(1);
-      const totalPassed = rows.filter((r) => r.status === 'Completed' || r.status === 'Gate Passed').length;
+      const avgTat =
+        rows.length > 0 ? (rows.reduce((sum, r) => sum + r.turnaroundMinutes, 0) / rows.length).toFixed(1) : '0.0';
+      const inCount = this.liveGateInCount() > 0 ? this.liveGateInCount() : rows.filter((r) => r.direction === 'IN').length;
+      const outCount = this.liveGateOutCount() > 0 ? this.liveGateOutCount() : rows.filter((r) => r.direction === 'OUT').length;
+      const totalMovements = inCount + outCount > 0 ? inCount + outCount : rows.length;
+      const autoMatchedCount = rows.filter((r) => r.ocrStatus === 'Auto-Matched').length;
+      const matchRate = rows.length > 0 ? `${Math.round((autoMatchedCount / rows.length) * 100)}%` : '100%';
+
       return {
         metric1Label: 'Total Gate Movements',
-        metric1Value: rows.length,
-        metric1Trend: '↑ 14% vs yesterday',
+        metric1Value: totalMovements,
+        metric1Trend: `${inCount} In / ${outCount} Out`,
         metric1IsPositive: true,
         metric2Label: 'Avg Turnaround (TAT)',
         metric2Value: `${avgTat} mins`,
-        metric2Trend: '↓ 2.1 mins faster',
+        metric2Trend: 'Live Operations',
         metric2IsPositive: true,
         metric3Label: 'OCR Auto-Match Rate',
-        metric3Value: '91.4%',
-        metric3Trend: '↑ 4.2% AI accuracy',
+        metric3Value: matchRate,
+        metric3Trend: 'AI Vision Accuracy',
         metric3IsPositive: true,
-        metric4Label: 'Gate Throughput (TEU/hr)',
-        metric4Value: '38 TEU',
-        metric4Trend: 'Peak efficiency',
-        metric4IsPositive: true,
+        metric4Label: 'Active Exceptions',
+        metric4Value: rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length,
+        metric4Trend: 'Pending Review',
+        metric4IsPositive: false,
       };
     } else if (cat === 'container-mismatch') {
       const rows = this.containerMismatchData();
@@ -779,14 +808,15 @@ export class ReportService {
   }
 
   public setDatePreset(preset: ReportDateFilter['preset']): void {
-    const today = new Date().toISOString().slice(0, 10);
+    const range = this.getDateRangeForPreset(preset);
     this.filter.update((f) => ({
       ...f,
       preset,
-      startDate: today,
-      endDate: today,
+      startDate: range.from ? range.from.slice(0, 10) : '',
+      endDate: range.to ? range.to.slice(0, 10) : '',
     }));
-    this.showToast(`Report updated for ${preset.toUpperCase()}`);
+    this.loadGateOperationsData(undefined, undefined, range.from, range.to);
+    this.showToast(`Report updated for ${preset === 'all' ? 'ALL DATES' : preset.toUpperCase()}`);
   }
 
   public showToast(msg: string): void {

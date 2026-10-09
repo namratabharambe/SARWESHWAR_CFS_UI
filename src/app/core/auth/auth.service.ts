@@ -647,24 +647,6 @@ export class AuthService {
         icon: 'sensor_occupied',
         route: '/gate-events',
         order: 2,
-        children: [
-          {
-            id: 'gate-in',
-            title: 'Gate In',
-            transKey: 'NAV.GATE_IN',
-            icon: 'login',
-            route: '/gate-events/in',
-            order: 1,
-          },
-          {
-            id: 'gate-out',
-            title: 'Gate Out',
-            transKey: 'NAV.GATE_OUT',
-            icon: 'logout',
-            route: '/gate-events/out',
-            order: 2,
-          },
-        ],
       },
       { id: 'tasks', title: 'Tasks', transKey: 'NAV.TASKS', icon: 'task_alt', route: '/tasks', order: 3 },
       {

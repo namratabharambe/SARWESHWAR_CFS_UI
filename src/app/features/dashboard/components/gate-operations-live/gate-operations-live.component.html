@@ -71,7 +71,7 @@
           Gate In
         </span>
         <span class="mt-0.5 truncate text-xs font-medium leading-normal text-slate-500 dark:text-slate-400">
-          {{ gateInCount() }} Trucks
+          {{ gateInCount() }}
         </span>
       </div>
     </button>
@@ -109,7 +109,7 @@
           Gate Out
         </span>
         <span class="mt-0.5 truncate text-xs font-medium leading-normal text-slate-500 dark:text-slate-400">
-          {{ gateOutCount() }} Trucks
+          {{ gateOutCount() }}
         </span>
       </div>
     </button>
@@ -122,10 +122,10 @@
         <!-- Stage Circle Icon (Same size as Exceptions & Alerts: h-8 w-8, icon h-4 w-4, stroke-width="2") -->
         <div
           class="shadow-2xs flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-          [class.bg-sky-100]="stage.iconType === 'truck-in'"
-          [class.text-sky-600]="stage.iconType === 'truck-in'"
-          [class.dark:bg-sky-950\/60]="stage.iconType === 'truck-in'"
-          [class.dark:text-sky-400]="stage.iconType === 'truck-in'"
+          [class.bg-sky-100]="stage.iconType === 'truck-in' || stage.iconType === 'truck-out'"
+          [class.text-sky-600]="stage.iconType === 'truck-in' || stage.iconType === 'truck-out'"
+          [class.dark:bg-sky-950\/60]="stage.iconType === 'truck-in' || stage.iconType === 'truck-out'"
+          [class.dark:text-sky-400]="stage.iconType === 'truck-in' || stage.iconType === 'truck-out'"
           [class.bg-emerald-100]="stage.iconType === 'ocr-scan' || stage.iconType === 'verification'"
           [class.text-emerald-600]="stage.iconType === 'ocr-scan' || stage.iconType === 'verification'"
           [class.dark:bg-emerald-950\/60]="stage.iconType === 'ocr-scan' || stage.iconType === 'verification'"
@@ -137,6 +137,22 @@
           @switch (stage.iconType) {
             @case ('truck-in') {
               <!-- Handheld Scanner Terminals / Arrived Icon -->
+              <svg
+                class="h-4 w-4 fill-none stroke-current"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                <rect x="4.75" y="5.5" width="5.5" height="6.5" rx="1.5" />
+                <line x1="7.5" y1="12" x2="7.5" y2="15.5" />
+                <circle cx="7.5" cy="17" r="1.1" />
+                <rect x="13.75" y="7" width="5.5" height="6.5" rx="1.5" />
+                <line x1="16.5" y1="13.5" x2="16.5" y2="17" />
+                <circle cx="16.5" cy="18.5" r="1.1" />
+              </svg>
+            }
+            @case ('truck-out') {
+              <!-- Departed / Truck Out Icon -->
               <svg
                 class="h-4 w-4 fill-none stroke-current"
                 stroke-width="2"
