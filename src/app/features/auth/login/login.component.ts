@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'core/auth/auth.service';
@@ -37,6 +38,18 @@ export class LoginComponent {
 
   public readonly isAuthenticating = signal<boolean>(false);
   public readonly splashStep = signal<string>('Authenticating credentials...');
+
+  constructor() {
+    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+      if (this.error()) {
+        this.error.set('');
+      }
+    });
+  }
+
+  public dismissError(): void {
+    this.error.set('');
+  }
 
   public togglePasswordVisibility(): void {
     this.showPassword.update((v) => !v);

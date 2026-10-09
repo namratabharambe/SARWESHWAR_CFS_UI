@@ -33,13 +33,23 @@ export class ReportsComponent implements OnInit {
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(10);
 
-  // Dynamic Gate Operation KPI counts
+  // Dynamic Gate Operation KPI counts from live Gate In & Gate Out API
   public readonly gateOpKpis = computed(() => {
     const rows = this.reportService.gateOperationsData();
-    const gateIn = rows.filter((r) => r.direction === 'IN' && !r.isNonErp).length;
-    const gateOut = rows.filter((r) => r.direction === 'OUT' && !r.isNonErp).length;
-    const nonErpGateIn = rows.filter((r) => r.direction === 'IN' && r.isNonErp).length;
-    const nonErpGateOut = rows.filter((r) => r.direction === 'OUT' && r.isNonErp).length;
+    const inRows = rows.filter((r) => r.direction === 'IN');
+    const outRows = rows.filter((r) => r.direction === 'OUT');
+
+    const nonErpGateIn = inRows.filter((r) => r.isNonErp).length;
+    const nonErpGateOut = outRows.filter((r) => r.isNonErp).length;
+
+    const apiInTotal = this.reportService.liveGateInCount();
+    const apiOutTotal = this.reportService.liveGateOutCount();
+
+    const totalIn = apiInTotal > 0 ? apiInTotal : inRows.length;
+    const totalOut = apiOutTotal > 0 ? apiOutTotal : outRows.length;
+
+    const gateIn = nonErpGateIn > 0 ? Math.max(0, totalIn - nonErpGateIn) : totalIn;
+    const gateOut = nonErpGateOut > 0 ? Math.max(0, totalOut - nonErpGateOut) : totalOut;
     const exception = rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length;
 
     return {
@@ -49,6 +59,16 @@ export class ReportsComponent implements OnInit {
       nonErpGateOut,
       exception,
     };
+  });
+
+  // Total live Gate Operations count
+  public readonly totalGateOperationsCount = computed(() => {
+    const apiIn = this.reportService.liveGateInCount();
+    const apiOut = this.reportService.liveGateOutCount();
+    if (apiIn + apiOut > 0) {
+      return apiIn + apiOut;
+    }
+    return this.reportService.gateOperationsData().length;
   });
 
   // Filtered rows applying both search query and active KPI card filter
@@ -95,6 +115,7 @@ export class ReportsComponent implements OnInit {
   ];
 
   public readonly datePresets = [
+    { value: 'all', label: 'All Dates' },
     { value: 'today', label: 'Today' },
     { value: 'yesterday', label: 'Yesterday' },
     { value: 'last7days', label: 'Last 7 Days' },
@@ -105,7 +126,7 @@ export class ReportsComponent implements OnInit {
   public readonly selectedPresetLabel = computed(() => {
     const currentPreset = this.reportService.filter().preset;
     const found = this.datePresets.find((dp) => dp.value === currentPreset);
-    return found ? found.label : 'Today';
+    return found ? found.label : 'All Dates';
   });
 
   public setCategory(cat: ReportCategory): void {
