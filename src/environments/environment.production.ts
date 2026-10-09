@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://cfsapi.prosperassettracking.com/api',
+  apiBaseUrl: 'https://apim-cfs-dev.azure-api.net/admin',
   gateApiBaseUrl: 'https://syapi.prosperassettracking.com/api/v1',
 };
 
