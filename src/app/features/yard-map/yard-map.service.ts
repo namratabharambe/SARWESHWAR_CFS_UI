@@ -37,11 +37,13 @@ function mapGpsSlotToParkingSlot(g: CfsGpsSlot): ParkingSlot {
   let zone: YardZoneType = 'truck-parking';
   if (g.block === 'A') zone = 'stacking-import';
   else if (g.block === 'B') zone = 'stacking-export';
-  else if (g.block === 'C') zone = 'empty-depot';
+  else if (g.block === 'C' || g.block === 'ED') zone = 'empty-depot';
   else if (g.block === 'D') zone = 'truck-parking';
+  else if (g.block === 'E') zone = 'stacking-export';
   else if (g.block === 'F') zone = 'truck-parking';
-  else if (g.block === 'I') zone = 'inspection-bay';
+  else if (g.block === 'G') zone = 'truck-parking';
   else if (g.block === 'H') zone = 'reefer-parking';
+  else if (g.block === 'I' || g.block === 'HS') zone = 'inspection-bay';
 
   return {
     id: g.id,
@@ -110,7 +112,7 @@ export class YardMapService {
       operator: 'Mahesh Patil (Cert A)',
       status: 'active',
       currentLocation: 'Lane D-06 (Central Aisle)',
-      taskDescription: 'Equipment Ready / Standby',
+      taskDescription: 'Stacking MAEU 991204-7 to Tier 3',
       xPercent: 52,
       yPercent: 48,
       headingDeg: 45,
@@ -122,7 +124,7 @@ export class YardMapService {
       operator: 'Dilip Rane',
       status: 'active',
       currentLocation: 'Inspection Bay Ramp I-1',
-      taskDescription: 'Equipment Ready / Standby',
+      taskDescription: 'Unloading Heavy Machinery Cargo',
       xPercent: 18,
       yPercent: 86,
       headingDeg: 270,
@@ -133,8 +135,8 @@ export class YardMapService {
       type: 'Terminal Tractor',
       operator: 'Suresh More',
       status: 'active',
-      currentLocation: 'Main Transit Way',
-      taskDescription: 'Equipment Ready / Standby',
+      currentLocation: 'Main Transit Way (Block C to Gate)',
+      taskDescription: 'Hauling Empty Container to Block C-1',
       xPercent: 58,
       yPercent: 22,
       headingDeg: 180,
@@ -142,7 +144,30 @@ export class YardMapService {
   ]);
 
   // Moving Vehicles Animation State
-  public readonly movingVehicles = signal<MovingVehicle[]>([]);
+  public readonly movingVehicles = signal<MovingVehicle[]>([
+    {
+      id: 'MV-01',
+      truckNumber: 'MH-46-AR-8821',
+      containerNumber: 'MSKU 910283-4',
+      driverName: 'Rajesh Sharma',
+      source: 'Gate OCR Lane 1',
+      target: 'Slot C-1 8',
+      progressPercent: 72,
+      statusText: 'Navigating GPS Artery to Slot C-1 8',
+      type: 'ENTRY_TO_BAY',
+    },
+    {
+      id: 'MV-02',
+      truckNumber: 'GJ-06-TT-5510',
+      containerNumber: 'MEDU 839102-4',
+      driverName: 'Harish Patel',
+      source: 'Block B-3 (Export)',
+      target: 'Weighbridge Gate',
+      progressPercent: 38,
+      statusText: 'Container moving to weighbridge for gross certification',
+      type: 'INTERNAL_SHUFFLE',
+    },
+  ]);
 
   // Read-only accessors
   public readonly slots = this._slots.asReadonly();

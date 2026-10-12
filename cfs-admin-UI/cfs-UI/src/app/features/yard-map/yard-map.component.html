@@ -88,20 +88,33 @@
       <div class="flex items-center rounded-xl border border-slate-700 bg-slate-900/90 p-1">
         <button
           type="button"
+          (click)="setTileLayer('google-satellite')"
+          [class.bg-gradient-to-r]="activeBaseLayer() === 'google-satellite'"
+          [class.from-cyan-600]="activeBaseLayer() === 'google-satellite'"
+          [class.to-blue-600]="activeBaseLayer() === 'google-satellite'"
+          [class.text-white]="activeBaseLayer() === 'google-satellite'"
+          [class.text-slate-300]="activeBaseLayer() !== 'google-satellite'"
+          class="rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition shadow-sm"
+          title="Pure High-Resolution Satellite (No Business Labels)">
+          Satellite
+        </button>
+        <button
+          type="button"
           (click)="setTileLayer('google-hybrid')"
           [class.bg-gradient-to-r]="activeBaseLayer() === 'google-hybrid'"
-          [class.from-cyan-500]="activeBaseLayer() === 'google-hybrid'"
+          [class.from-cyan-600]="activeBaseLayer() === 'google-hybrid'"
           [class.to-blue-600]="activeBaseLayer() === 'google-hybrid'"
           [class.text-white]="activeBaseLayer() === 'google-hybrid'"
           [class.text-slate-300]="activeBaseLayer() !== 'google-hybrid'"
-          class="rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition shadow-sm">
-          Satellite
+          class="rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition shadow-sm"
+          title="Satellite with Road & Boundary Labels">
+          Hybrid
         </button>
         <button
           type="button"
           (click)="setTileLayer('google-street')"
           [class.bg-gradient-to-r]="activeBaseLayer() === 'google-street'"
-          [class.from-cyan-500]="activeBaseLayer() === 'google-street'"
+          [class.from-cyan-600]="activeBaseLayer() === 'google-street'"
           [class.to-blue-600]="activeBaseLayer() === 'google-street'"
           [class.text-white]="activeBaseLayer() === 'google-street'"
           [class.text-slate-300]="activeBaseLayer() !== 'google-street'"
@@ -125,10 +138,24 @@
     <div #leafletMapContainer class="h-full w-full"></div>
 
     <!-- Map Coordinate Telemetry (Bottom Left) -->
-    <div class="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 rounded-2xl border border-cyan-500/30 bg-slate-950/90 px-3.5 py-2 font-mono text-xs text-slate-300 shadow-2xl backdrop-blur-xl">
-      <span class="h-2.5 w-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+    <div class="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 rounded-2xl border border-slate-700/60 bg-slate-950/90 px-3.5 py-2 font-mono text-xs text-slate-300 shadow-2xl backdrop-blur-xl">
+      <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
       <span class="text-cyan-300 font-bold">18.9028° N, 73.0465° E</span>
-      <span class="border-l border-slate-700 pl-2 text-emerald-400 font-bold">LOD Clean Geofence Layer</span>
+      <span class="border-l border-slate-700 pl-2 text-slate-400">Terminal Geofence Layer</span>
+    </div>
+
+    <!-- Sleek Floating Enterprise Block Quick-Filter Strip (Centered at bottom, non-obtrusive) -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-[400] hidden lg:flex items-center gap-1.5 overflow-x-auto max-w-[55vw] rounded-2xl border border-slate-700/60 bg-slate-950/90 p-1.5 shadow-2xl backdrop-blur-xl">
+      @for (c of blockClusters(); track c.block) {
+        <button
+          type="button"
+          (click)="flyToBlockCluster(c)"
+          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1 text-[11px] font-bold transition hover:scale-105 active:scale-95 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-300 hover:border-cyan-500/60 hover:text-white">
+          <span class="h-2 w-2 rounded-full" [style.backgroundColor]="c.color"></span>
+          <span>Block {{ c.block }}</span>
+          <span class="font-mono text-[9px] text-slate-400 font-bold">({{ c.occupiedSlots }}/{{ c.totalSlots }})</span>
+        </button>
+      }
     </div>
 
     <!-- Custom Zoom Overlay (Bottom Right) -->

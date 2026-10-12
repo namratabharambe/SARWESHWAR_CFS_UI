@@ -15,10 +15,20 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class GateEventService extends BaseApiService<GateEventsResponse, GateEventDetailDto, GateEventCaptureRequest> {
-  private readonly gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+  private readonly gateBaseUrl: string;
 
   constructor(http: HttpClient) {
-    super(http, (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1');
+    const resolvedUrl = GateEventService.getResolvedGateBaseUrl();
+    super(http, resolvedUrl);
+    this.gateBaseUrl = resolvedUrl;
+  }
+
+  private static getResolvedGateBaseUrl(): string {
+    let url = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1').replace(/\/+$/, '');
+    if (url.endsWith('/api')) {
+      url = `${url}/v1`;
+    }
+    return url;
   }
 
   public override controllerName(): string {

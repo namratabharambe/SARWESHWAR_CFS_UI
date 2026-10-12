@@ -1,4 +1,4 @@
-export type ContainerYardStatus = 'In Yard' | 'Overstay' | 'Hold' | 'Ready Out';
+export type ContainerYardStatus = 'In Yard' | 'Overstay' | 'Hold' | 'Ready Out' | 'Gate Out';
 
 export type ContainerFullEmpty = 'Full' | 'Empty';
 
@@ -44,6 +44,8 @@ export interface InventoryKpiMetrics {
   hazardousTrend?: string;
   overstayCount: number;
   overstayTrend: string;
+  gateInCount?: number;
+  gateOutCount?: number;
 }
 
 export interface InventoryTypeDistribution {

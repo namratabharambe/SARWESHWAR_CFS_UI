@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'core/auth/auth.service';
+import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { FocusInvalidFieldDirective } from 'shared/directives';
 import { TranslatePipe } from 'shared/pipes';
 
@@ -11,7 +11,7 @@ import { ThemeService } from 'core/services/theme.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, FocusInvalidFieldDirective, TranslatePipe],
+  imports: [ReactiveFormsModule, FocusInvalidFieldDirective],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,18 +38,6 @@ export class LoginComponent {
 
   public readonly isAuthenticating = signal<boolean>(false);
   public readonly splashStep = signal<string>('Authenticating credentials...');
-
-  constructor() {
-    this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => {
-      if (this.error()) {
-        this.error.set('');
-      }
-    });
-  }
-
-  public dismissError(): void {
-    this.error.set('');
-  }
 
   public togglePasswordVisibility(): void {
     this.showPassword.update((v) => !v);

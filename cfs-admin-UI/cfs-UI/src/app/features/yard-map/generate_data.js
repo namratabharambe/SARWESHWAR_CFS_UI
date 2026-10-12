@@ -1,13 +1,27 @@
 const fs = require('fs');
 const path = require('path');
 
-const csvPath = fs.existsSync('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences.csv')
-  ? path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences.csv')
-  : path.resolve('c:/sarvwshwar ui/Geofences.csv');
+// Locate Geofences (1).csv or Geofences.csv
+const candidates = [
+  path.resolve(__dirname, '../../../../Geofences (1).csv'),
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences (1).csv'),
+  path.resolve('c:/sarvwshwar ui/Geofences (1).csv'),
+  path.resolve(__dirname, '../../../../Geofences.csv'),
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences.csv'),
+  path.resolve('c:/sarvwshwar ui/Geofences.csv'),
+];
+
+let csvPath = candidates.find((p) => fs.existsSync(p));
+if (!csvPath) {
+  throw new Error('Geofences CSV not found in any candidate path!');
+}
 
 console.log(`Reading coordinates from: ${csvPath}`);
-const outputPath = path.resolve(__dirname, 'yard-map-data.ts');
-const jsonOutputPath = path.resolve(__dirname, 'geofences-data.json');
+
+const targetDirs = [
+  path.resolve(__dirname),
+  path.resolve('c:/sarvwshwar ui/src/app/features/yard-map'),
+];
 
 const content = fs.readFileSync(csvPath, 'utf-8');
 const lines = content.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -50,10 +64,7 @@ for (let i = 1; i < lines.length; i++) {
   });
 }
 
-console.log(`Parsed ${slots.length} geofences from Geofences.csv`);
-
-// Save JSON artifact
-fs.writeFileSync(jsonOutputPath, JSON.stringify(slots, null, 2), 'utf-8');
+console.log(`Parsed ${slots.length} surveyed geofence locations from CSV.`);
 
 const shippingLines = ['Maersk', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen'];
 const isoTypes = ['40HC', '20GP', '45R1', '40OT', '20FR'];
@@ -64,40 +75,69 @@ const tasks = [
   'Empty Repositioning',
   'Pre-Trip Cold Inspection',
   'Dangerous Goods Buffer',
+  'Direct Port Delivery Staging',
+  'Export Seal Verification',
 ];
 
+let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
+
 const cfsSlots = slots.map((s, idx) => {
-  const parts = s.name.split(' ');
-  const code = parts[0] || s.name;
-  const bay = parts[1] || `${idx + 1}`;
-  const blockLetter = s.name.charAt(0).toUpperCase();
+  const name = s.name.trim();
+  const parts = name.split(/[-\s]+/);
+  
+  let block = 'D';
+  if (name.startsWith('ED')) block = 'ED';
+  else if (name.startsWith('HS')) block = 'HS';
+  else if (name.startsWith('14')) block = '14';
+  else if (/^[A-Za-z]/.test(name)) block = name.charAt(0).toUpperCase();
+
+  const code = name;
+  const bay = parts[parts.length - 1] || `${idx + 1}`;
+  const row = parts[0] || code;
 
   let zoneType = 'Block D (General Yard)';
-  let block = blockLetter;
-  let row = code;
-
   let cycle = 'General Staging Cycle';
-  if (blockLetter === 'A') {
+
+  if (block === 'A') {
     zoneType = 'Block A (Import)';
     cycle = 'Import Clearance Cycle';
-  } else if (blockLetter === 'B') {
+  } else if (block === 'B') {
     zoneType = 'Block B (Export)';
     cycle = 'Export Buffer Cycle';
-  } else if (blockLetter === 'C') {
+  } else if (block === 'C') {
     zoneType = 'Block C (Empty Depot)';
     cycle = 'Empty Storage Cycle';
-  } else if (blockLetter === 'F') {
+  } else if (block === 'D') {
+    zoneType = 'Block D (General Yard)';
+    cycle = 'General Staging Cycle';
+  } else if (block === 'E') {
+    zoneType = 'Block E (Export Staging)';
+    cycle = 'Export Buffer Cycle';
+  } else if (block === 'F') {
     zoneType = 'Block F (Trailer Parking)';
     cycle = 'Trailer Marshalling Cycle';
-  } else if (blockLetter === 'H') {
+  } else if (block === 'G') {
+    zoneType = 'Block G (Heavy Ground Storage)';
+    cycle = 'General Staging Cycle';
+  } else if (block === 'H') {
     zoneType = 'Block H (Reefer Grid)';
     cycle = 'Reefer Cold Chain Cycle';
-  } else if (blockLetter === 'I') {
+  } else if (block === 'I') {
     zoneType = 'Block I (Customs Shed)';
     cycle = 'Customs Examination Cycle';
+  } else if (block === 'ED') {
+    zoneType = 'Empty Depot (ED-1)';
+    cycle = 'Empty Storage Cycle';
+  } else if (block === 'HS') {
+    zoneType = 'Hazardous Grid (HS)';
+    cycle = 'Hazardous Cargo Cycle';
+  } else if (block === '14') {
+    zoneType = 'Bay 14 Marshalling';
+    cycle = 'Trailer Marshalling Cycle';
   }
 
-  const isOccupied = (idx * 7 + 13) % 10 < 6; // 60% realistic live occupancy
+  // Realistic occupancy distribution (~62% occupied)
+  const isOccupied = (idx * 11 + 17) % 10 < 6;
   const status = isOccupied ? 'occupied' : 'available';
   const shippingLine = isOccupied ? shippingLines[idx % shippingLines.length] : undefined;
   const isoCode = isOccupied ? isoTypes[idx % isoTypes.length] : undefined;
@@ -105,9 +145,17 @@ const cfsSlots = slots.map((s, idx) => {
   const containerNumber = isOccupied
     ? `${(shippingLine || 'MSCU').substring(0, 4).toUpperCase()}U${7000000 + idx * 197}`
     : undefined;
-  const isReefer = blockLetter === 'H' || (isOccupied && idx % 7 === 0);
-  const cargoType = isReefer ? 'Reefer' : blockLetter === 'C' ? 'Empty' : idx % 9 === 0 ? 'Hazardous' : 'Dry';
-  const temperature = isReefer ? `${-18.0 - (idx % 5) * 0.4}°C` : undefined;
+
+  const isReefer = block === 'H' || (isOccupied && idx % 13 === 0);
+  const isHazardous = block === 'HS' || (isOccupied && idx % 19 === 0);
+  const isEmpty = block === 'C' || block === 'ED';
+
+  let cargoType = 'Dry';
+  if (isReefer) cargoType = 'Reefer';
+  else if (isHazardous) cargoType = 'Hazardous';
+  else if (isEmpty) cargoType = 'Empty';
+
+  const temperature = isReefer ? `${(-18.0 - (idx % 6) * 0.5).toFixed(1)}°C` : undefined;
 
   const polygon = [
     { lat: s.coords[0][0], lng: s.coords[0][1] },
@@ -116,6 +164,13 @@ const cfsSlots = slots.map((s, idx) => {
     { lat: s.coords[3][0], lng: s.coords[3][1] },
   ];
 
+  polygon.forEach((p) => {
+    minLat = Math.min(minLat, p.lat);
+    maxLat = Math.max(maxLat, p.lat);
+    minLng = Math.min(minLng, p.lng);
+    maxLng = Math.max(maxLng, p.lng);
+  });
+
   const center = {
     lat: s.coords[4][0],
     lng: s.coords[4][1],
@@ -123,8 +178,8 @@ const cfsSlots = slots.map((s, idx) => {
 
   return {
     id: `slot-${idx + 1}`,
-    name: s.name,
-    code: s.name,
+    name,
+    code: name,
     block,
     row,
     bay,
@@ -134,23 +189,26 @@ const cfsSlots = slots.map((s, idx) => {
     center,
     polygon,
     truckNumber,
-    driverName: isOccupied ? `Driver #${101 + (idx % 50)}` : undefined,
-    transporter: isOccupied ? 'Prosper Freight Logistics' : undefined,
+    driverName: isOccupied ? `Driver #${101 + (idx % 70)}` : undefined,
+    transporter: isOccupied ? 'Sarveshwar Freight Logistics' : undefined,
     containerNumber,
     isoCode,
     shippingLine,
     cargoType,
     temperature,
     sealNumber: isOccupied ? `CFS-${88000 + idx}` : undefined,
-    grossWeightKg: isOccupied ? 18000 + (idx * 340) % 14000 : undefined,
+    grossWeightKg: isOccupied ? 18000 + ((idx * 340) % 14000) : undefined,
     dwellTime: isOccupied ? `${(idx % 48) + 2}h ${((idx * 17) % 60)}m` : undefined,
-    entryTime: isOccupied ? `2026-09-28 0${(idx % 8) + 1}:30` : undefined,
+    entryTime: isOccupied ? `2026-10-10 0${(idx % 8) + 1}:30` : undefined,
     assignedTask: isOccupied ? tasks[idx % tasks.length] : undefined,
     tierLevel: isOccupied ? (idx % 4) + 1 : undefined,
     maxTiers: 4,
     priority: idx % 11 === 0,
   };
 });
+
+const centerLat = +( (minLat + maxLat) / 2 ).toFixed(6);
+const centerLng = +( (minLng + maxLng) / 2 ).toFixed(6);
 
 const tsCode = `export interface GpsCoordinate {
   lat: number;
@@ -164,14 +222,7 @@ export interface CfsGpsSlot {
   block: string;
   row: string;
   bay: string;
-  zoneType:
-    | 'Block A (Import)'
-    | 'Block B (Export)'
-    | 'Block C (Empty Depot)'
-    | 'Block D (General Yard)'
-    | 'Block F (Trailer Parking)'
-    | 'Block H (Reefer Grid)'
-    | 'Block I (Customs Shed)';
+  zoneType: string;
   cycle?: string;
   status: 'occupied' | 'available' | 'reserved' | 'maintenance' | 'incoming';
   center: GpsCoordinate;
@@ -201,13 +252,22 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = ${JSON.stringify(cfsSlots, null, 2)};
 export const ALL_CFS_GPS_SLOTS = CFS_GPS_SLOTS;
 
 export const CFS_GEO_BOUNDS = {
-  center: { lat: 18.9028, lng: 73.0465 },
-  minLat: 18.9015,
-  maxLat: 18.9042,
-  minLng: 73.0452,
-  maxLng: 73.0475,
+  center: { lat: ${centerLat}, lng: ${centerLng} },
+  minLat: ${minLat.toFixed(6)},
+  maxLat: ${maxLat.toFixed(6)},
+  minLng: ${minLng.toFixed(6)},
+  maxLng: ${maxLng.toFixed(6)},
 };
 `;
 
-fs.writeFileSync(outputPath, tsCode, 'utf-8');
-console.log(`Successfully generated yard-map-data.ts with ${cfsSlots.length} slots matching Geofences.csv`);
+for (const dir of targetDirs) {
+  if (fs.existsSync(dir)) {
+    const jsonPath = path.resolve(dir, 'geofences-data.json');
+    const tsPath = path.resolve(dir, 'yard-map-data.ts');
+    fs.writeFileSync(jsonPath, JSON.stringify(slots, null, 2), 'utf-8');
+    fs.writeFileSync(tsPath, tsCode, 'utf-8');
+    console.log(`Wrote JSON & TS files to: ${dir}`);
+  }
+}
+
+console.log(`Successfully generated data with ${cfsSlots.length} slots from ${csvPath}`);

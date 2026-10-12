@@ -112,10 +112,10 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
         attributionControl: false,
       });
 
-      // Base tile layer
+      // Base tile layer (Default to Pure High-Resolution Satellite without commercial POI clutter)
       const tileUrl =
         this.activeMapStyle() === 'satellite'
-          ? 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+          ? 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
           : 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
 
       L.tileLayer(tileUrl, {
@@ -124,39 +124,51 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
 
       this.polygonLayerGroup = L.layerGroup().addTo(this.map);
-      this.badgeLayerGroup = L.layerGroup().addTo(this.map);
 
-      // Render all 259 surveyed geofences
+      // Enterprise Standard Marine Terminal (TOS) Harmonious Palette
       const blockColorMap: Record<string, { stroke: string; fill: string }> = {
-        A: { stroke: '#00f0ff', fill: '#06b6d4' },
-        B: { stroke: '#10b981', fill: '#059669' },
-        C: { stroke: '#6366f1', fill: '#4f46e5' },
-        D: { stroke: '#38bdf8', fill: '#0284c7' },
-        F: { stroke: '#f59e0b', fill: '#d97706' },
-        H: { stroke: '#22d3ee', fill: '#0891b2' },
+        A: { stroke: '#0284c7', fill: '#0369a1' }, // Import Containers: Classic Marine Cyan
+        B: { stroke: '#059669', fill: '#047857' }, // Export Containers: Maritime Emerald
+        C: { stroke: '#4338ca', fill: '#3730a3' }, // Empty Depot: Deep Indigo
+        D: { stroke: '#2563eb', fill: '#1d4ed8' }, // General Staging: Steel Blue
+        E: { stroke: '#059669', fill: '#047857' }, // Export Staging: Maritime Emerald
+        F: { stroke: '#b45309', fill: '#92400e' }, // Trailer Parking: Terminal Amber
+        G: { stroke: '#1d4ed8', fill: '#1e40af' }, // Heavy Ground: Steel Blue
+        H: { stroke: '#0e7490', fill: '#155e75' }, // Reefer Grid: Arctic Cold Blue
+        I: { stroke: '#b91c1c', fill: '#991b1b' }, // Customs Examination: Safety Crimson
+        ED: { stroke: '#4338ca', fill: '#3730a3' }, // Empty Depot: Deep Indigo
+        HS: { stroke: '#c2410c', fill: '#9a3412' }, // Hazardous: Warning Orange
+        '14': { stroke: '#b45309', fill: '#92400e' }, // Trailer Bay 14: Terminal Amber
       };
 
+      // Render all 544 surveyed geofences with clean enterprise TOS standards
       CFS_GPS_SLOTS.forEach((slot) => {
         const polyCoords = slot.polygon.map((pt) => [pt.lat, pt.lng]);
         const block = (slot.block || 'A').toUpperCase();
-        const colors = blockColorMap[block] || { stroke: '#06b6d4', fill: '#0891b2' };
+        const colors = blockColorMap[block] || { stroke: '#0284c7', fill: '#0369a1' };
         const isOccupied = slot.status === 'occupied';
 
+        const strokeColor = isOccupied ? colors.stroke : '#64748b';
+        const fillColor = isOccupied ? colors.fill : '#334155';
+        const fillOpacity = isOccupied ? 0.45 : 0.05;
+        const weight = isOccupied ? 1.3 : 1.0;
+
         const polygon = L.polygon(polyCoords, {
-          color: colors.stroke,
-          weight: 1.5,
-          opacity: 0.95,
-          fillColor: isOccupied ? colors.fill : '#0f172a',
-          fillOpacity: isOccupied ? 0.65 : 0.25,
-          className: 'yard-geofence-slot',
+          color: strokeColor,
+          weight,
+          opacity: isOccupied ? 0.95 : 0.65,
+          fillColor,
+          fillOpacity,
+          className: 'yard-geofence-slot cursor-pointer',
         });
 
         polygon.bindTooltip(`
-          <div class="px-2 py-1 font-sans text-xs bg-slate-950/95 text-white rounded-md border border-cyan-500/50 shadow-md">
-            <span class="font-bold text-amber-400">📍 ${slot.name}</span> <span class="text-[10px] text-cyan-200">(${slot.status})</span>
-            ${slot.containerNumber ? `<div class="font-mono text-cyan-300 text-[10px] font-bold">📦 ${slot.containerNumber}</div>` : ''}
+          <div class="px-2.5 py-1.5 font-sans text-xs bg-slate-900/95 text-white rounded-lg border border-slate-700/80 shadow-xl backdrop-blur-md">
+            <div class="font-bold font-mono text-amber-400">📍 ${slot.name} <span class="text-[9px] px-1.5 py-0.2 rounded font-extrabold uppercase ${isOccupied ? 'bg-cyan-500/20 text-cyan-300' : 'bg-emerald-500/20 text-emerald-300'}">${slot.status}</span></div>
+            <div class="text-[10px] text-slate-300 mt-0.5">${slot.zoneType}</div>
+            ${slot.containerNumber ? `<div class="font-mono text-cyan-300 text-[10px] font-bold mt-1">📦 ${slot.containerNumber}</div>` : ''}
           </div>
-        `, { sticky: true, direction: 'top', opacity: 0.95 });
+        `, { sticky: true, direction: 'top', opacity: 0.98 });
 
         polygon.on('click', () => {
           this.navigateToYardMap();
@@ -165,37 +177,8 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
         this.polygonLayerGroup.addLayer(polygon);
       });
 
-      // Render Block Cluster Badges with clean offsets
-      const clusters = [
-        { name: 'Block F (Trailers)', count: '11/19', lat: 18.9042, lng: 73.0456, icon: '🚛' },
-        { name: 'Block D (General)', count: '40/67', lat: 18.9034, lng: 73.0459, icon: '🏢' },
-        { name: 'Block C (Empty)', count: '48/79', lat: 18.9036, lng: 73.0467, icon: '📦' },
-        { name: 'Block B (Export)', count: '21/34', lat: 18.9030, lng: 73.0471, icon: '🚢' },
-        { name: 'Block A (Import)', count: '21/35', lat: 18.9023, lng: 73.0474, icon: '📥' },
-        { name: 'Block H (Reefer)', count: '15/25', lat: 18.9015, lng: 73.0470, icon: '❄️' },
-      ];
-
-      clusters.forEach((c) => {
-        const badgeIcon = L.divIcon({
-          className: 'yard-cluster-badge-icon',
-          html: `
-            <div style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(6, 182, 212, 0.7); border-radius: 6px; padding: 2px 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 3px;">
-              <span style="font-size: 10px;">${c.icon}</span>
-              <span style="color: #38bdf8; font-size: 9.5px; font-weight: 800;">${c.name}</span>
-              <span style="background: rgba(6, 182, 212, 0.25); color: #67e8f9; font-size: 8.5px; font-weight: 900; padding: 0.5px 3px; border-radius: 3px;">${c.count}</span>
-            </div>
-          `,
-          iconSize: [130, 22],
-          iconAnchor: [65, 11],
-        });
-
-        const marker = L.marker([c.lat, c.lng], { icon: badgeIcon });
-        marker.on('click', () => this.navigateToYardMap());
-        this.badgeLayerGroup.addLayer(marker);
-      });
-
-      // Keep zoomed in by default on Sarveshwar CFS yard [18.9028, 73.0467]
-      this.map.setView([18.9028, 73.0467], 18.6);
+      // Keep zoomed in by default on Sarveshwar CFS yard [18.9028, 73.0465]
+      this.map.setView([18.9028, 73.0465], 18.5);
 
       setTimeout(() => {
         if (this.map) {

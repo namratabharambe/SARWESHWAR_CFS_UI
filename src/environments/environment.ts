@@ -1,7 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: '/api',
-  gateApiBaseUrl: '/api/v1',
+  apiBaseUrl: 'https://cfsapi.prosperassettracking.com/api',
+  gateApiBaseUrl: 'https://syapi.prosperassettracking.com/api/v1',
 };
-
-

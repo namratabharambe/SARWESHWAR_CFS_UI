@@ -34,10 +34,6 @@ export interface ContainerInventoryItem {
 export interface InventoryKpiMetrics {
   totalContainers: number;
   totalTrend: string;
-  gateInCount: number;
-  gateInTrend: string;
-  gateOutCount: number;
-  gateOutTrend: string;
   importCount: number;
   importTrend: string;
   exportCount: number;
@@ -48,6 +44,8 @@ export interface InventoryKpiMetrics {
   hazardousTrend?: string;
   overstayCount: number;
   overstayTrend: string;
+  gateInCount?: number;
+  gateOutCount?: number;
 }
 
 export interface InventoryTypeDistribution {

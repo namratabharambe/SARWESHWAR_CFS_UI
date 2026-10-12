@@ -10,7 +10,9 @@ export abstract class BaseApiService<T, T1 = T, T2 = T1> {
   public abstract controllerName(): string;
 
   protected get endpointUrl(): string {
-    return `${this.baseUrl}/${this.controllerName()}`;
+    const base = (this.baseUrl ?? '').replace(/\/+$/, '');
+    const ctrl = (this.controllerName() ?? '').replace(/^\/+/, '');
+    return `${base}/${ctrl}`;
   }
 
   public get(options?: {

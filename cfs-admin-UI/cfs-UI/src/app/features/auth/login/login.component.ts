@@ -11,7 +11,7 @@ import { ThemeService } from 'core/services/theme.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CenteredDividerComponent, FocusInvalidFieldDirective, TranslatePipe],
+  imports: [ReactiveFormsModule, FocusInvalidFieldDirective],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

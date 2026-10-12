@@ -453,7 +453,10 @@ export class GateEventsComponent implements OnInit {
 
         const imgId = img.id ?? img.Id;
         if (!url && imgId && visitId) {
-          const gateBaseUrl = (environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1';
+          let gateBaseUrl = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1').replace(/\/+$/, '');
+          if (gateBaseUrl.endsWith('/api')) {
+            gateBaseUrl = `${gateBaseUrl}/v1`;
+          }
           url = `${gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}/images/${encodeURIComponent(imgId)}`;
         }
 

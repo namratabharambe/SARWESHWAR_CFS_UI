@@ -52,8 +52,8 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
   private highlightCircleGroup: L.LayerGroup | null = null;
   private currentTileLayer: L.TileLayer | null = null;
 
-  // Map layer state
-  public readonly activeBaseLayer = signal<'google-hybrid' | 'esri-satellite' | 'google-street'>('google-hybrid');
+  // Map layer state (Default to Pure High-Resolution Satellite with ZERO POI/shop clutter)
+  public readonly activeBaseLayer = signal<'google-satellite' | 'google-hybrid' | 'esri-satellite' | 'google-street'>('google-satellite');
   public readonly actionToast = signal<string>('');
   public readonly hoveredSlot = signal<ParkingSlot | null>(null);
   public readonly currentZoomLevel = signal<number>(18.5);
@@ -153,6 +153,7 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       { id: 'Trailer Marshalling Cycle', name: 'Trailer Marshalling Cycle' },
       { id: 'Reefer Cold Chain Cycle', name: 'Reefer Cold Chain Cycle' },
       { id: 'Customs Examination Cycle', name: 'Customs Examination Cycle' },
+      { id: 'Hazardous Cargo Cycle', name: 'Hazardous Cargo Cycle' },
     ];
   });
 
@@ -181,15 +182,20 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
   // Compute Block Clusters for clean zoomed-out navigation
   public readonly blockClusters = computed<BlockCluster[]>(() => {
     const slots = this.allSlots();
-    const blockKeys = ['A', 'B', 'C', 'D', 'F', 'H', 'I'];
+    const blockKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'ED', 'HS', '14'];
     const meta: Record<string, { title: string; icon: string; color: string }> = {
-      A: { title: 'Block A (Import)', icon: 'apartment', color: '#38bdf8' },
-      B: { title: 'Block B (Export)', icon: 'directions_boat', color: '#34d399' },
-      C: { title: 'Block C (Empty Depot)', icon: 'inventory_2', color: '#818cf8' },
-      D: { title: 'Block D (General Staging)', icon: 'warehouse', color: '#38bdf8' },
-      F: { title: 'Block F (Trailer Parking)', icon: 'local_shipping', color: '#f59e0b' },
-      H: { title: 'Block H (Reefer Grid)', icon: 'ac_unit', color: '#06b6d4' },
-      I: { title: 'Block I (Customs Shed)', icon: 'policy', color: '#f43f5e' },
+      A: { title: 'Block A (Import)', icon: 'apartment', color: '#0284c7' },
+      B: { title: 'Block B (Export)', icon: 'directions_boat', color: '#059669' },
+      C: { title: 'Block C (Empty Depot)', icon: 'inventory_2', color: '#4338ca' },
+      D: { title: 'Block D (General Staging)', icon: 'warehouse', color: '#2563eb' },
+      E: { title: 'Block E (Export Staging)', icon: 'layers', color: '#059669' },
+      F: { title: 'Block F (Trailer Parking)', icon: 'local_shipping', color: '#b45309' },
+      G: { title: 'Block G (Heavy Ground Storage)', icon: 'grid_view', color: '#1d4ed8' },
+      H: { title: 'Block H (Reefer Grid)', icon: 'ac_unit', color: '#0e7490' },
+      I: { title: 'Block I (Customs Shed)', icon: 'policy', color: '#b91c1c' },
+      ED: { title: 'Empty Depot (ED-1)', icon: 'archive', color: '#4338ca' },
+      HS: { title: 'Hazardous Grid (HS)', icon: 'warning', color: '#c2410c' },
+      '14': { title: 'Bay 14 Marshalling', icon: 'commute', color: '#b45309' },
     };
 
     const clusters: BlockCluster[] = [];
@@ -240,7 +246,7 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       zoomControl: false,
     });
 
-    this.setTileLayer('google-hybrid');
+    this.setTileLayer('google-satellite');
 
     this.polygonLayerGroup = L.layerGroup().addTo(this.map);
     this.blockBadgeLayerGroup = L.layerGroup().addTo(this.map);
@@ -277,7 +283,7 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     this.map?.invalidateSize();
   }
 
-  public setTileLayer(type: 'google-hybrid' | 'esri-satellite' | 'google-street'): void {
+  public setTileLayer(type: 'google-satellite' | 'google-hybrid' | 'esri-satellite' | 'google-street'): void {
     if (!this.map) return;
     if (this.currentTileLayer) {
       this.map.removeLayer(this.currentTileLayer);
@@ -288,9 +294,12 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     let url = '';
     let attribution = '';
 
-    if (type === 'google-hybrid') {
+    if (type === 'google-satellite') {
+      url = 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
+      attribution = 'Google Satellite (Pure)';
+    } else if (type === 'google-hybrid') {
       url = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
-      attribution = 'Google Satellite';
+      attribution = 'Google Satellite (Hybrid)';
     } else if (type === 'esri-satellite') {
       url = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
       attribution = 'Esri Satellite';
@@ -306,15 +315,20 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     }).addTo(this.map);
   }
 
-  // Render uniform dark-shade parking polygons with high-accuracy GPS coordinates
-  // Block color mapping for razor-sharp visual clarity
+  // Enterprise Standard Marine Terminal (TOS) Harmonious Palette (Clean, Professional, Non-Messy)
   private readonly blockBorderColorMap: Record<string, { stroke: string; fill: string }> = {
-    A: { stroke: '#00f0ff', fill: '#06b6d4' },
-    B: { stroke: '#10b981', fill: '#059669' },
-    C: { stroke: '#6366f1', fill: '#4f46e5' },
-    D: { stroke: '#38bdf8', fill: '#0284c7' },
-    F: { stroke: '#f59e0b', fill: '#d97706' },
-    H: { stroke: '#22d3ee', fill: '#0891b2' },
+    A: { stroke: '#0284c7', fill: '#0369a1' }, // Import Containers: Classic Marine Cyan
+    B: { stroke: '#059669', fill: '#047857' }, // Export Containers: Maritime Emerald
+    C: { stroke: '#4338ca', fill: '#3730a3' }, // Empty Depot: Deep Indigo
+    D: { stroke: '#2563eb', fill: '#1d4ed8' }, // General Staging: Steel Blue
+    E: { stroke: '#059669', fill: '#047857' }, // Export Staging: Maritime Emerald
+    F: { stroke: '#b45309', fill: '#92400e' }, // Trailer Parking: Terminal Amber
+    G: { stroke: '#1d4ed8', fill: '#1e40af' }, // Heavy Ground: Steel Blue
+    H: { stroke: '#0e7490', fill: '#155e75' }, // Reefer Grid: Arctic Cold Blue
+    I: { stroke: '#b91c1c', fill: '#991b1b' }, // Customs Examination: Safety Crimson
+    ED: { stroke: '#4338ca', fill: '#3730a3' }, // Empty Depot: Deep Indigo
+    HS: { stroke: '#c2410c', fill: '#9a3412' }, // Hazardous: Warning Orange
+    '14': { stroke: '#b45309', fill: '#92400e' }, // Trailer Bay 14: Terminal Amber
   };
 
   // Render high-accuracy surveyed GPS geofence polygons with clean, distinct styling
@@ -335,33 +349,36 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       const isOccupied = slot.status === 'occupied';
 
       const blockLetter = (slot.block || 'A').toUpperCase();
-      const blockColor = this.blockBorderColorMap[blockLetter] || { stroke: '#00f0ff', fill: '#06b6d4' };
+      const blockColor = this.blockBorderColorMap[blockLetter] || { stroke: '#0284c7', fill: '#0369a1' };
 
-      const strokeColor = isSelected ? '#facc15' : blockColor.stroke;
-      const fillColor = isSelected ? '#facc15' : isOccupied ? blockColor.fill : '#0a0f1d';
-      const fillOpacity = isSelected ? 0.85 : isOccupied ? 0.55 : 0.2;
-      const weight = isSelected ? 3.5 : 1.5;
+      // Enterprise TOS Architecture:
+      // Available bays: Crisp architectural wireframe outline with subtle transparent fill (eliminates visual noise)
+      // Occupied bays: Distinct, unified maritime container fill with thin precision border
+      const strokeColor = isSelected ? '#facc15' : isOccupied ? blockColor.stroke : '#64748b';
+      const fillColor = isSelected ? '#facc15' : isOccupied ? blockColor.fill : '#334155';
+      const fillOpacity = isSelected ? 0.75 : isOccupied ? 0.45 : 0.05;
+      const weight = isSelected ? 2.5 : isOccupied ? 1.4 : 1.0;
 
       const polygon = L.polygon(latLngs, {
         color: strokeColor,
+        opacity: isSelected ? 1.0 : isOccupied ? 0.95 : 0.65,
         fillColor,
         fillOpacity,
         weight,
-        className: `dark-slot-polygon ${isSelected ? 'slot-highlight-animated' : ''}`,
+        className: `cfs-enterprise-slot-polygon ${isSelected ? 'slot-highlight-animated' : ''}`,
       });
 
       polygon.bindTooltip(
-        `<div class="p-1.5 font-sans">
-          <div class="font-black text-xs text-amber-300 font-mono tracking-wider">📍 ${slot.name}</div>
-          <div class="text-[11px] text-cyan-200 mt-0.5">${slot.zoneLabel}</div>
-          <div class="text-[10px] text-white mt-0.5">Status: <span class="font-bold ${isOccupied ? 'text-cyan-300' : 'text-emerald-300'}">${slot.status.toUpperCase()}</span></div>
-          ${slot.containerNumber ? `<div class="text-[10px] text-emerald-300 font-mono font-bold mt-1">📦 ${slot.containerNumber}</div>` : ''}
+        `<div class="cfs-compact-tooltip">
+          <div class="cfs-tip-title">📍 ${slot.name} <span class="cfs-tip-pill ${isOccupied ? 'occ' : 'avail'}">${isOccupied ? 'OCCUPIED' : 'AVAILABLE'}</span></div>
+          <div class="cfs-tip-sub">${slot.zoneLabel}</div>
+          ${slot.containerNumber ? `<div class="cfs-tip-cont">📦 ${slot.containerNumber}</div>` : ''}
         </div>`,
         {
           sticky: true,
           direction: 'top',
-          className: 'dark-leaflet-tooltip',
-          opacity: 0.96,
+          className: 'cfs-standard-tooltip',
+          offset: [0, -8],
         },
       );
 
@@ -397,33 +414,9 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     const currentLoc = this.filterLocation();
     const slotsToRender = this.displayedSlots();
 
-    if (zoom < 18.2) {
-      // ZOOMED OUT (< 18.2): Render ONLY high-level Block Group Badges (ZERO text crowding)
-      for (const cluster of this.blockClusters()) {
-        const clusterHtml = `
-          <div class="cfs-block-cluster-badge">
-            <span class="material-icons text-xs text-cyan-400">${cluster.icon}</span>
-            <span>${cluster.title}</span>
-            <span class="rounded bg-cyan-500/25 px-1.5 py-0.5 text-[9px] text-cyan-200 font-mono font-bold">${cluster.occupiedSlots}/${cluster.totalSlots}</span>
-          </div>
-        `;
-
-        const clusterIcon = L.divIcon({
-          className: 'cfs-block-div-icon',
-          html: clusterHtml,
-          iconSize: [140, 24],
-          iconAnchor: [70, 12],
-        });
-
-        const clusterMarker = L.marker([cluster.centerLat, cluster.centerLng], { icon: clusterIcon });
-        clusterMarker.on('click', () => {
-          this.flyToBlockCluster(cluster);
-        });
-
-        this.blockBadgeLayerGroup.addLayer(clusterMarker);
-      }
-    } else if (zoom >= 19.8) {
-      // EXTREME ZOOM IN (>= 19.8): Only show clean unobtrusive slot labels inside bays
+    // In professional TOS maps, we do NOT spam 12 overlapping text badges across the yard center.
+    // Instead, when zoomed in close (zoom >= 19.5), show clean minimal slot IDs inside each bay.
+    if (zoom >= 19.5) {
       for (const slot of slotsToRender) {
         const isSelected = currentSelected?.id === slot.id || (currentLoc && slot.name === currentLoc);
         const isOccupied = slot.status === 'occupied';

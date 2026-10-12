@@ -37,11 +37,13 @@ function mapGpsSlotToParkingSlot(g: CfsGpsSlot): ParkingSlot {
   let zone: YardZoneType = 'truck-parking';
   if (g.block === 'A') zone = 'stacking-import';
   else if (g.block === 'B') zone = 'stacking-export';
-  else if (g.block === 'C') zone = 'empty-depot';
+  else if (g.block === 'C' || g.block === 'ED') zone = 'empty-depot';
   else if (g.block === 'D') zone = 'truck-parking';
+  else if (g.block === 'E') zone = 'stacking-export';
   else if (g.block === 'F') zone = 'truck-parking';
-  else if (g.block === 'I') zone = 'inspection-bay';
+  else if (g.block === 'G') zone = 'truck-parking';
   else if (g.block === 'H') zone = 'reefer-parking';
+  else if (g.block === 'I' || g.block === 'HS') zone = 'inspection-bay';
 
   return {
     id: g.id,
