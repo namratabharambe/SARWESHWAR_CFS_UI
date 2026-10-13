@@ -20,10 +20,10 @@
   cursor: pointer;
 
   &:hover {
-    fill-opacity: 0.85 !important;
-    stroke-width: 2.2px !important;
+    fill-opacity: 0.50 !important;
+    stroke-width: 2.5px !important;
     stroke: #ffffff !important;
-    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85));
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
   }
 }
 
@@ -61,7 +61,7 @@
   }
 }
 
-/* Detailed Centroid Badges (Shown only when zoomed in close) */
+/* Detailed Centroid Badges (Shown when zoomed in to yard view) */
 .dark-slot-div-icon {
   background: transparent;
   border: none;
@@ -72,13 +72,13 @@
   align-items: center;
   justify-content: center;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 8px;
+  font-size: 8.5px;
   font-weight: 800;
-  padding: 1px 3px;
+  padding: 1px 4px;
   border-radius: 4px;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(4px);
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -89,15 +89,15 @@
   }
 
   &.occupied {
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(15, 23, 42, 0.95);
     color: #38bdf8;
-    border-color: rgba(56, 189, 248, 0.5);
+    border-color: rgba(56, 189, 248, 0.7);
   }
 
   &.available {
-    background: rgba(15, 23, 42, 0.8);
-    color: #94a3b8;
-    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.90);
+    color: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.6);
   }
 
   &.selected-beacon {
@@ -105,7 +105,7 @@
     color: #0f172a;
     font-weight: 900;
     border-color: #ffffff;
-    box-shadow: 0 0 14px rgba(250, 204, 21, 1);
+    box-shadow: 0 0 16px rgba(250, 204, 21, 1);
   }
 }
 
@@ -156,6 +156,15 @@
       color: #34d399;
       border: 1px solid rgba(52, 211, 153, 0.4);
     }
+  }
+
+  .cfs-tip-coords {
+    font-size: 9.5px;
+    font-family: ui-monospace, monospace;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-top: 2px;
+    letter-spacing: 0.02em;
   }
 
   .cfs-tip-sub {

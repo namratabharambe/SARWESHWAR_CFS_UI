@@ -13,6 +13,7 @@ import {
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
 import { VisitListItemDto, VisitsPagedResponse } from 'shared/types/gate-event/gate-event.interface';
+import { matchesDateFilter } from 'shared/utils/date-filter.util';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
@@ -147,7 +148,8 @@ export class InventoryService {
   public readonly isDrawerOpen = signal<boolean>(false);
   public readonly isMoveModalOpen = signal<boolean>(false);
 
-  // Filter Signals (Kept simple, driven by Gate In / Gate Out toggle)
+  // Filter Signals (Kept simple, driven by Gate In / Gate Out toggle & Date)
+  public readonly dateFilter = signal<string>('');
   public readonly filter = signal<InventoryFilterOptions>({
     containerNo: '',
     shippingLine: 'All',
@@ -161,7 +163,13 @@ export class InventoryService {
     fullEmpty: 'All',
     customer: 'All',
     searchQuery: '',
+    dateFilter: '',
   });
+
+  public setDateFilter(date: string): void {
+    this.dateFilter.set(date);
+    this.currentPage.set(1);
+  }
 
   // Pagination Signals (Default pageSize 10 for clean 1, 2, 3, 4 page navigation)
   public readonly currentPage = signal<number>(1);
@@ -504,6 +512,16 @@ export class InventoryService {
           c.bay?.toLowerCase().includes(q) ||
           c.tier?.toLowerCase().includes(q),
       );
+    }
+
+    const dStr = this.dateFilter()?.trim();
+    if (dStr) {
+      list = list.filter((c) => {
+        return (
+          matchesDateFilter(c.arrivalDate, dStr) ||
+          matchesDateFilter(c.lastUpdated, dStr)
+        );
+      });
     }
 
     return list;

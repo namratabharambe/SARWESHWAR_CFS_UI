@@ -18,7 +18,7 @@
       <div>
         <div class="flex items-center gap-2">
           <span class="bg-gradient-to-r from-white via-cyan-200 to-sky-400 bg-clip-text text-sm font-black tracking-wider text-transparent uppercase">
-            PROSPER LIVE YARD
+            SARWESHWAR LIVE YARD
           </span>
           <span class="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-0.5 font-mono text-[10px] font-black text-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.3)]">
             {{ displayedSlots().length }} / {{ allSlots().length }} SPOTS
@@ -139,9 +139,9 @@
 
     <!-- Map Coordinate Telemetry (Bottom Left) -->
     <div class="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 rounded-2xl border border-slate-700/60 bg-slate-950/90 px-3.5 py-2 font-mono text-xs text-slate-300 shadow-2xl backdrop-blur-xl">
-      <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
-      <span class="text-cyan-300 font-bold">18.9028° N, 73.0465° E</span>
-      <span class="border-l border-slate-700 pl-2 text-slate-400">Terminal Geofence Layer</span>
+      <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+      <span class="text-cyan-300 font-bold font-mono">{{ liveCoordinates().lat | number: '1.6-6' }}° N, {{ liveCoordinates().lng | number: '1.6-6' }}° E</span>
+      <span class="border-l border-slate-700 pl-2 text-slate-300">{{ hoveredSlot() ? ('📍 ' + hoveredSlot()!.name) : 'Sarveshwar CFS Terminal' }}</span>
     </div>
 
     <!-- Sleek Floating Enterprise Block Quick-Filter Strip (Centered at bottom, non-obtrusive) -->
@@ -178,7 +178,7 @@
   <!-- PREMIUM CYBER-GLASS FLOATING POPUP DIALOG (VIBRANT COLORS & RICH TYPOGRAPHY) -->
   @if (selectedSlot()) {
     <div
-      class="animate-in fade-in zoom-in-95 slide-in-from-right-8 absolute right-6 top-20 z-[600] w-full max-w-sm overflow-hidden rounded-3xl border border-cyan-400/60 bg-gradient-to-b from-slate-900/95 via-indigo-950/90 to-slate-900/98 p-5 text-white shadow-[0_25px_60px_-10px_rgba(0,0,0,0.9),0_0_35px_rgba(6,182,212,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl transition-all duration-300">
+      class="animate-in fade-in zoom-in-95 slide-in-from-right-8 absolute right-6 top-24 md:top-20 z-[600] w-full max-w-sm max-h-[calc(100vh-110px)] overflow-y-auto rounded-3xl border border-cyan-400/60 bg-gradient-to-b from-slate-900/95 via-indigo-950/90 to-slate-900/98 p-5 text-white shadow-[0_25px_60px_-10px_rgba(0,0,0,0.9),0_0_35px_rgba(6,182,212,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] backdrop-blur-2xl transition-all duration-300">
       
       <!-- Top Header: Vibrant Amber Gold Parking Location Number -->
       <div class="flex items-start justify-between border-b border-cyan-500/20 pb-3.5">

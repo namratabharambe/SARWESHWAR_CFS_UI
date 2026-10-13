@@ -3,12 +3,13 @@ const path = require('path');
 
 // Locate Geofences (1).csv or Geofences.csv
 const candidates = [
-  path.resolve(__dirname, '../../../../Geofences (1).csv'),
-  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences (1).csv'),
+  path.resolve(process.env.USERPROFILE || 'C:/Users/Sneha', 'Downloads/Geofences.csv'),
+  path.resolve('c:/sarvwshwar ui/Geofences.csv'),
   path.resolve('c:/sarvwshwar ui/Geofences (1).csv'),
   path.resolve(__dirname, '../../../../Geofences.csv'),
+  path.resolve(__dirname, '../../../../Geofences (1).csv'),
   path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences.csv'),
-  path.resolve('c:/sarvwshwar ui/Geofences.csv'),
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences (1).csv'),
 ];
 
 let csvPath = candidates.find((p) => fs.existsSync(p));
@@ -21,6 +22,7 @@ console.log(`Reading coordinates from: ${csvPath}`);
 const targetDirs = [
   path.resolve(__dirname),
   path.resolve('c:/sarvwshwar ui/src/app/features/yard-map'),
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/src/app/features/yard-map'),
 ];
 
 const content = fs.readFileSync(csvPath, 'utf-8');
@@ -84,7 +86,7 @@ let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
 const cfsSlots = slots.map((s, idx) => {
   const name = s.name.trim();
   const parts = name.split(/[-\s]+/);
-  
+
   let block = 'D';
   if (name.startsWith('ED')) block = 'ED';
   else if (name.startsWith('HS')) block = 'HS';
@@ -207,8 +209,8 @@ const cfsSlots = slots.map((s, idx) => {
   };
 });
 
-const centerLat = +( (minLat + maxLat) / 2 ).toFixed(6);
-const centerLng = +( (minLng + maxLng) / 2 ).toFixed(6);
+const centerLat = +((minLat + maxLat) / 2).toFixed(6);
+const centerLng = +((minLng + maxLng) / 2).toFixed(6);
 
 const tsCode = `export interface GpsCoordinate {
   lat: number;

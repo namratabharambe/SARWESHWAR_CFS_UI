@@ -27,7 +27,7 @@
   </div>
 
   <!-- Right Side: Navigation Buttons -->
-  @if (totalPages() > 1) {
+  @if (totalPages() >= 1 && totalItems() > 0) {
     <div class="flex items-center gap-1">
       <!-- Prev Button -->
       <button

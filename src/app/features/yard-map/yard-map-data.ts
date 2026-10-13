@@ -61,7 +61,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 5",
+    "name": "F- 7 5",
     "coords": [
       [
         18.90373823671341,
@@ -86,7 +86,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 4",
+    "name": "F- 7 4",
     "coords": [
       [
         18.903759218037678,
@@ -111,7 +111,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 3",
+    "name": "F- 7 3",
     "coords": [
       [
         18.90378019936195,
@@ -136,7 +136,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 2",
+    "name": "F- 7 2",
     "coords": [
       [
         18.90380118068622,
@@ -161,7 +161,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 1",
+    "name": "F- 7 1",
     "coords": [
       [
         18.903822162010492,
@@ -186,7 +186,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10 4",
+    "name": "F-10 1",
     "coords": [
       [
         18.90366365698123,
@@ -211,7 +211,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10-3",
+    "name": "F-10 2",
     "coords": [
       [
         18.903695376267216,
@@ -236,7 +236,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10-2",
+    "name": "F-10 3",
     "coords": [
       [
         18.90371440783591,
@@ -261,7 +261,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-10",
+    "name": "F-10 4",
     "coords": [
       [
         18.903713139064724,
@@ -1636,7 +1636,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "HS-1 2",
+    "name": "HS-1",
     "coords": [
       [
         18.902114269975062,
@@ -1661,7 +1661,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "HS-1 1",
+    "name": "HS-2",
     "coords": [
       [
         18.902111732408446,
@@ -1961,7 +1961,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-9 2",
+    "name": "F-11 2",
     "coords": [
       [
         18.90358077518696,
@@ -1986,7 +1986,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-9 1",
+    "name": "F-11 1",
     "coords": [
       [
         18.90358172107771,
@@ -2011,7 +2011,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-8  3",
+    "name": "F-9  3",
     "coords": [
       [
         18.903690835443175,
@@ -2036,7 +2036,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-8  2",
+    "name": "F-9  2",
     "coords": [
       [
         18.903690835505238,
@@ -2061,7 +2061,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-8  1",
+    "name": "F-9  1",
     "coords": [
       [
         18.903688297962443,
@@ -2086,7 +2086,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-7 3",
+    "name": "F-8 3",
     "coords": [
       [
         18.903798258162194,
@@ -2111,7 +2111,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-7 2",
+    "name": "F-8 2",
     "coords": [
       [
         18.903796566528527,
@@ -2136,7 +2136,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-7 1",
+    "name": "F-8 1",
     "coords": [
       [
         18.90379360580655,
@@ -2411,7 +2411,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "14 1",
+    "name": "E-14  1",
     "coords": [
       [
         18.902074864619642,
@@ -2436,7 +2436,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "14 2",
+    "name": "E-14  2",
     "coords": [
       [
         18.90209953197084,
@@ -2461,7 +2461,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "14 3",
+    "name": "E-14  3",
     "coords": [
       [
         18.90212419932204,
@@ -4861,7 +4861,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "E-1 3",
+    "name": "I-1 3",
     "coords": [
       [
         18.90341438143397,
@@ -4886,7 +4886,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "E-1 2",
+    "name": "I-1 2",
     "coords": [
       [
         18.903413489950662,
@@ -4911,7 +4911,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "E-1 1",
+    "name": "I-1 1",
     "coords": [
       [
         18.90330631109979,
@@ -7811,7 +7811,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-5 5",
+    "name": "H-5 5",
     "coords": [
       [
         18.90196497061299,
@@ -7836,7 +7836,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-5 4",
+    "name": "H-5 4",
     "coords": [
       [
         18.901942157812933,
@@ -7861,7 +7861,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-5 3",
+    "name": "H-5 3",
     "coords": [
       [
         18.901919345012878,
@@ -7886,7 +7886,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-5 2",
+    "name": "H-5 2",
     "coords": [
       [
         18.90189653221282,
@@ -7911,7 +7911,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-5 1",
+    "name": "H-5 1",
     "coords": [
       [
         18.901873719412762,
@@ -7936,7 +7936,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-4 6",
+    "name": "H-4 6",
     "coords": [
       [
         18.901935202866472,
@@ -7961,7 +7961,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-4 5",
+    "name": "H-4 5",
     "coords": [
       [
         18.90195862396569,
@@ -7986,7 +7986,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-4 4",
+    "name": "H-4 4",
     "coords": [
       [
         18.901982045064905,
@@ -8011,7 +8011,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-4 3",
+    "name": "H-4 3",
     "coords": [
       [
         18.902005466164123,
@@ -8036,7 +8036,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-4 2",
+    "name": "H-4 2",
     "coords": [
       [
         18.902028887263338,
@@ -8086,7 +8086,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-3 6",
+    "name": "H-3 6",
     "coords": [
       [
         18.901950910598188,
@@ -8111,7 +8111,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-3 5",
+    "name": "H-3 5",
     "coords": [
       [
         18.901974489357485,
@@ -8136,7 +8136,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-3 4",
+    "name": "H-3 4",
     "coords": [
       [
         18.901998068116782,
@@ -8161,7 +8161,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-3 3",
+    "name": "H-3 3",
     "coords": [
       [
         18.90202164687608,
@@ -8186,7 +8186,7 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
     ]
   },
   {
-    "name": "F-3 2",
+    "name": "H-3 2",
     "coords": [
       [
         18.902045225635376,
@@ -13676,8 +13676,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-2",
-    "name": "F-10 5",
-    "code": "F-10 5",
+    "name": "F- 7 5",
+    "code": "F- 7 5",
     "block": "F",
     "row": "F",
     "bay": "5",
@@ -13712,8 +13712,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-3",
-    "name": "F-10 4",
-    "code": "F-10 4",
+    "name": "F- 7 4",
+    "code": "F- 7 4",
     "block": "F",
     "row": "F",
     "bay": "4",
@@ -13748,8 +13748,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-4",
-    "name": "F-10 3",
-    "code": "F-10 3",
+    "name": "F- 7 3",
+    "code": "F- 7 3",
     "block": "F",
     "row": "F",
     "bay": "3",
@@ -13796,8 +13796,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-5",
-    "name": "F-10 2",
-    "code": "F-10 2",
+    "name": "F- 7 2",
+    "code": "F- 7 2",
     "block": "F",
     "row": "F",
     "bay": "2",
@@ -13844,8 +13844,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-6",
-    "name": "F-10 1",
-    "code": "F-10 1",
+    "name": "F- 7 1",
+    "code": "F- 7 1",
     "block": "F",
     "row": "F",
     "bay": "1",
@@ -13892,11 +13892,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-7",
-    "name": "F-10 4",
-    "code": "F-10 4",
+    "name": "F-10 1",
+    "code": "F-10 1",
     "block": "F",
     "row": "F",
-    "bay": "4",
+    "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
     "status": "occupied",
@@ -13940,11 +13940,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-8",
-    "name": "F-10-3",
-    "code": "F-10-3",
+    "name": "F-10 2",
+    "code": "F-10 2",
     "block": "F",
     "row": "F",
-    "bay": "3",
+    "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
     "status": "occupied",
@@ -13988,11 +13988,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-9",
-    "name": "F-10-2",
-    "code": "F-10-2",
+    "name": "F-10 3",
+    "code": "F-10 3",
     "block": "F",
     "row": "F",
-    "bay": "2",
+    "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
     "status": "occupied",
@@ -14036,11 +14036,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-10",
-    "name": "F-10",
-    "code": "F-10",
+    "name": "F-10 4",
+    "code": "F-10 4",
     "block": "F",
     "row": "F",
-    "bay": "10",
+    "bay": "4",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
     "status": "available",
@@ -16390,11 +16390,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-65",
-    "name": "HS-1 2",
-    "code": "HS-1 2",
+    "name": "HS-1",
+    "code": "HS-1",
     "block": "HS",
     "row": "HS",
-    "bay": "2",
+    "bay": "1",
     "zoneType": "Hazardous Grid (HS)",
     "cycle": "Hazardous Cargo Cycle",
     "status": "occupied",
@@ -16438,11 +16438,11 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-66",
-    "name": "HS-1 1",
-    "code": "HS-1 1",
+    "name": "HS-2",
+    "code": "HS-2",
     "block": "HS",
     "row": "HS",
-    "bay": "1",
+    "bay": "2",
     "zoneType": "Hazardous Grid (HS)",
     "cycle": "Hazardous Cargo Cycle",
     "status": "occupied",
@@ -16967,8 +16967,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-78",
-    "name": "F-9 2",
-    "code": "F-9 2",
+    "name": "F-11 2",
+    "code": "F-11 2",
     "block": "F",
     "row": "F",
     "bay": "2",
@@ -17015,8 +17015,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-79",
-    "name": "F-9 1",
-    "code": "F-9 1",
+    "name": "F-11 1",
+    "code": "F-11 1",
     "block": "F",
     "row": "F",
     "bay": "1",
@@ -17064,8 +17064,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-80",
-    "name": "F-8  3",
-    "code": "F-8  3",
+    "name": "F-9  3",
+    "code": "F-9  3",
     "block": "F",
     "row": "F",
     "bay": "3",
@@ -17100,8 +17100,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-81",
-    "name": "F-8  2",
-    "code": "F-8  2",
+    "name": "F-9  2",
+    "code": "F-9  2",
     "block": "F",
     "row": "F",
     "bay": "2",
@@ -17136,8 +17136,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-82",
-    "name": "F-8  1",
-    "code": "F-8  1",
+    "name": "F-9  1",
+    "code": "F-9  1",
     "block": "F",
     "row": "F",
     "bay": "1",
@@ -17172,8 +17172,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-83",
-    "name": "F-7 3",
-    "code": "F-7 3",
+    "name": "F-8 3",
+    "code": "F-8 3",
     "block": "F",
     "row": "F",
     "bay": "3",
@@ -17208,8 +17208,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-84",
-    "name": "F-7 2",
-    "code": "F-7 2",
+    "name": "F-8 2",
+    "code": "F-8 2",
     "block": "F",
     "row": "F",
     "bay": "2",
@@ -17256,8 +17256,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-85",
-    "name": "F-7 1",
-    "code": "F-7 1",
+    "name": "F-8 1",
+    "code": "F-8 1",
     "block": "F",
     "row": "F",
     "bay": "1",
@@ -17736,13 +17736,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-96",
-    "name": "14 1",
-    "code": "14 1",
-    "block": "14",
-    "row": "14",
+    "name": "E-14  1",
+    "code": "E-14  1",
+    "block": "E",
+    "row": "E",
     "bay": "1",
-    "zoneType": "Bay 14 Marshalling",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block E (Export Staging)",
+    "cycle": "Export Buffer Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.902071318566296,
@@ -17784,13 +17784,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-97",
-    "name": "14 2",
-    "code": "14 2",
-    "block": "14",
-    "row": "14",
+    "name": "E-14  2",
+    "code": "E-14  2",
+    "block": "E",
+    "row": "E",
     "bay": "2",
-    "zoneType": "Bay 14 Marshalling",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block E (Export Staging)",
+    "cycle": "Export Buffer Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.902097038487923,
@@ -17832,13 +17832,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-98",
-    "name": "14 3",
-    "code": "14 3",
-    "block": "14",
-    "row": "14",
+    "name": "E-14  3",
+    "code": "E-14  3",
+    "block": "E",
+    "row": "E",
     "bay": "3",
-    "zoneType": "Bay 14 Marshalling",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block E (Export Staging)",
+    "cycle": "Export Buffer Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.902122758409547,
@@ -21964,13 +21964,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-194",
-    "name": "E-1 3",
-    "code": "E-1 3",
-    "block": "E",
-    "row": "E",
+    "name": "I-1 3",
+    "code": "I-1 3",
+    "block": "I",
+    "row": "I",
     "bay": "3",
-    "zoneType": "Block E (Export Staging)",
-    "cycle": "Export Buffer Cycle",
+    "zoneType": "Block I (Customs Shed)",
+    "cycle": "Customs Examination Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90336194425089,
@@ -22012,13 +22012,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-195",
-    "name": "E-1 2",
-    "code": "E-1 2",
-    "block": "E",
-    "row": "E",
+    "name": "I-1 2",
+    "code": "I-1 2",
+    "block": "I",
+    "row": "I",
     "bay": "2",
-    "zoneType": "Block E (Export Staging)",
-    "cycle": "Export Buffer Cycle",
+    "zoneType": "Block I (Customs Shed)",
+    "cycle": "Customs Examination Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.903360581817125,
@@ -22060,13 +22060,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-196",
-    "name": "E-1 1",
-    "code": "E-1 1",
-    "block": "E",
-    "row": "E",
+    "name": "I-1 1",
+    "code": "I-1 1",
+    "block": "I",
+    "row": "I",
     "bay": "1",
-    "zoneType": "Block E (Export Staging)",
-    "cycle": "Export Buffer Cycle",
+    "zoneType": "Block I (Customs Shed)",
+    "cycle": "Customs Examination Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.903359310820747,
@@ -27083,13 +27083,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-312",
-    "name": "F-5 5",
-    "code": "F-5 5",
-    "block": "F",
-    "row": "F",
+    "name": "H-5 5",
+    "code": "H-5 5",
+    "block": "H",
+    "row": "H",
     "bay": "5",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "available",
     "center": {
       "lat": 18.901984763360332,
@@ -27113,19 +27113,20 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04653413546475
       }
     ],
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-20.5°C",
     "maxTiers": 4,
     "priority": false
   },
   {
     "id": "slot-313",
-    "name": "F-5 4",
-    "code": "F-5 4",
-    "block": "F",
-    "row": "F",
+    "name": "H-5 4",
+    "code": "H-5 4",
+    "block": "H",
+    "row": "H",
     "bay": "4",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "available",
     "center": {
       "lat": 18.901962519461428,
@@ -27149,19 +27150,20 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04653611741378
       }
     ],
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-18.0°C",
     "maxTiers": 4,
     "priority": false
   },
   {
     "id": "slot-314",
-    "name": "F-5 3",
-    "code": "F-5 3",
-    "block": "F",
-    "row": "F",
+    "name": "H-5 3",
+    "code": "H-5 3",
+    "block": "H",
+    "row": "H",
     "bay": "3",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.901940275562524,
@@ -27191,7 +27193,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "MSCU7061661",
     "isoCode": "40OT",
     "shippingLine": "MSC",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-18.5°C",
     "sealNumber": "CFS-88313",
     "grossWeightKg": 26420,
     "dwellTime": "27h 41m",
@@ -27203,13 +27206,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-315",
-    "name": "F-5 2",
-    "code": "F-5 2",
-    "block": "F",
-    "row": "F",
+    "name": "H-5 2",
+    "code": "H-5 2",
+    "block": "H",
+    "row": "H",
     "bay": "2",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90191803166362,
@@ -27239,7 +27242,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "CMA U7061858",
     "isoCode": "20FR",
     "shippingLine": "CMA CGM",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-19.0°C",
     "sealNumber": "CFS-88314",
     "grossWeightKg": 26760,
     "dwellTime": "28h 58m",
@@ -27251,13 +27255,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-316",
-    "name": "F-5 1",
-    "code": "F-5 1",
-    "block": "F",
-    "row": "F",
+    "name": "H-5 1",
+    "code": "H-5 1",
+    "block": "H",
+    "row": "H",
     "bay": "1",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90189578776471,
@@ -27287,7 +27291,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "HAPAU7062055",
     "isoCode": "40HC",
     "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-19.5°C",
     "sealNumber": "CFS-88315",
     "grossWeightKg": 27100,
     "dwellTime": "29h 15m",
@@ -27299,13 +27304,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-317",
-    "name": "F-4 6",
-    "code": "F-4 6",
-    "block": "F",
-    "row": "F",
+    "name": "H-4 6",
+    "code": "H-4 6",
+    "block": "H",
+    "row": "H",
     "bay": "6",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90191638233009,
@@ -27335,7 +27340,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "ONEU7062252",
     "isoCode": "20GP",
     "shippingLine": "ONE",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-20.0°C",
     "sealNumber": "CFS-88316",
     "grossWeightKg": 27440,
     "dwellTime": "30h 32m",
@@ -27347,13 +27353,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-318",
-    "name": "F-4 5",
-    "code": "F-4 5",
-    "block": "F",
-    "row": "F",
+    "name": "H-4 5",
+    "code": "H-4 5",
+    "block": "H",
+    "row": "H",
     "bay": "5",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90193953889447,
@@ -27383,7 +27389,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "EVERU7062449",
     "isoCode": "45R1",
     "shippingLine": "Evergreen",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-20.5°C",
     "sealNumber": "CFS-88317",
     "grossWeightKg": 27780,
     "dwellTime": "31h 49m",
@@ -27395,13 +27402,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-319",
-    "name": "F-4 4",
-    "code": "F-4 4",
-    "block": "F",
-    "row": "F",
+    "name": "H-4 4",
+    "code": "H-4 4",
+    "block": "H",
+    "row": "H",
     "bay": "4",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.901962695458856,
@@ -27431,7 +27438,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "MAERU7062646",
     "isoCode": "40OT",
     "shippingLine": "Maersk",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-18.0°C",
     "sealNumber": "CFS-88318",
     "grossWeightKg": 28120,
     "dwellTime": "32h 6m",
@@ -27443,13 +27451,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-320",
-    "name": "F-4 3",
-    "code": "F-4 3",
-    "block": "F",
-    "row": "F",
+    "name": "H-4 3",
+    "code": "H-4 3",
+    "block": "H",
+    "row": "H",
     "bay": "3",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "available",
     "center": {
       "lat": 18.901985852023238,
@@ -27473,19 +27481,20 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04679685710212
       }
     ],
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-18.5°C",
     "maxTiers": 4,
     "priority": true
   },
   {
     "id": "slot-321",
-    "name": "F-4 2",
-    "code": "F-4 2",
-    "block": "F",
-    "row": "F",
+    "name": "H-4 2",
+    "code": "H-4 2",
+    "block": "H",
+    "row": "H",
     "bay": "2",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "available",
     "center": {
       "lat": 18.90200900858762,
@@ -27509,7 +27518,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04679395958931
       }
     ],
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-19.0°C",
     "maxTiers": 4,
     "priority": false
   },
@@ -27552,13 +27562,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-323",
-    "name": "F-3 6",
-    "code": "F-3 6",
-    "block": "F",
-    "row": "F",
+    "name": "H-3 6",
+    "code": "H-3 6",
+    "block": "H",
+    "row": "H",
     "bay": "6",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "available",
     "center": {
       "lat": 18.901930361929963,
@@ -27582,19 +27592,20 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04693902731515
       }
     ],
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-20.0°C",
     "maxTiers": 4,
     "priority": false
   },
   {
     "id": "slot-324",
-    "name": "F-3 5",
-    "code": "F-3 5",
-    "block": "F",
-    "row": "F",
+    "name": "H-3 5",
+    "code": "H-3 5",
+    "block": "H",
+    "row": "H",
     "bay": "5",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.901954508558298,
@@ -27624,7 +27635,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "EVERU7063631",
     "isoCode": "40OT",
     "shippingLine": "Evergreen",
-    "cargoType": "Hazardous",
+    "cargoType": "Reefer",
+    "temperature": "-20.5°C",
     "sealNumber": "CFS-88323",
     "grossWeightKg": 29820,
     "dwellTime": "37h 31m",
@@ -27636,13 +27648,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-325",
-    "name": "F-3 4",
-    "code": "F-3 4",
-    "block": "F",
-    "row": "F",
+    "name": "H-3 4",
+    "code": "H-3 4",
+    "block": "H",
+    "row": "H",
     "bay": "4",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.90197865518663,
@@ -27672,7 +27684,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "MAERU7063828",
     "isoCode": "20FR",
     "shippingLine": "Maersk",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-18.0°C",
     "sealNumber": "CFS-88324",
     "grossWeightKg": 30160,
     "dwellTime": "38h 48m",
@@ -27684,13 +27697,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-326",
-    "name": "F-3 3",
-    "code": "F-3 3",
-    "block": "F",
-    "row": "F",
+    "name": "H-3 3",
+    "code": "H-3 3",
+    "block": "H",
+    "row": "H",
     "bay": "3",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.902002801814962,
@@ -27733,13 +27746,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   },
   {
     "id": "slot-327",
-    "name": "F-3 2",
-    "code": "F-3 2",
-    "block": "F",
-    "row": "F",
+    "name": "H-3 2",
+    "code": "H-3 2",
+    "block": "H",
+    "row": "H",
     "bay": "2",
-    "zoneType": "Block F (Trailer Parking)",
-    "cycle": "Trailer Marshalling Cycle",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
     "status": "occupied",
     "center": {
       "lat": 18.902026948443293,
@@ -27769,7 +27782,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "containerNumber": "CMA U7064222",
     "isoCode": "20GP",
     "shippingLine": "CMA CGM",
-    "cargoType": "Dry",
+    "cargoType": "Reefer",
+    "temperature": "-19.0°C",
     "sealNumber": "CFS-88326",
     "grossWeightKg": 30840,
     "dwellTime": "40h 22m",

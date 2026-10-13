@@ -12,10 +12,10 @@
   <header
     class="animate-logo-slide-down relative z-[2] flex items-center justify-start gap-3.5 px-6 py-6 sm:px-12 sm:py-8">
     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white p-1.5 shadow-md">
-      <img src="/assets/images/logo.png" alt="PROSPER CFS" class="h-full w-full object-contain" />
+      <img src="/assets/images/sarveshwar-seal.png" alt="Sarweshwar CFS" class="h-full w-full object-contain" />
     </div>
     <div class="flex flex-col">
-      <strong class="font-sans text-base sm:text-lg font-bold leading-tight tracking-wider text-white">PROSPER CFS</strong>
+      <strong class="font-sans text-base sm:text-lg font-bold leading-tight tracking-wider text-white">SARWESHWAR CFS</strong>
       <span class="text-xs font-normal tracking-wide text-slate-200">Container Terminal Control Tower</span>
     </div>
   </header>
@@ -81,14 +81,28 @@
         <!-- Validation & Error Alert -->
         @if (error()) {
         <div
-          class="animate-validation-fade mb-5 flex items-center gap-2.5 rounded-xl border border-red-400/40 bg-red-950/60 p-3 text-xs leading-snug text-red-200 backdrop-blur-md sm:text-sm"
+          class="animate-validation-fade mb-5 flex items-start gap-3 rounded-xl border border-rose-500/40 bg-rose-950/75 p-3.5 text-xs text-rose-200 shadow-xl backdrop-blur-md w-full max-w-full overflow-hidden"
           role="alert">
-          <svg class="h-4.5 w-4.5 shrink-0 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-              clip-rule="evenodd" />
-          </svg>
-          <span>{{ error() }}</span>
+          <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center text-rose-400">
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-rose-100 text-xs leading-snug">Authentication Failed</p>
+            <p class="mt-0.5 text-[11px] leading-relaxed text-rose-200/90 break-words">{{ error() }}</p>
+          </div>
+          <button
+            type="button"
+            (click)="error.set('')"
+            class="shrink-0 text-rose-400/80 hover:text-rose-100 transition-colors p-0.5 -mr-1 -mt-0.5 cursor-pointer"
+            title="Dismiss error">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
         </div>
         }
 
@@ -101,7 +115,7 @@
             </label>
             <input id="login-username" type="text"
               class="glass-input h-11 w-full rounded-xl px-3.5 text-sm text-white placeholder-slate-400 outline-none transition-all duration-150 focus:border-sky-400 focus:ring-2 focus:ring-sky-400/25"
-              placeholder="admin@prosper.com" [formControl]="form.controls.userName"
+              placeholder="vijay.mahale@sarweshwar.com" [formControl]="form.controls.userName"
               data-control-name="userName" autocomplete="username" />
           </div>
 
@@ -171,42 +185,118 @@
     </section>
   </div>
 
-  <!-- Splash Animation Overlay when logging in -->
+  <!-- 2-3 Second Luxury Blue Gradient Logo Splash Animation Overlay (Plays After Login) -->
   @if (isAuthenticating()) {
   <div
     class="login-splash-overlay fixed inset-0 z-[100] flex flex-col items-center justify-center select-none overflow-hidden">
-    <!-- Soft Luxury Radial Ambient Glow Layers -->
+    <!-- Soft Luxury Radial Ambient Glow Layers (#E3F2FD, #90CAF9, #2196F3, #0D47A1) -->
     <div
       class="pointer-events-none absolute h-[700px] w-[700px] rounded-full bg-[#E3F2FD]/60 blur-[120px] animate-pulse">
     </div>
     <div class="pointer-events-none absolute h-[500px] w-[500px] rounded-full bg-[#90CAF9]/40 blur-[90px]"></div>
     <div class="pointer-events-none absolute -bottom-20 h-[400px] w-full bg-[#0D47A1]/20 blur-[100px]"></div>
 
-    <!-- Centerpiece Floating Logo -->
+    <!-- Subtle Cyber Grid Mesh -->
+    <div class="splash-grid-bg pointer-events-none absolute inset-0 opacity-15"></div>
+
+    <!-- Centerpiece: Majestic 3D Floating Logo with Orbital Tech Rings -->
     <div class="relative mb-6 flex items-center justify-center">
+      <!-- Shockwave Expansion Wave 1 (#90CAF9) -->
       <div
         class="splash-shockwave-1 pointer-events-none absolute h-[380px] w-[380px] rounded-full border border-[#90CAF9]/50">
       </div>
+      <!-- Shockwave Expansion Wave 2 (#2196F3) -->
       <div
         class="splash-shockwave-2 pointer-events-none absolute h-[460px] w-[460px] rounded-full border border-[#2196F3]/30">
       </div>
+
+      <!-- Outer Orbiting Compass Ring (#2196F3) -->
       <div
-        class="splash-logo-card relative flex h-32 w-32 items-center justify-center rounded-3xl bg-white p-5 shadow-2xl">
-        <img src="/assets/images/logo.png" alt="PROSPER CFS" class="h-full w-full object-contain" />
+        class="splash-ring-outer absolute h-[350px] w-[350px] rounded-full border-2 border-dashed border-[#2196F3]/40">
+      </div>
+
+      <!-- Middle Orbiting Tech Ring with Glowing Nodes (#90CAF9) -->
+      <div class="splash-ring-inner absolute h-[300px] w-[300px] rounded-full border border-[#90CAF9]/60">
+        <div
+          class="absolute -top-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-[#2196F3] shadow-[0_0_10px_#2196F3]">
+        </div>
+        <div
+          class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rounded-full bg-[#90CAF9] shadow-[0_0_10px_#90CAF9]">
+        </div>
+      </div>
+
+      <!-- Inner Core Hyper Glow (#E3F2FD & #90CAF9) -->
+      <div
+        class="splash-core-glow pointer-events-none absolute h-[260px] w-[260px] rounded-full bg-[#90CAF9]/40 blur-2xl">
+      </div>
+
+      <!-- Big Majestic Official Round Seal Logo Container with 3D Float & Light Reflection -->
+      <div
+        class="splash-logo-container relative z-10 flex h-60 w-60 sm:h-72 sm:w-72 items-center justify-center rounded-full bg-gradient-to-b from-[#ffffff] via-[#E3F2FD] to-[#90CAF9] p-3.5 shadow-[0_20px_60px_rgba(13,71,161,0.35),0_0_45px_rgba(33,150,243,0.4)] border-2 border-white">
+        <img src="/assets/images/logo.png" alt="PROSPER CFS"
+          class="splash-logo-img h-full w-full object-contain rounded-full drop-shadow-[0_10px_22px_rgba(13,71,161,0.35)]" />
+
+        <!-- Diagonal Laser Shimmer Sweep over the logo -->
+        <div class="splash-logo-shimmer pointer-events-none absolute inset-0 rounded-full overflow-hidden">
+          <div class="shimmer-light-beam"></div>
+        </div>
+      </div>
+
+      <!-- Floating HUD Status Chips around the Logo (Positioned safely outside the logo) -->
+      <div
+        class="hud-chip-top-right absolute -top-3 -right-20 sm:-right-24 flex items-center gap-1.5 rounded-full border border-[#90CAF9] bg-white/95 px-3 py-1 text-[10.5px] font-bold tracking-wide text-[#0D47A1] shadow-md backdrop-blur-md">
+        <span class="h-2 w-2 animate-ping rounded-full bg-[#2196F3]"></span>
+        <span>SSL 256-BIT ENCRYPTED</span>
+      </div>
+      <div
+        class="hud-chip-bottom-left absolute -bottom-3 -left-20 sm:-left-24 flex items-center gap-1.5 rounded-full border border-[#2196F3]/40 bg-white/95 px-3 py-1 text-[10.5px] font-bold tracking-wide text-[#0D47A1] shadow-md backdrop-blur-md">
+        <span class="h-2 w-2 rounded-full bg-[#2196F3] shadow-[0_0_6px_#2196F3]"></span>
+        <span>GATE OCR VERIFIED</span>
       </div>
     </div>
 
-    <!-- Title & Status Step -->
+    <!-- Direct Floating Typography & Loading Line (No Card Box) -->
     <div class="relative z-10 flex flex-col items-center text-center px-4">
-      <h2 class="text-2xl font-bold tracking-wider text-slate-900 sm:text-3xl">
-        PROSPER CFS
+      <!-- Brand Title with Rapid Staggered Letter-by-Letter Entrance Animation -->
+      <h2
+        class="splash-title mb-2.5 flex flex-wrap items-center justify-center font-sans text-xl sm:text-2xl font-black tracking-[0.2em] text-[#0D47A1]">
+        <span class="animated-brand-word inline-flex">
+          <span class="stagger-letter" style="--i: 0">P</span>
+          <span class="stagger-letter" style="--i: 1">R</span>
+          <span class="stagger-letter" style="--i: 2">O</span>
+          <span class="stagger-letter" style="--i: 3">S</span>
+          <span class="stagger-letter" style="--i: 4">P</span>
+          <span class="stagger-letter" style="--i: 5">E</span>
+          <span class="stagger-letter" style="--i: 6">R</span>
+        </span>
+        <span class="mx-2 inline-block text-[#2196F3] font-normal">•</span>
+        <span class="animated-brand-word inline-flex">
+          <span class="stagger-letter" style="--i: 7">C</span>
+          <span class="stagger-letter" style="--i: 8">F</span>
+          <span class="stagger-letter" style="--i: 9">S</span>
+        </span>
       </h2>
-      <p class="mt-1 text-xs font-semibold tracking-widest text-blue-600 uppercase sm:text-sm">
-        Container Terminal Control Tower
-      </p>
-      <div class="mt-6 flex items-center gap-2.5 rounded-full bg-white/80 px-4 py-2 shadow-sm backdrop-blur-md">
-        <span class="animate-spin h-3.5 w-3.5 rounded-full border-2 border-blue-600/30 border-t-blue-600"></span>
-        <span class="text-xs font-medium text-slate-700 sm:text-sm">{{ splashStep() }}</span>
+
+      <!-- Outlined Live Status Pill directly on background -->
+      <div
+        class="splash-step-pill mb-4 inline-flex items-center gap-2 rounded-full border border-[#2196F3]/50 bg-white/70 px-5 py-1.5 shadow-sm backdrop-blur-md">
+        <span class="h-2 w-2 rounded-full bg-[#2196F3] animate-pulse shadow-[0_0_8px_#2196F3]"></span>
+        <span class="splash-step text-xs sm:text-[12.5px] font-bold tracking-wider uppercase text-[#0D47A1] font-mono">
+          {{ splashStep() }}
+        </span>
+      </div>
+
+      <!-- Charging Gradient Loading Line Bar -->
+      <div class="flex flex-col items-center gap-2">
+        <div
+          class="relative h-2 w-72 sm:w-80 overflow-hidden rounded-full bg-[#E3F2FD] border border-[#90CAF9]/80 shadow-[inset_0_1px_3px_rgba(13,71,161,0.15)]">
+          <div
+            class="splash-progress-bar h-full rounded-full bg-gradient-to-r from-[#90CAF9] via-[#2196F3] to-[#0D47A1] shadow-[0_0_12px_rgba(33,150,243,0.8)]">
+          </div>
+        </div>
+        <span class="text-[10px] font-bold tracking-widest uppercase text-[#0D47A1]/70">
+          INITIALIZING TERMINAL CONTROL TOWER...
+        </span>
       </div>
     </div>
   </div>

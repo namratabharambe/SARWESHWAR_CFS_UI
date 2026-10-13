@@ -253,7 +253,7 @@ export class GateEventDetailComponent {
       sealConfidence: 95,
       overallConfidence: event.confidence || 95,
       gate: event.gate === 'GATE-01' ? 'Gate 1' : event.gate === 'GATE-02' ? 'Gate 2' : event.gate || 'GATE-EDGE',
-      terminal: 'Prosper CFS Terminal',
+      terminal: 'Sarveshwar CFS Terminal',
       driver: event.driver || 'Driver (Unassigned)',
       driverPhone: '9876543210',
       transporter: 'Apex Logistics Pvt. Ltd.',

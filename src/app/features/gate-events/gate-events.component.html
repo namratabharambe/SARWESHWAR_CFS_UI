@@ -339,7 +339,16 @@
         <div class="filter-controls-right flex flex-wrap items-center gap-2.5 shrink-0">
           <!-- Date Selector (Calendar Option) -->
           <div class="filter-item relative z-20 flex items-center">
-            <app-date-picker [value]="dateFilter()" (valueChange)="onDateFilterChange($event)" placeholder="Select Date" />
+            <app-date-picker [value]="dateFilter()" (valueChange)="onDateFilterChange($event)" placeholder="Select Date" [showClear]="true" />
+            @if (dateFilter()) {
+              <button
+                type="button"
+                class="ml-1 text-xs text-slate-400 hover:text-rose-500 cursor-pointer font-bold px-1"
+                (click)="onDateFilterChange('')"
+                title="Clear date filter">
+                ✕
+              </button>
+            }
           </div>
 
           <!-- OCR Confidence Dropdown -->
@@ -658,7 +667,7 @@
 
       <!-- Pagination Footer -->
       <app-pagination
-        [totalItems]="searchQuery() || confidenceFilter() !== 'All' || dateFilter() || selectedKpiFilter() !== 'All' ? filteredEvents().length : totalCount()"
+        [totalItems]="filteredEvents().length"
         [currentPage]="currentPage()"
         [pageSize]="pageSize()"
         [pageSizeOptions]="[10, 15, 25, 50, 100]"

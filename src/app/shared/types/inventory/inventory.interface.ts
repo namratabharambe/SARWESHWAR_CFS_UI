@@ -84,6 +84,7 @@ export interface InventoryFilterOptions {
   fullEmpty: string;
   customer: string;
   searchQuery: string;
+  dateFilter?: string;
 }
 
 export interface AddInventoryFormData {

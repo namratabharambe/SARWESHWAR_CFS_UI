@@ -450,6 +450,12 @@ export class DashboardService {
   ]);
   public readonly gateLiveStages = this._gateLiveStages.asReadonly();
 
+  private readonly _gateInCount = signal<number>(0);
+  public readonly gateInCount = this._gateInCount.asReadonly();
+
+  private readonly _gateOutCount = signal<number>(0);
+  public readonly gateOutCount = this._gateOutCount.asReadonly();
+
   private readonly _nextTruckInfo = signal<NextTruckInfo>({
     truckNo: 'MH 46 AR 9921',
     status: 'Scanning',
@@ -642,12 +648,52 @@ export class DashboardService {
             this._allGateActivities.set(mapped);
 
             const totalVisits = response?.totalCount || mapped.length;
-            const arrivals = todayInRes?.totalCount || inRes?.totalCount || mapped.filter((a) => a.type === 'IN').length;
-            const departures = todayOutRes?.totalCount || outRes?.totalCount || mapped.filter((a) => a.type === 'OUT').length;
+            const now = new Date();
+            const isToday = (dateSource: any) => {
+              if (!dateSource) return false;
+              const d = new Date(dateSource);
+              if (isNaN(d.getTime())) return false;
+              return (
+                d.getFullYear() === now.getFullYear() &&
+                d.getMonth() === now.getMonth() &&
+                d.getDate() === now.getDate()
+              );
+            };
+
+            const itemsTodayIn = items.filter((v: any) => {
+              const primaryEvent = v.events?.[0];
+              const rawType = (primaryEvent?.eventType ?? 'GATE_IN').toUpperCase();
+              const isOut = rawType.includes('OUT') || rawType.includes('EXIT');
+              const d = primaryEvent?.capturedAt ?? v.createdAt;
+              return !isOut && isToday(d);
+            }).length;
+
+            const itemsTodayOut = items.filter((v: any) => {
+              const primaryEvent = v.events?.[0];
+              const rawType = (primaryEvent?.eventType ?? 'GATE_IN').toUpperCase();
+              const isOut = rawType.includes('OUT') || rawType.includes('EXIT');
+              const d = primaryEvent?.capturedAt ?? v.createdAt;
+              return isOut && isToday(d);
+            }).length;
+
+            // Accurate Today Only counts for Gate In and Gate Out
+            const arrivals =
+              todayInRes?.totalCount !== undefined && todayInRes.totalCount > 0
+                ? todayInRes.totalCount
+                : itemsTodayIn;
+
+            const departures =
+              todayOutRes?.totalCount !== undefined && todayOutRes.totalCount > 0
+                ? todayOutRes.totalCount
+                : itemsTodayOut;
+
             const inYard = items.filter((v) => v.status === 'IN_YARD').length;
             const review = mapped.filter((a) => a.status === 'Review').length;
             const verified = mapped.filter((a) => a.status === 'Verified').length;
             const departed = items.filter((v) => v.status === 'DEPARTED').length;
+
+            this._gateInCount.set(arrivals);
+            this._gateOutCount.set(departures);
 
             // 1. Top KPI Metrics - Real data without inventing comparison or fake alerts
             const openTasksCount = this.taskService
@@ -844,6 +890,8 @@ export class DashboardService {
             });
           } else {
             // Zero visits state
+            this._gateInCount.set(todayInRes?.totalCount || 0);
+            this._gateOutCount.set(todayOutRes?.totalCount || 0);
             this._allGateActivities.set([]);
             const openTasksCount = this.taskService
               ? this.taskService.allTasks().filter((t) => t.status !== 'Completed').length
@@ -938,10 +986,14 @@ export class DashboardService {
               currentTeu: 816,
               utilizationPercentage: 68,
             });
+            this._gateInCount.set(0);
+            this._gateOutCount.set(0);
           }
         },
         error: () => {
           this._allGateActivities.set([]);
+          this._gateInCount.set(0);
+          this._gateOutCount.set(0);
         },
       });
   }

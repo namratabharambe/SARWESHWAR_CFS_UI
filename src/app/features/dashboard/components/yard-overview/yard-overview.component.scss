@@ -24,38 +24,29 @@
   }
 }
 
-// Requirement 4: Custom Hover Tooltip Styling
+// Requirement 4: Custom Hover Tooltip Styling (Light Background with Clear High-Contrast Details)
+::ng-deep .leaflet-tooltip.yard-light-dashboard-tooltip,
 ::ng-deep .leaflet-tooltip.yard-map-tooltip-custom {
   background: #ffffff !important;
-  border: 2px solid #0f2851 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2) !important;
-  padding: 8px 12px !important;
-  color: #0f172a !important; /* DARK font */
-  font-family: inherit !important;
-  font-size: 13.5px !important;
-  font-weight: 700 !important;
-  line-height: 1.4 !important;
+  border: 1.5px solid #0f2851 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.35), 0 4px 10px -2px rgba(15, 23, 42, 0.15) !important;
+  padding: 0 !important;
+  color: #0f172a !important;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif !important;
   z-index: 1000 !important;
   opacity: 1 !important;
 
   &::before {
-    display: none !important;
+    border-top-color: #0f2851 !important;
   }
 
-  * {
+  .cfs-light-popup-content {
+    min-width: 175px;
+    padding: 8px 10px;
+    background: #ffffff !important;
     color: #0f172a !important;
-  }
-
-  .yard-tooltip-card {
-    min-width: 150px;
-    
-    .tooltip-header {
-      font-size: 13px;
-      font-weight: 800;
-      color: #091a38 !important;
-      letter-spacing: 0.03em;
-    }
+    border-radius: 8px;
   }
 }
 

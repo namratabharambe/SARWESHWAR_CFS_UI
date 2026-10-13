@@ -2,7 +2,7 @@ export type ReportCategory =
   'gate-operations' | 'container-mismatch' | 'yard-occupancy' | 'equipment-productivity' | 'customs-billing';
 
 export interface ReportDateFilter {
-  preset: 'all' | 'today' | 'yesterday' | 'last7days' | 'last30days' | 'monthToDate' | 'custom';
+  preset: 'today' | 'yesterday' | 'last7days' | 'last30days' | 'monthToDate' | 'custom';
   startDate: string;
   endDate: string;
   siteId: string;

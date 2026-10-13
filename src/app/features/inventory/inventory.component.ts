@@ -8,6 +8,7 @@ import { AddInventoryModalComponent } from './components/add-inventory-modal/add
 import { ContainerDetailDrawerComponent } from './components/container-detail-drawer/container-detail-drawer.component';
 import { MoveContainerModalComponent } from './components/move-container-modal/move-container-modal.component';
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { TranslatePipe } from 'shared/pipes';
 
 @Component({
@@ -21,6 +22,7 @@ import { TranslatePipe } from 'shared/pipes';
     ContainerDetailDrawerComponent,
     MoveContainerModalComponent,
     PaginationComponent,
+    DatePickerComponent,
     TranslatePipe,
   ],
   templateUrl: './inventory.component.html',
@@ -43,9 +45,14 @@ export class InventoryComponent {
     this.inventoryService.setGateMode(mode);
   }
 
+  public onDateFilterChange(val: string): void {
+    this.inventoryService.setDateFilter(val);
+  }
+
   public resetFilters(): void {
     this.inventoryService.setGateMode('ALL');
     this.inventoryService.setSearchQuery('');
+    this.inventoryService.setDateFilter('');
   }
 
   public openAddModal(): void {
@@ -97,6 +104,14 @@ export class InventoryComponent {
 
   public exportCsv(): void {
     this.inventoryService.exportDataToCsv();
+  }
+
+  public setPage(page: number): void {
+    this.inventoryService.setPage(page);
+  }
+
+  public setPageSize(size: number): void {
+    this.inventoryService.setPageSize(size);
   }
 
   public printReport(): void {

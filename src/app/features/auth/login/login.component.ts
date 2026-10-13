@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'core/auth/auth.service';
-import { CenteredDividerComponent } from 'shared/components/atoms/centered-divider/centered-divider.component';
 import { FocusInvalidFieldDirective } from 'shared/directives';
-import { TranslatePipe } from 'shared/pipes';
 
 import { ThemeService } from 'core/services/theme.service';
 
@@ -37,7 +35,15 @@ export class LoginComponent {
   });
 
   public readonly isAuthenticating = signal<boolean>(false);
-  public readonly splashStep = signal<string>('Authenticating credentials...');
+  public readonly splashStep = signal<string>('AUTHENTICATING TERMINAL CREDENTIALS...');
+
+  constructor() {
+    this.form.valueChanges.subscribe(() => {
+      if (this.error()) {
+        this.error.set('');
+      }
+    });
+  }
 
   public togglePasswordVisibility(): void {
     this.showPassword.update((v) => !v);
@@ -57,31 +63,40 @@ export class LoginComponent {
         // By default, activate light mode on login
         this.theme.setDarkMode(false);
         this.isAuthenticating.set(true);
-        this.splashStep.set('Authenticating terminal credentials...');
+        this.splashStep.set('AUTHENTICATING TERMINAL CREDENTIALS...');
 
         setTimeout(() => {
-          this.splashStep.set('Connecting to CFS Control Tower...');
+          this.splashStep.set('CONNECTING TO CFS CONTROL TOWER...');
         }, 700);
 
         setTimeout(() => {
-          this.splashStep.set('Syncing Gate OCR & Yard Telemetry...');
+          this.splashStep.set('SYNCING GATE OCR & YARD TELEMETRY...');
         }, 1400);
 
         setTimeout(() => {
-          this.splashStep.set('Welcome to PROSPER CFS!');
+          this.splashStep.set('WELCOME TO PROSPER CFS !');
         }, 2100);
 
         setTimeout(() => {
           void this.router.navigate(['/dashboard']);
-        }, 2500);
+        }, 2600);
       },
       error: (err) => {
-        this.error.set(
-          err?.error?.detail ??
-          err?.error?.title ??
-          err?.error?.message ??
-          'Invalid username or password. Please check your credentials.',
-        );
+        let message = 'Invalid email address or password. Please verify your credentials and try again.';
+        if (err?.status === 0 || err?.status === 504) {
+          message = 'Unable to connect to the CFS authentication server. Please check your network connection.';
+        } else if (err?.status === 401 || err?.status === 403) {
+          message = 'Invalid email address or password. Please verify your credentials and try again.';
+        } else if (typeof err?.error === 'string' && err.error.trim().length > 0 && !err.error.includes('<html') && !err.error.includes('{')) {
+          message = err.error.trim();
+        } else if (err?.error?.detail && typeof err.error.detail === 'string') {
+          message = err.error.detail.trim();
+        } else if (err?.error?.message && typeof err.error.message === 'string') {
+          message = err.error.message.trim();
+        } else if (err?.error?.title && typeof err.error.title === 'string' && !err.error.title.includes('One or more')) {
+          message = err.error.title.trim();
+        }
+        this.error.set(message);
       },
     });
   }

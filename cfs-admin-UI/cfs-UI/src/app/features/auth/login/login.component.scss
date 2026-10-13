@@ -13,6 +13,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -28,6 +29,7 @@
     opacity: 0;
     transform: translateY(-16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -44,6 +46,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -60,6 +63,7 @@
     opacity: 0;
     transform: translateY(22px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -76,6 +80,7 @@
     opacity: 0;
     transform: translateY(-4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -91,6 +96,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -225,31 +231,164 @@
 @keyframes splashFadeIn {
   from {
     opacity: 0;
+    transform: scale(0.97);
   }
   to {
     opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes spinClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinCounterClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
   }
 }
 
 @keyframes shockwavePulse1 {
   0% {
     transform: scale(0.7);
-    opacity: 0.8;
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.45;
   }
   100% {
-    transform: scale(1.4);
+    transform: scale(1.35);
     opacity: 0;
   }
 }
 
 @keyframes shockwavePulse2 {
   0% {
-    transform: scale(0.75);
-    opacity: 0.6;
+    transform: scale(0.65);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.35;
   }
   100% {
-    transform: scale(1.5);
+    transform: scale(1.45);
     opacity: 0;
+  }
+}
+
+@keyframes logo3dFloat {
+  0% {
+    transform: scale(0.75) translateY(20px);
+    opacity: 0;
+    filter: drop-shadow(0 0 10px rgba(33, 150, 243, 0.4));
+  }
+  35% {
+    transform: scale(1.05) translateY(-6px);
+    opacity: 1;
+    filter: drop-shadow(0 15px 35px rgba(13, 71, 161, 0.45));
+  }
+  65% {
+    transform: scale(0.98) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    filter: drop-shadow(0 10px 25px rgba(13, 71, 161, 0.35));
+  }
+}
+
+@keyframes shimmerPass {
+  0% {
+    transform: translateX(-120%) rotate(30deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(220%) rotate(30deg);
+    opacity: 0;
+  }
+}
+
+@keyframes splashProgressCharge {
+  0% {
+    width: 0%;
+  }
+  25% {
+    width: 32%;
+  }
+  55% {
+    width: 68%;
+  }
+  85% {
+    width: 90%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes pulseCoreGlow {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.85;
+  }
+}
+
+@keyframes letterPopFast {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.6) rotateX(40deg);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.08) rotateX(0deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes hudFloat1 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes hudFloat2 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(4px);
   }
 }
 
@@ -264,11 +403,83 @@
   );
   animation: splashFadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
+  .splash-grid-bg {
+    background-image: linear-gradient(rgba(33, 150, 243, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(33, 150, 243, 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
   .splash-shockwave-1 {
     animation: shockwavePulse1 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
   }
 
   .splash-shockwave-2 {
     animation: shockwavePulse2 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) 0.6s infinite;
+  }
+
+  .splash-ring-outer {
+    animation: spinClockwise 8s linear infinite;
+  }
+
+  .splash-ring-inner {
+    animation: spinCounterClockwise 5s linear infinite;
+  }
+
+  .splash-core-glow {
+    animation: pulseCoreGlow 1.8s ease-in-out infinite;
+  }
+
+  .splash-logo-container {
+    animation: logo3dFloat 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .splash-logo-shimmer {
+    .shimmer-light-beam {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      animation: shimmerPass 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s infinite;
+    }
+  }
+
+  .hud-chip-top-right {
+    animation: hudFloat1 3.2s ease-in-out infinite;
+  }
+
+  .hud-chip-bottom-left {
+    animation: hudFloat2 3.2s ease-in-out infinite 0.6s;
+  }
+
+  .splash-title {
+    font-family: 'Lexend', 'Outfit', sans-serif !important;
+
+    .stagger-letter {
+      display: inline-block;
+      opacity: 0;
+      animation: letterPopFast 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+      animation-delay: calc(0.15s + var(--i) * 0.04s);
+      color: #0d47a1;
+      text-shadow: 0 2px 10px rgba(33, 150, 243, 0.3);
+      will-change: transform, opacity;
+    }
+  }
+
+  .splash-step-pill {
+    transition: all 0.25s ease;
+  }
+
+  .splash-progress-bar {
+    width: 0%;
+    animation: splashProgressCharge 2.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
 }

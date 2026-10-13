@@ -17,18 +17,20 @@ import {
 export class GateEventService extends BaseApiService<GateEventsResponse, GateEventDetailDto, GateEventCaptureRequest> {
   private readonly gateBaseUrl: string;
 
-  constructor(http: HttpClient) {
-    const resolvedUrl = GateEventService.getResolvedGateBaseUrl();
-    super(http, resolvedUrl);
-    this.gateBaseUrl = resolvedUrl;
-  }
-
-  private static getResolvedGateBaseUrl(): string {
-    let url = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1').replace(/\/+$/, '');
+  public static getResolvedGateBaseUrl(): string {
+    let url = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1')
+      .trim()
+      .replace(/\/+$/, '');
     if (url.endsWith('/api')) {
       url = `${url}/v1`;
     }
     return url;
+  }
+
+  constructor(http: HttpClient) {
+    const resolvedUrl = GateEventService.getResolvedGateBaseUrl();
+    super(http, resolvedUrl);
+    this.gateBaseUrl = resolvedUrl;
   }
 
   public override controllerName(): string {
@@ -57,7 +59,10 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     let params = new HttpParams().set('page', options?.page ?? 1).set('pageSize', options?.pageSize ?? 25);
 
     if (options?.eventType) {
-      params = params.set('eventType', options.eventType);
+      params = params
+        .set('eventType', options.eventType)
+        .set('type', options.eventType)
+        .set('direction', options.eventType.includes('OUT') ? 'OUT' : 'IN');
     }
 
     if (options?.visitNumber) {
@@ -74,9 +79,13 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     }
     if (options?.from) {
       params = params.set('from', options.from);
+      params = params.set('fromDate', options.from);
+      params = params.set('startDate', options.from);
     }
     if (options?.to) {
       params = params.set('to', options.to);
+      params = params.set('toDate', options.to);
+      params = params.set('endDate', options.to);
     }
     if (options?.siteId) {
       params = params.set('siteId', options.siteId);

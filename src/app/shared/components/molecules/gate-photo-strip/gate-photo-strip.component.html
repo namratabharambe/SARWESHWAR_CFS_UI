@@ -4,7 +4,7 @@
       class="camera-photo-thumb"
       [class.clickable]="interactive()"
       [style.background-color]="photo.color"
-      [title]="photo.label + ' - ' + photo.tag + (photo.formattedCreatedAt ? ' (' + photo.formattedCreatedAt + ')' : '')"
+      [title]="photo.label + ' - ' + photo.tag"
       (click)="onPhotoClick(photo, $index, $event)">
       <div class="thumb-container-ribs">
         <span></span>
