@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import {
   AddInventoryFormData,
   BlockUtilization,
@@ -13,7 +13,15 @@ import {
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
 import { VisitListItemDto, VisitsPagedResponse } from 'shared/types/gate-event/gate-event.interface';
-import { matchesDateFilter } from 'shared/utils/date-filter.util';
+import {
+  isCreatedToday,
+  isVisitArrival,
+  isVisitDeparture,
+  isVisitArrivalToday,
+  isVisitDepartureToday,
+  matchesDateFilter,
+  parseAnyDate,
+} from 'shared/utils/date-filter.util';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
@@ -41,15 +49,14 @@ export class InventoryService {
     return Math.floor(diffMs / (1000 * 60 * 60 * 24));
   }
 
-  // Pre-configured fallback items generator with 0 records when live backend has no inventory
-  private readonly fallbackGateInContainers: ContainerInventoryItem[] = [];
-  private readonly fallbackGateOutContainers: ContainerInventoryItem[] = [];
-
-  // Gate Total & Today Counts (Live backend synced)
+  // Live database gate counts
   public readonly gateInTotalCount = signal<number>(0);
   public readonly todayGateInCount = signal<number>(0);
   public readonly gateOutTotalCount = signal<number>(0);
   public readonly todayGateOutCount = signal<number>(0);
+
+  public readonly fromDate = signal<string | undefined>(undefined);
+  public readonly toDate = signal<string | undefined>(undefined);
 
   private createFallbackContainers(mode: 'GATE_IN' | 'GATE_OUT', count: number = 40): ContainerInventoryItem[] {
     const lineCodes = ['MSKU', 'CMAU', 'HMMU', 'OOLU', 'MSCU', 'COSU', 'EGLU', 'ZIMU', 'PILU', 'ONEU'];
@@ -138,6 +145,7 @@ export class InventoryService {
   public readonly isMoveModalOpen = signal<boolean>(false);
 
   // Filter Signals (Kept simple, driven by Gate In / Gate Out toggle & Date)
+  public readonly selectedKpiFilter = signal<string>('All');
   public readonly dateFilter = signal<string>('');
   public readonly filter = signal<InventoryFilterOptions>({
     containerNo: '',
@@ -155,9 +163,46 @@ export class InventoryService {
     dateFilter: '',
   });
 
+  public selectKpiCard(kpi: string): void {
+    if (this.selectedKpiFilter() === kpi) {
+      this.selectedKpiFilter.set('All');
+    } else {
+      this.selectedKpiFilter.set(kpi);
+    }
+    this.currentPage.set(1);
+  }
+
+  public updateFilter<K extends keyof InventoryFilterOptions>(key: K, val: InventoryFilterOptions[K]): void {
+    this.filter.update((f) => ({ ...f, [key]: val }));
+    this.currentPage.set(1);
+  }
+
   public setDateFilter(date: string): void {
     this.dateFilter.set(date);
     this.currentPage.set(1);
+
+    if (!date) {
+      this.fromDate.set(undefined);
+      this.toDate.set(undefined);
+      this.loadLiveGateData();
+      return;
+    }
+
+    const parsed = parseAnyDate(date);
+    if (parsed) {
+      const year = parsed.getFullYear();
+      const month = parsed.getMonth();
+      const day = parsed.getDate();
+      const start = new Date(year, month, day, 0, 0, 0).toISOString();
+      const end = new Date(year, month, day, 23, 59, 59, 999).toISOString();
+      this.fromDate.set(start);
+      this.toDate.set(end);
+    } else {
+      this.fromDate.set(undefined);
+      this.toDate.set(undefined);
+    }
+
+    this.loadLiveGateData();
   }
 
   // Pagination Signals (Default pageSize 10 for clean 1, 2, 3, 4 page navigation)
@@ -199,121 +244,112 @@ export class InventoryService {
   }
 
   /**
-   * Fetches live data from backend Gate API with full counts and date filters
+   * Fetches live data from backend Gate API with full counts and date filters matching Gate Events module
    */
   public loadLiveGateData(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT' = this.activeGateMode()): void {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
     const clientId = this.authService.getActiveClientId() || undefined;
+    const from = this.fromDate();
+    const to = this.toDate();
 
-    const now = new Date();
-    const todayStartIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)).toISOString();
-    const todayEndIso = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)).toISOString();
+    this.gateEventService
+      .getVisits({
+        page: 1,
+        pageSize: 200,
+        siteId,
+        clientId,
+        from,
+        to,
+      })
+      .pipe(
+        switchMap((res: VisitsPagedResponse) => {
+          const firstPageItems = res?.items ?? (Array.isArray(res) ? (res as any) : []);
+          const totalCount = res?.totalCount ?? firstPageItems.length;
+          const returnedCount = firstPageItems.length;
 
-    const allInVisits$ = this.gateEventService.getVisits({
-      page: 1,
-      pageSize: 1,
-      siteId,
-      clientId,
-      eventType: 'GATE_IN',
-    });
-
-    const allOutVisits$ = this.gateEventService.getVisits({
-      page: 1,
-      pageSize: 1,
-      siteId,
-      clientId,
-      eventType: 'GATE_OUT',
-    });
-
-    const todayInVisits$ = this.gateEventService.getVisits({
-      page: 1,
-      pageSize: 1,
-      siteId,
-      clientId,
-      eventType: 'GATE_IN',
-      from: todayStartIso,
-      to: todayEndIso,
-    });
-
-    const todayOutVisits$ = this.gateEventService.getVisits({
-      page: 1,
-      pageSize: 1,
-      siteId,
-      clientId,
-      eventType: 'GATE_OUT',
-      from: todayStartIso,
-      to: todayEndIso,
-    });
-
-    const currentVisits$ = this.gateEventService.getVisits({
-      page: 1,
-      pageSize: 100,
-      siteId,
-      clientId,
-      eventType: mode === 'ALL' ? undefined : mode,
-    });
-
-    forkJoin({
-      allInRes: allInVisits$,
-      allOutRes: allOutVisits$,
-      todayInRes: todayInVisits$,
-      todayOutRes: todayOutVisits$,
-      currentRes: currentVisits$,
-    }).subscribe({
-      next: ({ allInRes, allOutRes, todayInRes, todayOutRes, currentRes }) => {
-        this.isLoading.set(false);
-        const totalIn = allInRes?.totalCount ?? 0;
-        const totalOut = allOutRes?.totalCount ?? 0;
-        const todayIn = todayInRes?.totalCount ?? 0;
-        const todayOut = todayOutRes?.totalCount ?? 0;
-
-        this.gateInTotalCount.set(totalIn);
-        this.gateOutTotalCount.set(totalOut);
-        this.todayGateInCount.set(todayIn);
-        this.todayGateOutCount.set(todayOut);
-
-        const items = currentRes?.items ?? (Array.isArray(currentRes) ? (currentRes as any) : []);
-        if (items && items.length > 0) {
-          const mapped = this.mapVisitsToInventoryItems(items, mode);
-          mapped.sort((a, b) => {
-            const tA = (a.arrivalDate ? new Date(a.arrivalDate).getTime() : 0) || 0;
-            const tB = (b.arrivalDate ? new Date(b.arrivalDate).getTime() : 0) || 0;
-            return tB - tA;
-          });
-          this.containers.set(mapped);
-          this.totalServerCount.set(currentRes.totalCount ?? mapped.length);
-          if (mapped.length > 0) {
-            this.selectedContainer.set(mapped[0]);
+          // If there are more items beyond page 1, fetch remaining pages in parallel
+          if (totalCount > returnedCount && returnedCount > 0) {
+            const pageSize = 200;
+            const totalPages = Math.ceil(totalCount / pageSize);
+            const remainingRequests$: Observable<VisitsPagedResponse>[] = [];
+            for (let p = 2; p <= totalPages; p++) {
+              remainingRequests$.push(
+                this.gateEventService.getVisits({
+                  page: p,
+                  pageSize,
+                  siteId,
+                  clientId,
+                  from,
+                  to,
+                }),
+              );
+            }
+            return forkJoin(remainingRequests$).pipe(
+              map((moreResponses) => {
+                const allItems = [...firstPageItems];
+                for (const r of moreResponses) {
+                  if (r?.items?.length) {
+                    allItems.push(...r.items);
+                  }
+                }
+                return { items: allItems, totalCount: Math.max(totalCount, allItems.length) };
+              }),
+            );
           }
-        } else {
+
+          return of({ items: firstPageItems, totalCount });
+        }),
+      )
+      .subscribe({
+        next: ({ items }) => {
+          this.isLoading.set(false);
+          if (items && items.length > 0) {
+            const mapped = this.mapVisitsToInventoryItems(items, 'ALL');
+            mapped.sort((a, b) => {
+              const tA = (a.arrivalDate ? new Date(a.arrivalDate).getTime() : 0) || 0;
+              const tB = (b.arrivalDate ? new Date(b.arrivalDate).getTime() : 0) || 0;
+              return tB - tA;
+            });
+            this.containers.set(mapped);
+            this.totalServerCount.set(mapped.length);
+
+            const listIn = mapped.filter((c) => c.lastAction === 'Gated In' || c.currentLocation === 'In Yard').length;
+            const listOut = mapped.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out').length;
+            const todayIn = items.filter((v: any) => isVisitArrivalToday(v)).length;
+            const todayOut = items.filter((v: any) => isVisitDepartureToday(v)).length;
+            const totalIn = items.filter((v: any) => isVisitArrival(v)).length;
+            const totalOut = items.filter((v: any) => isVisitDeparture(v)).length;
+
+            this.gateInTotalCount.set(totalIn || listIn);
+            this.gateOutTotalCount.set(totalOut || listOut);
+            this.todayGateInCount.set(todayIn);
+            this.todayGateOutCount.set(todayOut);
+
+            if (mapped.length > 0) {
+              this.selectedContainer.set(mapped[0]);
+            }
+          } else {
+            this.containers.set([]);
+            this.totalServerCount.set(0);
+            this.gateInTotalCount.set(0);
+            this.gateOutTotalCount.set(0);
+            this.todayGateInCount.set(0);
+            this.todayGateOutCount.set(0);
+            this.selectedContainer.set(null);
+          }
+        },
+        error: () => {
+          this.isLoading.set(false);
           this.containers.set([]);
           this.totalServerCount.set(0);
+          this.gateInTotalCount.set(0);
+          this.gateOutTotalCount.set(0);
+          this.todayGateInCount.set(0);
+          this.todayGateOutCount.set(0);
           this.selectedContainer.set(null);
-        }
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.containers.set([]);
-        this.totalServerCount.set(0);
-        this.selectedContainer.set(null);
-      },
-    });
-  }
-
-  private getFallbackContainersForMode(mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
-    if (mode === 'ALL') {
-      const ins = this.getFallbackContainersForMode('GATE_IN');
-      const outs = this.getFallbackContainersForMode('GATE_OUT');
-      return [...ins, ...outs];
-    }
-    const list = mode === 'GATE_OUT' ? this.fallbackGateOutContainers : this.fallbackGateInContainers;
-    return list.map((c) => ({
-      ...c,
-      currentLocation: mode === 'GATE_OUT' ? 'Gate Out' : 'In Yard',
-      yardStatus: mode === 'GATE_OUT' ? 'Gate Out' : (c.daysInYard > 7 ? 'Overstay' : 'In Yard'),
-      daysInYard: this.calculateDaysInYard(c.arrivalDate),
-    }));
+        },
+      });
   }
 
   private mapVisitsToInventoryItems(visits: any[], mode: 'ALL' | 'GATE_IN' | 'GATE_OUT'): ContainerInventoryItem[] {
@@ -321,58 +357,119 @@ export class InventoryService {
 
     visits.forEach((v, index) => {
       const eventsList = Array.isArray(v.events) ? v.events : Array.isArray(v.Events) ? v.Events : [];
-      const outEvent = eventsList.find((ev: any) => {
-        const t = String(ev.eventType ?? ev.EventType ?? '').toUpperCase();
-        return t.includes('OUT') || t.includes('EXIT');
-      });
+      const hasIn = isVisitArrival(v);
+      const hasOut = isVisitDeparture(v);
+
       const inEvent = eventsList.find((ev: any) => {
         const t = String(ev.eventType ?? ev.EventType ?? '').toUpperCase();
         return t.includes('IN') || t.includes('ENTER');
       });
-      const primaryEvent = mode === 'GATE_OUT' ? (outEvent || eventsList[0] || null) : (inEvent || eventsList[0] || null);
-      const arrivalDate =
-        primaryEvent?.capturedAt ?? primaryEvent?.CapturedAt ?? v.createdAt ?? v.CreatedAt ?? new Date().toISOString();
-      const daysInYard = this.calculateDaysInYard(arrivalDate);
+      const outEvent = eventsList.find((ev: any) => {
+        const t = String(ev.eventType ?? ev.EventType ?? '').toUpperCase();
+        return t.includes('OUT') || t.includes('EXIT');
+      });
 
-      const dateObj = new Date(arrivalDate);
-      const formattedDate = isNaN(dateObj.getTime())
-        ? arrivalDate
-        : dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
-          ', ' +
-          dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const directionsToGenerate: ('IN' | 'OUT')[] = [];
+      if (mode === 'GATE_IN') {
+        if (hasIn || !hasOut) directionsToGenerate.push('IN');
+      } else if (mode === 'GATE_OUT') {
+        if (hasOut || !hasIn) directionsToGenerate.push('OUT');
+      } else {
+        // mode === 'ALL'
+        if (inEvent && outEvent) {
+          directionsToGenerate.push('OUT');
+          directionsToGenerate.push('IN');
+        } else if (hasOut) {
+          directionsToGenerate.push('OUT');
+        } else {
+          directionsToGenerate.push('IN');
+        }
+      }
 
-      const rawContainers = Array.isArray(v.containers) && v.containers.length > 0
-        ? v.containers
-        : Array.isArray(v.Containers) && v.Containers.length > 0
-          ? v.Containers
-          : null;
+      directionsToGenerate.forEach((dir) => {
+        const primaryEvent = dir === 'OUT' ? (outEvent || eventsList[0] || null) : (inEvent || eventsList[0] || null);
+        const arrivalDate =
+          primaryEvent?.capturedAt ?? primaryEvent?.CapturedAt ?? (dir === 'OUT' ? (v.departedAt ?? v.DepartedAt ?? v.createdAt) : (v.arrivedAt ?? v.ArrivedAt ?? v.createdAt)) ?? new Date().toISOString();
+        const daysInYard = this.calculateDaysInYard(arrivalDate);
 
-      if (rawContainers && rawContainers.length > 0) {
-        rawContainers.forEach((cItem: any, cIdx: number) => {
+        const dateObj = new Date(arrivalDate);
+        const formattedDate = isNaN(dateObj.getTime())
+          ? arrivalDate
+          : dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+            ', ' +
+            dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+        const rawContainers = Array.isArray(v.containers) && v.containers.length > 0
+          ? v.containers
+          : Array.isArray(v.Containers) && v.Containers.length > 0
+            ? v.Containers
+            : null;
+
+        if (rawContainers && rawContainers.length > 0) {
+          rawContainers.forEach((cItem: any, cIdx: number) => {
+            const cNumber =
+              cItem.containerNumber ||
+              cItem.ContainerNumber ||
+              v.containerNumber ||
+              v.ContainerNumber ||
+              `CONT-${1000 + index}-${cIdx + 1}`;
+            const cSize = cItem.size || cItem.Size || v.containerSize || v.ContainerSize || "40' HC";
+            const rawFullEmpty = cItem.fullOrEmpty || cItem.FullOrEmpty;
+            const fullEmpty = rawFullEmpty?.toLowerCase().includes('empty') ? 'Empty' : 'Full';
+
+            let cargoType: 'Export' | 'Import' | 'Empty' = fullEmpty === 'Empty' ? 'Empty' : (dir === 'OUT' ? 'Export' : 'Import');
+            const rawCt = cItem.cargoType || cItem.CargoType;
+            if (rawCt) {
+              const ct = rawCt.toLowerCase();
+              if (ct.includes('export')) cargoType = 'Export';
+              else if (ct.includes('empty')) cargoType = 'Empty';
+              else if (ct.includes('import')) cargoType = 'Import';
+            }
+
+            const isOut = dir === 'OUT';
+
+            result.push({
+              id: `${v.visitId || v.VisitId || index}-${dir.toLowerCase()}-${cIdx}`,
+              containerNo: String(cNumber).toUpperCase(),
+              sizeType: String(cSize),
+              line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
+              fullEmpty,
+              cargoType,
+              currentLocation: isOut ? 'Gate Out' : 'In Yard',
+              block: 'A',
+              row: '01',
+              bay: '01',
+              tier: '01',
+              yardStatus: isOut ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
+              lastAction: isOut ? 'Gated Out' : 'Gated In',
+              arrivalDate,
+              lastUpdated: formattedDate,
+              daysInYard,
+              holds: '-',
+              customerName: v.driverName || v.DriverName || 'General Shipping Logistics',
+              bookingNo: `BKG-${v.visitId || v.VisitId ? String(v.visitId || v.VisitId).slice(0, 6) : 1000 + index}`,
+            });
+          });
+        } else {
           const cNumber =
-            cItem.containerNumber ||
-            cItem.ContainerNumber ||
             v.containerNumber ||
             v.ContainerNumber ||
-            `CONT-${1000 + index}-${cIdx + 1}`;
-          const cSize = cItem.size || cItem.Size || v.containerSize || v.ContainerSize || "40' HC";
-          const rawFullEmpty = cItem.fullOrEmpty || cItem.FullOrEmpty;
-          const fullEmpty = rawFullEmpty?.toLowerCase().includes('empty') ? 'Empty' : 'Full';
+            primaryEvent?.detectedContainerNumber ||
+            primaryEvent?.DetectedContainerNumber ||
+            `CONT-${1000 + index}`;
+          const cSize =
+            v.containerSize ||
+            v.ContainerSize ||
+            primaryEvent?.detectedContainerSize ||
+            primaryEvent?.DetectedContainerSize ||
+            "40' HC";
 
-          let cargoType: 'Export' | 'Import' | 'Empty' = fullEmpty === 'Empty' ? 'Empty' : (mode === 'GATE_OUT' ? 'Export' : 'Import');
-          const rawCt = cItem.cargoType || cItem.CargoType;
-          if (rawCt) {
-            const ct = rawCt.toLowerCase();
-            if (ct.includes('export')) cargoType = 'Export';
-            else if (ct.includes('empty')) cargoType = 'Empty';
-            else if (ct.includes('import')) cargoType = 'Import';
-          }
-
-          const rawType = (primaryEvent?.eventType ?? '').toUpperCase();
-          const isOut = mode === 'GATE_OUT' || rawType.includes('OUT') || rawType.includes('EXIT');
+          const isOut = dir === 'OUT';
+          const fullEmpty = 'Full';
+          const cargoType: 'Export' | 'Import' | 'Empty' = isOut ? 'Export' : 'Import';
 
           result.push({
-            id: `${v.visitId || v.VisitId || index}-${cIdx}`,
+            id: `${v.visitId || v.VisitId || `live-${index}`}-${dir.toLowerCase()}`,
             containerNo: String(cNumber).toUpperCase(),
             sizeType: String(cSize),
             line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
@@ -392,48 +489,8 @@ export class InventoryService {
             customerName: v.driverName || v.DriverName || 'General Shipping Logistics',
             bookingNo: `BKG-${v.visitId || v.VisitId ? String(v.visitId || v.VisitId).slice(0, 6) : 1000 + index}`,
           });
-        });
-      } else {
-        const cNumber =
-          v.containerNumber ||
-          v.ContainerNumber ||
-          primaryEvent?.detectedContainerNumber ||
-          primaryEvent?.DetectedContainerNumber ||
-          `CONT-${1000 + index}`;
-        const cSize =
-          v.containerSize ||
-          v.ContainerSize ||
-          primaryEvent?.detectedContainerSize ||
-          primaryEvent?.DetectedContainerSize ||
-          "40' HC";
-
-        const rawType = (primaryEvent?.eventType ?? '').toUpperCase();
-        const isOut = mode === 'GATE_OUT' || rawType.includes('OUT') || rawType.includes('EXIT');
-        const fullEmpty = 'Full';
-        const cargoType: 'Export' | 'Import' | 'Empty' = isOut ? 'Export' : 'Import';
-
-        result.push({
-          id: v.visitId || v.VisitId || `live-${index}`,
-          containerNo: String(cNumber).toUpperCase(),
-          sizeType: String(cSize),
-          line: String(cNumber).slice(0, 3).toUpperCase() || 'MSK',
-          fullEmpty,
-          cargoType,
-          currentLocation: isOut ? 'Gate Out' : 'In Yard',
-          block: 'A',
-          row: '01',
-          bay: '01',
-          tier: '01',
-          yardStatus: isOut ? 'Gate Out' : daysInYard > 7 ? 'Overstay' : 'In Yard',
-          lastAction: isOut ? 'Gated Out' : 'Gated In',
-          arrivalDate,
-          lastUpdated: formattedDate,
-          daysInYard,
-          holds: '-',
-          customerName: v.driverName || v.DriverName || 'General Shipping Logistics',
-          bookingNo: `BKG-${v.visitId || v.VisitId ? String(v.visitId || v.VisitId).slice(0, 6) : 1000 + index}`,
-        });
-      }
+        }
+      });
     });
 
     return result;
@@ -485,6 +542,26 @@ export class InventoryService {
       list = list.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out');
     }
 
+    // KPI Card Filter
+    const kpi = this.selectedKpiFilter().trim();
+    if (kpi === 'Total Gate In') {
+      list = list.filter((c) => c.lastAction === 'Gated In' || c.currentLocation !== 'Gate Out');
+    } else if (kpi === 'Total Gate Out') {
+      list = list.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out');
+    } else if (kpi === 'Import') {
+      list = list.filter((c) => c.cargoType === 'Import');
+    } else if (kpi === 'Export') {
+      list = list.filter((c) => c.cargoType === 'Export');
+    } else if (kpi === 'Empty') {
+      list = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty');
+    } else if (kpi === 'Overstay' || kpi === 'Overstay (>7 Days)') {
+      list = list.filter((c) => c.daysInYard > 7);
+    }
+
+    if (this.filter().shippingLine && this.filter().shippingLine !== 'All') {
+      list = list.filter((c) => c.line === this.filter().shippingLine);
+    }
+
     const q = this.filter().searchQuery?.trim().toLowerCase();
 
     if (q) {
@@ -529,9 +606,10 @@ export class InventoryService {
   public readonly kpiMetrics = computed<InventoryKpiMetrics>(() => {
     const list = this.containers();
     const total = this.totalServerCount() || list.length;
-    const isGateIn = this.activeGateMode() === 'GATE_IN';
-    const gateIn = isGateIn ? total : this.gateInTotalCount() || this.fallbackGateInContainers.length;
-    const gateOut = !isGateIn ? total : this.gateOutTotalCount() || this.fallbackGateOutContainers.length;
+    const inFromList = list.filter((c) => c.lastAction === 'Gated In' || c.currentLocation === 'In Yard').length;
+    const outFromList = list.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out').length;
+    const gateIn = this.gateInTotalCount() > 0 ? this.gateInTotalCount() : inFromList;
+    const gateOut = this.gateOutTotalCount() > 0 ? this.gateOutTotalCount() : outFromList;
     const imports = list.filter((c) => c.cargoType === 'Import').length;
     const exports = list.filter((c) => c.cargoType === 'Export').length;
     const empties = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
@@ -772,8 +850,17 @@ export class InventoryService {
     this.showToast(`Hold status toggled for container.`);
   }
 
-  public exportDataToCsv(): void {
-    const rows = this.filteredContainers();
+  public exportDataToCsv(selectedIds?: Set<string>): void {
+    const isSelective = !!selectedIds && selectedIds.size > 0;
+    const rows = isSelective
+      ? this.containers().filter((c) => selectedIds.has(c.id))
+      : this.filteredContainers();
+
+    if (!rows.length) {
+      this.showToast('No records available to export.');
+      return;
+    }
+
     const headers = [
       'Container No',
       'Size/Type',
@@ -807,11 +894,19 @@ export class InventoryService {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `container-inventory-${this.activeGateMode().toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`);
+    const filename = isSelective
+      ? `container-inventory-selected-${rows.length}-${new Date().toISOString().slice(0, 10)}.csv`
+      : `container-inventory-${this.activeGateMode().toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    this.showToast('Exported inventory to CSV.');
+
+    if (isSelective) {
+      this.showToast(`Exported ${rows.length} selected record${rows.length > 1 ? 's' : ''} to CSV.`);
+    } else {
+      this.showToast('Exported inventory to CSV.');
+    }
   }
 
   public showToast(msg: string): void {

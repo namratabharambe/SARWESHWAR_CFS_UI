@@ -3,7 +3,7 @@
   <aside class="sidebar" [class.mobile-open]="mobileOpen()">
     <!-- Brand Header -->
     <div class="brand">
-      <img src="/assets/images/logo.png" alt="PROSPER CFS" class="brand-logo-img" />
+      <img src="assets/images/logo.png" alt="PROSPER CFS" class="brand-logo-img" />
       <div class="brand-copy">
         <strong class="brand-company-name">PROSPER CFS</strong>
         <small class="brand-product-desc text-white">Container Freight Station</small>
@@ -81,11 +81,6 @@
     <!-- Top Bar -->
     <!-- Top Bar -->
     <header class="topbar sticky top-0 z-40">
-      <!-- Backdrop for closing open topbar popovers -->
-      @if (locationMenuOpen() || notificationsMenuOpen() || userMenuOpen()) {
-      <div class="fixed inset-0 z-30 bg-transparent" (click)="closeAllMenus()" aria-hidden="true"></div>
-      }
-
       <!-- Mobile Menu Button (Phone / Tablet) -->
       <button class="mobile-menu text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
         type="button" aria-label="Open menu" (click)="mobileOpen.set(!mobileOpen())">
@@ -97,7 +92,7 @@
         <!-- Map / Location Icon Button with Tooltip and Selection Popover -->
         <div class="relative">
           <button type="button" class="action-btn location-map-btn group relative" [class.active]="locationMenuOpen()"
-            (click)="toggleLocationMenu()" [attr.aria-expanded]="locationMenuOpen()"
+            (click)="toggleLocationMenu($event)" [attr.aria-expanded]="locationMenuOpen()"
             title="Current Location: {{ currentSiteName() }}">
             <span class="material-icons-outlined text-xl text-blue-600 dark:text-blue-400">location_on</span>
 
@@ -184,7 +179,9 @@
 
         <!-- Client & Site Dual Context Badge (Unique & Proper) -->
         <div
-          class="flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/90 px-3 py-1.5 shadow-2xs backdrop-blur-md dark:border-slate-800 dark:bg-[#111a2e]/90">
+          (click)="toggleLocationMenu($event)"
+          title="Click to change location"
+          class="location-context-trigger flex items-center gap-2 rounded-xl border border-slate-200/90 bg-white/90 px-3 py-1.5 shadow-2xs backdrop-blur-md dark:border-slate-800 dark:bg-[#111a2e]/90 cursor-pointer hover:border-blue-400/60 transition-colors">
           <!-- Client Badge -->
           <div class="flex items-center gap-1.5">
             <span
@@ -249,7 +246,7 @@
         <!-- Notification Bell with Dynamic Alerts Popup -->
         <div class="relative">
           <button type="button" aria-label="Notifications" class="action-btn notification-btn relative"
-            [class.active]="notificationsMenuOpen()" (click)="toggleNotificationsMenu()" title="Notifications & Alerts">
+            [class.active]="notificationsMenuOpen()" (click)="toggleNotificationsMenu($event)" title="Notifications & Alerts">
             <span class="material-icons-outlined text-xl text-slate-600 dark:text-slate-300">notifications</span>
             @if (notificationCount() > 0) {
             <span class="notification-badge">
@@ -356,7 +353,7 @@
         <div class="relative">
           <button type="button"
             class="user-avatar-btn flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black tracking-wider text-white shadow-md shadow-blue-600/25 transition-transform duration-200 hover:scale-105 active:scale-95"
-            (click)="toggleUserMenu()" [attr.aria-expanded]="userMenuOpen()" title="Account: {{ auth.userName() }}">
+            (click)="toggleUserMenu($event)" [attr.aria-expanded]="userMenuOpen()" title="Account: {{ auth.userName() }}">
             {{ auth.userInitials() }}
           </button>
 

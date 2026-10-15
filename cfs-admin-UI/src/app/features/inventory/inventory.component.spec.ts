@@ -47,4 +47,53 @@ describe('InventoryComponent', () => {
     expect(added).toBeTruthy();
     expect(inventoryService.containers().length).toBe(initialCount + 1);
   });
+
+  it('should toggle selection and select all properly', () => {
+    inventoryService.containers.set([
+      { id: 'c-1', containerNo: 'MSKU 123456 1', sizeType: "40' HC", line: 'MSK', fullEmpty: 'Full', cargoType: 'Import', currentLocation: 'In Yard', block: 'A', row: '01', bay: '01', tier: '01', yardStatus: 'In Yard', lastAction: 'Gated In', arrivalDate: new Date().toISOString(), lastUpdated: 'Today', daysInYard: 2, holds: '-' },
+      { id: 'c-2', containerNo: 'MSKU 654321 2', sizeType: "20' GP", line: 'MSK', fullEmpty: 'Empty', cargoType: 'Empty', currentLocation: 'In Yard', block: 'B', row: '02', bay: '02', tier: '02', yardStatus: 'In Yard', lastAction: 'Gated In', arrivalDate: new Date().toISOString(), lastUpdated: 'Today', daysInYard: 1, holds: '-' },
+    ]);
+
+    expect(component.isAllSelected()).toBe(false);
+    const firstContainer = inventoryService.paginatedContainers()[0];
+    expect(firstContainer).toBeTruthy();
+
+    component.toggleSelect(firstContainer.id);
+    expect(component.isSelected(firstContainer.id)).toBe(true);
+    expect(component.selectedCount()).toBe(1);
+
+    component.toggleSelectAll();
+    expect(component.isAllSelected()).toBe(true);
+    expect(component.selectedCount()).toBe(inventoryService.paginatedContainers().length);
+
+    component.toggleSelectAll();
+    expect(component.isAllSelected()).toBe(false);
+    expect(component.selectedCount()).toBe(0);
+  });
+
+  it('should filter containers when KPI card is selected', () => {
+    inventoryService.containers.set([
+      { id: 'c-1', containerNo: 'MSKU 123456 1', sizeType: "40' HC", line: 'MSK', fullEmpty: 'Full', cargoType: 'Import', currentLocation: 'In Yard', block: 'A', row: '01', bay: '01', tier: '01', yardStatus: 'In Yard', lastAction: 'Gated In', arrivalDate: new Date().toISOString(), lastUpdated: 'Today', daysInYard: 2, holds: '-' },
+      { id: 'c-2', containerNo: 'MSKU 654321 2', sizeType: "20' GP", line: 'MSK', fullEmpty: 'Full', cargoType: 'Export', currentLocation: 'Gate Out', block: 'B', row: '02', bay: '02', tier: '02', yardStatus: 'Gate Out', lastAction: 'Gated Out', arrivalDate: new Date().toISOString(), lastUpdated: 'Today', daysInYard: 1, holds: '-' },
+    ]);
+
+    component.selectKpiCard('Total Gate In');
+    expect(inventoryService.selectedKpiFilter()).toBe('Total Gate In');
+    expect(inventoryService.filteredContainers().every((c) => c.lastAction === 'Gated In' || c.currentLocation !== 'Gate Out')).toBe(true);
+
+    component.selectKpiCard('Total Gate In'); // Toggle off back to All
+    expect(inventoryService.selectedKpiFilter()).toBe('All');
+  });
+
+  it('should call exportDataToCsv with selected IDs on exportCsv', () => {
+    inventoryService.containers.set([
+      { id: 'c-1', containerNo: 'MSKU 123456 1', sizeType: "40' HC", line: 'MSK', fullEmpty: 'Full', cargoType: 'Import', currentLocation: 'In Yard', block: 'A', row: '01', bay: '01', tier: '01', yardStatus: 'In Yard', lastAction: 'Gated In', arrivalDate: new Date().toISOString(), lastUpdated: 'Today', daysInYard: 2, holds: '-' },
+    ]);
+    const spy = vi.spyOn(inventoryService, 'exportDataToCsv');
+    const firstContainer = inventoryService.paginatedContainers()[0];
+    component.toggleSelect(firstContainer.id);
+
+    component.exportCsv();
+    expect(spy).toHaveBeenCalledWith(component.selectedIds());
+  });
 });

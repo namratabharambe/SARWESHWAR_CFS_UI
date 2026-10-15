@@ -8,6 +8,7 @@ export class MockAuthService {
   public readonly sessionExpired = signal<boolean>(false);
   public readonly isSystemAdmin = computed<boolean>(() => true);
   public readonly canManageClients = computed<boolean>(() => true);
+  public readonly hasAdminAccess = computed<boolean>(() => true);
   public hasRole(_roles: string | string[]): boolean {
     return true;
   }

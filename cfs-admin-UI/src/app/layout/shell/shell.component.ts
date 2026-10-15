@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService, ContextClient } from 'core/auth/auth.service';
@@ -48,19 +48,46 @@ export class ShellComponent {
     return alerts.length > 0 ? alerts.length : 2;
   });
 
-  public toggleLocationMenu(): void {
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target) return;
+    if (
+      target.closest('.location-context-trigger') ||
+      target.closest('.location-map-btn') ||
+      target.closest('.location-popover') ||
+      target.closest('.notification-btn') ||
+      target.closest('.notifications-popover') ||
+      target.closest('.user-avatar-btn') ||
+      target.closest('.user-popover')
+    ) {
+      return;
+    }
+    this.closeAllMenus();
+  }
+
+  public toggleLocationMenu(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     const next = !this.locationMenuOpen();
     this.closeAllMenus();
     this.locationMenuOpen.set(next);
   }
 
-  public toggleNotificationsMenu(): void {
+  public toggleNotificationsMenu(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     const next = !this.notificationsMenuOpen();
     this.closeAllMenus();
     this.notificationsMenuOpen.set(next);
   }
 
-  public toggleUserMenu(): void {
+  public toggleUserMenu(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
     const next = !this.userMenuOpen();
     this.closeAllMenus();
     this.userMenuOpen.set(next);
