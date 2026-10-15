@@ -121,8 +121,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     }
 
     let headers = new HttpHeaders()
-      .set('X-Site-Id', effectiveSiteId)
-      .set('Site-ID', effectiveSiteId);
+      .set('X-Site-Id', effectiveSiteId);
     if (effectiveClientId) {
       headers = headers.set('X-Client-Id', effectiveClientId);
     }
@@ -149,8 +148,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
       DEFAULT_FALLBACK_SITE_ID;
 
     const headers = new HttpHeaders()
-      .set('X-Site-Id', effectiveSiteId)
-      .set('Site-ID', effectiveSiteId);
+      .set('X-Site-Id', effectiveSiteId);
 
     const url = `${this.gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}`;
     return this.http.get<VisitListItemDto>(url, { headers }).pipe(catchError(() => of(null as any)));
@@ -171,8 +169,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
       DEFAULT_FALLBACK_SITE_ID;
 
     const headers = new HttpHeaders()
-      .set('X-Site-Id', effectiveSiteId)
-      .set('Site-ID', effectiveSiteId);
+      .set('X-Site-Id', effectiveSiteId);
 
     let params = new HttpParams().set('Page', options?.page ?? 1).set('PageSize', options?.pageSize ?? 20);
 

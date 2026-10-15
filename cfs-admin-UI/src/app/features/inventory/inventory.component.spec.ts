@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { InventoryComponent } from './inventory.component';
 import { InventoryService } from 'shared/services/inventory.service';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('InventoryComponent', () => {
   let component: InventoryComponent;

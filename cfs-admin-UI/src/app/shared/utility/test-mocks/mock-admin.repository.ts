@@ -1,8 +1,13 @@
-import { signal } from '@angular/core';
+import { computed, signal } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { Client, Site, Role, User } from 'core/models/admin.models';
 
 export class MockAdminRepository {
+  public readonly availableClients = computed<any[]>(() =>
+    this.clients().map((c) => ({ id: c.id, name: c.name || c.clientName || 'Client' })),
+  );
+  public readonly sitesForSelectedClient = computed<Site[]>(() => this.sites());
+
   public readonly clients = signal<Client[]>([
     {
       id: '1',

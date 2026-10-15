@@ -29,9 +29,8 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-kpi-metric-card')).toBeTruthy();
-    expect(compiled.querySelector('app-yard-snapshot')).toBeTruthy();
+    expect(compiled.querySelector('app-yard-overview')).toBeTruthy();
     expect(compiled.querySelector('app-recent-gate-activity')).toBeTruthy();
     expect(compiled.querySelector('app-exception-alerts')).toBeTruthy();
-    expect(compiled.querySelector('app-inventory-summary')).toBeTruthy();
   });
 });

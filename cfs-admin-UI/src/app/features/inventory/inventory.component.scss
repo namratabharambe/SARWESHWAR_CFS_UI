@@ -35,8 +35,7 @@
 }
 
 .inventory-analytics-card,
-.inventory-filter-card,
-.inventory-table-card {
+.inventory-filter-card {
   background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%) !important;
   border: 2px solid #0f2851 !important;
   border-radius: 14px !important;
@@ -61,11 +60,45 @@
 }
 
 .inventory-table-card {
-  background: #ffffff !important;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8fe 100%) !important;
+  border: 2px solid #0f2851 !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 40, 81, 0.14) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+  .filters-bar-container {
+    background: linear-gradient(180deg, #f0f7ff 0%, #e6f1fe 100%) !important;
+  }
+
+  &:hover {
+    border-color: #2563eb !important;
+    box-shadow: 0 8px 24px -2px rgba(15, 40, 81, 0.22) !important;
+  }
 
   :host-context(.dark) & {
     background: #111a2e !important;
+    border: 2px solid #1e3a8a !important;
+
+    .filters-bar-container {
+      background: #0f172a !important;
+    }
+
+    &:hover {
+      border-color: #3b82f6 !important;
+      box-shadow: 0 8px 24px -2px rgba(0, 0, 0, 0.6) !important;
+    }
   }
+}
+
+.col-checkbox {
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  text-align: center;
+}
+
+.gate-checkbox {
+  cursor: pointer;
+  accent-color: #525EA7;
 }
 
 .quick-actions-popover {
@@ -80,4 +113,3 @@
     box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.8) !important;
   }
 }
-

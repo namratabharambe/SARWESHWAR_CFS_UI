@@ -31,6 +31,33 @@ describe('AlertsComponent', () => {
   });
 
   it('should resolve alert on resolution action', () => {
+    alertService.alerts.set([
+      {
+        id: 'test-alt-1',
+        alertCode: 'ALT-1',
+        alertType: 'Container Number Mismatch',
+        severity: 'Critical',
+        status: 'Active',
+        timestamp: new Date().toISOString(),
+        gateLocation: 'Gate 1',
+        truckNo: 'TR-1',
+        driverName: 'Driver',
+        driverLicense: 'DL-1',
+        scannedContainerNo: 'C1',
+        expectedContainerNo: 'C2',
+        scannedSealNo: 'S1',
+        expectedSealNo: 'S1',
+        measuredWeightKg: 1000,
+        manifestWeightKg: 1000,
+        weightVariancePercentage: 0,
+        ocrConfidence: 99,
+        shippingLine: 'MSK',
+        bookingNo: 'B1',
+        isoType: "40' HC",
+        systemRecommendation: 'Verify',
+        comparisonFields: [],
+      },
+    ]);
     const firstAlert = alertService.alerts()[0];
     alertService.resolveAlert({
       alertId: firstAlert.id,
