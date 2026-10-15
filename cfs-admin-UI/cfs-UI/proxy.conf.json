@@ -1,12 +1,24 @@
 {
+  "/gate/api/v1": {
+    "target": "https://api.smartyard.prosperinfotech.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
+  "/admin/api": {
+    "target": "https://api.smartyard.prosperinfotech.com",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info"
+  },
   "/api/v1": {
-    "target": "https://syapi.prosperassettracking.com",
+    "target": "https://api.smartyard.prosperinfotech.com/gate",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"
   },
   "/api": {
-    "target": "https://cfsapi.prosperassettracking.com",
+    "target": "https://api.smartyard.prosperinfotech.com/admin",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"

@@ -18,7 +18,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
   private readonly gateBaseUrl: string;
 
   public static getResolvedGateBaseUrl(): string {
-    let url = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1')
+    let url = String((environment as any).gateApiBaseUrl || 'https://api.smartyard.prosperinfotech.com/gate/api/v1')
       .trim()
       .replace(/\/+$/, '');
     if (url.endsWith('/api')) {
@@ -59,10 +59,16 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     let params = new HttpParams().set('page', options?.page ?? 1).set('pageSize', options?.pageSize ?? 25);
 
     if (options?.eventType) {
+      const dir = options.eventType.includes('OUT') ? 'OUT' : 'IN';
       params = params
         .set('eventType', options.eventType)
+        .set('EventType', options.eventType)
         .set('type', options.eventType)
-        .set('direction', options.eventType.includes('OUT') ? 'OUT' : 'IN');
+        .set('Type', options.eventType)
+        .set('direction', dir)
+        .set('Direction', dir)
+        .set('cycle', dir)
+        .set('Cycle', dir);
     }
 
     if (options?.visitNumber) {
@@ -103,7 +109,8 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
 
     const url = `${this.gateBaseUrl}/gate/visits`;
     return this.http.get<VisitsPagedResponse>(url, { params }).pipe(
-      catchError(() => {
+      catchError((error) => {
+        console.error('Failed to fetch gate visits from API:', url, error);
         return of({
           items: [],
           page: options?.page ?? 1,
