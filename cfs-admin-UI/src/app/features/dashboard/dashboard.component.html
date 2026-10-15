@@ -1,0 +1,177 @@
+<div class="dashboard-page relative flex flex-col gap-3.5 min-w-0">
+  <!-- Top Ambient Sheen Laser Line on Dashboard Open -->
+  <div class="dashboard-sheen-line" aria-hidden="true"></div>
+
+  <!-- Top Hero Banner: Welcome CFS + Weather Widget + Today's Throughput -->
+  <section
+    class="dashboard-section-hero grid grid-cols-1 gap-3.5 md:grid-cols-12 lg:grid-cols-12 items-stretch min-w-0">
+    <!-- 1. Welcome CFS Operations Control Tower Card -->
+    <div
+      class="welcome-banner-card md:col-span-6 lg:col-span-6 flex items-center justify-between rounded-[12px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs relative overflow-hidden dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] min-w-0">
+      <!-- Background Terminal Scene -->
+      <div class="banner-bg-media absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <img src="assets/images/welcome-banner-bg.png" alt="CFS Operations"
+          class="h-full w-full object-cover object-right opacity-90" />
+        <div
+          class="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-sky-50/85 to-transparent dark:from-[#0d1527]/95 dark:via-[#0d1527]/80 dark:to-transparent">
+        </div>
+      </div>
+
+      <!-- Text Content -->
+      <div class="relative z-10 flex flex-col min-w-0 max-w-[80%]">
+        <span class="text-xs font-bold text-blue-700 dark:text-blue-400 tracking-wide leading-none">Welcome to</span>
+        <div class="flex items-center gap-2 flex-wrap my-1 min-w-0">
+          <h1
+            class="text-base sm:text-lg xl:text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight truncate">
+            CFS Operations Control Tower
+          </h1>
+          <span
+            class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/60 dark:text-emerald-300 shadow-2xs shrink-0">
+            <span class="beacon-dot-live"></span>
+            Terminal Live
+          </span>
+        </div>
+        <!-- Client & Site Info Pills in Dashboard Hero -->
+        <div class="mt-0.5 flex items-center gap-2 flex-wrap text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <span class="inline-flex items-center gap-1 rounded-md bg-blue-50/90 px-2 py-0.5 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/50">
+            <span class="material-icons-outlined text-xs text-blue-600 dark:text-blue-400">business</span>
+            <span class="font-bold">{{ clientName() }}</span>
+          </span>
+          <span class="text-slate-300 dark:text-slate-600">•</span>
+          <span class="inline-flex items-center gap-1 rounded-md bg-slate-100/90 px-2 py-0.5 text-slate-800 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/50">
+            <span class="material-icons-outlined text-xs text-emerald-600 dark:text-emerald-400">place</span>
+            <span class="font-bold text-[#0f2851] dark:text-white">{{ siteName() }}</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Gate Lanes & Hardware Telemetry Card -->
+    <div
+      class="gate-lanes-widget-card md:col-span-3 lg:col-span-3 flex flex-col justify-between rounded-[12px] p-3.5 bg-white dark:bg-[#111a2e] border border-[rgba(82,94,167,0.12)] dark:border-[rgba(148,163,184,0.14)] shadow-xs relative overflow-hidden min-w-0">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400 shadow-2xs">
+            <span class="material-icons-outlined text-base">videocam</span>
+          </div>
+          <span class="truncate text-xs font-bold text-[#0f2851] dark:text-slate-200">Gate Automation</span>
+        </div>
+        <span
+          class="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-300/80 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/60 dark:text-emerald-300">
+          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          2 Lanes Live
+        </span>
+      </div>
+
+      <div class="my-1.5 flex items-baseline justify-between gap-2">
+        <div class="flex flex-col min-w-0">
+          <span class="text-xl font-black text-[#0f2851] dark:text-white leading-none">
+            {{ dashboardService.activeLanesCount() }} / {{ dashboardService.totalLanesCount() }}
+          </span>
+          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+            Active Gate Lanes
+          </span>
+        </div>
+        <div class="flex flex-col items-end text-right">
+          <span class="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">
+            {{ dashboardService.avgOcrConfidence() }}%
+          </span>
+          <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5">
+            OCR Accuracy
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+        <span class="truncate">Lane 1 (In) • Lane 2 (Out)</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">100% Uptime</span>
+      </div>
+    </div>
+
+    <!-- 3. Gate Velocity & Turnaround Time (TAT) Card -->
+    <div
+      class="turnaround-widget-card md:col-span-3 lg:col-span-3 flex flex-col justify-between rounded-[12px] p-3.5 bg-white dark:bg-[#111a2e] border border-[rgba(82,94,167,0.12)] dark:border-[rgba(148,163,184,0.14)] shadow-xs relative overflow-hidden min-w-0">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 shadow-2xs">
+            <span class="material-icons-outlined text-base">timer</span>
+          </div>
+          <span class="truncate text-xs font-bold text-[#0f2851] dark:text-slate-200">Gate Velocity (TAT)</span>
+        </div>
+        <span
+          class="inline-flex shrink-0 items-center rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:border-blue-800/60 dark:bg-blue-950/60 dark:text-blue-300">
+          Target &lt; 25m
+        </span>
+      </div>
+
+      <div class="my-1.5 flex items-baseline justify-between gap-2">
+        <div class="flex flex-col min-w-0">
+          <div class="flex items-baseline gap-1">
+            <span class="text-xl font-black text-[#0f2851] dark:text-white leading-none">
+              {{ dashboardService.avgTurnaroundMinutes() }}
+            </span>
+            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">mins</span>
+          </div>
+          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+            Avg Turnaround Time
+          </span>
+        </div>
+        <div class="flex flex-col items-end text-right">
+          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 leading-none">
+            ↑ 14% Faster
+          </span>
+          <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5">
+            vs 30-day baseline
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+        <span class="truncate">Gate In to Yard Stacking</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">98.2% On Time</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Row: 5 KPI Metric Cards -->
+  <section class="dashboard-section-kpi grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 min-w-0">
+    @for (metric of dashboardService.kpiMetrics(); track metric.id) {
+    <app-kpi-metric-card [metric]="metric" class="dashboard-kpi-card min-w-0" />
+    }
+  </section>
+
+  <!-- Main Operational Grid: 3 Clean Columns with Uniform 14px Gaps -->
+  <section class="dashboard-section-ops-grid grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-stretch min-w-0">
+    <!-- Left Column: Yard Overview (6 columns) -->
+    <div class="lg:col-span-6 flex flex-col min-w-0">
+      <app-yard-overview [yardRows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()"
+        class="h-full flex flex-col min-w-0" />
+    </div>
+
+    <!-- Right 6 Columns: 2x2 Equal Grid for the 4 Operational Cards (Identical Size) -->
+    <div class="dashboard-ops-quad-grid lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 grid-rows-2 gap-3.5 min-w-0 items-stretch">
+      <!-- Row 1, Col 1: Recent Gate Activity -->
+      <app-recent-gate-activity [activities]="dashboardService.filteredGateActivities()"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
+
+      <!-- Row 1, Col 2: Yard Capacity & Utilization -->
+      <app-yard-capacity-utilization [yardRows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
+
+      <!-- Row 2, Col 1: Gate Operations (Live) -->
+      <app-gate-operations-live
+        [tabs]="dashboardService.gateTabs()"
+        [stages]="dashboardService.gateLiveStages()"
+        [gateInCount]="dashboardService.gateInCount()"
+        [gateOutCount]="dashboardService.gateOutCount()"
+        [nextTruck]="dashboardService.nextTruckInfo()"
+        [selectedGateId]="dashboardService.selectedGateId()"
+        (gateTabChange)="dashboardService.selectGateTab($event)"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
+
+      <!-- Row 2, Col 2: Exceptions & Alerts -->
+      <app-exception-alerts [alerts]="dashboardService.exceptionAlerts()"
+        class="dashboard-quad-card h-full min-h-0 min-w-0 flex flex-col" />
+    </div>
+  </section>
+</div>
