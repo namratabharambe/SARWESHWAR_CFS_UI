@@ -1,6 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { forkJoin, map, Observable, of, catchError, tap } from 'rxjs';
-import { AuthService } from 'core/auth/auth.service';
+import { AuthService, ContextClient } from 'core/auth/auth.service';
 import { ClientService } from 'shared/services/client.service';
 import { SiteService } from 'shared/services/site.service';
 import { UserService } from 'shared/services/user.service';
@@ -47,6 +47,103 @@ export class AdminRepository {
   public readonly users = signal<User[]>([]);
   public readonly loading = signal(false);
   public readonly error = signal('');
+
+  public readonly availableClients = computed<ContextClient[]>(() => {
+    const fromRepo = this.clients();
+    const fromToken = this.auth.tokenClients();
+
+    const clientMap = new Map<string, ContextClient>();
+
+    for (const c of fromRepo) {
+      if (c.id) {
+        clientMap.set(c.id, {
+          id: c.id,
+          name: c.clientName || c.name || 'Client',
+          code: c.code,
+        });
+      }
+    }
+
+    for (const c of fromToken) {
+      if (c.id) {
+        const existing = clientMap.get(c.id);
+        if (!existing) {
+          clientMap.set(c.id, c);
+        } else if (existing.name === 'Primary Client' || existing.name === 'Client') {
+          if (c.name && c.name !== 'Primary Client') {
+            existing.name = c.name;
+          }
+        }
+      }
+    }
+
+    return Array.from(clientMap.values());
+  });
+
+  public readonly sitesForSelectedClient = computed<Site[]>(() => {
+    const selectedCid = this.auth.selectedClientId() || this.auth.getActiveClientId();
+    const repoSites = this.sites();
+    const tokenSites = this.auth.tokenSites();
+
+    const siteMap = new Map<string, Site>();
+
+    // 1. From repository sites
+    for (const s of repoSites) {
+      if (!s.id) continue;
+      if (!selectedCid || !s.clientId || matchIds(s.clientId, selectedCid)) {
+        siteMap.set(s.id, { ...s });
+      }
+    }
+
+    // 2. From token / auth user sites
+    for (const ts of tokenSites) {
+      const id = ts.id || ts.siteId || '';
+      if (!id) continue;
+      const existing = siteMap.get(id);
+      if (!existing) {
+        if (!selectedCid || !ts.clientId || matchIds(ts.clientId, selectedCid)) {
+          siteMap.set(id, {
+            id,
+            clientId: ts.clientId || selectedCid,
+            name: ts.name || `Site (${id.slice(0, 8)})`,
+            code: ts.code || '',
+            status: 'Active',
+            active: true,
+          });
+        }
+      } else {
+        if ((!existing.name || existing.name.startsWith('Site (')) && ts.name && !ts.name.startsWith('Site (')) {
+          existing.name = ts.name;
+        }
+      }
+    }
+
+    // 3. Fallback: If no sites matched the specific client ID, show all available repository sites
+    if (siteMap.size === 0 && repoSites.length > 0) {
+      for (const s of repoSites) {
+        if (s.id) siteMap.set(s.id, { ...s });
+      }
+    }
+
+    // 4. Fallback: All token sites
+    if (siteMap.size === 0 && tokenSites.length > 0) {
+      for (const ts of tokenSites) {
+        const id = ts.id || ts.siteId || '';
+        if (id && !siteMap.has(id)) {
+          siteMap.set(id, {
+            id,
+            clientId: ts.clientId || selectedCid,
+            name: ts.name || `Site (${id.slice(0, 8)})`,
+            code: ts.code || '',
+            status: 'Active',
+            active: true,
+          });
+        }
+      }
+    }
+
+    return Array.from(siteMap.values());
+  });
 
   public loadAll(clientId?: string, siteId?: string): void {
     this.loading.set(true);

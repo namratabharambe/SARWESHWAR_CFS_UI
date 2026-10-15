@@ -520,6 +520,25 @@ export class AuthService {
    */
   public switchContext(clientId: string, siteId?: string): Observable<string> {
     this.contextLoading.set(true);
+
+    if (clientId) {
+      sessionStorage.setItem(this.clientContextKey, clientId);
+      this.selectedClientId.set(clientId);
+    }
+    if (siteId) {
+      sessionStorage.setItem(this.siteContextKey, siteId);
+      this.selectedSiteId.set(siteId);
+    } else {
+      sessionStorage.removeItem(this.siteContextKey);
+      this.selectedSiteId.set('');
+    }
+
+    if (this.isBypassMode()) {
+      this.contextLoading.set(false);
+      this.loadMyModules();
+      return of('');
+    }
+
     const payload: ContextRequest = {
       ClientId: clientId,
       SiteId: siteId || null,
@@ -547,20 +566,12 @@ export class AuthService {
           this.userClaims.set(this.decodeToken(newToken));
         }
 
-        if (clientId) {
-          sessionStorage.setItem(this.clientContextKey, clientId);
-          this.selectedClientId.set(clientId);
-        }
-        if (siteId) {
-          sessionStorage.setItem(this.siteContextKey, siteId);
-          this.selectedSiteId.set(siteId);
-        } else {
-          sessionStorage.removeItem(this.siteContextKey);
-          this.selectedSiteId.set('');
-        }
-
         this.loadMyModules();
         return newToken;
+      }),
+      catchError(() => {
+        this.loadMyModules();
+        return of('');
       }),
       finalize(() => this.contextLoading.set(false)),
     );

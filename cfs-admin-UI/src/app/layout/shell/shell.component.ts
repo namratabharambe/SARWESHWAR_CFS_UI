@@ -31,71 +31,7 @@ export class ShellComponent {
   public readonly gateEventsExpanded = signal<boolean>(true);
   public readonly currentUrl = signal<string>(this.router.url);
 
-  public readonly sitesForSelectedClient = computed<Site[]>(() => {
-    const selectedCid = this.auth.selectedClientId() || this.auth.getActiveClientId();
-    const repoSites = this.repository.sites();
-    const tokenSites = this.auth.tokenSites();
-
-    const siteMap = new Map<string, Site>();
-
-    // 1. From repository sites (fetched from Site GET API - highest priority for real names)
-    for (const s of repoSites) {
-      if (!s.id) continue;
-      if (!selectedCid || !s.clientId || matchIds(s.clientId, selectedCid)) {
-        siteMap.set(s.id, { ...s });
-      }
-    }
-
-    // 2. From token / auth user sites (supplement any missing sites from token)
-    for (const ts of tokenSites) {
-      const id = ts.id || ts.siteId || '';
-      if (!id) continue;
-      const existing = siteMap.get(id);
-      if (!existing) {
-        if (!selectedCid || !ts.clientId || matchIds(ts.clientId, selectedCid)) {
-          siteMap.set(id, {
-            id,
-            clientId: ts.clientId || selectedCid,
-            name: ts.name || `Site (${id.slice(0, 8)})`,
-            code: ts.code || '',
-            status: 'Active',
-            active: true,
-          });
-        }
-      } else {
-        // Upgrade if existing name is generic and token site has a more specific name
-        if ((!existing.name || existing.name.startsWith('Site (')) && ts.name && !ts.name.startsWith('Site (')) {
-          existing.name = ts.name;
-        }
-      }
-    }
-
-    // 3. Fallback: If no sites matched the specific client ID, show all available repository sites
-    if (siteMap.size === 0 && repoSites.length > 0) {
-      for (const s of repoSites) {
-        if (s.id) siteMap.set(s.id, { ...s });
-      }
-    }
-
-    // 4. Fallback: All token sites if still empty
-    if (siteMap.size === 0 && tokenSites.length > 0) {
-      for (const ts of tokenSites) {
-        const id = ts.id || ts.siteId || '';
-        if (id && !siteMap.has(id)) {
-          siteMap.set(id, {
-            id,
-            clientId: ts.clientId || selectedCid,
-            name: ts.name || `Site (${id.slice(0, 8)})`,
-            code: ts.code || '',
-            status: 'Active',
-            active: true,
-          });
-        }
-      }
-    }
-
-    return Array.from(siteMap.values());
-  });
+  public readonly sitesForSelectedClient = this.repository.sitesForSelectedClient;
 
   public readonly loadingSites = signal<boolean>(false);
   public readonly switchingContext = signal<boolean>(false);
@@ -144,37 +80,7 @@ export class ShellComponent {
     this.userMenuOpen.set(false);
   }
 
-  public readonly availableClients = computed<ContextClient[]>(() => {
-    const fromRepo = this.repository.clients();
-    const fromToken = this.auth.tokenClients();
-
-    const clientMap = new Map<string, ContextClient>();
-
-    for (const c of fromRepo) {
-      if (c.id) {
-        clientMap.set(c.id, {
-          id: c.id,
-          name: c.clientName || c.name || 'Client',
-          code: c.code,
-        });
-      }
-    }
-
-    for (const c of fromToken) {
-      if (c.id) {
-        const existing = clientMap.get(c.id);
-        if (!existing) {
-          clientMap.set(c.id, c);
-        } else if (existing.name === 'Primary Client' || existing.name === 'Client') {
-          if (c.name && c.name !== 'Primary Client') {
-            existing.name = c.name;
-          }
-        }
-      }
-    }
-
-    return Array.from(clientMap.values());
-  });
+  public readonly availableClients = this.repository.availableClients;
 
   public readonly currentClientName = computed<string>(() => {
     const cid = this.auth.selectedClientId() || this.auth.getActiveClientId();
