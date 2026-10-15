@@ -24,6 +24,16 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     if (url.endsWith('/api')) {
       url = `${url}/v1`;
     }
+    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        try {
+          const parsed = new URL(url);
+          return parsed.pathname.replace(/\/+$/, '');
+        } catch {
+          return url;
+        }
+      }
+    }
     return url;
   }
 
