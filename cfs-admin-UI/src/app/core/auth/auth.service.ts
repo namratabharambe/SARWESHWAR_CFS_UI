@@ -364,6 +364,16 @@ export class AuthService {
         next: (sites) => {
           if (sites && sites.length > 0) {
             this.accessibleUserSites.set(sites);
+            if (!this.selectedSiteId()) {
+              const firstSite = sites[0];
+              const sId = firstSite.siteId || (firstSite as any).id;
+              if (sId) {
+                this.selectedSiteId.set(sId);
+                if (typeof sessionStorage !== 'undefined') {
+                  sessionStorage.setItem(this.siteContextKey, sId);
+                }
+              }
+            }
           }
         },
       });

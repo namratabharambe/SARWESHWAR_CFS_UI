@@ -17,6 +17,7 @@ export abstract class BaseApiService<T, T1 = T, T2 = T1> {
 
   public get(options?: {
     params?: HttpParams | { [param: string]: string | number | boolean | readonly (string | number | boolean)[] };
+    headers?: any;
   }): Observable<T> {
     return this.http.get<T>(this.endpointUrl, options);
   }

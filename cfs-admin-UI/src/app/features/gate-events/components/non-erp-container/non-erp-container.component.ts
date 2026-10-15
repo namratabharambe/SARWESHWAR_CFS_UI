@@ -50,6 +50,8 @@ export class NonErpContainerComponent {
   public readonly statusFilter = signal<string>('ALL');
   public readonly gateFilter = signal<string>('ALL');
   public readonly selectedIds = signal<Set<string>>(new Set());
+  public readonly selectedCount = computed<number>(() => this.selectedIds().size);
+  public readonly exportDropdownOpen = signal<boolean>(false);
 
   // Pagination signals
   public readonly currentPage = signal<number>(1);
@@ -73,9 +75,8 @@ export class NonErpContainerComponent {
     remarks: '',
   };
 
-  // Non-ERP Inbound events
-  private readonly inEvents = signal<NonErpContainerItem[]>([]);
-  private readonly _dummyIn = [
+  // Sample data for Inbound Non-ERP containers
+  private readonly inEvents = signal<NonErpContainerItem[]>([
     {
       id: 'NE-IN-101',
       eventTime: '11:42 AM',
@@ -194,11 +195,10 @@ export class NonErpContainerComponent {
         },
       ],
     },
-  ];
+  ]);
 
-  // Non-ERP Outbound events
-  private readonly outEvents = signal<NonErpContainerItem[]>([]);
-  private readonly _dummyOut = [
+  // Sample data for Outbound Non-ERP containers
+  private readonly outEvents = signal<NonErpContainerItem[]>([
     {
       id: 'NE-OUT-201',
       eventTime: '11:30 AM',
@@ -283,7 +283,7 @@ export class NonErpContainerComponent {
         },
       ],
     },
-  ];
+  ]);
 
   /** Active event list based on gate mode */
   public readonly activeEvents = computed(() => {
@@ -475,13 +475,23 @@ export class NonErpContainerComponent {
   }
 
   public exportCsv(): void {
-    const data = this.filteredEvents();
+    const selected = this.selectedIds();
+    const isSelective = selected.size > 0;
+    const data = isSelective
+      ? this.filteredEvents().filter((e: NonErpContainerItem) => selected.has(e.id))
+      : this.filteredEvents();
+
+    if (!data.length) {
+      this.toast.emit('No records available to export.');
+      return;
+    }
+
     const csvContent =
       'data:text/csv;charset=utf-8,' +
       ['ID,Time,Gate,Direction,Truck No,Container No,Size,Confidence,Driver,Category,Status']
         .concat(
           data.map(
-            (e) =>
+            (e: NonErpContainerItem) =>
               `"${e.id}","${e.eventTime}","${e.gate}","${e.direction}","${e.truckNo}","${e.containerNo}","${e.sizeType}",${e.confidence}%,"${e.driver}","${e.category}","${e.status}"`,
           ),
         )
@@ -490,10 +500,26 @@ export class NonErpContainerComponent {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `non-erp-containers-${this.gateMode()}-${new Date().toISOString().slice(0, 10)}.csv`);
+    const filename = isSelective
+      ? `non-erp-containers-selected-${data.length}-${new Date().toISOString().slice(0, 10)}.csv`
+      : `non-erp-containers-${this.gateMode()}-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    this.toast.emit('Exporting Non-ERP container log to CSV.');
+
+    if (isSelective) {
+      this.toast.emit(`Exported ${data.length} selected record${data.length > 1 ? 's' : ''} to CSV.`);
+    } else {
+      this.toast.emit('Exporting Non-ERP container log to CSV.');
+    }
+  }
+
+  public exportSelectedCsv(): void {
+    this.exportCsv();
+  }
+
+  public clearSelection(): void {
+    this.selectedIds.set(new Set());
   }
 }

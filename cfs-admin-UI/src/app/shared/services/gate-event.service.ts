@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, catchError, of } from 'rxjs';
 import { BaseApiService } from 'shared/services/base-api.service';
 import { ApiUrlService } from 'core/services/api.url.service';
@@ -12,6 +12,9 @@ import {
   VisitsPagedResponse,
   VisitListItemDto,
 } from 'shared/types/gate-event/gate-event.interface';
+
+const DEFAULT_FALLBACK_SITE_ID = '01a07fd0-d69a-7998-bd0c-48b96d3b8a88';
+const DEFAULT_FALLBACK_CLIENT_ID = '01a07fcf-041d-74be-8d8f-14e12d9e471b';
 
 @Injectable({ providedIn: 'root' })
 export class GateEventService extends BaseApiService<GateEventsResponse, GateEventDetailDto, GateEventCaptureRequest> {
@@ -56,6 +59,16 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     userId?: string;
     eventType?: string;
   }): Observable<VisitsPagedResponse> {
+    const effectiveSiteId =
+      options?.siteId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_site_id') : '') ||
+      DEFAULT_FALLBACK_SITE_ID;
+
+    const effectiveClientId =
+      options?.clientId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_client_id') : '') ||
+      DEFAULT_FALLBACK_CLIENT_ID;
+
     let params = new HttpParams().set('page', options?.page ?? 1).set('pageSize', options?.pageSize ?? 25);
 
     if (options?.eventType) {
@@ -93,11 +106,11 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
       params = params.set('toDate', options.to);
       params = params.set('endDate', options.to);
     }
-    if (options?.siteId) {
-      params = params.set('siteId', options.siteId);
+    if (effectiveSiteId) {
+      params = params.set('siteId', effectiveSiteId);
     }
-    if (options?.clientId) {
-      params = params.set('clientId', options.clientId);
+    if (effectiveClientId) {
+      params = params.set('clientId', effectiveClientId);
     }
     if (options?.createdByUserId) {
       params = params.set('createdByUserId', options.createdByUserId);
@@ -107,8 +120,15 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
       params = params.set('userId', options.userId);
     }
 
+    let headers = new HttpHeaders()
+      .set('X-Site-Id', effectiveSiteId)
+      .set('Site-ID', effectiveSiteId);
+    if (effectiveClientId) {
+      headers = headers.set('X-Client-Id', effectiveClientId);
+    }
+
     const url = `${this.gateBaseUrl}/gate/visits`;
-    return this.http.get<VisitsPagedResponse>(url, { params }).pipe(
+    return this.http.get<VisitsPagedResponse>(url, { params, headers }).pipe(
       catchError((error) => {
         console.error('Failed to fetch gate visits from API:', url, error);
         return of({
@@ -122,9 +142,18 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     );
   }
 
-  public getVisitById(visitId: string): Observable<VisitListItemDto | null> {
+  public getVisitById(visitId: string, siteId?: string): Observable<VisitListItemDto | null> {
+    const effectiveSiteId =
+      siteId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_site_id') : '') ||
+      DEFAULT_FALLBACK_SITE_ID;
+
+    const headers = new HttpHeaders()
+      .set('X-Site-Id', effectiveSiteId)
+      .set('Site-ID', effectiveSiteId);
+
     const url = `${this.gateBaseUrl}/gate/visits/${encodeURIComponent(visitId)}`;
-    return this.http.get<VisitListItemDto>(url).pipe(catchError(() => of(null as any)));
+    return this.http.get<VisitListItemDto>(url, { headers }).pipe(catchError(() => of(null as any)));
   }
 
   public getGateEvents(options?: {
@@ -132,9 +161,19 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
     eventType?: string;
     containerNumber?: string;
     truckNumber?: string;
+    siteId?: string;
     page?: number;
     pageSize?: number;
   }): Observable<GateEventsResponse> {
+    const effectiveSiteId =
+      options?.siteId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_site_id') : '') ||
+      DEFAULT_FALLBACK_SITE_ID;
+
+    const headers = new HttpHeaders()
+      .set('X-Site-Id', effectiveSiteId)
+      .set('Site-ID', effectiveSiteId);
+
     let params = new HttpParams().set('Page', options?.page ?? 1).set('PageSize', options?.pageSize ?? 20);
 
     if (options?.visitId) {
@@ -150,7 +189,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
       params = params.set('TruckNumber', options.truckNumber);
     }
 
-    return this.get({ params });
+    return this.get({ params, headers });
   }
 
   public getGateEventById(id: string): Observable<GateEventDetailDto> {

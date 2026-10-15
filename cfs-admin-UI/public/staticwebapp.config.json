@@ -6,7 +6,7 @@
   "globalHeaders": {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
-    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Client-Id, Site-ID, X-Site-Id"
+    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Client-Id, Site-ID, X-Site-Id, x-site-id, x-client-id, site-id"
   },
   "mimeTypes": {
     ".json": "application/json",

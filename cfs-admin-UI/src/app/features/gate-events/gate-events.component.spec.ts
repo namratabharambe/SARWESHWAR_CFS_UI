@@ -127,4 +127,54 @@ describe('GateEventsComponent', () => {
     component.closeDetails();
     expect(component.selectedEventForDetails()).toBeNull();
   });
+
+  it('should manage selection state and count', () => {
+    expect(component.selectedCount()).toBe(0);
+    const firstId = component.events()[0].id;
+    component.toggleSelect(firstId);
+    expect(component.selectedCount()).toBe(1);
+
+    component.clearSelection();
+    expect(component.selectedCount()).toBe(0);
+    expect(component.isSelected(firstId)).toBe(false);
+  });
+
+  it('should support exportData for all records when none checked, and selected records when checked', () => {
+    let downloadedFile = '';
+    const clickSpy = vi.fn();
+    const origCreateElement = document.createElement.bind(document);
+    vi.spyOn(document, 'createElement').mockImplementation((tagName: string) => {
+      const el = origCreateElement(tagName);
+      if (tagName === 'a') {
+        el.click = clickSpy;
+        const origSetAttribute = el.setAttribute.bind(el);
+        el.setAttribute = (name: string, val: string) => {
+          if (name === 'download') {
+            downloadedFile = val;
+          }
+          origSetAttribute(name, val);
+        };
+      }
+      return el;
+    });
+
+    // 1. Without checkboxes checked -> exports all
+    component.selectedIds.set(new Set());
+    component.exportData();
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(downloadedFile).toContain('gate-events-');
+    expect(downloadedFile).not.toContain('selected');
+
+    // 2. With checkbox checked (e.g. 1 record) -> exports only selected records
+    clickSpy.mockClear();
+    const firstId = component.events()[0].id;
+    component.toggleSelect(firstId);
+    expect(component.selectedIds().size).toBe(1);
+
+    component.exportData();
+    expect(clickSpy).toHaveBeenCalledTimes(1);
+    expect(downloadedFile).toContain('gate-events-selected-1');
+
+    vi.restoreAllMocks();
+  });
 });
