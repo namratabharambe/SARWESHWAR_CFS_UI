@@ -10,7 +10,8 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
-  private readonly initialAlerts: ContainerMismatchAlert[] = [
+  private readonly initialAlerts: ContainerMismatchAlert[] = [];
+  private readonly _dummy = [
     {
       id: 'alert-1',
       alertCode: 'ALT-MM-2025-0101',
@@ -235,10 +236,10 @@ export class AlertService {
   ];
 
   // Live Alerts Signal
-  public readonly alerts = signal<ContainerMismatchAlert[]>(this.initialAlerts);
+  public readonly alerts = signal<ContainerMismatchAlert[]>([]);
 
   // Active selected alert for comparison drawer / modal
-  public readonly selectedAlert = signal<ContainerMismatchAlert | null>(this.initialAlerts[0]);
+  public readonly selectedAlert = signal<ContainerMismatchAlert | null>(null);
 
   // Modal open states
   public readonly isDetailModalOpen = signal<boolean>(false);

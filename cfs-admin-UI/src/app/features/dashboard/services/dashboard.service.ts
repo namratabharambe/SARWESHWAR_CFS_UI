@@ -28,36 +28,7 @@ import {
   parseAnyDate,
 } from 'shared/utils/date-filter.util';
 
-export const DEFAULT_EXCEPTION_ALERTS: ExceptionAlertItem[] = [
-  {
-    id: 'alert-1',
-    title: 'Container Hold - Documentation Pending',
-    description: 'FCIU3627463 • Import',
-    time: '2m ago',
-    severity: 'danger',
-  },
-  {
-    id: 'alert-2',
-    title: 'Gate Delay - Truck not arrived',
-    description: 'MH 46 AR 9921 • Gate 02',
-    time: '8m ago',
-    severity: 'warning',
-  },
-  {
-    id: 'alert-3',
-    title: 'Temperature Alert',
-    description: 'TCLU4S67890 • Import',
-    time: '14m ago',
-    severity: 'info',
-  },
-  {
-    id: 'alert-4',
-    title: 'Yard Space Low (Zone B)',
-    description: 'Only 12% available',
-    time: '28m ago',
-    severity: 'warning',
-  },
-];
+export const DEFAULT_EXCEPTION_ALERTS: ExceptionAlertItem[] = [];
 
 @Injectable({
   providedIn: 'root',
@@ -157,100 +128,8 @@ export class DashboardService {
   });
   public readonly yardMetrics = this._yardMetrics.asReadonly();
 
-  // Recent Gate Activity Table (Live API Data with instant initial state)
-  private readonly _allGateActivities = signal<GateActivityItem[]>([
-    {
-      id: 'gate-2',
-      time: '29 Sept, 04:54 PM',
-      type: 'IN',
-      truckNo: 'MH 46 AR 9921',
-      containerNo: 'MSDU1194174',
-      sizeType: "40' FT",
-      direction: 'Import',
-      ocrResult: 'MSDU1194174',
-      ocrConfidence: 96,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-3',
-      time: '29 Sept, 04:51 PM',
-      type: 'IN',
-      truckNo: 'MH 04 FK 7720',
-      containerNo: 'KMTU7461189',
-      sizeType: "20' FT",
-      direction: 'Import',
-      ocrResult: 'KMTU7461189',
-      ocrConfidence: 94,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-4',
-      time: '29 Sept, 04:50 PM',
-      type: 'IN',
-      truckNo: 'MH 14 DT 5512',
-      containerNo: 'SEGU3055768',
-      sizeType: "40' FT",
-      direction: 'Import',
-      ocrResult: 'SEGU3055768',
-      ocrConfidence: 97,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-5',
-      time: '29 Sept, 04:47 PM',
-      type: 'OUT',
-      truckNo: 'MH 43 BB 8804',
-      containerNo: 'ESDU7061669',
-      sizeType: "40' FT",
-      direction: 'Export',
-      ocrResult: 'ESDU7061669',
-      ocrConfidence: 95,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-6',
-      time: '29 Sept, 04:30 PM',
-      type: 'IN',
-      truckNo: 'MH 12 CR 4519',
-      containerNo: 'TLLU2046508',
-      sizeType: "20' FT",
-      direction: 'Import',
-      ocrResult: 'TLLU2046508',
-      ocrConfidence: 92,
-      status: 'Processing',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-7',
-      time: '29 Sept, 04:15 PM',
-      type: 'OUT',
-      truckNo: 'MH 06 KQ 8831',
-      containerNo: 'CMAU1234567',
-      sizeType: "40' FT",
-      direction: 'Export',
-      ocrResult: 'CMAU1234567',
-      ocrConfidence: 99,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-    {
-      id: 'gate-8',
-      time: '29 Sept, 04:02 PM',
-      type: 'IN',
-      truckNo: 'MH 46 TR 1198',
-      containerNo: 'OOLU9876543',
-      sizeType: "20' FT",
-      direction: 'Import',
-      ocrResult: 'OOLU9876543',
-      ocrConfidence: 94,
-      status: 'Verified',
-      imageUrl: 'assets/images/throughput-truck.png',
-    },
-  ]);
+  // Recent Gate Activity Table (Live API Data)
+  private readonly _allGateActivities = signal<GateActivityItem[]>([]);
 
   public readonly filteredGateActivities = computed<GateActivityItem[]>(() => {
     const query = this.searchQuery().trim().toLowerCase();
@@ -293,18 +172,7 @@ export class DashboardService {
       status: 'Completed' | 'In Yard' | 'Pending' | 'In Progress';
       iconType: 'booking' | 'arrived' | 'ocr' | 'gate-in' | 'yard' | 'inspection' | 'gate-out';
     }[];
-  } | null>({
-    containerNo: 'FCIU3627463',
-    steps: [
-      { id: 'booking', title: 'Booking', timestamp: '24 Apr 10:20', status: 'Completed', iconType: 'booking' },
-      { id: 'arrived', title: 'Arrived at Gate', timestamp: '24 Apr 14:35', status: 'Completed', iconType: 'arrived' },
-      { id: 'ocr', title: 'OCR Verified', timestamp: '24 Apr 14:42', status: 'Completed', iconType: 'ocr' },
-      { id: 'gate-in', title: 'Gate In', timestamp: '24 Apr 15:10', status: 'Completed', iconType: 'gate-in' },
-      { id: 'yard', title: 'Yard Location', timestamp: '24 Apr 15:45', status: 'In Yard', iconType: 'yard' },
-      { id: 'inspection', title: 'Inspection', timestamp: '24 Apr 16:10', status: 'Pending', iconType: 'inspection' },
-      { id: 'gate-out', title: 'Gate Out', status: 'In Progress', iconType: 'gate-out' },
-    ],
-  });
+  } | null>(null);
   public readonly activeContainerJourney = this._activeContainerJourney.asReadonly();
 
   // Exceptions / Alerts (Dynamic from shared AlertService)
@@ -404,10 +272,10 @@ export class DashboardService {
 
   // Gate Operations Live Tabs & Stages
   private readonly _gateTabs = signal<GateTabInfo[]>([
-    { gateId: 'gate-1', gateName: 'Gate 1', truckCount: 12 },
-    { gateId: 'gate-2', gateName: 'Gate 2', truckCount: 8 },
-    { gateId: 'gate-3', gateName: 'Gate 3', truckCount: 6 },
-    { gateId: 'gate-4', gateName: 'Gate 4', truckCount: 4 },
+    { gateId: 'gate-1', gateName: 'Gate 1', truckCount: 0 },
+    { gateId: 'gate-2', gateName: 'Gate 2', truckCount: 0 },
+    { gateId: 'gate-3', gateName: 'Gate 3', truckCount: 0 },
+    { gateId: 'gate-4', gateName: 'Gate 4', truckCount: 0 },
   ]);
   public readonly gateTabs = this._gateTabs.asReadonly();
 
@@ -418,9 +286,9 @@ export class DashboardService {
     {
       id: 'arrived',
       label: 'Arrived',
-      count: 10,
-      percentage: 85,
-      trendText: '12%',
+      count: 0,
+      percentage: 0,
+      trendText: '0%',
       trendDirection: 'positive',
       colorTheme: 'blue',
       iconType: 'truck-in',
@@ -428,9 +296,9 @@ export class DashboardService {
     {
       id: 'ocr-scan',
       label: 'OCR Scan',
-      count: 9,
-      percentage: 75,
-      trendText: '8%',
+      count: 0,
+      percentage: 0,
+      trendText: '0%',
       trendDirection: 'positive',
       colorTheme: 'amber',
       iconType: 'ocr-scan',
@@ -438,9 +306,9 @@ export class DashboardService {
     {
       id: 'verification',
       label: 'Verification',
-      count: 8,
-      percentage: 65,
-      trendText: '5%',
+      count: 0,
+      percentage: 0,
+      trendText: '0%',
       trendDirection: 'positive',
       colorTheme: 'blue',
       iconType: 'verification',
@@ -448,79 +316,33 @@ export class DashboardService {
   ]);
   public readonly gateLiveStages = this._gateLiveStages.asReadonly();
 
-  private readonly _gateInCount = signal<number>(10);
+  private readonly _gateInCount = signal<number>(0);
   public readonly gateInCount = this._gateInCount.asReadonly();
 
-  private readonly _gateOutCount = signal<number>(6);
+  private readonly _gateOutCount = signal<number>(0);
   public readonly gateOutCount = this._gateOutCount.asReadonly();
 
   // Useful CFS operational telemetry (Replaces fake weather and duplicate throughput)
-  private readonly _activeLanesCount = signal<number>(2);
+  private readonly _activeLanesCount = signal<number>(0);
   public readonly activeLanesCount = this._activeLanesCount.asReadonly();
 
   private readonly _totalLanesCount = signal<number>(2);
   public readonly totalLanesCount = this._totalLanesCount.asReadonly();
 
-  private readonly _avgOcrConfidence = signal<number>(98);
+  private readonly _avgOcrConfidence = signal<number>(0);
   public readonly avgOcrConfidence = this._avgOcrConfidence.asReadonly();
 
-  private readonly _avgTurnaroundMinutes = signal<number>(14);
+  private readonly _avgTurnaroundMinutes = signal<number>(0);
   public readonly avgTurnaroundMinutes = this._avgTurnaroundMinutes.asReadonly();
 
   private readonly _nextTruckInfo = signal<NextTruckInfo>({
-    truckNo: 'MH 46 AR 9921',
-    status: 'Scanning',
+    truckNo: '-',
+    status: 'Waiting',
   });
   public readonly nextTruckInfo = this._nextTruckInfo.asReadonly();
 
   // Recent Activity Events (Dynamic from real operational events)
-  private readonly _recentActivityEvents = signal<RecentActivityEvent[]>([
-    {
-      id: 'act-1',
-      title: 'Truck In',
-      details: 'MH 46 AR 9921 • FCIU3627463',
-      subtitle: 'Gate 01 • 02:36 PM',
-      time: '02:36 PM',
-      status: 'Verified',
-      iconType: 'truck-in',
-    },
-    {
-      id: 'act-2',
-      title: 'OCR Verified',
-      details: 'GJ 05 CD 7890 • TGHU9876543',
-      subtitle: 'Gate 02 • 02:31 PM',
-      time: '02:31 PM',
-      status: 'Verified',
-      iconType: 'ocr-verified',
-    },
-    {
-      id: 'act-3',
-      title: 'Gate Out',
-      details: 'RJ 14 EF 5678 • MSDU7654321',
-      subtitle: 'Gate 03 • 02:18 PM',
-      time: '02:18 PM',
-      status: 'Processing',
-      iconType: 'gate-out',
-    },
-    {
-      id: 'act-4',
-      title: 'Yard Move',
-      details: 'CAIU5425141 • Block B',
-      subtitle: '02:05 PM',
-      time: '02:05 PM',
-      status: 'In Progress',
-      iconType: 'yard-move',
-    },
-    {
-      id: 'act-5',
-      title: 'Inspection Completed',
-      details: 'CMAU1234567 • Block C',
-      subtitle: '01:20 PM',
-      time: '01:20 PM',
-      status: 'Completed',
-      iconType: 'inspection',
-    },
-  ]);
+  private readonly _recentActivityEvents = signal<RecentActivityEvent[]>([]);
   public readonly recentActivityEvents = this._recentActivityEvents.asReadonly();
 
   public selectGateTab(gateId: string): void {
@@ -589,9 +411,7 @@ export class DashboardService {
       .subscribe({
         next: ({ items, totalCount }) => {
           if (items && items.length > 0) {
-            const samplePlates = ['MH 46 AR 9921', 'MH 04 FK 7720', 'MH 14 DT 5512', 'MH 43 BB 8804', 'MH 12 CR 4519'];
             const mapped: GateActivityItem[] = [];
-
             const createItem = (visit: any, type: 'IN' | 'OUT', ev: any, customId?: string): GateActivityItem => {
               const conf = visit.containerConfidence ?? ev?.detectedContainerConfidence ?? 0.95;
               const dateObj = parseAnyDate(ev?.capturedAt ?? (type === 'OUT' ? ((visit as any).departedAt ?? visit.createdAt) : ((visit as any).arrivedAt ?? visit.createdAt))) || new Date();
@@ -606,17 +426,19 @@ export class DashboardService {
                 ? visit.truckNumber
                 : (ev?.detectedTruckNumber && ev?.detectedTruckNumber !== 'NA')
                   ? ev.detectedTruckNumber
-                  : samplePlates[mapped.length % samplePlates.length];
+                  : 'Pending Scan';
+
+              const containerCode = visit.containerNumber || ev?.detectedContainerNumber || 'Pending OCR';
 
               return {
                 id: customId || visit.visitId,
                 time: timeStr,
                 type,
                 truckNo: truckPlate,
-                containerNo: visit.containerNumber || ev?.detectedContainerNumber || 'MSCU1234567',
+                containerNo: containerCode,
                 sizeType: size,
                 direction: type === 'OUT' ? 'Export' : 'Import',
-                ocrResult: visit.containerNumber || ev?.detectedContainerNumber || 'MSCU1234567',
+                ocrResult: containerCode,
                 ocrConfidence: Math.round(conf > 1 ? conf : conf * 100),
                 status: visit.status === 'IN_YARD' || visit.status === 'DEPARTED' ? 'Verified' : 'Review',
                 imageUrl: ev?.images?.[0]?.imageUrl || (visit as any)?.images?.[0]?.imageUrl || (visit as any)?.Images?.[0]?.ImageUrl || 'assets/images/throughput-truck.png',
@@ -899,8 +721,8 @@ export class DashboardService {
               totalBlocks: 4,
               totalRows: 4,
               teuCapacity: 1200,
-              currentTeu: 816,
-              utilizationPercentage: 68,
+              currentTeu: inYard * 2 || arrivals * 2,
+              utilizationPercentage: Math.min(100, Math.round(((inYard * 2 || arrivals * 2) / 1200) * 100)),
             });
           } else {
             // Zero visits state
@@ -1009,8 +831,8 @@ export class DashboardService {
               totalBlocks: 4,
               totalRows: 4,
               teuCapacity: 1200,
-              currentTeu: 816,
-              utilizationPercentage: 68,
+              currentTeu: 0,
+              utilizationPercentage: 0,
             });
             this._gateInCount.set(0);
             this._gateOutCount.set(0);

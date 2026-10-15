@@ -73,8 +73,9 @@ export class NonErpContainerComponent {
     remarks: '',
   };
 
-  // Sample data for Inbound Non-ERP containers
-  private readonly inEvents = signal<NonErpContainerItem[]>([
+  // Non-ERP Inbound events
+  private readonly inEvents = signal<NonErpContainerItem[]>([]);
+  private readonly _dummyIn = [
     {
       id: 'NE-IN-101',
       eventTime: '11:42 AM',
@@ -193,10 +194,11 @@ export class NonErpContainerComponent {
         },
       ],
     },
-  ]);
+  ];
 
-  // Sample data for Outbound Non-ERP containers
-  private readonly outEvents = signal<NonErpContainerItem[]>([
+  // Non-ERP Outbound events
+  private readonly outEvents = signal<NonErpContainerItem[]>([]);
+  private readonly _dummyOut = [
     {
       id: 'NE-OUT-201',
       eventTime: '11:30 AM',
@@ -281,7 +283,7 @@ export class NonErpContainerComponent {
         },
       ],
     },
-  ]);
+  ];
 
   /** Active event list based on gate mode */
   public readonly activeEvents = computed(() => {

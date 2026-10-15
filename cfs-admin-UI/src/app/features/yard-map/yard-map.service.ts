@@ -103,71 +103,11 @@ export class YardMapService {
   // Master Parking & Yard Slots projected from real survey GPS coordinates
   private readonly _slots = signal<ParkingSlot[]>(CFS_GPS_SLOTS.map(mapGpsSlotToParkingSlot));
 
-  // Live Equipment Tracking
-  public readonly equipment = signal<YardEquipmentItem[]>([
-    {
-      id: 'EQ-01',
-      name: 'Reach Stacker RS-101',
-      type: 'Reach Stacker',
-      operator: 'Mahesh Patil (Cert A)',
-      status: 'active',
-      currentLocation: 'Lane D-06 (Central Aisle)',
-      taskDescription: 'Stacking MAEU 991204-7 to Tier 3',
-      xPercent: 52,
-      yPercent: 48,
-      headingDeg: 45,
-    },
-    {
-      id: 'EQ-02',
-      name: 'Heavy Forklift FL-04 (16 Ton)',
-      type: 'Heavy Forklift',
-      operator: 'Dilip Rane',
-      status: 'active',
-      currentLocation: 'Inspection Bay Ramp I-1',
-      taskDescription: 'Unloading Heavy Machinery Cargo',
-      xPercent: 18,
-      yPercent: 86,
-      headingDeg: 270,
-    },
-    {
-      id: 'EQ-03',
-      name: 'Terminal Tractor TT-08',
-      type: 'Terminal Tractor',
-      operator: 'Suresh More',
-      status: 'active',
-      currentLocation: 'Main Transit Way (Block C to Gate)',
-      taskDescription: 'Hauling Empty Container to Block C-1',
-      xPercent: 58,
-      yPercent: 22,
-      headingDeg: 180,
-    },
-  ]);
+  // Live Equipment Tracking (Empty by default until real hardware connects)
+  public readonly equipment = signal<YardEquipmentItem[]>([]);
 
-  // Moving Vehicles Animation State
-  public readonly movingVehicles = signal<MovingVehicle[]>([
-    {
-      id: 'MV-01',
-      truckNumber: 'MH-46-AR-8821',
-      containerNumber: 'MSKU 910283-4',
-      driverName: 'Rajesh Sharma',
-      source: 'Gate OCR Lane 1',
-      target: 'Slot C-1 8',
-      progressPercent: 72,
-      statusText: 'Navigating GPS Artery to Slot C-1 8',
-      type: 'ENTRY_TO_BAY',
-    },
-    {
-      id: 'MV-02',
-      truckNumber: 'GJ-06-TT-5510',
-      containerNumber: 'MEDU 839102-4',
-      driverName: 'Harish Patel',
-      source: 'Block B-3 (Export)',
-      target: 'Weighbridge Gate',
-      progressPercent: 38,
-      statusText: 'Container moving to weighbridge for gross certification',
-      type: 'INTERNAL_SHUFFLE',
-    },
-  ]);
+  // Moving Vehicles State (Empty when no live trucks are moving in yard)
+  public readonly movingVehicles = signal<MovingVehicle[]>([]);
 
   // Read-only accessors
   public readonly slots = this._slots.asReadonly();
@@ -268,12 +208,12 @@ export class YardMapService {
       totalContainerSlots: totalSlots,
       occupiedContainerSlots: occupiedSlots,
       teuCapacity: 1200,
-      currentTeu: 842,
+      currentTeu: occupiedSlots * 2,
       liveTrucksInYard: all.filter((s) => !!s.truckNumber).length + this.movingVehicles().length,
-      avgTurnaroundMinutes: 28,
+      avgTurnaroundMinutes: 0,
       activeEquipment: this.equipment().filter((e) => e.status === 'active').length,
       reeferActiveCount: reeferOccupied,
-      gateLanesActive: 2,
+      gateLanesActive: 0,
     };
   });
 

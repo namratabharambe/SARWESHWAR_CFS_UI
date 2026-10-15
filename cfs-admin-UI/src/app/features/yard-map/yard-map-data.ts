@@ -36,6 +36,631 @@ export interface CfsGpsSlot {
 
 export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
   {
+    "name": "C-12 6",
+    "coords": [
+      [
+        18.90304114642859,
+        73.046848911878
+      ],
+      [
+        18.902980854750183,
+        73.04685625254821
+      ],
+      [
+        18.902984051486474,
+        73.04688221597327
+      ],
+      [
+        18.903044952757604,
+        73.04687551045073
+      ],
+      [
+        18.90301275135571,
+        73.04686572271255
+      ]
+    ]
+  },
+  {
+    "name": "C-12 5",
+    "coords": [
+      [
+        18.903037340099576,
+        73.04682231330527
+      ],
+      [
+        18.90297765801389,
+        73.04683028912315
+      ],
+      [
+        18.902980854750183,
+        73.04685625254821
+      ],
+      [
+        18.90304114642859,
+        73.046848911878
+      ],
+      [
+        18.90300924982306,
+        73.04683944171366
+      ]
+    ]
+  },
+  {
+    "name": "C-12 4",
+    "coords": [
+      [
+        18.90303353377056,
+        73.04679571473254
+      ],
+      [
+        18.902974461277598,
+        73.04680432569808
+      ],
+      [
+        18.90297765801389,
+        73.04683028912315
+      ],
+      [
+        18.903037340099576,
+        73.04682231330527
+      ],
+      [
+        18.903005748290408,
+        73.04681316071475
+      ]
+    ]
+  },
+  {
+    "name": "C-12 3",
+    "coords": [
+      [
+        18.903029727441545,
+        73.04676911615981
+      ],
+      [
+        18.902971264541307,
+        73.04677836227302
+      ],
+      [
+        18.902974461277598,
+        73.04680432569808
+      ],
+      [
+        18.90303353377056,
+        73.04679571473254
+      ],
+      [
+        18.90300224675775,
+        73.04678687971585
+      ]
+    ]
+  },
+  {
+    "name": "C-12 2",
+    "coords": [
+      [
+        18.903025921112533,
+        73.04674251758708
+      ],
+      [
+        18.902968067805013,
+        73.04675239884796
+      ],
+      [
+        18.902971264541307,
+        73.04677836227302
+      ],
+      [
+        18.903029727441545,
+        73.04676911615981
+      ],
+      [
+        18.9029987452251,
+        73.04676059871696
+      ]
+    ]
+  },
+  {
+    "name": "C-12 1",
+    "coords": [
+      [
+        18.903022114783518,
+        73.04671591901435
+      ],
+      [
+        18.902964871068722,
+        73.0467264354229
+      ],
+      [
+        18.902968067805013,
+        73.04675239884796
+      ],
+      [
+        18.903025921112533,
+        73.04674251758708
+      ],
+      [
+        18.902995243692448,
+        73.04673431771806
+      ]
+    ]
+  },
+  {
+    "name": "H-6 4",
+    "coords": [
+      [
+        18.901880916221604,
+        73.04642705373664
+      ],
+      [
+        18.901858608842236,
+        73.04642956000944
+      ],
+      [
+        18.90187424883847,
+        73.04654157542838
+      ],
+      [
+        18.90189645257232,
+        73.04653922849549
+      ],
+      [
+        18.901877556618658,
+        73.04648435441749
+      ]
+    ]
+  },
+  {
+    "name": "H-6 3",
+    "coords": [
+      [
+        18.90190322360097,
+        73.04642454746383
+      ],
+      [
+        18.901880916221604,
+        73.04642705373664
+      ],
+      [
+        18.90189645257232,
+        73.04653922849549
+      ],
+      [
+        18.901918656306172,
+        73.0465368815626
+      ],
+      [
+        18.901899812175266,
+        73.04648192781464
+      ]
+    ]
+  },
+  {
+    "name": "H-6 2",
+    "coords": [
+      [
+        18.90192553098034,
+        73.04642204119101
+      ],
+      [
+        18.90190322360097,
+        73.04642454746383
+      ],
+      [
+        18.901918656306172,
+        73.0465368815626
+      ],
+      [
+        18.90194086004002,
+        73.04653453462971
+      ],
+      [
+        18.901922067731874,
+        73.04647950121178
+      ]
+    ]
+  },
+  {
+    "name": "H-6 1",
+    "coords": [
+      [
+        18.901947838359707,
+        73.0464195349182
+      ],
+      [
+        18.90192553098034,
+        73.04642204119101
+      ],
+      [
+        18.90194086004002,
+        73.04653453462971
+      ],
+      [
+        18.90196306377387,
+        73.04653218769683
+      ],
+      [
+        18.901944323288483,
+        73.04647707460893
+      ]
+    ]
+  },
+  {
+    "name": "B-ex 1",
+    "coords": [
+      [
+        18.902991187205657,
+        73.04690131660965
+      ],
+      [
+        18.902967938044654,
+        73.04690367364539
+      ],
+      [
+        18.90298189458926,
+        73.04706058287276
+      ],
+      [
+        18.903005651704177,
+        73.04705847208933
+      ],
+      [
+        18.902986667885937,
+        73.04698101130427
+      ]
+    ]
+  },
+  {
+    "name": "B-ex 2",
+    "coords": [
+      [
+        18.903014436366664,
+        73.0468989595739
+      ],
+      [
+        18.902991187205657,
+        73.04690131660965
+      ],
+      [
+        18.903005651704177,
+        73.04705847208933
+      ],
+      [
+        18.903029408819098,
+        73.0470563613059
+      ],
+      [
+        18.903010171023897,
+        73.0469787773947
+      ]
+    ]
+  },
+  {
+    "name": "A-10 6",
+    "coords": [
+      [
+        18.90219821166092,
+        73.04724878453864
+      ],
+      [
+        18.902117984911513,
+        73.04724800108545
+      ],
+      [
+        18.902119124189024,
+        73.04727247738494
+      ],
+      [
+        18.902199057516043,
+        73.04727381848944
+      ],
+      [
+        18.902158594569375,
+        73.0472607703746
+      ]
+    ]
+  },
+  {
+    "name": "A-10 5",
+    "coords": [
+      [
+        18.902197365805797,
+        73.04722375058783
+      ],
+      [
+        18.902116845634005,
+        73.04722352478596
+      ],
+      [
+        18.902117984911513,
+        73.04724800108545
+      ],
+      [
+        18.90219821166092,
+        73.04724878453864
+      ],
+      [
+        18.902157602003058,
+        73.04723601524947
+      ]
+    ]
+  },
+  {
+    "name": "A-10 4",
+    "coords": [
+      [
+        18.902196519950675,
+        73.04719871663703
+      ],
+      [
+        18.902115706356497,
+        73.04719904848648
+      ],
+      [
+        18.902116845634005,
+        73.04722352478596
+      ],
+      [
+        18.902197365805797,
+        73.04722375058783
+      ],
+      [
+        18.902156609436744,
+        73.04721126012433
+      ]
+    ]
+  },
+  {
+    "name": "A-10 3",
+    "coords": [
+      [
+        18.90219567409555,
+        73.04717368268622
+      ],
+      [
+        18.902114567078986,
+        73.04717457218699
+      ],
+      [
+        18.902115706356497,
+        73.04719904848648
+      ],
+      [
+        18.902196519950675,
+        73.04719871663703
+      ],
+      [
+        18.902155616870427,
+        73.04718650499917
+      ]
+    ]
+  },
+  {
+    "name": "A-10 2",
+    "coords": [
+      [
+        18.90219482824043,
+        73.04714864873542
+      ],
+      [
+        18.902113427801474,
+        73.0471500958875
+      ],
+      [
+        18.902114567078986,
+        73.04717457218699
+      ],
+      [
+        18.90219567409555,
+        73.04717368268622
+      ],
+      [
+        18.90215462430411,
+        73.04716174987402
+      ]
+    ]
+  },
+  {
+    "name": "A-10 1",
+    "coords": [
+      [
+        18.902193982385306,
+        73.04712361478461
+      ],
+      [
+        18.902112288523966,
+        73.04712561958802
+      ],
+      [
+        18.902113427801474,
+        73.0471500958875
+      ],
+      [
+        18.90219482824043,
+        73.04714864873542
+      ],
+      [
+        18.902153631737793,
+        73.04713699474888
+      ]
+    ]
+  },
+  {
+    "name": "C-ex",
+    "coords": [
+      [
+        18.90367845156366,
+        73.0465630331005
+      ],
+      [
+        18.90365688244768,
+        73.046564374205
+      ],
+      [
+        18.903673376477805,
+        73.04669580244673
+      ],
+      [
+        18.903690164137696,
+        73.0466918493841
+      ],
+      [
+        18.90367471865671,
+        73.04662876478409
+      ]
+    ]
+  },
+  {
+    "name": "F-12 1",
+    "coords": [
+      [
+        18.90376809311939,
+        73.04636392557563
+      ],
+      [
+        18.903742629475175,
+        73.04635763168335
+      ],
+      [
+        18.903739352582054,
+        73.04644233369483
+      ],
+      [
+        18.903766208221644,
+        73.04644836866511
+      ],
+      [
+        18.903754070849565,
+        73.04640306490472
+      ]
+    ]
+  },
+  {
+    "name": "F-12 2",
+    "coords": [
+      [
+        18.903793556763606,
+        73.04637021946792
+      ],
+      [
+        18.90376809311939,
+        73.04636392557563
+      ],
+      [
+        18.903766208221644,
+        73.04644836866511
+      ],
+      [
+        18.903793063861233,
+        73.0464544036354
+      ],
+      [
+        18.903780230491467,
+        73.046409229336
+      ]
+    ]
+  },
+  {
+    "name": "F-12 3",
+    "coords": [
+      [
+        18.90381902040782,
+        73.0463765133602
+      ],
+      [
+        18.903793556763606,
+        73.04637021946792
+      ],
+      [
+        18.903793063861233,
+        73.0464544036354
+      ],
+      [
+        18.903819919500823,
+        73.04646043860568
+      ],
+      [
+        18.90380639013337,
+        73.04641539376729
+      ]
+    ]
+  },
+  {
+    "name": "F-12 4",
+    "coords": [
+      [
+        18.903844484052033,
+        73.0463828072525
+      ],
+      [
+        18.90381902040782,
+        73.0463765133602
+      ],
+      [
+        18.903819919500823,
+        73.04646043860568
+      ],
+      [
+        18.903846775140412,
+        73.04646647357596
+      ],
+      [
+        18.90383254977527,
+        73.04642155819857
+      ]
+    ]
+  },
+  {
+    "name": "F-12 5",
+    "coords": [
+      [
+        18.90386994769625,
+        73.04638910114478
+      ],
+      [
+        18.903844484052033,
+        73.0463828072525
+      ],
+      [
+        18.903846775140412,
+        73.04646647357596
+      ],
+      [
+        18.90387363078,
+        73.04647250854624
+      ],
+      [
+        18.90385870941717,
+        73.04642772262987
+      ]
+    ]
+  },
+  {
+    "name": "F-12 6",
+    "coords": [
+      [
+        18.903895411340464,
+        73.04639539503707
+      ],
+      [
+        18.90386994769625,
+        73.04638910114478
+      ],
+      [
+        18.90387363078,
+        73.04647250854624
+      ],
+      [
+        18.90390048641959,
+        73.04647854351653
+      ],
+      [
+        18.903884869059077,
+        73.04643388706116
+      ]
+    ]
+  },
+  {
     "name": "ED-1",
     "coords": [
       [
@@ -13640,6 +14265,931 @@ export const RAW_CFS_GEOFENCES: { name: string; coords: number[][] }[] = [
 export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
   {
     "id": "slot-1",
+    "name": "C-12 6",
+    "code": "C-12 6",
+    "block": "C",
+    "row": "C",
+    "bay": "6",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90301275135571,
+      "lng": 73.04686572271255
+    },
+    "polygon": [
+      {
+        "lat": 18.90304114642859,
+        "lng": 73.046848911878
+      },
+      {
+        "lat": 18.902980854750183,
+        "lng": 73.04685625254821
+      },
+      {
+        "lat": 18.902984051486474,
+        "lng": 73.04688221597327
+      },
+      {
+        "lat": 18.903044952757604,
+        "lng": 73.04687551045073
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-2",
+    "name": "C-12 5",
+    "code": "C-12 5",
+    "block": "C",
+    "row": "C",
+    "bay": "5",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90300924982306,
+      "lng": 73.04683944171366
+    },
+    "polygon": [
+      {
+        "lat": 18.903037340099576,
+        "lng": 73.04682231330527
+      },
+      {
+        "lat": 18.90297765801389,
+        "lng": 73.04683028912315
+      },
+      {
+        "lat": 18.902980854750183,
+        "lng": 73.04685625254821
+      },
+      {
+        "lat": 18.90304114642859,
+        "lng": 73.046848911878
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-3",
+    "name": "C-12 4",
+    "code": "C-12 4",
+    "block": "C",
+    "row": "C",
+    "bay": "4",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.903005748290408,
+      "lng": 73.04681316071475
+    },
+    "polygon": [
+      {
+        "lat": 18.90303353377056,
+        "lng": 73.04679571473254
+      },
+      {
+        "lat": 18.902974461277598,
+        "lng": 73.04680432569808
+      },
+      {
+        "lat": 18.90297765801389,
+        "lng": 73.04683028912315
+      },
+      {
+        "lat": 18.903037340099576,
+        "lng": 73.04682231330527
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-4",
+    "name": "C-12 3",
+    "code": "C-12 3",
+    "block": "C",
+    "row": "C",
+    "bay": "3",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90300224675775,
+      "lng": 73.04678687971585
+    },
+    "polygon": [
+      {
+        "lat": 18.903029727441545,
+        "lng": 73.04676911615981
+      },
+      {
+        "lat": 18.902971264541307,
+        "lng": 73.04677836227302
+      },
+      {
+        "lat": 18.902974461277598,
+        "lng": 73.04680432569808
+      },
+      {
+        "lat": 18.90303353377056,
+        "lng": 73.04679571473254
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-5",
+    "name": "C-12 2",
+    "code": "C-12 2",
+    "block": "C",
+    "row": "C",
+    "bay": "2",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.9029987452251,
+      "lng": 73.04676059871696
+    },
+    "polygon": [
+      {
+        "lat": 18.903025921112533,
+        "lng": 73.04674251758708
+      },
+      {
+        "lat": 18.902968067805013,
+        "lng": 73.04675239884796
+      },
+      {
+        "lat": 18.902971264541307,
+        "lng": 73.04677836227302
+      },
+      {
+        "lat": 18.903029727441545,
+        "lng": 73.04676911615981
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-6",
+    "name": "C-12 1",
+    "code": "C-12 1",
+    "block": "C",
+    "row": "C",
+    "bay": "1",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902995243692448,
+      "lng": 73.04673431771806
+    },
+    "polygon": [
+      {
+        "lat": 18.903022114783518,
+        "lng": 73.04671591901435
+      },
+      {
+        "lat": 18.902964871068722,
+        "lng": 73.0467264354229
+      },
+      {
+        "lat": 18.902968067805013,
+        "lng": 73.04675239884796
+      },
+      {
+        "lat": 18.903025921112533,
+        "lng": 73.04674251758708
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-7",
+    "name": "H-6 4",
+    "code": "H-6 4",
+    "block": "H",
+    "row": "H",
+    "bay": "4",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.901877556618658,
+      "lng": 73.04648435441749
+    },
+    "polygon": [
+      {
+        "lat": 18.901880916221604,
+        "lng": 73.04642705373664
+      },
+      {
+        "lat": 18.901858608842236,
+        "lng": 73.04642956000944
+      },
+      {
+        "lat": 18.90187424883847,
+        "lng": 73.04654157542838
+      },
+      {
+        "lat": 18.90189645257232,
+        "lng": 73.04653922849549
+      }
+    ],
+    "cargoType": "Reefer",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-8",
+    "name": "H-6 3",
+    "code": "H-6 3",
+    "block": "H",
+    "row": "H",
+    "bay": "3",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.901899812175266,
+      "lng": 73.04648192781464
+    },
+    "polygon": [
+      {
+        "lat": 18.90190322360097,
+        "lng": 73.04642454746383
+      },
+      {
+        "lat": 18.901880916221604,
+        "lng": 73.04642705373664
+      },
+      {
+        "lat": 18.90189645257232,
+        "lng": 73.04653922849549
+      },
+      {
+        "lat": 18.901918656306172,
+        "lng": 73.0465368815626
+      }
+    ],
+    "cargoType": "Reefer",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-9",
+    "name": "H-6 2",
+    "code": "H-6 2",
+    "block": "H",
+    "row": "H",
+    "bay": "2",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.901922067731874,
+      "lng": 73.04647950121178
+    },
+    "polygon": [
+      {
+        "lat": 18.90192553098034,
+        "lng": 73.04642204119101
+      },
+      {
+        "lat": 18.90190322360097,
+        "lng": 73.04642454746383
+      },
+      {
+        "lat": 18.901918656306172,
+        "lng": 73.0465368815626
+      },
+      {
+        "lat": 18.90194086004002,
+        "lng": 73.04653453462971
+      }
+    ],
+    "cargoType": "Reefer",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-10",
+    "name": "H-6 1",
+    "code": "H-6 1",
+    "block": "H",
+    "row": "H",
+    "bay": "1",
+    "zoneType": "Block H (Reefer Grid)",
+    "cycle": "Reefer Cold Chain Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.901944323288483,
+      "lng": 73.04647707460893
+    },
+    "polygon": [
+      {
+        "lat": 18.901947838359707,
+        "lng": 73.0464195349182
+      },
+      {
+        "lat": 18.90192553098034,
+        "lng": 73.04642204119101
+      },
+      {
+        "lat": 18.90194086004002,
+        "lng": 73.04653453462971
+      },
+      {
+        "lat": 18.90196306377387,
+        "lng": 73.04653218769683
+      }
+    ],
+    "cargoType": "Reefer",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-11",
+    "name": "B-ex 1",
+    "code": "B-ex 1",
+    "block": "B",
+    "row": "B",
+    "bay": "1",
+    "zoneType": "Block B (Export)",
+    "cycle": "Export Buffer Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902986667885937,
+      "lng": 73.04698101130427
+    },
+    "polygon": [
+      {
+        "lat": 18.902991187205657,
+        "lng": 73.04690131660965
+      },
+      {
+        "lat": 18.902967938044654,
+        "lng": 73.04690367364539
+      },
+      {
+        "lat": 18.90298189458926,
+        "lng": 73.04706058287276
+      },
+      {
+        "lat": 18.903005651704177,
+        "lng": 73.04705847208933
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-12",
+    "name": "B-ex 2",
+    "code": "B-ex 2",
+    "block": "B",
+    "row": "B",
+    "bay": "2",
+    "zoneType": "Block B (Export)",
+    "cycle": "Export Buffer Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.903010171023897,
+      "lng": 73.0469787773947
+    },
+    "polygon": [
+      {
+        "lat": 18.903014436366664,
+        "lng": 73.0468989595739
+      },
+      {
+        "lat": 18.902991187205657,
+        "lng": 73.04690131660965
+      },
+      {
+        "lat": 18.903005651704177,
+        "lng": 73.04705847208933
+      },
+      {
+        "lat": 18.903029408819098,
+        "lng": 73.0470563613059
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-13",
+    "name": "A-10 6",
+    "code": "A-10 6",
+    "block": "A",
+    "row": "A",
+    "bay": "6",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902158594569375,
+      "lng": 73.0472607703746
+    },
+    "polygon": [
+      {
+        "lat": 18.90219821166092,
+        "lng": 73.04724878453864
+      },
+      {
+        "lat": 18.902117984911513,
+        "lng": 73.04724800108545
+      },
+      {
+        "lat": 18.902119124189024,
+        "lng": 73.04727247738494
+      },
+      {
+        "lat": 18.902199057516043,
+        "lng": 73.04727381848944
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-14",
+    "name": "A-10 5",
+    "code": "A-10 5",
+    "block": "A",
+    "row": "A",
+    "bay": "5",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902157602003058,
+      "lng": 73.04723601524947
+    },
+    "polygon": [
+      {
+        "lat": 18.902197365805797,
+        "lng": 73.04722375058783
+      },
+      {
+        "lat": 18.902116845634005,
+        "lng": 73.04722352478596
+      },
+      {
+        "lat": 18.902117984911513,
+        "lng": 73.04724800108545
+      },
+      {
+        "lat": 18.90219821166092,
+        "lng": 73.04724878453864
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-15",
+    "name": "A-10 4",
+    "code": "A-10 4",
+    "block": "A",
+    "row": "A",
+    "bay": "4",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902156609436744,
+      "lng": 73.04721126012433
+    },
+    "polygon": [
+      {
+        "lat": 18.902196519950675,
+        "lng": 73.04719871663703
+      },
+      {
+        "lat": 18.902115706356497,
+        "lng": 73.04719904848648
+      },
+      {
+        "lat": 18.902116845634005,
+        "lng": 73.04722352478596
+      },
+      {
+        "lat": 18.902197365805797,
+        "lng": 73.04722375058783
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-16",
+    "name": "A-10 3",
+    "code": "A-10 3",
+    "block": "A",
+    "row": "A",
+    "bay": "3",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902155616870427,
+      "lng": 73.04718650499917
+    },
+    "polygon": [
+      {
+        "lat": 18.90219567409555,
+        "lng": 73.04717368268622
+      },
+      {
+        "lat": 18.902114567078986,
+        "lng": 73.04717457218699
+      },
+      {
+        "lat": 18.902115706356497,
+        "lng": 73.04719904848648
+      },
+      {
+        "lat": 18.902196519950675,
+        "lng": 73.04719871663703
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-17",
+    "name": "A-10 2",
+    "code": "A-10 2",
+    "block": "A",
+    "row": "A",
+    "bay": "2",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90215462430411,
+      "lng": 73.04716174987402
+    },
+    "polygon": [
+      {
+        "lat": 18.90219482824043,
+        "lng": 73.04714864873542
+      },
+      {
+        "lat": 18.902113427801474,
+        "lng": 73.0471500958875
+      },
+      {
+        "lat": 18.902114567078986,
+        "lng": 73.04717457218699
+      },
+      {
+        "lat": 18.90219567409555,
+        "lng": 73.04717368268622
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-18",
+    "name": "A-10 1",
+    "code": "A-10 1",
+    "block": "A",
+    "row": "A",
+    "bay": "1",
+    "zoneType": "Block A (Import)",
+    "cycle": "Import Clearance Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.902153631737793,
+      "lng": 73.04713699474888
+    },
+    "polygon": [
+      {
+        "lat": 18.902193982385306,
+        "lng": 73.04712361478461
+      },
+      {
+        "lat": 18.902112288523966,
+        "lng": 73.04712561958802
+      },
+      {
+        "lat": 18.902113427801474,
+        "lng": 73.0471500958875
+      },
+      {
+        "lat": 18.90219482824043,
+        "lng": 73.04714864873542
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-19",
+    "name": "C-ex",
+    "code": "C-ex",
+    "block": "C",
+    "row": "C",
+    "bay": "ex",
+    "zoneType": "Block C (Empty Depot)",
+    "cycle": "Empty Storage Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90367471865671,
+      "lng": 73.04662876478409
+    },
+    "polygon": [
+      {
+        "lat": 18.90367845156366,
+        "lng": 73.0465630331005
+      },
+      {
+        "lat": 18.90365688244768,
+        "lng": 73.046564374205
+      },
+      {
+        "lat": 18.903673376477805,
+        "lng": 73.04669580244673
+      },
+      {
+        "lat": 18.903690164137696,
+        "lng": 73.0466918493841
+      }
+    ],
+    "cargoType": "Empty",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-20",
+    "name": "F-12 1",
+    "code": "F-12 1",
+    "block": "F",
+    "row": "F",
+    "bay": "1",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.903754070849565,
+      "lng": 73.04640306490472
+    },
+    "polygon": [
+      {
+        "lat": 18.90376809311939,
+        "lng": 73.04636392557563
+      },
+      {
+        "lat": 18.903742629475175,
+        "lng": 73.04635763168335
+      },
+      {
+        "lat": 18.903739352582054,
+        "lng": 73.04644233369483
+      },
+      {
+        "lat": 18.903766208221644,
+        "lng": 73.04644836866511
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-21",
+    "name": "F-12 2",
+    "code": "F-12 2",
+    "block": "F",
+    "row": "F",
+    "bay": "2",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.903780230491467,
+      "lng": 73.046409229336
+    },
+    "polygon": [
+      {
+        "lat": 18.903793556763606,
+        "lng": 73.04637021946792
+      },
+      {
+        "lat": 18.90376809311939,
+        "lng": 73.04636392557563
+      },
+      {
+        "lat": 18.903766208221644,
+        "lng": 73.04644836866511
+      },
+      {
+        "lat": 18.903793063861233,
+        "lng": 73.0464544036354
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-22",
+    "name": "F-12 3",
+    "code": "F-12 3",
+    "block": "F",
+    "row": "F",
+    "bay": "3",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90380639013337,
+      "lng": 73.04641539376729
+    },
+    "polygon": [
+      {
+        "lat": 18.90381902040782,
+        "lng": 73.0463765133602
+      },
+      {
+        "lat": 18.903793556763606,
+        "lng": 73.04637021946792
+      },
+      {
+        "lat": 18.903793063861233,
+        "lng": 73.0464544036354
+      },
+      {
+        "lat": 18.903819919500823,
+        "lng": 73.04646043860568
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-23",
+    "name": "F-12 4",
+    "code": "F-12 4",
+    "block": "F",
+    "row": "F",
+    "bay": "4",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90383254977527,
+      "lng": 73.04642155819857
+    },
+    "polygon": [
+      {
+        "lat": 18.903844484052033,
+        "lng": 73.0463828072525
+      },
+      {
+        "lat": 18.90381902040782,
+        "lng": 73.0463765133602
+      },
+      {
+        "lat": 18.903819919500823,
+        "lng": 73.04646043860568
+      },
+      {
+        "lat": 18.903846775140412,
+        "lng": 73.04646647357596
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-24",
+    "name": "F-12 5",
+    "code": "F-12 5",
+    "block": "F",
+    "row": "F",
+    "bay": "5",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.90385870941717,
+      "lng": 73.04642772262987
+    },
+    "polygon": [
+      {
+        "lat": 18.90386994769625,
+        "lng": 73.04638910114478
+      },
+      {
+        "lat": 18.903844484052033,
+        "lng": 73.0463828072525
+      },
+      {
+        "lat": 18.903846775140412,
+        "lng": 73.04646647357596
+      },
+      {
+        "lat": 18.90387363078,
+        "lng": 73.04647250854624
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-25",
+    "name": "F-12 6",
+    "code": "F-12 6",
+    "block": "F",
+    "row": "F",
+    "bay": "6",
+    "zoneType": "Block F (Trailer Parking)",
+    "cycle": "Trailer Marshalling Cycle",
+    "status": "available",
+    "center": {
+      "lat": 18.903884869059077,
+      "lng": 73.04643388706116
+    },
+    "polygon": [
+      {
+        "lat": 18.903895411340464,
+        "lng": 73.04639539503707
+      },
+      {
+        "lat": 18.90386994769625,
+        "lng": 73.04638910114478
+      },
+      {
+        "lat": 18.90387363078,
+        "lng": 73.04647250854624
+      },
+      {
+        "lat": 18.90390048641959,
+        "lng": 73.04647854351653
+      }
+    ],
+    "cargoType": "Dry",
+    "tierLevel": 0,
+    "maxTiers": 4,
+    "priority": false
+  },
+  {
+    "id": "slot-26",
     "name": "ED-1",
     "code": "ED-1",
     "block": "ED",
@@ -13671,11 +15221,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-2",
+    "id": "slot-27",
     "name": "F- 7 5",
     "code": "F- 7 5",
     "block": "F",
@@ -13707,11 +15258,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-3",
+    "id": "slot-28",
     "name": "F- 7 4",
     "code": "F- 7 4",
     "block": "F",
@@ -13743,11 +15295,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-4",
+    "id": "slot-29",
     "name": "F- 7 3",
     "code": "F- 7 3",
     "block": "F",
@@ -13755,7 +15308,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90377389192782,
       "lng": 73.04556488667569
@@ -13778,24 +15331,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561091593135
       }
     ],
-    "truckNumber": "MH-46-AR-1111",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7000591",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88003",
-    "grossWeightKg": 19020,
-    "dwellTime": "5h 51m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-5",
+    "id": "slot-30",
     "name": "F- 7 2",
     "code": "F- 7 2",
     "block": "F",
@@ -13803,7 +15345,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903794723435883,
       "lng": 73.04556521375571
@@ -13826,24 +15368,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561210711634
       }
     ],
-    "truckNumber": "MH-46-AR-1148",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7000788",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88004",
-    "grossWeightKg": 19360,
-    "dwellTime": "6h 8m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-6",
+    "id": "slot-31",
     "name": "F- 7 1",
     "code": "F- 7 1",
     "block": "F",
@@ -13851,7 +15382,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903815554943947,
       "lng": 73.04556554083574
@@ -13874,24 +15405,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561329830133
       }
     ],
-    "truckNumber": "MH-46-AR-1185",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7000985",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88005",
-    "grossWeightKg": 19700,
-    "dwellTime": "7h 25m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-7",
+    "id": "slot-32",
     "name": "F-10 1",
     "code": "F-10 1",
     "block": "F",
@@ -13899,7 +15419,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903662805758387,
       "lng": 73.04562317189968
@@ -13922,24 +15442,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04566871832247
       }
     ],
-    "truckNumber": "MH-46-AR-1222",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7001182",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88006",
-    "grossWeightKg": 20040,
-    "dwellTime": "8h 42m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-8",
+    "id": "slot-33",
     "name": "F-10 2",
     "code": "F-10 2",
     "block": "F",
@@ -13947,7 +15456,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903679833817456,
       "lng": 73.04573315951278
@@ -13970,24 +15479,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04567683312347
       }
     ],
-    "truckNumber": "MH-46-AR-1259",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7001379",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88007",
-    "grossWeightKg": 20380,
-    "dwellTime": "9h 59m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-9",
+    "id": "slot-34",
     "name": "F-10 3",
     "code": "F-10 3",
     "block": "F",
@@ -13995,7 +15493,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903698865387952,
       "lng": 73.04585184726169
@@ -14018,24 +15516,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04579887363364
       }
     ],
-    "truckNumber": "MH-46-AR-1296",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7001576",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88008",
-    "grossWeightKg": 20720,
-    "dwellTime": "10h 16m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-10",
+    "id": "slot-35",
     "name": "F-10 4",
     "code": "F-10 4",
     "block": "F",
@@ -14067,11 +15554,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-11",
+    "id": "slot-36",
     "name": "E-D",
     "code": "E-D",
     "block": "E",
@@ -14103,11 +15591,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-12",
+    "id": "slot-37",
     "name": "G-13 4",
     "code": "G-13 4",
     "block": "G",
@@ -14139,11 +15628,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-13",
+    "id": "slot-38",
     "name": "G-13 3",
     "code": "G-13 3",
     "block": "G",
@@ -14175,11 +15665,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-14",
+    "id": "slot-39",
     "name": "G-13 2",
     "code": "G-13 2",
     "block": "G",
@@ -14187,7 +15678,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901991897708996,
       "lng": 73.04573731585394
@@ -14210,25 +15701,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04580313979594
       }
     ],
-    "truckNumber": "MH-46-AR-1481",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7002561",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
-    "cargoType": "Reefer",
-    "temperature": "-18.5°C",
-    "sealNumber": "CFS-88013",
-    "grossWeightKg": 22420,
-    "dwellTime": "15h 41m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-15",
+    "id": "slot-40",
     "name": "G-13 1",
     "code": "G-13 1",
     "block": "G",
@@ -14236,7 +15715,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90201658465596,
       "lng": 73.04573407520525
@@ -14259,24 +15738,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04579980531014
       }
     ],
-    "truckNumber": "MH-46-AR-1518",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7002758",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88014",
-    "grossWeightKg": 22760,
-    "dwellTime": "16h 58m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-16",
+    "id": "slot-41",
     "name": "G-12 1",
     "code": "G-12 1",
     "block": "G",
@@ -14284,7 +15752,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902042801157293,
       "lng": 73.04572846106231
@@ -14307,24 +15775,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04579101502895
       }
     ],
-    "truckNumber": "MH-46-AR-1555",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7002955",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88015",
-    "grossWeightKg": 23100,
-    "dwellTime": "17h 15m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-17",
+    "id": "slot-42",
     "name": "G-12 2",
     "code": "G-12 2",
     "block": "G",
@@ -14332,7 +15789,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902070104088164,
       "lng": 73.04572662889237
@@ -14355,24 +15812,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04578900337219
       }
     ],
-    "truckNumber": "MH-46-AR-1592",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7003152",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88016",
-    "grossWeightKg": 23440,
-    "dwellTime": "18h 32m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-18",
+    "id": "slot-43",
     "name": "G-11 4",
     "code": "G-11 4",
     "block": "G",
@@ -14380,7 +15826,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902187151579646,
       "lng": 73.04576536234582
@@ -14403,24 +15849,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04577105170772
       }
     ],
-    "truckNumber": "MH-46-AR-1629",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7003349",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88017",
-    "grossWeightKg": 23780,
-    "dwellTime": "19h 49m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-19",
+    "id": "slot-44",
     "name": "G-11 3",
     "code": "G-11 3",
     "block": "G",
@@ -14428,7 +15863,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902184616811322,
       "lng": 73.04573391733865
@@ -14451,24 +15886,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04574020630405
       }
     ],
-    "truckNumber": "MH-46-AR-1666",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7003546",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88018",
-    "grossWeightKg": 24120,
-    "dwellTime": "20h 6m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-20",
+    "id": "slot-45",
     "name": "G-11 2",
     "code": "G-11 2",
     "block": "G",
@@ -14500,11 +15924,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-21",
+    "id": "slot-46",
     "name": "G-11 1",
     "code": "G-11 1",
     "block": "G",
@@ -14536,11 +15961,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-22",
+    "id": "slot-47",
     "name": "G-10 1",
     "code": "G-10 1",
     "block": "G",
@@ -14572,11 +15998,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-23",
+    "id": "slot-48",
     "name": "G-10 2",
     "code": "G-10 2",
     "block": "G",
@@ -14608,11 +16035,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-24",
+    "id": "slot-49",
     "name": "G-9 4",
     "code": "G-9 4",
     "block": "G",
@@ -14620,7 +16048,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902455572703417,
       "lng": 73.04572208806805
@@ -14643,24 +16071,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04572762012414
       }
     ],
-    "truckNumber": "MH-46-AR-1851",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7004531",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88023",
-    "grossWeightKg": 25820,
-    "dwellTime": "25h 31m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-25",
+    "id": "slot-50",
     "name": "G-9 3",
     "code": "G-9 3",
     "block": "G",
@@ -14668,7 +16085,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902450497580187,
       "lng": 73.04569358959726
@@ -14691,24 +16108,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04569878637723
       }
     ],
-    "truckNumber": "MH-46-AR-1888",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7004728",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88024",
-    "grossWeightKg": 26160,
-    "dwellTime": "26h 48m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-26",
+    "id": "slot-51",
     "name": "G-9 2",
     "code": "G-9 2",
     "block": "G",
@@ -14716,7 +16122,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902445422456957,
       "lng": 73.04566509112648
@@ -14739,24 +16145,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04566995263032
       }
     ],
-    "truckNumber": "MH-46-AR-1925",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7004925",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88025",
-    "grossWeightKg": 26500,
-    "dwellTime": "27h 5m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-27",
+    "id": "slot-52",
     "name": "G-9 1",
     "code": "G-9 1",
     "block": "G",
@@ -14764,7 +16159,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902440347333727,
       "lng": 73.0456365926557
@@ -14787,25 +16182,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04564111888341
       }
     ],
-    "truckNumber": "MH-46-AR-1962",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7005122",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88026",
-    "grossWeightKg": 26840,
-    "dwellTime": "28h 22m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-28",
+    "id": "slot-53",
     "name": "G-8 5",
     "code": "G-8 5",
     "block": "G",
@@ -14813,7 +16196,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902703394648903,
       "lng": 73.04568003156558
@@ -14836,24 +16219,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04567903280258
       }
     ],
-    "truckNumber": "MH-46-AR-1999",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7005319",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88027",
-    "grossWeightKg": 27180,
-    "dwellTime": "29h 39m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-29",
+    "id": "slot-54",
     "name": "G-8 4",
     "code": "G-8 4",
     "block": "G",
@@ -14861,7 +16233,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902702158243883,
       "lng": 73.04565924120875
@@ -14884,24 +16256,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04565945049801
       }
     ],
-    "truckNumber": "MH-46-AR-2036",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7005516",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88028",
-    "grossWeightKg": 27520,
-    "dwellTime": "30h 56m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-30",
+    "id": "slot-55",
     "name": "G-8 3",
     "code": "G-8 3",
     "block": "G",
@@ -14933,11 +16294,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-31",
+    "id": "slot-56",
     "name": "G-8 2",
     "code": "G-8 2",
     "block": "G",
@@ -14969,11 +16331,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-32",
+    "id": "slot-57",
     "name": "G-8 1",
     "code": "G-8 1",
     "block": "G",
@@ -15005,11 +16368,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-33",
+    "id": "slot-58",
     "name": "G-7 5",
     "code": "G-7 5",
     "block": "G",
@@ -15041,11 +16405,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-34",
+    "id": "slot-59",
     "name": "G-7 4",
     "code": "G-7 4",
     "block": "G",
@@ -15053,7 +16418,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902811187323344,
       "lng": 73.04565066136126
@@ -15076,24 +16441,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04565140387096
       }
     ],
-    "truckNumber": "MH-46-AR-2221",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7006501",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88033",
-    "grossWeightKg": 29220,
-    "dwellTime": "35h 21m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-35",
+    "id": "slot-60",
     "name": "G-7 3",
     "code": "G-7 3",
     "block": "G",
@@ -15101,7 +16455,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902808624895542,
       "lng": 73.04563175069833
@@ -15124,24 +16478,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0456331626709
       }
     ],
-    "truckNumber": "MH-46-AR-2258",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7006698",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88034",
-    "grossWeightKg": 29560,
-    "dwellTime": "36h 38m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-36",
+    "id": "slot-61",
     "name": "G-7 2",
     "code": "G-7 2",
     "block": "G",
@@ -15149,7 +16492,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902806062467747,
       "lng": 73.0456128400354
@@ -15172,24 +16515,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561492147084
       }
     ],
-    "truckNumber": "MH-46-AR-2295",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7006895",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88035",
-    "grossWeightKg": 29900,
-    "dwellTime": "37h 55m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-37",
+    "id": "slot-62",
     "name": "G-7 1",
     "code": "G-7 1",
     "block": "G",
@@ -15197,7 +16529,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90280350003995,
       "lng": 73.04559392937246
@@ -15220,24 +16552,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04559668027078
       }
     ],
-    "truckNumber": "MH-46-AR-2332",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7007092",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88036",
-    "grossWeightKg": 30240,
-    "dwellTime": "38h 12m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-38",
+    "id": "slot-63",
     "name": "G-6  5",
     "code": "G-6  5",
     "block": "G",
@@ -15245,7 +16566,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902919278187042,
       "lng": 73.04565120416348
@@ -15268,24 +16589,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04565085871411
       }
     ],
-    "truckNumber": "MH-46-AR-2369",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7007289",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88037",
-    "grossWeightKg": 30580,
-    "dwellTime": "39h 29m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-39",
+    "id": "slot-64",
     "name": "G-6  4",
     "code": "G-6  4",
     "block": "G",
@@ -15293,7 +16603,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90291598965408,
       "lng": 73.04563235314427
@@ -15316,24 +16626,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04563181720887
       }
     ],
-    "truckNumber": "MH-46-AR-2406",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7007486",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88038",
-    "grossWeightKg": 30920,
-    "dwellTime": "40h 46m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-40",
+    "id": "slot-65",
     "name": "G-6  3",
     "code": "G-6  3",
     "block": "G",
@@ -15365,11 +16664,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-41",
+    "id": "slot-66",
     "name": "G-6  2",
     "code": "G-6  2",
     "block": "G",
@@ -15401,11 +16701,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-42",
+    "id": "slot-67",
     "name": "G-6  1",
     "code": "G-6  1",
     "block": "G",
@@ -15437,11 +16738,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-43",
+    "id": "slot-68",
     "name": "G-5 5",
     "code": "G-5 5",
     "block": "G",
@@ -15473,11 +16775,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-44",
+    "id": "slot-69",
     "name": "G-5 4",
     "code": "G-5 4",
     "block": "G",
@@ -15485,7 +16788,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90306453984931,
       "lng": 73.04560667895966
@@ -15508,24 +16811,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04560811867113
       }
     ],
-    "truckNumber": "MH-46-AR-2591",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7008471",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88043",
-    "grossWeightKg": 18620,
-    "dwellTime": "45h 11m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-45",
+    "id": "slot-70",
     "name": "G-5 3",
     "code": "G-5 3",
     "block": "G",
@@ -15533,7 +16825,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903061186267752,
       "lng": 73.04558654047939
@@ -15556,24 +16848,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0455879582782
       }
     ],
-    "truckNumber": "MH-46-AR-2628",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7008668",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88044",
-    "grossWeightKg": 18960,
-    "dwellTime": "46h 28m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-46",
+    "id": "slot-71",
     "name": "G-5 2",
     "code": "G-5 2",
     "block": "G",
@@ -15581,7 +16862,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903057832686194,
       "lng": 73.04556640199912
@@ -15604,24 +16885,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04556779788527
       }
     ],
-    "truckNumber": "MH-46-AR-2665",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7008865",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88045",
-    "grossWeightKg": 19300,
-    "dwellTime": "47h 45m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-47",
+    "id": "slot-72",
     "name": "G-5 1",
     "code": "G-5 1",
     "block": "G",
@@ -15629,7 +16899,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90305447910464,
       "lng": 73.04554626351886
@@ -15652,24 +16922,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04554763749235
       }
     ],
-    "truckNumber": "MH-46-AR-2702",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7009062",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88046",
-    "grossWeightKg": 19640,
-    "dwellTime": "48h 2m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-48",
+    "id": "slot-73",
     "name": "G-4 5",
     "code": "G-4 5",
     "block": "G",
@@ -15677,7 +16936,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903164545431807,
       "lng": 73.045606881275
@@ -15700,24 +16959,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04560660226537
       }
     ],
-    "truckNumber": "MH-46-AR-2739",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7009259",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88047",
-    "grossWeightKg": 19980,
-    "dwellTime": "49h 19m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-49",
+    "id": "slot-74",
     "name": "G-4 4",
     "code": "G-4 4",
     "block": "G",
@@ -15725,7 +16973,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90316092081686,
       "lng": 73.0455859816222
@@ -15748,24 +16996,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04558545596913
       }
     ],
-    "truckNumber": "MH-46-AR-2776",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7009456",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88048",
-    "grossWeightKg": 20320,
-    "dwellTime": "2h 36m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-50",
+    "id": "slot-75",
     "name": "G-4 3",
     "code": "G-4 3",
     "block": "G",
@@ -15797,11 +17034,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-51",
+    "id": "slot-76",
     "name": "G-4 2",
     "code": "G-4 2",
     "block": "G",
@@ -15833,11 +17071,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-52",
+    "id": "slot-77",
     "name": "G-4 1",
     "code": "G-4 1",
     "block": "G",
@@ -15869,11 +17108,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-53",
+    "id": "slot-78",
     "name": "G-3 4",
     "code": "G-3 4",
     "block": "G",
@@ -15905,11 +17145,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-54",
+    "id": "slot-79",
     "name": "G-3 3",
     "code": "G-3 3",
     "block": "G",
@@ -15917,7 +17158,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903333067532905,
       "lng": 73.04555743664662
@@ -15940,24 +17181,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04555837070691
       }
     ],
-    "truckNumber": "MH-46-AR-2961",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7010441",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88053",
-    "grossWeightKg": 22020,
-    "dwellTime": "7h 1m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-55",
+    "id": "slot-80",
     "name": "G-3 2",
     "code": "G-3 2",
     "block": "G",
@@ -15965,7 +17195,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903330440597763,
       "lng": 73.04553583543833
@@ -15988,24 +17218,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04553696123861
       }
     ],
-    "truckNumber": "MH-46-AR-2998",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7010638",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88054",
-    "grossWeightKg": 22360,
-    "dwellTime": "8h 18m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-56",
+    "id": "slot-81",
     "name": "G-3 1",
     "code": "G-3 1",
     "block": "G",
@@ -16013,7 +17232,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90332781366262,
       "lng": 73.04551423423005
@@ -16036,24 +17255,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0455155517703
       }
     ],
-    "truckNumber": "MH-46-AR-3035",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7010835",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88055",
-    "grossWeightKg": 22700,
-    "dwellTime": "9h 35m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-57",
+    "id": "slot-82",
     "name": "G-2 3",
     "code": "G-2 3",
     "block": "G",
@@ -16061,7 +17269,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903441717484217,
       "lng": 73.04556657146533
@@ -16084,24 +17292,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04556958414116
       }
     ],
-    "truckNumber": "MH-46-AR-3072",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7011032",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88056",
-    "grossWeightKg": 23040,
-    "dwellTime": "10h 52m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-58",
+    "id": "slot-83",
     "name": "G-2 2",
     "code": "G-2 2",
     "block": "G",
@@ -16109,7 +17306,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903438227948012,
       "lng": 73.04554713506859
@@ -16132,24 +17329,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0455497595923
       }
     ],
-    "truckNumber": "MH-46-AR-3109",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7011229",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88057",
-    "grossWeightKg": 23380,
-    "dwellTime": "11h 9m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-59",
+    "id": "slot-84",
     "name": "G-2 1",
     "code": "G-2 1",
     "block": "G",
@@ -16157,7 +17343,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block G (Heavy Ground Storage)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903434738411804,
       "lng": 73.04552769867185
@@ -16180,24 +17366,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04552993504346
       }
     ],
-    "truckNumber": "MH-46-AR-3146",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7011426",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88058",
-    "grossWeightKg": 23720,
-    "dwellTime": "12h 26m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-60",
+    "id": "slot-85",
     "name": "G-1 2",
     "code": "G-1 2",
     "block": "G",
@@ -16229,11 +17404,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-61",
+    "id": "slot-86",
     "name": "G-1 1",
     "code": "G-1 1",
     "block": "G",
@@ -16265,11 +17441,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-62",
+    "id": "slot-87",
     "name": "B-4 1",
     "code": "B-4 1",
     "block": "B",
@@ -16301,11 +17478,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-63",
+    "id": "slot-88",
     "name": "B-4 2",
     "code": "B-4 2",
     "block": "B",
@@ -16337,11 +17515,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-64",
+    "id": "slot-89",
     "name": "B-4 3",
     "code": "B-4 3",
     "block": "B",
@@ -16349,7 +17528,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903319874376212,
       "lng": 73.0470751367537
@@ -16372,24 +17551,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04713878196948
       }
     ],
-    "truckNumber": "MH-46-AR-3331",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7012411",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88063",
-    "grossWeightKg": 25420,
-    "dwellTime": "17h 51m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-65",
+    "id": "slot-90",
     "name": "HS-1",
     "code": "HS-1",
     "block": "HS",
@@ -16397,7 +17565,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Hazardous Grid (HS)",
     "cycle": "Hazardous Cargo Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90205915738025,
       "lng": 73.04725454074307
@@ -16420,24 +17588,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04727021021121
       }
     ],
-    "truckNumber": "MH-46-AR-3368",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7012608",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Hazardous",
-    "sealNumber": "CFS-88064",
-    "grossWeightKg": 25760,
-    "dwellTime": "18h 8m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-66",
+    "id": "slot-91",
     "name": "HS-2",
     "code": "HS-2",
     "block": "HS",
@@ -16445,7 +17602,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Hazardous Grid (HS)",
     "cycle": "Hazardous Cargo Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902056778808216,
       "lng": 73.04722454291132
@@ -16468,25 +17625,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04723869425528
       }
     ],
-    "truckNumber": "MH-46-AR-3405",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7012805",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
-    "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88065",
-    "grossWeightKg": 26100,
-    "dwellTime": "19h 25m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "cargoType": "Hazardous",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-67",
+    "id": "slot-92",
     "name": "C-1 8",
     "code": "C-1 8",
     "block": "C",
@@ -16494,7 +17639,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903617812378002,
       "lng": 73.04674262295725
@@ -16517,24 +17662,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04674853219899
       }
     ],
-    "truckNumber": "MH-46-AR-3442",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7013002",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88066",
-    "grossWeightKg": 26440,
-    "dwellTime": "20h 42m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-68",
+    "id": "slot-93",
     "name": "C-1 7",
     "code": "C-1 7",
     "block": "C",
@@ -16542,7 +17676,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90361503693932,
       "lng": 73.0467160523242
@@ -16565,24 +17699,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04672204538497
       }
     ],
-    "truckNumber": "MH-46-AR-3479",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7013199",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88067",
-    "grossWeightKg": 26780,
-    "dwellTime": "21h 59m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-69",
+    "id": "slot-94",
     "name": "C-1 6",
     "code": "C-1 6",
     "block": "C",
@@ -16590,7 +17713,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903612261500637,
       "lng": 73.04668948169115
@@ -16613,24 +17736,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04669555857095
       }
     ],
-    "truckNumber": "MH-46-AR-3516",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7013396",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88068",
-    "grossWeightKg": 27120,
-    "dwellTime": "22h 16m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-70",
+    "id": "slot-95",
     "name": "C-1 5",
     "code": "C-1 5",
     "block": "C",
@@ -16662,11 +17774,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-71",
+    "id": "slot-96",
     "name": "C-1 4",
     "code": "C-1 4",
     "block": "C",
@@ -16698,11 +17811,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-72",
+    "id": "slot-97",
     "name": "C-1 3",
     "code": "C-1 3",
     "block": "C",
@@ -16734,11 +17848,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-73",
+    "id": "slot-98",
     "name": "C-1 2",
     "code": "C-1 2",
     "block": "C",
@@ -16770,11 +17885,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-74",
+    "id": "slot-99",
     "name": "C-1 1",
     "code": "C-1 1",
     "block": "C",
@@ -16782,7 +17898,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90359838430723,
       "lng": 73.04655662852588
@@ -16805,24 +17921,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04656312450084
       }
     ],
-    "truckNumber": "MH-46-AR-3701",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7014381",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88073",
-    "grossWeightKg": 28820,
-    "dwellTime": "27h 41m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-75",
+    "id": "slot-100",
     "name": "B-G1 1",
     "code": "B-G1 1",
     "block": "B",
@@ -16830,7 +17935,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903731751310715,
       "lng": 73.04677236658746
@@ -16853,24 +17958,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04677748123032
       }
     ],
-    "truckNumber": "MH-46-AR-3738",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7014578",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88074",
-    "grossWeightKg": 29160,
-    "dwellTime": "28h 58m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-76",
+    "id": "slot-101",
     "name": "B-G-1 2",
     "code": "B-G-1 2",
     "block": "B",
@@ -16878,7 +17972,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90383600089085,
       "lng": 73.04672608079193
@@ -16901,24 +17995,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04673049799712
       }
     ],
-    "truckNumber": "MH-46-AR-3775",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7014775",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88075",
-    "grossWeightKg": 29500,
-    "dwellTime": "29h 15m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-77",
+    "id": "slot-102",
     "name": "B-G-1 1",
     "code": "B-G-1 1",
     "block": "B",
@@ -16926,7 +18009,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90383681600371,
       "lng": 73.04675562861709
@@ -16949,24 +18032,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467594188813
       }
     ],
-    "truckNumber": "MH-46-AR-3812",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7014972",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88076",
-    "grossWeightKg": 29840,
-    "dwellTime": "30h 32m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-78",
+    "id": "slot-103",
     "name": "F-11 2",
     "code": "F-11 2",
     "block": "F",
@@ -16974,7 +18046,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903526847401878,
       "lng": 73.04547087883431
@@ -16997,24 +18069,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04548191253981
       }
     ],
-    "truckNumber": "MH-46-AR-3849",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7015169",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88077",
-    "grossWeightKg": 30180,
-    "dwellTime": "31h 49m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-79",
+    "id": "slot-104",
     "name": "F-11 1",
     "code": "F-11 1",
     "block": "F",
@@ -17022,7 +18083,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903528327149147,
       "lng": 73.04544097985172
@@ -17045,25 +18106,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04545195978224
       }
     ],
-    "truckNumber": "MH-46-AR-3886",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7015366",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
-    "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88078",
-    "grossWeightKg": 30520,
-    "dwellTime": "32h 6m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-80",
+    "id": "slot-105",
     "name": "F-9  3",
     "code": "F-9  3",
     "block": "F",
@@ -17095,11 +18144,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-81",
+    "id": "slot-106",
     "name": "F-9  2",
     "code": "F-9  2",
     "block": "F",
@@ -17131,11 +18181,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-82",
+    "id": "slot-107",
     "name": "F-9  1",
     "code": "F-9  1",
     "block": "F",
@@ -17167,11 +18218,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-83",
+    "id": "slot-108",
     "name": "F-8 3",
     "code": "F-8 3",
     "block": "F",
@@ -17203,11 +18255,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-84",
+    "id": "slot-109",
     "name": "F-8 2",
     "code": "F-8 2",
     "block": "F",
@@ -17215,7 +18268,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903745336229385,
       "lng": 73.04542988607508
@@ -17238,24 +18291,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04544122961002
       }
     ],
-    "truckNumber": "MH-46-AR-4071",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7016351",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88083",
-    "grossWeightKg": 18220,
-    "dwellTime": "37h 31m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-85",
+    "id": "slot-110",
     "name": "F-8 1",
     "code": "F-8 1",
     "block": "F",
@@ -17263,7 +18305,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903743258970017,
       "lng": 73.04539915245842
@@ -17286,24 +18328,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04541083127016
       }
     ],
-    "truckNumber": "MH-46-AR-4108",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7016548",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88084",
-    "grossWeightKg": 18560,
-    "dwellTime": "38h 48m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-86",
+    "id": "slot-111",
     "name": "B-2 5",
     "code": "B-2 5",
     "block": "B",
@@ -17311,7 +18342,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90346336103503,
       "lng": 73.04703215844718
@@ -17334,24 +18365,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04703779108611
       }
     ],
-    "truckNumber": "MH-46-AR-4145",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7016745",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88085",
-    "grossWeightKg": 18900,
-    "dwellTime": "39h 5m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-87",
+    "id": "slot-112",
     "name": "B-2 4",
     "code": "B-2 4",
     "block": "B",
@@ -17359,7 +18379,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90346095036632,
       "lng": 73.04700882322875
@@ -17382,24 +18402,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04701418764678
       }
     ],
-    "truckNumber": "MH-46-AR-4182",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7016942",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88086",
-    "grossWeightKg": 19240,
-    "dwellTime": "40h 22m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-88",
+    "id": "slot-113",
     "name": "B-2 3",
     "code": "B-2 3",
     "block": "B",
@@ -17407,7 +18416,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903458539697613,
       "lng": 73.04698548801032
@@ -17430,24 +18439,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04699058420745
       }
     ],
-    "truckNumber": "MH-46-AR-4219",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7017139",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88087",
-    "grossWeightKg": 19580,
-    "dwellTime": "41h 39m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-89",
+    "id": "slot-114",
     "name": "B-2 2",
     "code": "B-2 2",
     "block": "B",
@@ -17455,7 +18453,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903456129028903,
       "lng": 73.04696215279189
@@ -17478,24 +18476,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04696698076812
       }
     ],
-    "truckNumber": "MH-46-AR-4256",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7017336",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88088",
-    "grossWeightKg": 19920,
-    "dwellTime": "42h 56m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-90",
+    "id": "slot-115",
     "name": "B-2 1",
     "code": "B-2 1",
     "block": "B",
@@ -17527,11 +18514,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-91",
+    "id": "slot-116",
     "name": "E-15 5",
     "code": "E-15 5",
     "block": "E",
@@ -17563,11 +18551,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-92",
+    "id": "slot-117",
     "name": "E-15 4",
     "code": "E-15 4",
     "block": "E",
@@ -17599,11 +18588,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-93",
+    "id": "slot-118",
     "name": "E-15 3",
     "code": "E-15 3",
     "block": "E",
@@ -17635,11 +18625,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-94",
+    "id": "slot-119",
     "name": "E-15 2",
     "code": "E-15 2",
     "block": "E",
@@ -17647,7 +18638,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901994851832143,
       "lng": 73.0463746006228
@@ -17670,24 +18661,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04638064288748
       }
     ],
-    "truckNumber": "MH-46-AR-4441",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7018321",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88093",
-    "grossWeightKg": 21620,
-    "dwellTime": "47h 21m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-95",
+    "id": "slot-120",
     "name": "E-15 1",
     "code": "E-15 1",
     "block": "E",
@@ -17695,7 +18675,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90199124629395,
       "lng": 73.04634950072575
@@ -17718,24 +18698,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04635516190184
       }
     ],
-    "truckNumber": "MH-46-AR-4478",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7018518",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88094",
-    "grossWeightKg": 21960,
-    "dwellTime": "48h 38m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-96",
+    "id": "slot-121",
     "name": "E-14  1",
     "code": "E-14  1",
     "block": "E",
@@ -17743,7 +18712,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902071318566296,
       "lng": 73.04638436681832
@@ -17766,24 +18735,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0464410727518
       }
     ],
-    "truckNumber": "MH-46-AR-4515",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7018715",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88095",
-    "grossWeightKg": 22300,
-    "dwellTime": "49h 55m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-97",
+    "id": "slot-122",
     "name": "E-14  2",
     "code": "E-14  2",
     "block": "E",
@@ -17791,7 +18749,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902097038487923,
       "lng": 73.04637965859517
@@ -17814,24 +18772,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643633880528
       }
     ],
-    "truckNumber": "MH-46-AR-4552",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7018912",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88096",
-    "grossWeightKg": 22640,
-    "dwellTime": "2h 12m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-98",
+    "id": "slot-123",
     "name": "E-14  3",
     "code": "E-14  3",
     "block": "E",
@@ -17839,7 +18786,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902122758409547,
       "lng": 73.04637495037201
@@ -17862,24 +18809,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643160485877
       }
     ],
-    "truckNumber": "MH-46-AR-4589",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7019109",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88097",
-    "grossWeightKg": 22980,
-    "dwellTime": "3h 29m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-99",
+    "id": "slot-124",
     "name": "E-13 5",
     "code": "E-13 5",
     "block": "E",
@@ -17887,7 +18823,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902282903290967,
       "lng": 73.0464235900997
@@ -17910,24 +18846,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04642892264975
       }
     ],
-    "truckNumber": "MH-46-AR-4626",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7019306",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88098",
-    "grossWeightKg": 23320,
-    "dwellTime": "4h 46m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-100",
+    "id": "slot-125",
     "name": "E-13 4",
     "code": "E-13 4",
     "block": "E",
@@ -17959,11 +18884,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-101",
+    "id": "slot-126",
     "name": "E-13 3",
     "code": "E-13 3",
     "block": "E",
@@ -17995,11 +18921,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-102",
+    "id": "slot-127",
     "name": "E-13 2",
     "code": "E-13 2",
     "block": "E",
@@ -18031,11 +18958,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-103",
+    "id": "slot-128",
     "name": "E-13 1",
     "code": "E-13 1",
     "block": "E",
@@ -18067,11 +18995,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-104",
+    "id": "slot-129",
     "name": "E-12 5",
     "code": "E-12 5",
     "block": "E",
@@ -18079,7 +19008,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902530378516747,
       "lng": 73.04637873038646
@@ -18102,24 +19031,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04638600730551
       }
     ],
-    "truckNumber": "MH-46-AR-4811",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7020291",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88103",
-    "grossWeightKg": 25020,
-    "dwellTime": "9h 11m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-105",
+    "id": "slot-130",
     "name": "E-12 4",
     "code": "E-12 4",
     "block": "E",
@@ -18127,7 +19045,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902526910298374,
       "lng": 73.0463534477123
@@ -18150,25 +19068,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04636025809897
       }
     ],
-    "truckNumber": "MH-46-AR-4848",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7020488",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88104",
-    "grossWeightKg": 25360,
-    "dwellTime": "10h 28m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-106",
+    "id": "slot-131",
     "name": "E-12 3",
     "code": "E-12 3",
     "block": "E",
@@ -18176,7 +19082,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902523442079996,
       "lng": 73.04632816503815
@@ -18199,24 +19105,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04633450889243
       }
     ],
-    "truckNumber": "MH-46-AR-4885",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7020685",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88105",
-    "grossWeightKg": 25700,
-    "dwellTime": "11h 45m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-107",
+    "id": "slot-132",
     "name": "E-12 2",
     "code": "E-12 2",
     "block": "E",
@@ -18224,7 +19119,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90251997386162,
       "lng": 73.046302882364
@@ -18247,24 +19142,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04630875968589
       }
     ],
-    "truckNumber": "MH-46-AR-4922",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7020882",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88106",
-    "grossWeightKg": 26040,
-    "dwellTime": "12h 2m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-108",
+    "id": "slot-133",
     "name": "E-12 1",
     "code": "E-12 1",
     "block": "E",
@@ -18272,7 +19156,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902516505643245,
       "lng": 73.04627759968984
@@ -18295,24 +19179,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04628301047934
       }
     ],
-    "truckNumber": "MH-46-AR-4959",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7021079",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88107",
-    "grossWeightKg": 26380,
-    "dwellTime": "13h 19m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-109",
+    "id": "slot-134",
     "name": "E-11",
     "code": "E-11",
     "block": "E",
@@ -18320,7 +19193,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "11",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902596053662545,
       "lng": 73.04632158118228
@@ -18343,24 +19216,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04626375436783
       }
     ],
-    "truckNumber": "MH-46-AR-4996",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7021276",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88108",
-    "grossWeightKg": 26720,
-    "dwellTime": "14h 36m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-110",
+    "id": "slot-135",
     "name": "E-9",
     "code": "E-9",
     "block": "E",
@@ -18392,11 +19254,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-111",
+    "id": "slot-136",
     "name": "E-10 5",
     "code": "E-10 5",
     "block": "E",
@@ -18428,11 +19291,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-112",
+    "id": "slot-137",
     "name": "E-10 4",
     "code": "E-10 4",
     "block": "E",
@@ -18464,11 +19328,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-113",
+    "id": "slot-138",
     "name": "E-10 3",
     "code": "E-10 3",
     "block": "E",
@@ -18500,11 +19365,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-114",
+    "id": "slot-139",
     "name": "E-10 2",
     "code": "E-10 2",
     "block": "E",
@@ -18512,7 +19378,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90263011149709,
       "lng": 73.04628125574597
@@ -18535,24 +19401,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04628998422278
       }
     ],
-    "truckNumber": "MH-46-AR-5181",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7022261",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88113",
-    "grossWeightKg": 28420,
-    "dwellTime": "19h 1m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-115",
+    "id": "slot-140",
     "name": "E-10 1",
     "code": "E-10 1",
     "block": "E",
@@ -18560,7 +19415,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90262555089703,
       "lng": 73.04625429162836
@@ -18583,24 +19438,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04626289391173
       }
     ],
-    "truckNumber": "MH-46-AR-5218",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7022458",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88114",
-    "grossWeightKg": 28760,
-    "dwellTime": "20h 18m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-116",
+    "id": "slot-141",
     "name": "E-8 5",
     "code": "E-8 5",
     "block": "E",
@@ -18608,7 +19452,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902750132450112,
       "lng": 73.04634245287643
@@ -18631,24 +19475,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04635113858832
       }
     ],
-    "truckNumber": "MH-46-AR-5255",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7022655",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88115",
-    "grossWeightKg": 29100,
-    "dwellTime": "21h 35m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-117",
+    "id": "slot-142",
     "name": "E-8 4",
     "code": "E-8 4",
     "block": "E",
@@ -18656,7 +19489,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902745905674767,
       "lng": 73.04631569372111
@@ -18679,24 +19512,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04632351183547
       }
     ],
-    "truckNumber": "MH-46-AR-5292",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7022852",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88116",
-    "grossWeightKg": 29440,
-    "dwellTime": "22h 52m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-118",
+    "id": "slot-143",
     "name": "E-8 3",
     "code": "E-8 3",
     "block": "E",
@@ -18704,7 +19526,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902741678899417,
       "lng": 73.04628893456578
@@ -18727,25 +19549,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04629588508261
       }
     ],
-    "truckNumber": "MH-46-AR-5329",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7023049",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88117",
-    "grossWeightKg": 29780,
-    "dwellTime": "23h 9m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-119",
+    "id": "slot-144",
     "name": "E-8 2",
     "code": "E-8 2",
     "block": "E",
@@ -18753,7 +19563,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90273745212407,
       "lng": 73.04626217541045
@@ -18776,24 +19586,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04626825832976
       }
     ],
-    "truckNumber": "MH-46-AR-5366",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7023246",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88118",
-    "grossWeightKg": 30120,
-    "dwellTime": "24h 26m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-120",
+    "id": "slot-145",
     "name": "E-8 1",
     "code": "E-8 1",
     "block": "E",
@@ -18825,11 +19624,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-121",
+    "id": "slot-146",
     "name": "E-7 5",
     "code": "E-7 5",
     "block": "E",
@@ -18861,11 +19661,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-122",
+    "id": "slot-147",
     "name": "E-7 4",
     "code": "E-7 4",
     "block": "E",
@@ -18897,11 +19698,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-123",
+    "id": "slot-148",
     "name": "E-7 3",
     "code": "E-7 3",
     "block": "E",
@@ -18933,11 +19735,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-124",
+    "id": "slot-149",
     "name": "E-7 2",
     "code": "E-7 2",
     "block": "E",
@@ -18945,7 +19748,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902851889372034,
       "lng": 73.04624628647062
@@ -18968,24 +19771,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04625109219207
       }
     ],
-    "truckNumber": "MH-46-AR-5551",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7024231",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88123",
-    "grossWeightKg": 31820,
-    "dwellTime": "29h 51m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-125",
+    "id": "slot-150",
     "name": "E-7 1",
     "code": "E-7 1",
     "block": "E",
@@ -18993,7 +19785,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902847914487513,
       "lng": 73.04621939410443
@@ -19016,24 +19808,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04622400188101
       }
     ],
-    "truckNumber": "MH-46-AR-5588",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7024428",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88124",
-    "grossWeightKg": 18160,
-    "dwellTime": "30h 8m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-126",
+    "id": "slot-151",
     "name": "E-6 5",
     "code": "E-6 5",
     "block": "E",
@@ -19041,7 +19822,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902985073652133,
       "lng": 73.04630650439793
@@ -19064,24 +19845,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0463122465576
       }
     ],
-    "truckNumber": "MH-46-AR-5625",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7024625",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88125",
-    "grossWeightKg": 18500,
-    "dwellTime": "31h 25m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-127",
+    "id": "slot-152",
     "name": "E-6 4",
     "code": "E-6 4",
     "block": "E",
@@ -19089,7 +19859,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902981641509793,
       "lng": 73.04627939051488
@@ -19112,24 +19882,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04628461980475
       }
     ],
-    "truckNumber": "MH-46-AR-5662",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7024822",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88126",
-    "grossWeightKg": 18840,
-    "dwellTime": "32h 42m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-128",
+    "id": "slot-153",
     "name": "E-6 3",
     "code": "E-6 3",
     "block": "E",
@@ -19137,7 +19896,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902978209367454,
       "lng": 73.04625227663183
@@ -19160,24 +19919,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0462569930519
       }
     ],
-    "truckNumber": "MH-46-AR-5699",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7025019",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88127",
-    "grossWeightKg": 19180,
-    "dwellTime": "33h 59m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-129",
+    "id": "slot-154",
     "name": "E-6 2",
     "code": "E-6 2",
     "block": "E",
@@ -19185,7 +19933,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902974777225115,
       "lng": 73.04622516274878
@@ -19208,24 +19956,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04622936629904
       }
     ],
-    "truckNumber": "MH-46-AR-5736",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7025216",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88128",
-    "grossWeightKg": 19520,
-    "dwellTime": "34h 16m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-130",
+    "id": "slot-155",
     "name": "E-6 1",
     "code": "E-6 1",
     "block": "E",
@@ -19257,11 +19994,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-131",
+    "id": "slot-156",
     "name": "E-5 4",
     "code": "E-5 4",
     "block": "E",
@@ -19293,11 +20031,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-132",
+    "id": "slot-157",
     "name": "E-5 3",
     "code": "E-5 3",
     "block": "E",
@@ -19329,11 +20068,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-133",
+    "id": "slot-158",
     "name": "E-5 2",
     "code": "E-5 2",
     "block": "E",
@@ -19365,11 +20105,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-134",
+    "id": "slot-159",
     "name": "E-5 1",
     "code": "E-5 1",
     "block": "E",
@@ -19377,7 +20118,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903224686436854,
       "lng": 73.0461567883942
@@ -19400,24 +20141,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0461660661663
       }
     ],
-    "truckNumber": "MH-46-AR-5921",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7026201",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88133",
-    "grossWeightKg": 21220,
-    "dwellTime": "39h 41m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-135",
+    "id": "slot-160",
     "name": "E-4 4",
     "code": "E-4 4",
     "block": "E",
@@ -19425,7 +20155,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903366452924708,
       "lng": 73.04624678893131
@@ -19448,24 +20178,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0462572612728
       }
     ],
-    "truckNumber": "MH-46-AR-5958",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7026398",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88134",
-    "grossWeightKg": 21560,
-    "dwellTime": "40h 58m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-136",
+    "id": "slot-161",
     "name": "E-4 3",
     "code": "E-4 3",
     "block": "E",
@@ -19473,7 +20192,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903360724312734,
       "lng": 73.0462089427878
@@ -19496,24 +20215,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04621903979434
       }
     ],
-    "truckNumber": "MH-46-AR-5995",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7026595",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88135",
-    "grossWeightKg": 21900,
-    "dwellTime": "41h 15m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-137",
+    "id": "slot-162",
     "name": "E-4 2",
     "code": "E-4 2",
     "block": "E",
@@ -19521,7 +20229,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903354995700756,
       "lng": 73.04617109664429
@@ -19544,24 +20252,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04618081831588
       }
     ],
-    "truckNumber": "MH-46-AR-6032",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7026792",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88136",
-    "grossWeightKg": 22240,
-    "dwellTime": "42h 32m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-138",
+    "id": "slot-163",
     "name": "E-4 1",
     "code": "E-4 1",
     "block": "E",
@@ -19569,7 +20266,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90334926708878,
       "lng": 73.04613325050076
@@ -19592,24 +20289,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04614259683741
       }
     ],
-    "truckNumber": "MH-46-AR-6069",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7026989",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88137",
-    "grossWeightKg": 22580,
-    "dwellTime": "43h 49m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-139",
+    "id": "slot-164",
     "name": "E-3 4",
     "code": "E-3 4",
     "block": "E",
@@ -19617,7 +20303,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903491440830592,
       "lng": 73.04622469527652
@@ -19640,24 +20326,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04623312139167
       }
     ],
-    "truckNumber": "MH-46-AR-6106",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7027186",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88138",
-    "grossWeightKg": 22920,
-    "dwellTime": "44h 6m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-140",
+    "id": "slot-165",
     "name": "E-3 3",
     "code": "E-3 3",
     "block": "E",
@@ -19689,11 +20364,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-141",
+    "id": "slot-166",
     "name": "E-3 2",
     "code": "E-3 2",
     "block": "E",
@@ -19725,11 +20401,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-142",
+    "id": "slot-167",
     "name": "E-3 1",
     "code": "E-3 1",
     "block": "E",
@@ -19761,11 +20438,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-143",
+    "id": "slot-168",
     "name": "E-2 3",
     "code": "E-2 3",
     "block": "E",
@@ -19797,11 +20475,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-144",
+    "id": "slot-169",
     "name": "E-2 2",
     "code": "E-2 2",
     "block": "E",
@@ -19809,7 +20488,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903610757107344,
       "lng": 73.04613080906609
@@ -19832,25 +20511,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04614058518065
       }
     ],
-    "truckNumber": "MH-46-AR-6291",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7028171",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
-    "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88143",
-    "grossWeightKg": 24620,
-    "dwellTime": "49h 31m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-145",
+    "id": "slot-170",
     "name": "E-2 1",
     "code": "E-2 1",
     "block": "E",
@@ -19858,7 +20525,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903604959396862,
       "lng": 73.04609478735722
@@ -19881,24 +20548,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04610437535895
       }
     ],
-    "truckNumber": "MH-46-AR-6328",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7028368",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88144",
-    "grossWeightKg": 24960,
-    "dwellTime": "2h 48m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-146",
+    "id": "slot-171",
     "name": "E-1 2",
     "code": "E-1 2",
     "block": "E",
@@ -19906,7 +20562,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90369917644454,
       "lng": 73.04611535123621
@@ -19929,24 +20585,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04612717413558
       }
     ],
-    "truckNumber": "MH-46-AR-6365",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7028565",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88145",
-    "grossWeightKg": 25300,
-    "dwellTime": "3h 5m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-147",
+    "id": "slot-172",
     "name": "E-1 1",
     "code": "E-1 1",
     "block": "E",
@@ -19954,7 +20599,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block E (Export Staging)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903694950441995,
       "lng": 73.04608365881046
@@ -19977,24 +20622,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0460949876274
       }
     ],
-    "truckNumber": "MH-46-AR-6402",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7028762",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88146",
-    "grossWeightKg": 25640,
-    "dwellTime": "4h 22m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-148",
+    "id": "slot-173",
     "name": "I-15 2",
     "code": "I-15 2",
     "block": "I",
@@ -20002,7 +20636,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901859206734144,
       "lng": 73.04569053999604
@@ -20025,24 +20659,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04566143670827
       }
     ],
-    "truckNumber": "MH-46-AR-6439",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7028959",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88147",
-    "grossWeightKg": 25980,
-    "dwellTime": "5h 39m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-149",
+    "id": "slot-174",
     "name": "I-15 1",
     "code": "I-15 1",
     "block": "I",
@@ -20050,7 +20673,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90183862663149,
       "lng": 73.04566943762129
@@ -20073,24 +20696,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04571262690955
       }
     ],
-    "truckNumber": "MH-46-AR-6476",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7029156",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88148",
-    "grossWeightKg": 26320,
-    "dwellTime": "6h 56m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-150",
+    "id": "slot-175",
     "name": "I-14 2",
     "code": "I-14 2",
     "block": "I",
@@ -20122,11 +20734,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-151",
+    "id": "slot-176",
     "name": "I-14 1",
     "code": "I-14 1",
     "block": "I",
@@ -20158,11 +20771,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-152",
+    "id": "slot-177",
     "name": "I-13 4",
     "code": "I-13 4",
     "block": "I",
@@ -20194,11 +20808,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-153",
+    "id": "slot-178",
     "name": "I-13 3",
     "code": "I-13 3",
     "block": "I",
@@ -20230,11 +20845,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-154",
+    "id": "slot-179",
     "name": "I-13 2",
     "code": "I-13 2",
     "block": "I",
@@ -20242,7 +20858,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90198359729521,
       "lng": 73.04552354155655
@@ -20265,24 +20881,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.045497100558
       }
     ],
-    "truckNumber": "MH-46-AR-6661",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7030141",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88153",
-    "grossWeightKg": 28020,
-    "dwellTime": "11h 21m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-155",
+    "id": "slot-180",
     "name": "I-13 1",
     "code": "I-13 1",
     "block": "I",
@@ -20290,7 +20895,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901968131423196,
       "lng": 73.04550502015451
@@ -20313,24 +20918,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04547698399038
       }
     ],
-    "truckNumber": "MH-46-AR-6698",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7030338",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88154",
-    "grossWeightKg": 28360,
-    "dwellTime": "12h 38m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-156",
+    "id": "slot-181",
     "name": "I-12 4",
     "code": "I-12 4",
     "block": "I",
@@ -20338,7 +20932,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902086012061982,
       "lng": 73.045493060805
@@ -20361,24 +20955,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04547302447642
       }
     ],
-    "truckNumber": "MH-46-AR-6735",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7030535",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88155",
-    "grossWeightKg": 28700,
-    "dwellTime": "13h 55m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-157",
+    "id": "slot-182",
     "name": "I-12 3",
     "code": "I-12 3",
     "block": "I",
@@ -20386,7 +20969,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902070548660788,
       "lng": 73.04547170046703
@@ -20409,25 +20992,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04545150235126
       }
     ],
-    "truckNumber": "MH-46-AR-6772",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7030732",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
-    "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88156",
-    "grossWeightKg": 29040,
-    "dwellTime": "14h 12m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-158",
+    "id": "slot-183",
     "name": "I-12 2",
     "code": "I-12 2",
     "block": "I",
@@ -20435,7 +21006,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90205508525959,
       "lng": 73.04545034012904
@@ -20458,24 +21029,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04542998022607
       }
     ],
-    "truckNumber": "MH-46-AR-6809",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7030929",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88157",
-    "grossWeightKg": 29380,
-    "dwellTime": "15h 29m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-159",
+    "id": "slot-184",
     "name": "I-12 1",
     "code": "I-12 1",
     "block": "I",
@@ -20483,7 +21043,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902039621858393,
       "lng": 73.04542897979105
@@ -20506,24 +21066,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0454084581009
       }
     ],
-    "truckNumber": "MH-46-AR-6846",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7031126",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88158",
-    "grossWeightKg": 29720,
-    "dwellTime": "16h 46m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-160",
+    "id": "slot-185",
     "name": "I-11 7",
     "code": "I-11 7",
     "block": "I",
@@ -20555,11 +21104,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-161",
+    "id": "slot-186",
     "name": "I-11 6",
     "code": "I-11 6",
     "block": "I",
@@ -20591,11 +21141,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-162",
+    "id": "slot-187",
     "name": "I-11 5",
     "code": "I-11 5",
     "block": "I",
@@ -20627,11 +21178,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-163",
+    "id": "slot-188",
     "name": "I-11 4",
     "code": "I-11 4",
     "block": "I",
@@ -20663,11 +21215,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-164",
+    "id": "slot-189",
     "name": "I-11 3",
     "code": "I-11 3",
     "block": "I",
@@ -20675,7 +21228,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90219463603664,
       "lng": 73.04541000729537
@@ -20698,24 +21251,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04542382705168
       }
     ],
-    "truckNumber": "MH-46-AR-7031",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7032111",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88163",
-    "grossWeightKg": 31420,
-    "dwellTime": "21h 11m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-165",
+    "id": "slot-190",
     "name": "I-11 2",
     "code": "I-11 2",
     "block": "I",
@@ -20723,7 +21265,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902195462847317,
       "lng": 73.04538390047361
@@ -20746,24 +21288,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04539757654015
       }
     ],
-    "truckNumber": "MH-46-AR-7068",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7032308",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88164",
-    "grossWeightKg": 31760,
-    "dwellTime": "22h 28m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-166",
+    "id": "slot-191",
     "name": "I-11 1",
     "code": "I-11 1",
     "block": "I",
@@ -20771,7 +21302,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902196289657994,
       "lng": 73.04535779365187
@@ -20794,24 +21325,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04537132602864
       }
     ],
-    "truckNumber": "MH-46-AR-7105",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7032505",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88165",
-    "grossWeightKg": 18100,
-    "dwellTime": "23h 45m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-167",
+    "id": "slot-192",
     "name": "I-10 7",
     "code": "I-10 7",
     "block": "I",
@@ -20819,7 +21339,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90230033261069,
       "lng": 73.04552220433291
@@ -20842,24 +21362,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04553952726226
       }
     ],
-    "truckNumber": "MH-46-AR-7142",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7032702",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88166",
-    "grossWeightKg": 18440,
-    "dwellTime": "24h 2m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-168",
+    "id": "slot-193",
     "name": "I-10 6",
     "code": "I-10 6",
     "block": "I",
@@ -20867,7 +21376,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9023013717656,
       "lng": 73.04549557442974
@@ -20890,24 +21399,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04551308954603
       }
     ],
-    "truckNumber": "MH-46-AR-7179",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7032899",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88167",
-    "grossWeightKg": 18780,
-    "dwellTime": "25h 19m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-169",
+    "id": "slot-194",
     "name": "I-10 5",
     "code": "I-10 5",
     "block": "I",
@@ -20915,7 +21413,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902302410920505,
       "lng": 73.04546894452653
@@ -20938,24 +21436,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0454866518298
       }
     ],
-    "truckNumber": "MH-46-AR-7216",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7033096",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88168",
-    "grossWeightKg": 19120,
-    "dwellTime": "26h 36m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-170",
+    "id": "slot-195",
     "name": "I-10 4",
     "code": "I-10 4",
     "block": "I",
@@ -20987,11 +21474,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-171",
+    "id": "slot-196",
     "name": "I-10 3",
     "code": "I-10 3",
     "block": "I",
@@ -21023,11 +21511,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-172",
+    "id": "slot-197",
     "name": "I-10 2",
     "code": "I-10 2",
     "block": "I",
@@ -21059,11 +21548,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-173",
+    "id": "slot-198",
     "name": "I-10 1",
     "code": "I-10 1",
     "block": "I",
@@ -21095,11 +21585,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-174",
+    "id": "slot-199",
     "name": "I-9 1 3",
     "code": "I-9 1 3",
     "block": "I",
@@ -21107,7 +21598,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902454510424633,
       "lng": 73.04555090230538
@@ -21130,24 +21621,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0455730855465
       }
     ],
-    "truckNumber": "MH-46-AR-7401",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7034081",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88173",
-    "grossWeightKg": 20820,
-    "dwellTime": "31h 1m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-175",
+    "id": "slot-200",
     "name": "I-9 1 2",
     "code": "I-9 1 2",
     "block": "I",
@@ -21155,7 +21635,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90245769364408,
       "lng": 73.04552397018173
@@ -21178,24 +21658,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04554580900047
       }
     ],
-    "truckNumber": "MH-46-AR-7438",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7034278",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88174",
-    "grossWeightKg": 21160,
-    "dwellTime": "32h 18m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-176",
+    "id": "slot-201",
     "name": "I-9 1 1",
     "code": "I-9 1 1",
     "block": "I",
@@ -21203,7 +21672,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90246087686353,
       "lng": 73.0454970380581
@@ -21226,24 +21695,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04551853245445
       }
     ],
-    "truckNumber": "MH-46-AR-7475",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7034475",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88175",
-    "grossWeightKg": 21500,
-    "dwellTime": "33h 35m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-177",
+    "id": "slot-202",
     "name": "I-8 1 2",
     "code": "I-8 1 2",
     "block": "I",
@@ -21251,7 +21709,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902571093517924,
       "lng": 73.04553150852388
@@ -21274,24 +21732,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04554626345634
       }
     ],
-    "truckNumber": "MH-46-AR-7512",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7034672",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88176",
-    "grossWeightKg": 21840,
-    "dwellTime": "34h 52m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-178",
+    "id": "slot-203",
     "name": "I-8 1 1",
     "code": "I-8 1 1",
     "block": "I",
@@ -21299,7 +21746,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90257144978946,
       "lng": 73.04551004528597
@@ -21322,24 +21769,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04552479465266
       }
     ],
-    "truckNumber": "MH-46-AR-7549",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7034869",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88177",
-    "grossWeightKg": 22180,
-    "dwellTime": "35h 9m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-179",
+    "id": "slot-204",
     "name": "I-7 2",
     "code": "I-7 2",
     "block": "I",
@@ -21347,7 +21783,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902693380421645,
       "lng": 73.04553325722152
@@ -21370,24 +21806,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04554358124733
       }
     ],
-    "truckNumber": "MH-46-AR-7586",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7035066",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88178",
-    "grossWeightKg": 22520,
-    "dwellTime": "36h 26m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-180",
+    "id": "slot-205",
     "name": "I-7 1",
     "code": "I-7 1",
     "block": "I",
@@ -21419,11 +21844,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-181",
+    "id": "slot-206",
     "name": "I-6 2",
     "code": "I-6 2",
     "block": "I",
@@ -21455,11 +21881,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-182",
+    "id": "slot-207",
     "name": "I-6 1",
     "code": "I-6 1",
     "block": "I",
@@ -21491,11 +21918,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-183",
+    "id": "slot-208",
     "name": "I-5 2",
     "code": "I-5 2",
     "block": "I",
@@ -21527,11 +21955,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-184",
+    "id": "slot-209",
     "name": "I-5 1",
     "code": "I-5 1",
     "block": "I",
@@ -21539,7 +21968,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90291418844176,
       "lng": 73.04543543634773
@@ -21562,24 +21991,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04542823512813
       }
     ],
-    "truckNumber": "MH-46-AR-7771",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7036051",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88183",
-    "grossWeightKg": 24220,
-    "dwellTime": "41h 51m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-185",
+    "id": "slot-210",
     "name": "I-4 3",
     "code": "I-4 3",
     "block": "I",
@@ -21587,7 +22005,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90303329820607,
       "lng": 73.04543086253592
@@ -21610,24 +22028,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04543897509575
       }
     ],
-    "truckNumber": "MH-46-AR-7808",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7036248",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88184",
-    "grossWeightKg": 24560,
-    "dwellTime": "42h 8m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-186",
+    "id": "slot-211",
     "name": "I-4 2",
     "code": "I-4 2",
     "block": "I",
@@ -21635,7 +22042,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903030587073232,
       "lng": 73.0454039085802
@@ -21658,24 +22065,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04541214558456
       }
     ],
-    "truckNumber": "MH-46-AR-7845",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7036445",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88185",
-    "grossWeightKg": 24900,
-    "dwellTime": "43h 25m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-187",
+    "id": "slot-212",
     "name": "I-4 1",
     "code": "I-4 1",
     "block": "I",
@@ -21683,7 +22079,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9030278759404,
       "lng": 73.04537695462449
@@ -21706,24 +22102,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04538531607338
       }
     ],
-    "truckNumber": "MH-46-AR-7882",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7036642",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88186",
-    "grossWeightKg": 25240,
-    "dwellTime": "44h 42m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-188",
+    "id": "slot-213",
     "name": "I-3 1 3",
     "code": "I-3 1 3",
     "block": "I",
@@ -21731,7 +22116,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903150336866442,
       "lng": 73.04541840963805
@@ -21754,24 +22139,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0454295873642
       }
     ],
-    "truckNumber": "MH-46-AR-7919",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7036839",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88187",
-    "grossWeightKg": 25580,
-    "dwellTime": "45h 59m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-189",
+    "id": "slot-214",
     "name": "I-3 1 2",
     "code": "I-3 1 2",
     "block": "I",
@@ -21779,7 +22153,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9031469795162,
       "lng": 73.0453906897677
@@ -21802,24 +22176,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04540096971367
       }
     ],
-    "truckNumber": "MH-46-AR-7956",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7037036",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88188",
-    "grossWeightKg": 25920,
-    "dwellTime": "46h 16m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-190",
+    "id": "slot-215",
     "name": "I-3 1 1",
     "code": "I-3 1 1",
     "block": "I",
@@ -21851,11 +22214,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-191",
+    "id": "slot-216",
     "name": "I-2 3",
     "code": "I-2 3",
     "block": "I",
@@ -21887,11 +22251,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-192",
+    "id": "slot-217",
     "name": "I-2 2",
     "code": "I-2 2",
     "block": "I",
@@ -21923,11 +22288,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-193",
+    "id": "slot-218",
     "name": "I-2 1",
     "code": "I-2 1",
     "block": "I",
@@ -21959,11 +22325,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-194",
+    "id": "slot-219",
     "name": "I-1 3",
     "code": "I-1 3",
     "block": "I",
@@ -21971,7 +22338,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90336194425089,
       "lng": 73.04540571162332
@@ -21994,24 +22361,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04541686929244
       }
     ],
-    "truckNumber": "MH-46-AR-8141",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7038021",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88193",
-    "grossWeightKg": 27620,
-    "dwellTime": "3h 41m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-195",
+    "id": "slot-220",
     "name": "I-1 2",
     "code": "I-1 2",
     "block": "I",
@@ -22019,7 +22375,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903360581817125,
       "lng": 73.04537470152682
@@ -22042,24 +22398,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04538636288997
       }
     ],
-    "truckNumber": "MH-46-AR-8178",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7038218",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88194",
-    "grossWeightKg": 27960,
-    "dwellTime": "4h 58m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-196",
+    "id": "slot-221",
     "name": "I-1 1",
     "code": "I-1 1",
     "block": "I",
@@ -22067,7 +22412,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block I (Customs Shed)",
     "cycle": "Customs Examination Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903359310820747,
       "lng": 73.04534126030815
@@ -22090,25 +22435,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04533230315104
       }
     ],
-    "truckNumber": "MH-46-AR-8215",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7038415",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88195",
-    "grossWeightKg": 28300,
-    "dwellTime": "5h 15m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-197",
+    "id": "slot-222",
     "name": "B-1",
     "code": "B-1",
     "block": "B",
@@ -22116,7 +22449,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903563311254473,
       "lng": 73.04692329601113
@@ -22139,24 +22472,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04691379181341
       }
     ],
-    "truckNumber": "MH-46-AR-8252",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7038612",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88196",
-    "grossWeightKg": 28640,
-    "dwellTime": "6h 32m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-198",
+    "id": "slot-223",
     "name": "C-7 7",
     "code": "C-7 7",
     "block": "C",
@@ -22164,7 +22486,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902887377314414,
       "lng": 73.04686856562701
@@ -22187,24 +22509,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04687555852908
       }
     ],
-    "truckNumber": "MH-46-AR-8289",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7038809",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88197",
-    "grossWeightKg": 28980,
-    "dwellTime": "7h 49m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-199",
+    "id": "slot-224",
     "name": "C-7 6",
     "code": "C-7 6",
     "block": "C",
@@ -22212,7 +22523,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90288493038652,
       "lng": 73.04683982767328
@@ -22235,24 +22546,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04684662898899
       }
     ],
-    "truckNumber": "MH-46-AR-8326",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7039006",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88198",
-    "grossWeightKg": 29320,
-    "dwellTime": "8h 6m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-200",
+    "id": "slot-225",
     "name": "C-7 5",
     "code": "C-7 5",
     "block": "C",
@@ -22284,11 +22584,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-201",
+    "id": "slot-226",
     "name": "C-7 4",
     "code": "C-7 4",
     "block": "C",
@@ -22320,11 +22621,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-202",
+    "id": "slot-227",
     "name": "C-7 3",
     "code": "C-7 3",
     "block": "C",
@@ -22356,11 +22658,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-203",
+    "id": "slot-228",
     "name": "C-7 2",
     "code": "C-7 2",
     "block": "C",
@@ -22392,11 +22695,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-204",
+    "id": "slot-229",
     "name": "C-7 1",
     "code": "C-7 1",
     "block": "C",
@@ -22404,7 +22708,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902872695747057,
       "lng": 73.04669613790462
@@ -22427,24 +22731,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04670198128855
       }
     ],
-    "truckNumber": "MH-46-AR-8511",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7039991",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88203",
-    "grossWeightKg": 31020,
-    "dwellTime": "13h 31m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-205",
+    "id": "slot-230",
     "name": "C-7 7",
     "code": "C-7 7",
     "block": "C",
@@ -22452,7 +22745,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9027701552858,
       "lng": 73.04687765964091
@@ -22475,24 +22768,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04689359820767
       }
     ],
-    "truckNumber": "MH-46-AR-8548",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7040188",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88204",
-    "grossWeightKg": 31360,
-    "dwellTime": "14h 48m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-206",
+    "id": "slot-231",
     "name": "C-9 6",
     "code": "C-9 6",
     "block": "C",
@@ -22500,7 +22782,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902767882025728,
       "lng": 73.0468490700364
@@ -22523,24 +22805,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468655401251
       }
     ],
-    "truckNumber": "MH-46-AR-8585",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7040385",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88205",
-    "grossWeightKg": 31700,
-    "dwellTime": "15h 5m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-207",
+    "id": "slot-232",
     "name": "C-9 5",
     "code": "C-9 5",
     "block": "C",
@@ -22548,7 +22819,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902765608765648,
       "lng": 73.04682048043189
@@ -22571,24 +22842,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468374820425
       }
     ],
-    "truckNumber": "MH-46-AR-8622",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7040582",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88206",
-    "grossWeightKg": 18040,
-    "dwellTime": "16h 22m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-208",
+    "id": "slot-233",
     "name": "C-9 4",
     "code": "C-9 4",
     "block": "C",
@@ -22596,7 +22856,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902763335505572,
       "lng": 73.04679189082736
@@ -22619,24 +22879,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04680942395993
       }
     ],
-    "truckNumber": "MH-46-AR-8659",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7040779",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88207",
-    "grossWeightKg": 18380,
-    "dwellTime": "17h 39m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-209",
+    "id": "slot-234",
     "name": "C-9 3",
     "code": "C-9 3",
     "block": "C",
@@ -22644,7 +22893,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902761062245496,
       "lng": 73.04676330122284
@@ -22667,25 +22916,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04678136587734
       }
     ],
-    "truckNumber": "MH-46-AR-8696",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7040976",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
-    "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88208",
-    "grossWeightKg": 18720,
-    "dwellTime": "18h 56m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-210",
+    "id": "slot-235",
     "name": "C-9 2",
     "code": "C-9 2",
     "block": "C",
@@ -22717,11 +22954,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-211",
+    "id": "slot-236",
     "name": "C-9 1",
     "code": "C-9 1",
     "block": "C",
@@ -22753,11 +22991,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-212",
+    "id": "slot-237",
     "name": "F-6 6",
     "code": "F-6 6",
     "block": "F",
@@ -22789,11 +23028,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-213",
+    "id": "slot-238",
     "name": "F-6 5",
     "code": "F-6 5",
     "block": "F",
@@ -22825,11 +23065,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-214",
+    "id": "slot-239",
     "name": "F-6 4",
     "code": "F-6 4",
     "block": "F",
@@ -22837,7 +23078,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903784715308795,
       "lng": 73.04567454528564
@@ -22860,24 +23101,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561204838637
       }
     ],
-    "truckNumber": "MH-46-AR-8881",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7041961",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88213",
-    "grossWeightKg": 20420,
-    "dwellTime": "23h 21m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-215",
+    "id": "slot-240",
     "name": "F-6 3",
     "code": "F-6 3",
     "block": "F",
@@ -22885,7 +23115,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90380601133397,
       "lng": 73.04567512178149
@@ -22908,24 +23138,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561275434321
       }
     ],
-    "truckNumber": "MH-46-AR-8918",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7042158",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88214",
-    "grossWeightKg": 20760,
-    "dwellTime": "24h 38m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-216",
+    "id": "slot-241",
     "name": "F-6 2",
     "code": "F-6 2",
     "block": "F",
@@ -22933,7 +23152,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903827307359148,
       "lng": 73.04567569827732
@@ -22956,24 +23175,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04561346030006
       }
     ],
-    "truckNumber": "MH-46-AR-8955",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7042355",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88215",
-    "grossWeightKg": 21100,
-    "dwellTime": "25h 55m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-217",
+    "id": "slot-242",
     "name": "F-6 1",
     "code": "F-6 1",
     "block": "F",
@@ -22981,7 +23189,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903848603384326,
       "lng": 73.04567627477316
@@ -23004,24 +23212,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0456141662569
       }
     ],
-    "truckNumber": "MH-46-AR-8992",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7042552",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88216",
-    "grossWeightKg": 21440,
-    "dwellTime": "26h 12m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-218",
+    "id": "slot-243",
     "name": "C-11 6",
     "code": "C-11 6",
     "block": "C",
@@ -23029,7 +23226,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902206425168828,
       "lng": 73.04675159148712
@@ -23052,24 +23249,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04674413028735
       }
     ],
-    "truckNumber": "MH-46-AR-9029",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7042749",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88217",
-    "grossWeightKg": 21780,
-    "dwellTime": "27h 29m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-219",
+    "id": "slot-244",
     "name": "C-11 5",
     "code": "C-11 5",
     "block": "C",
@@ -23077,7 +23263,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902208550046847,
       "lng": 73.04678126603625
@@ -23100,24 +23286,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04677274051684
       }
     ],
-    "truckNumber": "MH-46-AR-9066",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7042946",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88218",
-    "grossWeightKg": 22120,
-    "dwellTime": "28h 46m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-220",
+    "id": "slot-245",
     "name": "C-11 4",
     "code": "C-11 4",
     "block": "C",
@@ -23149,11 +23324,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-221",
+    "id": "slot-246",
     "name": "C-11 3",
     "code": "C-11 3",
     "block": "C",
@@ -23185,11 +23361,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-222",
+    "id": "slot-247",
     "name": "C-11 2",
     "code": "C-11 2",
     "block": "C",
@@ -23221,11 +23398,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-223",
+    "id": "slot-248",
     "name": "C-11 1",
     "code": "C-11 1",
     "block": "C",
@@ -23257,11 +23435,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-224",
+    "id": "slot-249",
     "name": "C-10 7",
     "code": "C-10 7",
     "block": "C",
@@ -23269,7 +23448,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90234804220145,
       "lng": 73.04689616952544
@@ -23292,24 +23471,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04690354870458
       }
     ],
-    "truckNumber": "MH-46-AR-9251",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7043931",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88223",
-    "grossWeightKg": 23820,
-    "dwellTime": "33h 11m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-225",
+    "id": "slot-250",
     "name": "C-10 6",
     "code": "C-10 6",
     "block": "C",
@@ -23317,7 +23485,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902346099232293,
       "lng": 73.04687185041647
@@ -23340,24 +23508,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04687905036775
       }
     ],
-    "truckNumber": "MH-46-AR-9288",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7044128",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88224",
-    "grossWeightKg": 24160,
-    "dwellTime": "34h 28m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-226",
+    "id": "slot-251",
     "name": "C-10 5",
     "code": "C-10 5",
     "block": "C",
@@ -23365,7 +23522,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902344156263137,
       "lng": 73.04684753130748
@@ -23388,24 +23545,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04685455203092
       }
     ],
-    "truckNumber": "MH-46-AR-9325",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7044325",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88225",
-    "grossWeightKg": 24500,
-    "dwellTime": "35h 45m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-227",
+    "id": "slot-252",
     "name": "C-10 4",
     "code": "C-10 4",
     "block": "C",
@@ -23413,7 +23559,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90234221329398,
       "lng": 73.0468232121985
@@ -23436,24 +23582,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468300536941
       }
     ],
-    "truckNumber": "MH-46-AR-9362",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7044522",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88226",
-    "grossWeightKg": 24840,
-    "dwellTime": "36h 2m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-228",
+    "id": "slot-253",
     "name": "C-10 3",
     "code": "C-10 3",
     "block": "C",
@@ -23461,7 +23596,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902340270324828,
       "lng": 73.04679889308952
@@ -23484,24 +23619,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04680555535727
       }
     ],
-    "truckNumber": "MH-46-AR-9399",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7044719",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88227",
-    "grossWeightKg": 25180,
-    "dwellTime": "37h 19m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-229",
+    "id": "slot-254",
     "name": "C-10 2",
     "code": "C-10 2",
     "block": "C",
@@ -23509,7 +23633,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90233832735567,
       "lng": 73.04677457398054
@@ -23532,24 +23656,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04678105702044
       }
     ],
-    "truckNumber": "MH-46-AR-9436",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7044916",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88228",
-    "grossWeightKg": 25520,
-    "dwellTime": "38h 36m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-230",
+    "id": "slot-255",
     "name": "C-10 1",
     "code": "C-10 1",
     "block": "C",
@@ -23581,11 +23694,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-231",
+    "id": "slot-256",
     "name": "C-9 7",
     "code": "C-9 7",
     "block": "C",
@@ -23617,11 +23731,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-232",
+    "id": "slot-257",
     "name": "C-9 6",
     "code": "C-9 6",
     "block": "C",
@@ -23653,11 +23768,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-233",
+    "id": "slot-258",
     "name": "C-9 5",
     "code": "C-9 5",
     "block": "C",
@@ -23689,11 +23805,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-234",
+    "id": "slot-259",
     "name": "C-9 4",
     "code": "C-9 4",
     "block": "C",
@@ -23701,7 +23818,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90245753308886,
       "lng": 73.04681319716948
@@ -23724,24 +23841,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04682248910785
       }
     ],
-    "truckNumber": "MH-46-AR-9621",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7045901",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88233",
-    "grossWeightKg": 27220,
-    "dwellTime": "43h 1m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-235",
+    "id": "slot-260",
     "name": "C-9 3",
     "code": "C-9 3",
     "block": "C",
@@ -23749,7 +23855,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902455086154795,
       "lng": 73.04678809935656
@@ -23772,25 +23878,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04679719970858
       }
     ],
-    "truckNumber": "MH-46-AR-9658",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7046098",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
-    "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88234",
-    "grossWeightKg": 27560,
-    "dwellTime": "44h 18m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-236",
+    "id": "slot-261",
     "name": "C-9 2",
     "code": "C-9 2",
     "block": "C",
@@ -23798,7 +23892,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902452639220726,
       "lng": 73.04676300154364
@@ -23821,24 +23915,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04677191030929
       }
     ],
-    "truckNumber": "MH-46-AR-9695",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7046295",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88235",
-    "grossWeightKg": 27900,
-    "dwellTime": "45h 35m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-237",
+    "id": "slot-262",
     "name": "C-9 1",
     "code": "C-9 1",
     "block": "C",
@@ -23846,7 +23929,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90245019228666,
       "lng": 73.04673790373072
@@ -23869,24 +23952,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04674662091001
       }
     ],
-    "truckNumber": "MH-46-AR-9732",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7046492",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88236",
-    "grossWeightKg": 28240,
-    "dwellTime": "46h 52m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-238",
+    "id": "slot-263",
     "name": "C-8 7",
     "code": "C-8 7",
     "block": "C",
@@ -23894,7 +23966,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90259278851465,
       "lng": 73.04687711991335
@@ -23917,24 +23989,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04688628736514
       }
     ],
-    "truckNumber": "MH-46-AR-9769",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7046689",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88237",
-    "grossWeightKg": 28580,
-    "dwellTime": "47h 9m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-239",
+    "id": "slot-264",
     "name": "C-8 6",
     "code": "C-8 6",
     "block": "C",
@@ -23942,7 +24003,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902589791710138,
       "lng": 73.04685150187663
@@ -23965,24 +24026,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04686004003406
       }
     ],
-    "truckNumber": "MH-46-AR-9806",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7046886",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88238",
-    "grossWeightKg": 28920,
-    "dwellTime": "48h 26m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-240",
+    "id": "slot-265",
     "name": "C-8 5",
     "code": "C-8 5",
     "block": "C",
@@ -24014,11 +24064,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-241",
+    "id": "slot-266",
     "name": "C-8 4",
     "code": "C-8 4",
     "block": "C",
@@ -24050,11 +24101,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-242",
+    "id": "slot-267",
     "name": "C-8 3",
     "code": "C-8 3",
     "block": "C",
@@ -24086,11 +24138,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-243",
+    "id": "slot-268",
     "name": "C-8 2",
     "code": "C-8 2",
     "block": "C",
@@ -24122,11 +24175,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-244",
+    "id": "slot-269",
     "name": "C-8 1",
     "code": "C-8 1",
     "block": "C",
@@ -24134,7 +24188,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90257480768759,
       "lng": 73.04672341169302
@@ -24157,24 +24211,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467288033787
       }
     ],
-    "truckNumber": "MH-46-AR-9991",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7047871",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88243",
-    "grossWeightKg": 30620,
-    "dwellTime": "5h 51m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-245",
+    "id": "slot-270",
     "name": "F-5 6",
     "code": "F-5 6",
     "block": "F",
@@ -24182,7 +24225,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903869711773723,
       "lng": 73.04580412804538
@@ -24205,24 +24248,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04586503654176
       }
     ],
-    "truckNumber": "MH-46-AR-1029",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7048068",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88244",
-    "grossWeightKg": 30960,
-    "dwellTime": "6h 8m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-246",
+    "id": "slot-271",
     "name": "F-5 5",
     "code": "F-5 5",
     "block": "F",
@@ -24230,7 +24262,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903848354138642,
       "lng": 73.04580301045829
@@ -24253,24 +24285,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04586414247208
       }
     ],
-    "truckNumber": "MH-46-AR-1066",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7048265",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88245",
-    "grossWeightKg": 31300,
-    "dwellTime": "7h 25m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-247",
+    "id": "slot-272",
     "name": "F-5 4",
     "code": "F-5 4",
     "block": "F",
@@ -24278,7 +24299,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90382699650356,
       "lng": 73.0458018928712
@@ -24301,24 +24322,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04586324840241
       }
     ],
-    "truckNumber": "MH-46-AR-1103",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7048462",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88246",
-    "grossWeightKg": 31640,
-    "dwellTime": "8h 42m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-248",
+    "id": "slot-273",
     "name": "F-5 3",
     "code": "F-5 3",
     "block": "F",
@@ -24326,7 +24336,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903805638868477,
       "lng": 73.0458007752841
@@ -24349,25 +24359,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04586235433274
       }
     ],
-    "truckNumber": "MH-46-AR-1140",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7048659",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
-    "cargoType": "Reefer",
-    "temperature": "-18.5°C",
-    "sealNumber": "CFS-88247",
-    "grossWeightKg": 31980,
-    "dwellTime": "9h 59m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-249",
+    "id": "slot-274",
     "name": "F-5 2",
     "code": "F-5 2",
     "block": "F",
@@ -24375,7 +24373,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9037842812334,
       "lng": 73.04579965769702
@@ -24398,24 +24396,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04586146026307
       }
     ],
-    "truckNumber": "MH-46-AR-1177",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7048856",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88248",
-    "grossWeightKg": 18320,
-    "dwellTime": "10h 16m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-250",
+    "id": "slot-275",
     "name": "F-5 1",
     "code": "F-5 1",
     "block": "F",
@@ -24447,11 +24434,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-251",
+    "id": "slot-276",
     "name": "C-5 9",
     "code": "C-5 9",
     "block": "C",
@@ -24483,11 +24471,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-252",
+    "id": "slot-277",
     "name": "C-5 8",
     "code": "C-5 8",
     "block": "C",
@@ -24519,11 +24508,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-253",
+    "id": "slot-278",
     "name": "C-5 7",
     "code": "C-5 7",
     "block": "C",
@@ -24555,11 +24545,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-254",
+    "id": "slot-279",
     "name": "C-5 6",
     "code": "C-5 6",
     "block": "C",
@@ -24567,7 +24558,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90309717588073,
       "lng": 73.04675002729387
@@ -24590,24 +24581,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467438697815
       }
     ],
-    "truckNumber": "MH-46-AR-1362",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7049841",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88253",
-    "grossWeightKg": 20020,
-    "dwellTime": "15h 41m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-255",
+    "id": "slot-280",
     "name": "C-5 5",
     "code": "C-5 5",
     "block": "C",
@@ -24615,7 +24595,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903100874453095,
       "lng": 73.04678073190526
@@ -24638,24 +24618,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467738211155
       }
     ],
-    "truckNumber": "MH-46-AR-1399",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7050038",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88254",
-    "grossWeightKg": 20360,
-    "dwellTime": "16h 58m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-256",
+    "id": "slot-281",
     "name": "C-5 4",
     "code": "C-5 4",
     "block": "C",
@@ -24663,7 +24632,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903104573025466,
       "lng": 73.04681143651665
@@ -24686,24 +24655,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468037724495
       }
     ],
-    "truckNumber": "MH-46-AR-1436",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7050235",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88255",
-    "grossWeightKg": 20700,
-    "dwellTime": "17h 15m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-257",
+    "id": "slot-282",
     "name": "C-5 3",
     "code": "C-5 3",
     "block": "C",
@@ -24711,7 +24669,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903108271597834,
       "lng": 73.04684214112802
@@ -24734,24 +24692,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468337237835
       }
     ],
-    "truckNumber": "MH-46-AR-1473",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7050432",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88256",
-    "grossWeightKg": 21040,
-    "dwellTime": "18h 32m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-258",
+    "id": "slot-283",
     "name": "C-5 2",
     "code": "C-5 2",
     "block": "C",
@@ -24759,7 +24706,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9031119701702,
       "lng": 73.04687284573941
@@ -24782,24 +24729,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04686367511749
       }
     ],
-    "truckNumber": "MH-46-AR-1510",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7050629",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88257",
-    "grossWeightKg": 21380,
-    "dwellTime": "19h 49m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-259",
+    "id": "slot-284",
     "name": "C-5 1",
     "code": "C-5 1",
     "block": "C",
@@ -24807,7 +24743,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90311566874257,
       "lng": 73.0469035503508
@@ -24830,24 +24766,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04689362645149
       }
     ],
-    "truckNumber": "MH-46-AR-1547",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7050826",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88258",
-    "grossWeightKg": 21720,
-    "dwellTime": "20h 6m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-260",
+    "id": "slot-285",
     "name": "C-4 9",
     "code": "C-4 9",
     "block": "C",
@@ -24879,11 +24804,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-261",
+    "id": "slot-286",
     "name": "C-4 8",
     "code": "C-4 8",
     "block": "C",
@@ -24915,11 +24841,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-262",
+    "id": "slot-287",
     "name": "C-4 7",
     "code": "C-4 7",
     "block": "C",
@@ -24951,11 +24878,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-263",
+    "id": "slot-288",
     "name": "C-4 6",
     "code": "C-4 6",
     "block": "C",
@@ -24987,11 +24915,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-264",
+    "id": "slot-289",
     "name": "C-4 5",
     "code": "C-4 5",
     "block": "C",
@@ -24999,7 +24928,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903229962975562,
       "lng": 73.04675861715339
@@ -25022,24 +24951,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467540025711
       }
     ],
-    "truckNumber": "MH-46-AR-1732",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7051811",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88263",
-    "grossWeightKg": 23420,
-    "dwellTime": "25h 31m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-265",
+    "id": "slot-290",
     "name": "C-4 4",
     "code": "C-4 4",
     "block": "C",
@@ -25047,7 +24965,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90323302507558,
       "lng": 73.04679081487478
@@ -25070,24 +24988,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04678604006767
       }
     ],
-    "truckNumber": "MH-46-AR-1769",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7052008",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88264",
-    "grossWeightKg": 23760,
-    "dwellTime": "26h 48m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-266",
+    "id": "slot-291",
     "name": "C-4 3",
     "code": "C-4 3",
     "block": "C",
@@ -25095,7 +25002,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903236087175596,
       "lng": 73.04682301259618
@@ -25118,24 +25025,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04681807756424
       }
     ],
-    "truckNumber": "MH-46-AR-1806",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7052205",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88265",
-    "grossWeightKg": 24100,
-    "dwellTime": "27h 5m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-267",
+    "id": "slot-292",
     "name": "C-4 2",
     "code": "C-4 2",
     "block": "C",
@@ -25143,7 +25039,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90323914927561,
       "lng": 73.04685521031757
@@ -25166,24 +25062,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0468501150608
       }
     ],
-    "truckNumber": "MH-46-AR-1843",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7052402",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88266",
-    "grossWeightKg": 24440,
-    "dwellTime": "28h 22m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-268",
+    "id": "slot-293",
     "name": "C-4 1",
     "code": "C-4 1",
     "block": "C",
@@ -25191,7 +25076,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9032460176916,
       "lng": 73.04688740804208
@@ -25214,24 +25099,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04688215256037
       }
     ],
-    "truckNumber": "MH-46-AR-1880",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7052599",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88267",
-    "grossWeightKg": 24780,
-    "dwellTime": "29h 39m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-269",
+    "id": "slot-294",
     "name": "F-4 6",
     "code": "F-4 6",
     "block": "F",
@@ -25239,7 +25113,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903895337450514,
       "lng": 73.04593251445644
@@ -25262,24 +25136,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04599976920737
       }
     ],
-    "truckNumber": "MH-46-AR-1917",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7052796",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88268",
-    "grossWeightKg": 25120,
-    "dwellTime": "30h 56m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-270",
+    "id": "slot-295",
     "name": "F-4 5",
     "code": "F-4 5",
     "block": "F",
@@ -25311,11 +25174,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-271",
+    "id": "slot-296",
     "name": "F-4 4",
     "code": "F-4 4",
     "block": "F",
@@ -25347,11 +25211,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-272",
+    "id": "slot-297",
     "name": "F-4 3",
     "code": "F-4 3",
     "block": "F",
@@ -25383,11 +25248,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-273",
+    "id": "slot-298",
     "name": "F-4 2",
     "code": "F-4 2",
     "block": "F",
@@ -25419,11 +25285,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-274",
+    "id": "slot-299",
     "name": "F-4 1",
     "code": "F-4 1",
     "block": "F",
@@ -25431,7 +25298,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903780409276898,
       "lng": 73.04593056039548
@@ -25454,25 +25321,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04599753403319
       }
     ],
-    "truckNumber": "MH-46-AR-2102",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7053781",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88273",
-    "grossWeightKg": 26820,
-    "dwellTime": "35h 21m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-275",
+    "id": "slot-300",
     "name": "C-3 9",
     "code": "C-3 9",
     "block": "C",
@@ -25480,7 +25335,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903374304537486,
       "lng": 73.04685966766735
@@ -25503,24 +25358,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04686343803914
       }
     ],
-    "truckNumber": "MH-46-AR-2139",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7053978",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88274",
-    "grossWeightKg": 27160,
-    "dwellTime": "36h 38m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-276",
+    "id": "slot-301",
     "name": "C-3 8",
     "code": "C-3 8",
     "block": "C",
@@ -25528,7 +25372,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903370038894128,
       "lng": 73.04682743720016
@@ -25551,24 +25395,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04683116361295
       }
     ],
-    "truckNumber": "MH-46-AR-2176",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7054175",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88275",
-    "grossWeightKg": 27500,
-    "dwellTime": "37h 55m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-277",
+    "id": "slot-302",
     "name": "C-3 7",
     "code": "C-3 7",
     "block": "C",
@@ -25576,7 +25409,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90336577325077,
       "lng": 73.04679520673298
@@ -25599,24 +25432,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04679888918677
       }
     ],
-    "truckNumber": "MH-46-AR-2213",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7054372",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88276",
-    "grossWeightKg": 27840,
-    "dwellTime": "38h 12m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-278",
+    "id": "slot-303",
     "name": "C-3 6",
     "code": "C-3 6",
     "block": "C",
@@ -25624,7 +25446,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903361507607414,
       "lng": 73.0467629762658
@@ -25647,24 +25469,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04676661476059
       }
     ],
-    "truckNumber": "MH-46-AR-2250",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7054569",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88277",
-    "grossWeightKg": 28180,
-    "dwellTime": "39h 29m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-279",
+    "id": "slot-304",
     "name": "C-3 5",
     "code": "C-3 5",
     "block": "C",
@@ -25672,7 +25483,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903357241964056,
       "lng": 73.04673074579861
@@ -25695,24 +25506,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467343403344
       }
     ],
-    "truckNumber": "MH-46-AR-2287",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7054766",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88278",
-    "grossWeightKg": 28520,
-    "dwellTime": "40h 46m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-280",
+    "id": "slot-305",
     "name": "C-3 4",
     "code": "C-3 4",
     "block": "C",
@@ -25744,11 +25544,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-281",
+    "id": "slot-306",
     "name": "C-3 3",
     "code": "C-3 3",
     "block": "C",
@@ -25780,11 +25581,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-282",
+    "id": "slot-307",
     "name": "C-3 2",
     "code": "C-3 2",
     "block": "C",
@@ -25816,11 +25618,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-283",
+    "id": "slot-308",
     "name": "C-3 1",
     "code": "C-3 1",
     "block": "C",
@@ -25852,11 +25655,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-284",
+    "id": "slot-309",
     "name": "F-3 6",
     "code": "F-3 6",
     "block": "F",
@@ -25864,7 +25668,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903897728777586,
       "lng": 73.04606725222013
@@ -25887,24 +25691,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04612562060356
       }
     ],
-    "truckNumber": "MH-46-AR-2472",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7055751",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88283",
-    "grossWeightKg": 30220,
-    "dwellTime": "45h 11m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-285",
+    "id": "slot-310",
     "name": "F-3 5",
     "code": "F-3 5",
     "block": "F",
@@ -25912,7 +25705,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903873679909182,
       "lng": 73.04606496152799
@@ -25935,24 +25728,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04612293839455
       }
     ],
-    "truckNumber": "MH-46-AR-2509",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7055948",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88284",
-    "grossWeightKg": 30560,
-    "dwellTime": "46h 28m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-286",
+    "id": "slot-311",
     "name": "F-3 4",
     "code": "F-3 4",
     "block": "F",
@@ -25960,7 +25742,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903849631040778,
       "lng": 73.04606267083587
@@ -25983,24 +25765,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04612025618553
       }
     ],
-    "truckNumber": "MH-46-AR-2546",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7056145",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88285",
-    "grossWeightKg": 30900,
-    "dwellTime": "47h 45m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-287",
+    "id": "slot-312",
     "name": "F-3 3",
     "code": "F-3 3",
     "block": "F",
@@ -26008,7 +25779,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90382558217237,
       "lng": 73.04606038014373
@@ -26031,25 +25802,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04611757397652
       }
     ],
-    "truckNumber": "MH-46-AR-2583",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7056342",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
-    "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88286",
-    "grossWeightKg": 31240,
-    "dwellTime": "48h 2m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-288",
+    "id": "slot-313",
     "name": "F-3 2",
     "code": "F-3 2",
     "block": "F",
@@ -26057,7 +25816,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903801533303966,
       "lng": 73.0460580894516
@@ -26080,24 +25839,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0461148917675
       }
     ],
-    "truckNumber": "MH-46-AR-2620",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7056539",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88287",
-    "grossWeightKg": 31580,
-    "dwellTime": "49h 19m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-289",
+    "id": "slot-314",
     "name": "F-3 1",
     "code": "F-3 1",
     "block": "F",
@@ -26105,7 +25853,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903777484435558,
       "lng": 73.04605579875948
@@ -26128,24 +25876,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04611220955849
       }
     ],
-    "truckNumber": "MH-46-AR-2657",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7056736",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88288",
-    "grossWeightKg": 31920,
-    "dwellTime": "2h 36m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-290",
+    "id": "slot-315",
     "name": "F-2 6",
     "code": "F-2 6",
     "block": "F",
@@ -26177,11 +25914,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-291",
+    "id": "slot-316",
     "name": "F-2 5",
     "code": "F-2 5",
     "block": "F",
@@ -26213,11 +25951,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-292",
+    "id": "slot-317",
     "name": "F-2 4",
     "code": "F-2 4",
     "block": "F",
@@ -26249,11 +25988,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-293",
+    "id": "slot-318",
     "name": "F-2 3",
     "code": "F-2 3",
     "block": "F",
@@ -26285,11 +26025,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-294",
+    "id": "slot-319",
     "name": "F-2 2",
     "code": "F-2 2",
     "block": "F",
@@ -26297,7 +26038,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903797091299577,
       "lng": 73.046180130222
@@ -26320,24 +26061,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04624497890472
       }
     ],
-    "truckNumber": "MH-46-AR-2842",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7057721",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88293",
-    "grossWeightKg": 19620,
-    "dwellTime": "7h 1m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-295",
+    "id": "slot-320",
     "name": "F-2 1",
     "code": "F-2 1",
     "block": "F",
@@ -26345,7 +26075,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903770927523812,
       "lng": 73.04617560441352
@@ -26368,24 +26098,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04624028503895
       }
     ],
-    "truckNumber": "MH-46-AR-2879",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7057918",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88294",
-    "grossWeightKg": 19960,
-    "dwellTime": "8h 18m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-296",
+    "id": "slot-321",
     "name": "C-2 9",
     "code": "C-2 9",
     "block": "C",
@@ -26393,7 +26112,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903468990247525,
       "lng": 73.04657574106567
@@ -26416,24 +26135,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04656894488996
       }
     ],
-    "truckNumber": "MH-46-AR-2916",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7058115",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88295",
-    "grossWeightKg": 20300,
-    "dwellTime": "9h 35m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-297",
+    "id": "slot-322",
     "name": "C-2 8",
     "code": "C-2 8",
     "block": "C",
@@ -26441,7 +26149,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903473316581238,
       "lng": 73.04660810888022
@@ -26464,24 +26172,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660098238652
       }
     ],
-    "truckNumber": "MH-46-AR-2953",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7058312",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88296",
-    "grossWeightKg": 20640,
-    "dwellTime": "10h 52m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-298",
+    "id": "slot-323",
     "name": "C-2 7",
     "code": "C-2 7",
     "block": "C",
@@ -26489,7 +26186,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903477642914954,
       "lng": 73.04664047669476
@@ -26512,24 +26209,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04663301988309
       }
     ],
-    "truckNumber": "MH-46-AR-2990",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7058509",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88297",
-    "grossWeightKg": 20980,
-    "dwellTime": "11h 9m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-299",
+    "id": "slot-324",
     "name": "C-2 6",
     "code": "C-2 6",
     "block": "C",
@@ -26537,7 +26223,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90348196924867,
       "lng": 73.0466728445093
@@ -26560,24 +26246,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04666505737966
       }
     ],
-    "truckNumber": "MH-46-AR-3027",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7058706",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88298",
-    "grossWeightKg": 21320,
-    "dwellTime": "12h 26m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-300",
+    "id": "slot-325",
     "name": "C-2 5",
     "code": "C-2 5",
     "block": "C",
@@ -26609,11 +26284,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-301",
+    "id": "slot-326",
     "name": "C-2 4",
     "code": "C-2 4",
     "block": "C",
@@ -26645,11 +26321,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-302",
+    "id": "slot-327",
     "name": "C-2 3",
     "code": "C-2 3",
     "block": "C",
@@ -26681,11 +26358,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-303",
+    "id": "slot-328",
     "name": "C-2 2",
     "code": "C-2 2",
     "block": "C",
@@ -26717,11 +26395,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Empty",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-304",
+    "id": "slot-329",
     "name": "C-2 1",
     "code": "C-2 1",
     "block": "C",
@@ -26729,7 +26408,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block C (Empty Depot)",
     "cycle": "Empty Storage Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903503600917244,
       "lng": 73.04683468358202
@@ -26752,24 +26431,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04682524486249
       }
     ],
-    "truckNumber": "MH-46-AR-3212",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7059691",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Empty",
-    "sealNumber": "CFS-88303",
-    "grossWeightKg": 23020,
-    "dwellTime": "17h 51m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-305",
+    "id": "slot-330",
     "name": "F-1 6",
     "code": "F-1 6",
     "block": "F",
@@ -26777,7 +26445,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90389038049953,
       "lng": 73.04632804116437
@@ -26800,24 +26468,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04639250040054
       }
     ],
-    "truckNumber": "MH-46-AR-3249",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7059888",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88304",
-    "grossWeightKg": 23360,
-    "dwellTime": "18h 8m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-306",
+    "id": "slot-331",
     "name": "F-1 5",
     "code": "F-1 5",
     "block": "F",
@@ -26825,7 +26482,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903865591542033,
       "lng": 73.04632295649836
@@ -26848,24 +26505,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0463869124651
       }
     ],
-    "truckNumber": "MH-46-AR-3286",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7060085",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88305",
-    "grossWeightKg": 23700,
-    "dwellTime": "19h 25m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-307",
+    "id": "slot-332",
     "name": "F-1 4",
     "code": "F-1 4",
     "block": "F",
@@ -26873,7 +26519,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90384080258454,
       "lng": 73.04631787183231
@@ -26896,24 +26542,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04638132452965
       }
     ],
-    "truckNumber": "MH-46-AR-3323",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7060282",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88306",
-    "grossWeightKg": 24040,
-    "dwellTime": "20h 42m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-308",
+    "id": "slot-333",
     "name": "F-1 3",
     "code": "F-1 3",
     "block": "F",
@@ -26921,7 +26556,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903816013627043,
       "lng": 73.04631278716629
@@ -26944,24 +26579,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0463757365942
       }
     ],
-    "truckNumber": "MH-46-AR-3360",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7060479",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88307",
-    "grossWeightKg": 24380,
-    "dwellTime": "21h 59m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-309",
+    "id": "slot-334",
     "name": "F-1 2",
     "code": "F-1 2",
     "block": "F",
@@ -26969,7 +26593,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block F (Trailer Parking)",
     "cycle": "Trailer Marshalling Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903791224669547,
       "lng": 73.04630770250026
@@ -26992,24 +26616,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04637014865875
       }
     ],
-    "truckNumber": "MH-46-AR-3397",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7060676",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88308",
-    "grossWeightKg": 24720,
-    "dwellTime": "22h 16m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-310",
+    "id": "slot-335",
     "name": "F-1 1",
     "code": "F-1 1",
     "block": "F",
@@ -27041,11 +26654,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-311",
+    "id": "slot-336",
     "name": "H-5 6",
     "code": "H-5 6",
     "block": "H",
@@ -27077,12 +26691,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-20.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-312",
+    "id": "slot-337",
     "name": "H-5 5",
     "code": "H-5 5",
     "block": "H",
@@ -27114,12 +26728,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-20.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-313",
+    "id": "slot-338",
     "name": "H-5 4",
     "code": "H-5 4",
     "block": "H",
@@ -27151,12 +26765,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-18.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-314",
+    "id": "slot-339",
     "name": "H-5 3",
     "code": "H-5 3",
     "block": "H",
@@ -27164,7 +26778,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901940275562524,
       "lng": 73.04660139844131
@@ -27187,25 +26801,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0465380993628
       }
     ],
-    "truckNumber": "MH-46-AR-3582",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7061661",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Reefer",
-    "temperature": "-18.5°C",
-    "sealNumber": "CFS-88313",
-    "grossWeightKg": 26420,
-    "dwellTime": "27h 41m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-315",
+    "id": "slot-340",
     "name": "H-5 2",
     "code": "H-5 2",
     "block": "H",
@@ -27213,7 +26815,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90191803166362,
       "lng": 73.04660300472679
@@ -27236,25 +26838,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04654008131183
       }
     ],
-    "truckNumber": "MH-46-AR-3619",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7061858",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88314",
-    "grossWeightKg": 26760,
-    "dwellTime": "28h 58m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-316",
+    "id": "slot-341",
     "name": "H-5 1",
     "code": "H-5 1",
     "block": "H",
@@ -27262,7 +26852,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90189578776471,
       "lng": 73.04660461101227
@@ -27285,25 +26875,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04654206326086
       }
     ],
-    "truckNumber": "MH-46-AR-3656",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7062055",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88315",
-    "grossWeightKg": 27100,
-    "dwellTime": "29h 15m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-317",
+    "id": "slot-342",
     "name": "H-4 6",
     "code": "H-4 6",
     "block": "H",
@@ -27311,7 +26889,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90191638233009,
       "lng": 73.04674193964085
@@ -27334,25 +26912,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04680554964055
       }
     ],
-    "truckNumber": "MH-46-AR-3693",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7062252",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88316",
-    "grossWeightKg": 27440,
-    "dwellTime": "30h 32m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-318",
+    "id": "slot-343",
     "name": "H-4 5",
     "code": "H-4 5",
     "block": "H",
@@ -27360,7 +26926,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90193953889447,
       "lng": 73.04673943141236
@@ -27383,25 +26949,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04680265212774
       }
     ],
-    "truckNumber": "MH-46-AR-3730",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7062449",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88317",
-    "grossWeightKg": 27780,
-    "dwellTime": "31h 49m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-319",
+    "id": "slot-344",
     "name": "H-4 4",
     "code": "H-4 4",
     "block": "H",
@@ -27409,7 +26963,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901962695458856,
       "lng": 73.04673692318389
@@ -27432,25 +26986,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04679975461494
       }
     ],
-    "truckNumber": "MH-46-AR-3767",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7062646",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88318",
-    "grossWeightKg": 28120,
-    "dwellTime": "32h 6m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-320",
+    "id": "slot-345",
     "name": "H-4 3",
     "code": "H-4 3",
     "block": "H",
@@ -27482,12 +27024,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-18.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-321",
+    "id": "slot-346",
     "name": "H-4 2",
     "code": "H-4 2",
     "block": "H",
@@ -27519,12 +27061,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-19.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-322",
+    "id": "slot-347",
     "name": "H-4 1",
     "code": "H-4 1",
     "block": "H",
@@ -27556,12 +27098,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-19.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-323",
+    "id": "slot-348",
     "name": "H-3 6",
     "code": "H-3 6",
     "block": "H",
@@ -27593,12 +27135,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-20.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-324",
+    "id": "slot-349",
     "name": "H-3 5",
     "code": "H-3 5",
     "block": "H",
@@ -27606,7 +27148,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901954508558298,
       "lng": 73.04687173223991
@@ -27629,25 +27171,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04693534294044
       }
     ],
-    "truckNumber": "MH-46-AR-3952",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7063631",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88323",
-    "grossWeightKg": 29820,
-    "dwellTime": "37h 31m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-325",
+    "id": "slot-350",
     "name": "H-3 4",
     "code": "H-3 4",
     "block": "H",
@@ -27655,7 +27185,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90197865518663,
       "lng": 73.04686822852133
@@ -27678,25 +27208,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04693165856574
       }
     ],
-    "truckNumber": "MH-46-AR-3989",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7063828",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88324",
-    "grossWeightKg": 30160,
-    "dwellTime": "38h 48m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-326",
+    "id": "slot-351",
     "name": "H-3 3",
     "code": "H-3 3",
     "block": "H",
@@ -27704,7 +27222,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902002801814962,
       "lng": 73.04686472480276
@@ -27727,25 +27245,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04692797419102
       }
     ],
-    "truckNumber": "MH-46-AR-4026",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7064025",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Reefer",
-    "temperature": "-18.5°C",
-    "sealNumber": "CFS-88325",
-    "grossWeightKg": 30500,
-    "dwellTime": "39h 5m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-327",
+    "id": "slot-352",
     "name": "H-3 2",
     "code": "H-3 2",
     "block": "H",
@@ -27753,7 +27259,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902026948443293,
       "lng": 73.04686122108419
@@ -27776,25 +27282,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04692428981632
       }
     ],
-    "truckNumber": "MH-46-AR-4063",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7064222",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88326",
-    "grossWeightKg": 30840,
-    "dwellTime": "40h 22m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-328",
+    "id": "slot-353",
     "name": "H-3 1",
     "code": "H-3 1",
     "block": "H",
@@ -27802,7 +27296,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902051095071627,
       "lng": 73.04685771736561
@@ -27825,25 +27319,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04692060544161
       }
     ],
-    "truckNumber": "MH-46-AR-4100",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7064419",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88327",
-    "grossWeightKg": 31180,
-    "dwellTime": "41h 39m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-329",
+    "id": "slot-354",
     "name": "H-2 6",
     "code": "H-2 6",
     "block": "H",
@@ -27851,7 +27333,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902067376205387,
       "lng": 73.04699030960441
@@ -27874,25 +27356,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04692643817022
       }
     ],
-    "truckNumber": "MH-46-AR-4137",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7064616",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88328",
-    "grossWeightKg": 31520,
-    "dwellTime": "42h 56m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-330",
+    "id": "slot-355",
     "name": "H-2 5",
     "code": "H-2 5",
     "block": "H",
@@ -27924,12 +27394,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-20.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-331",
+    "id": "slot-356",
     "name": "H-2 4",
     "code": "H-2 4",
     "block": "H",
@@ -27961,12 +27431,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-18.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-332",
+    "id": "slot-357",
     "name": "H-2 3",
     "code": "H-2 3",
     "block": "H",
@@ -27998,12 +27468,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-18.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-333",
+    "id": "slot-358",
     "name": "H-2 2",
     "code": "H-2 2",
     "block": "H",
@@ -28035,12 +27505,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-19.0°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-334",
+    "id": "slot-359",
     "name": "H-2 1",
     "code": "H-2 1",
     "block": "H",
@@ -28048,7 +27518,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901944529880126,
       "lng": 73.04700616042517
@@ -28071,25 +27541,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04694640625807
       }
     ],
-    "truckNumber": "MH-46-AR-4322",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7065601",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88333",
-    "grossWeightKg": 19220,
-    "dwellTime": "47h 21m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-335",
+    "id": "slot-360",
     "name": "D-12 10",
     "code": "D-12 10",
     "block": "D",
@@ -28097,7 +27555,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902182061131256,
       "lng": 73.04670260702125
@@ -28120,24 +27578,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0467230923926
       }
     ],
-    "truckNumber": "MH-46-AR-4359",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7065798",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88334",
-    "grossWeightKg": 19560,
-    "dwellTime": "48h 38m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-336",
+    "id": "slot-361",
     "name": "D-12 9",
     "code": "D-12 9",
     "block": "D",
@@ -28145,7 +27592,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90217876229578,
       "lng": 73.04667772953263
@@ -28168,24 +27615,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0466977455174
       }
     ],
-    "truckNumber": "MH-46-AR-4396",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7065995",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88335",
-    "grossWeightKg": 19900,
-    "dwellTime": "49h 55m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-337",
+    "id": "slot-362",
     "name": "D-12 8",
     "code": "D-12 8",
     "block": "D",
@@ -28193,7 +27629,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902175463460303,
       "lng": 73.04665285204402
@@ -28216,24 +27652,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04667239864222
       }
     ],
-    "truckNumber": "MH-46-AR-4433",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7066192",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88336",
-    "grossWeightKg": 20240,
-    "dwellTime": "2h 12m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-338",
+    "id": "slot-363",
     "name": "D-12 7",
     "code": "D-12 7",
     "block": "D",
@@ -28241,7 +27666,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902172164624822,
       "lng": 73.0466279745554
@@ -28264,24 +27689,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04664705176702
       }
     ],
-    "truckNumber": "MH-46-AR-4470",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7066389",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88337",
-    "grossWeightKg": 20580,
-    "dwellTime": "3h 29m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-339",
+    "id": "slot-364",
     "name": "D-12 6",
     "code": "D-12 6",
     "block": "D",
@@ -28289,7 +27703,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90216886578935,
       "lng": 73.0466030970668
@@ -28312,25 +27726,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04662170489183
       }
     ],
-    "truckNumber": "MH-46-AR-4507",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7066586",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88338",
-    "grossWeightKg": 20920,
-    "dwellTime": "4h 46m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-340",
+    "id": "slot-365",
     "name": "D-12 5",
     "code": "D-12 5",
     "block": "D",
@@ -28362,11 +27764,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-341",
+    "id": "slot-366",
     "name": "D-12 4",
     "code": "D-12 4",
     "block": "D",
@@ -28398,11 +27801,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-342",
+    "id": "slot-367",
     "name": "D-12 3",
     "code": "D-12 3",
     "block": "D",
@@ -28434,11 +27838,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-343",
+    "id": "slot-368",
     "name": "D-12 2",
     "code": "D-12 2",
     "block": "D",
@@ -28470,11 +27875,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-344",
+    "id": "slot-369",
     "name": "D-12 1",
     "code": "D-12 1",
     "block": "D",
@@ -28482,7 +27888,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902152371611965,
       "lng": 73.04647870962373
@@ -28505,24 +27911,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04649497051588
       }
     ],
-    "truckNumber": "MH-46-AR-4692",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7067571",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88343",
-    "grossWeightKg": 22620,
-    "dwellTime": "9h 11m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-345",
+    "id": "slot-370",
     "name": "H-1 6",
     "code": "H-1 6",
     "block": "H",
@@ -28530,7 +27925,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90196668074884,
       "lng": 73.04713205651225
@@ -28553,25 +27948,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04719517827607
       }
     ],
-    "truckNumber": "MH-46-AR-4729",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7067768",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88344",
-    "grossWeightKg": 22960,
-    "dwellTime": "10h 28m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-346",
+    "id": "slot-371",
     "name": "H-1 5",
     "code": "H-1 5",
     "block": "H",
@@ -28579,7 +27962,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.901991144290054,
       "lng": 73.0471298919794
@@ -28602,25 +27985,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04719305468653
       }
     ],
-    "truckNumber": "MH-46-AR-4766",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7067965",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88345",
-    "grossWeightKg": 23300,
-    "dwellTime": "11h 45m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-347",
+    "id": "slot-372",
     "name": "H-1 4",
     "code": "H-1 4",
     "block": "H",
@@ -28628,7 +27999,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902015607831267,
       "lng": 73.04712772744652
@@ -28651,25 +28022,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04719093109698
       }
     ],
-    "truckNumber": "MH-46-AR-4803",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7068162",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88346",
-    "grossWeightKg": 23640,
-    "dwellTime": "12h 2m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-348",
+    "id": "slot-373",
     "name": "H-1 3",
     "code": "H-1 3",
     "block": "H",
@@ -28677,7 +28036,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902040071372483,
       "lng": 73.04712556291366
@@ -28700,25 +28059,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04718880750744
       }
     ],
-    "truckNumber": "MH-46-AR-4840",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7068359",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88347",
-    "grossWeightKg": 23980,
-    "dwellTime": "13h 19m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-349",
+    "id": "slot-374",
     "name": "H-1 2",
     "code": "H-1 2",
     "block": "H",
@@ -28726,7 +28073,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block H (Reefer Grid)",
     "cycle": "Reefer Cold Chain Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9020645349137,
       "lng": 73.04712339838079
@@ -28749,25 +28096,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0471866839179
       }
     ],
-    "truckNumber": "MH-46-AR-4877",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7068556",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88348",
-    "grossWeightKg": 24320,
-    "dwellTime": "14h 36m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-350",
+    "id": "slot-375",
     "name": "H-1 1",
     "code": "H-1 1",
     "block": "H",
@@ -28799,12 +28134,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Reefer",
-    "temperature": "-18.5°C",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-351",
+    "id": "slot-376",
     "name": "D-11 10",
     "code": "D-11 10",
     "block": "D",
@@ -28836,11 +28171,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-352",
+    "id": "slot-377",
     "name": "D-11 9",
     "code": "D-11 9",
     "block": "D",
@@ -28872,11 +28208,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-353",
+    "id": "slot-378",
     "name": "D-11 8",
     "code": "D-11 8",
     "block": "D",
@@ -28908,11 +28245,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-354",
+    "id": "slot-379",
     "name": "D-11 7",
     "code": "D-11 7",
     "block": "D",
@@ -28920,7 +28258,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902293143027308,
       "lng": 73.04661278654686
@@ -28943,24 +28281,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04663042207113
       }
     ],
-    "truckNumber": "MH-46-AR-5062",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7069541",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88353",
-    "grossWeightKg": 26020,
-    "dwellTime": "19h 1m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-355",
+    "id": "slot-380",
     "name": "D-11 6",
     "code": "D-11 6",
     "block": "D",
@@ -28968,7 +28295,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902289971072424,
       "lng": 73.04658797611347
@@ -28991,24 +28318,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660534341684
       }
     ],
-    "truckNumber": "MH-46-AR-5099",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7069738",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88354",
-    "grossWeightKg": 26360,
-    "dwellTime": "20h 18m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-356",
+    "id": "slot-381",
     "name": "D-11 5",
     "code": "D-11 5",
     "block": "D",
@@ -29016,7 +28332,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902286799117533,
       "lng": 73.04656316568008
@@ -29039,24 +28355,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04658026476255
       }
     ],
-    "truckNumber": "MH-46-AR-5136",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7069935",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88355",
-    "grossWeightKg": 26700,
-    "dwellTime": "21h 35m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-357",
+    "id": "slot-382",
     "name": "D-11 4",
     "code": "D-11 4",
     "block": "D",
@@ -29064,7 +28369,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90228362716265,
       "lng": 73.0465383552467
@@ -29087,24 +28392,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04655518610826
       }
     ],
-    "truckNumber": "MH-46-AR-5173",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7070132",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88356",
-    "grossWeightKg": 27040,
-    "dwellTime": "22h 52m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-358",
+    "id": "slot-383",
     "name": "D-11 3",
     "code": "D-11 3",
     "block": "D",
@@ -29112,7 +28406,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902280455207762,
       "lng": 73.04651354481331
@@ -29135,24 +28429,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04653010745398
       }
     ],
-    "truckNumber": "MH-46-AR-5210",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7070329",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88357",
-    "grossWeightKg": 27380,
-    "dwellTime": "23h 9m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-359",
+    "id": "slot-384",
     "name": "D-11 2",
     "code": "D-11 2",
     "block": "D",
@@ -29160,7 +28443,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90227728325288,
       "lng": 73.04648873437992
@@ -29183,24 +28466,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04650502879969
       }
     ],
-    "truckNumber": "MH-46-AR-5247",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7070526",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88358",
-    "grossWeightKg": 27720,
-    "dwellTime": "24h 26m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-360",
+    "id": "slot-385",
     "name": "D-11 1",
     "code": "D-11 1",
     "block": "D",
@@ -29232,11 +28504,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-361",
+    "id": "slot-386",
     "name": "D-10 10",
     "code": "D-10 10",
     "block": "D",
@@ -29268,11 +28541,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-362",
+    "id": "slot-387",
     "name": "D-10 9",
     "code": "D-10 9",
     "block": "D",
@@ -29304,11 +28578,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-363",
+    "id": "slot-388",
     "name": "D-10 8",
     "code": "D-10 8",
     "block": "D",
@@ -29340,11 +28615,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-364",
+    "id": "slot-389",
     "name": "D-10 7",
     "code": "D-10 7",
     "block": "D",
@@ -29352,7 +28628,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902511563698205,
       "lng": 73.04658683617464
@@ -29375,24 +28651,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660413642279
       }
     ],
-    "truckNumber": "MH-46-AR-5432",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7071511",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88363",
-    "grossWeightKg": 29420,
-    "dwellTime": "29h 51m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-365",
+    "id": "slot-390",
     "name": "D-10 6",
     "code": "D-10 6",
     "block": "D",
@@ -29400,7 +28665,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9025082648695,
       "lng": 73.0465618916308
@@ -29423,25 +28688,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0465787895476
       }
     ],
-    "truckNumber": "MH-46-AR-5469",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7071708",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
-    "cargoType": "Reefer",
-    "temperature": "-20.0°C",
-    "sealNumber": "CFS-88364",
-    "grossWeightKg": 29760,
-    "dwellTime": "30h 8m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-366",
+    "id": "slot-391",
     "name": "D-10 5",
     "code": "D-10 5",
     "block": "D",
@@ -29449,7 +28702,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902504966040794,
       "lng": 73.04653694708696
@@ -29472,24 +28725,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0465534426724
       }
     ],
-    "truckNumber": "MH-46-AR-5506",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7071905",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88365",
-    "grossWeightKg": 30100,
-    "dwellTime": "31h 25m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-367",
+    "id": "slot-392",
     "name": "D-10 4",
     "code": "D-10 4",
     "block": "D",
@@ -29497,7 +28739,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90250166721209,
       "lng": 73.04651200254312
@@ -29520,24 +28762,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04652809579721
       }
     ],
-    "truckNumber": "MH-46-AR-5543",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7072102",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88366",
-    "grossWeightKg": 30440,
-    "dwellTime": "32h 42m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-368",
+    "id": "slot-393",
     "name": "D-10 3",
     "code": "D-10 3",
     "block": "D",
@@ -29545,7 +28776,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902498368383384,
       "lng": 73.04648705799929
@@ -29568,24 +28799,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04650274892202
       }
     ],
-    "truckNumber": "MH-46-AR-5580",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7072299",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88367",
-    "grossWeightKg": 30780,
-    "dwellTime": "33h 59m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-369",
+    "id": "slot-394",
     "name": "D-10 2",
     "code": "D-10 2",
     "block": "D",
@@ -29593,7 +28813,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902495069554682,
       "lng": 73.04646211345545
@@ -29616,24 +28836,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04647740204683
       }
     ],
-    "truckNumber": "MH-46-AR-5617",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7072496",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88368",
-    "grossWeightKg": 31120,
-    "dwellTime": "34h 16m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-370",
+    "id": "slot-395",
     "name": "D-10 1",
     "code": "D-10 1",
     "block": "D",
@@ -29665,11 +28874,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-371",
+    "id": "slot-396",
     "name": "B-11 6",
     "code": "B-11 6",
     "block": "B",
@@ -29701,11 +28911,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-372",
+    "id": "slot-397",
     "name": "B-11 5",
     "code": "B-11 5",
     "block": "B",
@@ -29737,11 +28948,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-373",
+    "id": "slot-398",
     "name": "B-11 4",
     "code": "B-11 4",
     "block": "B",
@@ -29773,11 +28985,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-374",
+    "id": "slot-399",
     "name": "B-11 3",
     "code": "B-11 3",
     "block": "B",
@@ -29785,7 +28998,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902199839531004,
       "lng": 73.04700094122309
@@ -29808,24 +29021,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04701418117894
       }
     ],
-    "truckNumber": "MH-46-AR-5802",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7073481",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88373",
-    "grossWeightKg": 18820,
-    "dwellTime": "39h 41m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-375",
+    "id": "slot-400",
     "name": "B-11 2",
     "code": "B-11 2",
     "block": "B",
@@ -29833,7 +29035,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902195492193776,
       "lng": 73.04697217315093
@@ -29856,24 +29058,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04698492667693
       }
     ],
-    "truckNumber": "MH-46-AR-5839",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7073678",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88374",
-    "grossWeightKg": 19160,
-    "dwellTime": "40h 58m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-376",
+    "id": "slot-401",
     "name": "B-11 1",
     "code": "B-11 1",
     "block": "B",
@@ -29881,7 +29072,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902191144856545,
       "lng": 73.04694340507879
@@ -29904,24 +29095,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0469556721749
       }
     ],
-    "truckNumber": "MH-46-AR-5876",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7073875",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88375",
-    "grossWeightKg": 19500,
-    "dwellTime": "41h 15m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-377",
+    "id": "slot-402",
     "name": "D-9 10",
     "code": "D-9 10",
     "block": "D",
@@ -29929,7 +29109,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90261293921249,
       "lng": 73.04642694298974
@@ -29952,24 +29132,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04640793283335
       }
     ],
-    "truckNumber": "MH-46-AR-5913",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7074072",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88376",
-    "grossWeightKg": 19840,
-    "dwellTime": "42h 32m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-378",
+    "id": "slot-403",
     "name": "D-9 9",
     "code": "D-9 9",
     "block": "D",
@@ -29977,7 +29146,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902616238038966,
       "lng": 73.04645155225745
@@ -30000,25 +29169,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643287737719
       }
     ],
-    "truckNumber": "MH-46-AR-5950",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7074269",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
-    "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88377",
-    "grossWeightKg": 20180,
-    "dwellTime": "43h 49m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-379",
+    "id": "slot-404",
     "name": "D-9 8",
     "code": "D-9 8",
     "block": "D",
@@ -30026,7 +29183,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902619536865444,
       "lng": 73.04647616152516
@@ -30049,24 +29206,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04645782192102
       }
     ],
-    "truckNumber": "MH-46-AR-5987",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7074466",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88378",
-    "grossWeightKg": 20520,
-    "dwellTime": "44h 6m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-380",
+    "id": "slot-405",
     "name": "D-9 7",
     "code": "D-9 7",
     "block": "D",
@@ -30098,11 +29244,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-381",
+    "id": "slot-406",
     "name": "D-9 6",
     "code": "D-9 6",
     "block": "D",
@@ -30134,11 +29281,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-382",
+    "id": "slot-407",
     "name": "D-9 5",
     "code": "D-9 5",
     "block": "D",
@@ -30170,11 +29318,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-383",
+    "id": "slot-408",
     "name": "D-9 4",
     "code": "D-9 4",
     "block": "D",
@@ -30206,11 +29355,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-384",
+    "id": "slot-409",
     "name": "D-9 3",
     "code": "D-9 3",
     "block": "D",
@@ -30218,7 +29368,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90263603099783,
       "lng": 73.04659920786372
@@ -30241,24 +29391,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04658254464022
       }
     ],
-    "truckNumber": "MH-46-AR-6172",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7075451",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88383",
-    "grossWeightKg": 22220,
-    "dwellTime": "49h 31m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-385",
+    "id": "slot-410",
     "name": "D-9 2",
     "code": "D-9 2",
     "block": "D",
@@ -30266,7 +29405,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902639329824307,
       "lng": 73.04662381713143
@@ -30289,24 +29428,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660748918405
       }
     ],
-    "truckNumber": "MH-46-AR-6209",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7075648",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88384",
-    "grossWeightKg": 22560,
-    "dwellTime": "2h 48m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-386",
+    "id": "slot-411",
     "name": "D-9 1",
     "code": "D-9 1",
     "block": "D",
@@ -30314,7 +29442,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902642628650785,
       "lng": 73.04664842639914
@@ -30337,24 +29465,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0466324337279
       }
     ],
-    "truckNumber": "MH-46-AR-6246",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7075845",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88385",
-    "grossWeightKg": 22900,
-    "dwellTime": "3h 5m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-387",
+    "id": "slot-412",
     "name": "D-8 10",
     "code": "D-8 10",
     "block": "D",
@@ -30362,7 +29479,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90276825077141,
       "lng": 73.04663376455493
@@ -30385,24 +29502,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04665396858145
       }
     ],
-    "truckNumber": "MH-46-AR-6283",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7076042",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88386",
-    "grossWeightKg": 23240,
-    "dwellTime": "4h 22m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-388",
+    "id": "slot-413",
     "name": "D-8 9",
     "code": "D-8 9",
     "block": "D",
@@ -30410,7 +29516,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90276434957697,
       "lng": 73.0466087222747
@@ -30433,24 +29539,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04662896267529
       }
     ],
-    "truckNumber": "MH-46-AR-6320",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7076239",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88387",
-    "grossWeightKg": 23580,
-    "dwellTime": "5h 39m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-389",
+    "id": "slot-414",
     "name": "D-8 8",
     "code": "D-8 8",
     "block": "D",
@@ -30458,7 +29553,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90276044838253,
       "lng": 73.04658367999448
@@ -30481,24 +29576,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660395676913
       }
     ],
-    "truckNumber": "MH-46-AR-6357",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7076436",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88388",
-    "grossWeightKg": 23920,
-    "dwellTime": "6h 56m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-390",
+    "id": "slot-415",
     "name": "D-8 7",
     "code": "D-8 7",
     "block": "D",
@@ -30530,11 +29614,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-391",
+    "id": "slot-416",
     "name": "D-8 6",
     "code": "D-8 6",
     "block": "D",
@@ -30566,11 +29651,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-392",
+    "id": "slot-417",
     "name": "D-8 5",
     "code": "D-8 5",
     "block": "D",
@@ -30602,11 +29688,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-393",
+    "id": "slot-418",
     "name": "D-8 4",
     "code": "D-8 4",
     "block": "D",
@@ -30638,11 +29725,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-394",
+    "id": "slot-419",
     "name": "D-8 3",
     "code": "D-8 3",
     "block": "D",
@@ -30650,7 +29738,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90274094241034,
       "lng": 73.04645846859334
@@ -30673,24 +29761,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04647892723831
       }
     ],
-    "truckNumber": "MH-46-AR-6542",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7077421",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88393",
-    "grossWeightKg": 25620,
-    "dwellTime": "11h 21m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-395",
+    "id": "slot-420",
     "name": "D-8 2",
     "code": "D-8 2",
     "block": "D",
@@ -30698,7 +29775,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9027370412159,
       "lng": 73.04643342631311
@@ -30721,24 +29798,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04645392133214
       }
     ],
-    "truckNumber": "MH-46-AR-6579",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7077618",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88394",
-    "grossWeightKg": 25960,
-    "dwellTime": "12h 38m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-396",
+    "id": "slot-421",
     "name": "D-8 1",
     "code": "D-8 1",
     "block": "D",
@@ -30746,7 +29812,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902733140021464,
       "lng": 73.0464083840329
@@ -30769,24 +29835,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04642891542599
       }
     ],
-    "truckNumber": "MH-46-AR-6616",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7077815",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88395",
-    "grossWeightKg": 26300,
-    "dwellTime": "13h 55m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-397",
+    "id": "slot-422",
     "name": "B-10 6",
     "code": "B-10 6",
     "block": "B",
@@ -30794,7 +29849,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9023227251067,
       "lng": 73.04693780455166
@@ -30817,24 +29872,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04692357778549
       }
     ],
-    "truckNumber": "MH-46-AR-6653",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7078012",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88396",
-    "grossWeightKg": 26640,
-    "dwellTime": "14h 12m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-398",
+    "id": "slot-423",
     "name": "B-10 5",
     "code": "B-10 5",
     "block": "B",
@@ -30842,7 +29886,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90232624336673,
       "lng": 73.04696759090147
@@ -30865,24 +29909,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04695397615433
       }
     ],
-    "truckNumber": "MH-46-AR-6690",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7078209",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88397",
-    "grossWeightKg": 26980,
-    "dwellTime": "15h 29m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-399",
+    "id": "slot-424",
     "name": "B-10 4",
     "code": "B-10 4",
     "block": "B",
@@ -30890,7 +29923,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902329761626753,
       "lng": 73.04699737725129
@@ -30913,24 +29946,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04698437452316
       }
     ],
-    "truckNumber": "MH-46-AR-6727",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7078406",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88398",
-    "grossWeightKg": 27320,
-    "dwellTime": "16h 46m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-400",
+    "id": "slot-425",
     "name": "B-10 3",
     "code": "B-10 3",
     "block": "B",
@@ -30962,11 +29984,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-401",
+    "id": "slot-426",
     "name": "B-10 2",
     "code": "B-10 2",
     "block": "B",
@@ -30998,11 +30021,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-402",
+    "id": "slot-427",
     "name": "B-10 1",
     "code": "B-10 1",
     "block": "B",
@@ -31034,11 +30058,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-403",
+    "id": "slot-428",
     "name": "D-7 10",
     "code": "D-7 10",
     "block": "D",
@@ -31070,11 +30095,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-404",
+    "id": "slot-429",
     "name": "D-7 9",
     "code": "D-7 9",
     "block": "D",
@@ -31082,7 +30108,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90288924856267,
       "lng": 73.04658718407892
@@ -31105,25 +30131,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04660829384676
       }
     ],
-    "truckNumber": "MH-46-AR-6912",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7079391",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
-    "cargoType": "Reefer",
-    "temperature": "-18.5°C",
-    "sealNumber": "CFS-88403",
-    "grossWeightKg": 29020,
-    "dwellTime": "21h 11m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-405",
+    "id": "slot-430",
     "name": "D-7 8",
     "code": "D-7 8",
     "block": "D",
@@ -31131,7 +30145,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90288543090361,
       "lng": 73.04656207238357
@@ -31154,24 +30168,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04658334930292
       }
     ],
-    "truckNumber": "MH-46-AR-6949",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7079588",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88404",
-    "grossWeightKg": 29360,
-    "dwellTime": "22h 28m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-406",
+    "id": "slot-431",
     "name": "D-7 7",
     "code": "D-7 7",
     "block": "D",
@@ -31179,7 +30182,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90288161324455,
       "lng": 73.0465369606882
@@ -31202,24 +30205,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04655840475908
       }
     ],
-    "truckNumber": "MH-46-AR-6986",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7079785",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88405",
-    "grossWeightKg": 29700,
-    "dwellTime": "23h 45m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-407",
+    "id": "slot-432",
     "name": "D-7 6",
     "code": "D-7 6",
     "block": "D",
@@ -31227,7 +30219,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90287779558549,
       "lng": 73.04651184899285
@@ -31250,24 +30242,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04653346021524
       }
     ],
-    "truckNumber": "MH-46-AR-7023",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7079982",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88406",
-    "grossWeightKg": 30040,
-    "dwellTime": "24h 2m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-408",
+    "id": "slot-433",
     "name": "D-7 5",
     "code": "D-7 5",
     "block": "D",
@@ -31275,7 +30256,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902873977926433,
       "lng": 73.0464867372975
@@ -31298,24 +30279,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0465085156714
       }
     ],
-    "truckNumber": "MH-46-AR-7060",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7080179",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88407",
-    "grossWeightKg": 30380,
-    "dwellTime": "25h 19m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-409",
+    "id": "slot-434",
     "name": "D-7 4",
     "code": "D-7 4",
     "block": "D",
@@ -31323,7 +30293,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902870160267373,
       "lng": 73.04646162560215
@@ -31346,24 +30316,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04648357112757
       }
     ],
-    "truckNumber": "MH-46-AR-7097",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7080376",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88408",
-    "grossWeightKg": 30720,
-    "dwellTime": "26h 36m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-410",
+    "id": "slot-435",
     "name": "D-7 3",
     "code": "D-7 3",
     "block": "D",
@@ -31395,11 +30354,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-411",
+    "id": "slot-436",
     "name": "D-7 2",
     "code": "D-7 2",
     "block": "D",
@@ -31431,11 +30391,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-412",
+    "id": "slot-437",
     "name": "D-7 1",
     "code": "D-7 1",
     "block": "D",
@@ -31467,11 +30428,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-413",
+    "id": "slot-438",
     "name": "B-9 6",
     "code": "B-9 6",
     "block": "B",
@@ -31503,11 +30465,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-414",
+    "id": "slot-439",
     "name": "B-9 5",
     "code": "B-9 5",
     "block": "B",
@@ -31515,7 +30478,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90245465811808,
       "lng": 73.04696220831701
@@ -31538,24 +30501,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.046947723725
       }
     ],
-    "truckNumber": "MH-46-AR-7282",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7081361",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88413",
-    "grossWeightKg": 18420,
-    "dwellTime": "31h 1m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-415",
+    "id": "slot-440",
     "name": "B-9 4",
     "code": "B-9 4",
     "block": "B",
@@ -31563,7 +30515,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9024574727651,
       "lng": 73.0469920547022
@@ -31586,24 +30538,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04697800618855
       }
     ],
-    "truckNumber": "MH-46-AR-7319",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7081558",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88414",
-    "grossWeightKg": 18760,
-    "dwellTime": "32h 18m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-416",
+    "id": "slot-441",
     "name": "B-9 3",
     "code": "B-9 3",
     "block": "B",
@@ -31611,7 +30552,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902460287412126,
       "lng": 73.04702190108739
@@ -31634,24 +30575,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04700828865211
       }
     ],
-    "truckNumber": "MH-46-AR-7356",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7081755",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88415",
-    "grossWeightKg": 19100,
-    "dwellTime": "33h 35m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-417",
+    "id": "slot-442",
     "name": "B-9 2",
     "code": "B-9 2",
     "block": "B",
@@ -31659,7 +30589,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90246310205915,
       "lng": 73.04705174747258
@@ -31682,25 +30612,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04703857111566
       }
     ],
-    "truckNumber": "MH-46-AR-7393",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7081952",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88416",
-    "grossWeightKg": 19440,
-    "dwellTime": "34h 52m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-418",
+    "id": "slot-443",
     "name": "B-9 1",
     "code": "B-9 1",
     "block": "B",
@@ -31708,7 +30626,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902465916706173,
       "lng": 73.04708159385777
@@ -31731,24 +30649,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04706885357922
       }
     ],
-    "truckNumber": "MH-46-AR-7430",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7082149",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88417",
-    "grossWeightKg": 19780,
-    "dwellTime": "35h 9m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-419",
+    "id": "slot-444",
     "name": "D-6 10",
     "code": "D-6 10",
     "block": "D",
@@ -31756,7 +30663,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903013492430716,
       "lng": 73.0465898871874
@@ -31779,24 +30686,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04661043961397
       }
     ],
-    "truckNumber": "MH-46-AR-7467",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7082346",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88418",
-    "grossWeightKg": 20120,
-    "dwellTime": "36h 26m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-420",
+    "id": "slot-445",
     "name": "D-6 9",
     "code": "D-6 9",
     "block": "D",
@@ -31828,11 +30724,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-421",
+    "id": "slot-446",
     "name": "D-6 8",
     "code": "D-6 8",
     "block": "D",
@@ -31864,11 +30761,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-422",
+    "id": "slot-447",
     "name": "D-6 7",
     "code": "D-6 7",
     "block": "D",
@@ -31900,11 +30798,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-423",
+    "id": "slot-448",
     "name": "D-6 6",
     "code": "D-6 6",
     "block": "D",
@@ -31936,11 +30835,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-424",
+    "id": "slot-449",
     "name": "D-6 5",
     "code": "D-6 5",
     "block": "D",
@@ -31948,7 +30848,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902994460781628,
       "lng": 73.04646482919208
@@ -31971,24 +30871,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04648504634253
       }
     ],
-    "truckNumber": "MH-46-AR-7652",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7083331",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88423",
-    "grossWeightKg": 21820,
-    "dwellTime": "41h 51m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-425",
+    "id": "slot-450",
     "name": "D-6 4",
     "code": "D-6 4",
     "block": "D",
@@ -31996,7 +30885,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90299065445181,
       "lng": 73.04643981759301
@@ -32019,24 +30908,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04645996768824
       }
     ],
-    "truckNumber": "MH-46-AR-7689",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7083528",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88424",
-    "grossWeightKg": 22160,
-    "dwellTime": "42h 8m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-426",
+    "id": "slot-451",
     "name": "D-6 3",
     "code": "D-6 3",
     "block": "D",
@@ -32044,7 +30922,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90298684812199,
       "lng": 73.04641480599395
@@ -32067,24 +30945,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643488903395
       }
     ],
-    "truckNumber": "MH-46-AR-7726",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7083725",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88425",
-    "grossWeightKg": 22500,
-    "dwellTime": "43h 25m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-427",
+    "id": "slot-452",
     "name": "D-6 2",
     "code": "D-6 2",
     "block": "D",
@@ -32092,7 +30959,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902983041792176,
       "lng": 73.04638979439488
@@ -32115,24 +30982,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04640981037966
       }
     ],
-    "truckNumber": "MH-46-AR-7763",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7083922",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88426",
-    "grossWeightKg": 22840,
-    "dwellTime": "44h 42m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-428",
+    "id": "slot-453",
     "name": "D-6 1",
     "code": "D-6 1",
     "block": "D",
@@ -32140,7 +30996,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902979235462354,
       "lng": 73.04636478279582
@@ -32163,24 +31019,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04638473172537
       }
     ],
-    "truckNumber": "MH-46-AR-7800",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7084119",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88427",
-    "grossWeightKg": 23180,
-    "dwellTime": "45h 59m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-429",
+    "id": "slot-454",
     "name": "D-5 10",
     "code": "D-5 10",
     "block": "D",
@@ -32188,7 +31033,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903146475876085,
       "lng": 73.04656968543807
@@ -32211,24 +31056,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04659032304636
       }
     ],
-    "truckNumber": "MH-46-AR-7837",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7084316",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88428",
-    "grossWeightKg": 23520,
-    "dwellTime": "46h 16m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-430",
+    "id": "slot-455",
     "name": "D-5 9",
     "code": "D-5 9",
     "block": "D",
@@ -32260,11 +31094,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-431",
+    "id": "slot-456",
     "name": "D-5 8",
     "code": "D-5 8",
     "block": "D",
@@ -32296,11 +31131,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-432",
+    "id": "slot-457",
     "name": "D-5 7",
     "code": "D-5 7",
     "block": "D",
@@ -32332,11 +31168,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-433",
+    "id": "slot-458",
     "name": "D-5 6",
     "code": "D-5 6",
     "block": "D",
@@ -32368,11 +31205,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-434",
+    "id": "slot-459",
     "name": "D-5 5",
     "code": "D-5 5",
     "block": "D",
@@ -32380,7 +31218,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903131407809056,
       "lng": 73.04644377562575
@@ -32403,24 +31241,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04646389669313
       }
     ],
-    "truckNumber": "MH-46-AR-8022",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7085301",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88433",
-    "grossWeightKg": 25220,
-    "dwellTime": "3h 41m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-435",
+    "id": "slot-460",
     "name": "D-5 4",
     "code": "D-5 4",
     "block": "D",
@@ -32428,7 +31255,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90312839419565,
       "lng": 73.04641859366328
@@ -32451,24 +31278,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643861142249
       }
     ],
-    "truckNumber": "MH-46-AR-8059",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7085498",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88434",
-    "grossWeightKg": 25560,
-    "dwellTime": "4h 58m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-436",
+    "id": "slot-461",
     "name": "D-5 3",
     "code": "D-5 3",
     "block": "D",
@@ -32476,7 +31292,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903125380582242,
       "lng": 73.04639341170082
@@ -32499,24 +31315,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04641332615185
       }
     ],
-    "truckNumber": "MH-46-AR-8096",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7085695",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88435",
-    "grossWeightKg": 25900,
-    "dwellTime": "5h 15m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-437",
+    "id": "slot-462",
     "name": "D-5 2",
     "code": "D-5 2",
     "block": "D",
@@ -32524,7 +31329,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903122366968837,
       "lng": 73.04636822973833
@@ -32547,24 +31352,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0463880408812
       }
     ],
-    "truckNumber": "MH-46-AR-8133",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7085892",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88436",
-    "grossWeightKg": 26240,
-    "dwellTime": "6h 32m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-438",
+    "id": "slot-463",
     "name": "D-5 1",
     "code": "D-5 1",
     "block": "D",
@@ -32572,7 +31366,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90311935335543,
       "lng": 73.04634304777588
@@ -32595,24 +31389,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04636275561055
       }
     ],
-    "truckNumber": "MH-46-AR-8170",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7086089",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88437",
-    "grossWeightKg": 26580,
-    "dwellTime": "7h 49m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-439",
+    "id": "slot-464",
     "name": "D-4 10",
     "code": "D-4 10",
     "block": "D",
@@ -32620,7 +31403,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903275304253334,
       "lng": 73.04653869052282
@@ -32643,24 +31426,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04655813653818
       }
     ],
-    "truckNumber": "MH-46-AR-8207",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7086286",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88438",
-    "grossWeightKg": 26920,
-    "dwellTime": "8h 6m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-440",
+    "id": "slot-465",
     "name": "D-4 9",
     "code": "D-4 9",
     "block": "D",
@@ -32692,11 +31464,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-441",
+    "id": "slot-466",
     "name": "D-4 8",
     "code": "D-4 8",
     "block": "D",
@@ -32728,11 +31501,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-442",
+    "id": "slot-467",
     "name": "D-4 7",
     "code": "D-4 7",
     "block": "D",
@@ -32764,11 +31538,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-443",
+    "id": "slot-468",
     "name": "D-4 6",
     "code": "D-4 6",
     "block": "D",
@@ -32800,11 +31575,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-444",
+    "id": "slot-469",
     "name": "D-4 5",
     "code": "D-4 5",
     "block": "D",
@@ -32812,7 +31588,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903260713345823,
       "lng": 73.04641799111715
@@ -32835,24 +31611,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04643743713251
       }
     ],
-    "truckNumber": "MH-46-AR-8392",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7087271",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88443",
-    "grossWeightKg": 28620,
-    "dwellTime": "13h 31m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-445",
+    "id": "slot-470",
     "name": "D-4 4",
     "code": "D-4 4",
     "block": "D",
@@ -32860,7 +31625,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903257795164322,
       "lng": 73.04639385123602
@@ -32883,24 +31648,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04641329725138
       }
     ],
-    "truckNumber": "MH-46-AR-8429",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7087468",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88444",
-    "grossWeightKg": 28960,
-    "dwellTime": "14h 48m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-446",
+    "id": "slot-471",
     "name": "D-4 3",
     "code": "D-4 3",
     "block": "D",
@@ -32908,7 +31662,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903254876982817,
       "lng": 73.04636971135488
@@ -32931,24 +31685,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04638915737024
       }
     ],
-    "truckNumber": "MH-46-AR-8466",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7087665",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88445",
-    "grossWeightKg": 29300,
-    "dwellTime": "15h 5m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-447",
+    "id": "slot-472",
     "name": "D-4 2",
     "code": "D-4 2",
     "block": "D",
@@ -32956,7 +31699,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903251958801313,
       "lng": 73.04634557147375
@@ -32979,24 +31722,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04636501748911
       }
     ],
-    "truckNumber": "MH-46-AR-8503",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7087862",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88446",
-    "grossWeightKg": 29640,
-    "dwellTime": "16h 22m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-448",
+    "id": "slot-473",
     "name": "D-4 1",
     "code": "D-4 1",
     "block": "D",
@@ -33004,7 +31736,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903249040619812,
       "lng": 73.04632143159262
@@ -33027,24 +31759,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04634087760797
       }
     ],
-    "truckNumber": "MH-46-AR-8540",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7088059",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88447",
-    "grossWeightKg": 29980,
-    "dwellTime": "17h 39m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-449",
+    "id": "slot-474",
     "name": "B-8 6",
     "code": "B-8 6",
     "block": "B",
@@ -33052,7 +31773,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902578320167702,
       "lng": 73.04692802123274
@@ -33075,24 +31796,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04691609355201
       }
     ],
-    "truckNumber": "MH-46-AR-8577",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7088256",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88448",
-    "grossWeightKg": 30320,
-    "dwellTime": "18h 56m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-450",
+    "id": "slot-475",
     "name": "B-8 5",
     "code": "B-8 5",
     "block": "B",
@@ -33124,11 +31834,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-451",
+    "id": "slot-476",
     "name": "B-8 4",
     "code": "B-8 4",
     "block": "B",
@@ -33160,11 +31871,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-452",
+    "id": "slot-477",
     "name": "B-8 3",
     "code": "B-8 3",
     "block": "B",
@@ -33196,11 +31908,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-453",
+    "id": "slot-478",
     "name": "B-8 2",
     "code": "B-8 2",
     "block": "B",
@@ -33232,11 +31945,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-454",
+    "id": "slot-479",
     "name": "B-8 1",
     "code": "B-8 1",
     "block": "B",
@@ -33244,7 +31958,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90258872121123,
       "lng": 73.04707693209805
@@ -33267,24 +31981,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04706527619972
       }
     ],
-    "truckNumber": "MH-46-AR-8762",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7089241",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88453",
-    "grossWeightKg": 18020,
-    "dwellTime": "23h 21m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-455",
+    "id": "slot-480",
     "name": "D-3 10",
     "code": "D-3 10",
     "block": "D",
@@ -33292,7 +31995,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903372714387757,
       "lng": 73.04630594183556
@@ -33315,24 +32018,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04628589232317
       }
     ],
-    "truckNumber": "MH-46-AR-8799",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7089438",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88454",
-    "grossWeightKg": 18360,
-    "dwellTime": "24h 38m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-456",
+    "id": "slot-481",
     "name": "D-3 9",
     "code": "D-3 9",
     "block": "D",
@@ -33340,7 +32032,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903375569128578,
       "lng": 73.04632994760624
@@ -33363,25 +32055,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04630989809385
       }
     ],
-    "truckNumber": "MH-46-AR-8836",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7089635",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
-    "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88455",
-    "grossWeightKg": 18700,
-    "dwellTime": "25h 55m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-457",
+    "id": "slot-482",
     "name": "D-3 8",
     "code": "D-3 8",
     "block": "D",
@@ -33389,7 +32069,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90337842386939,
       "lng": 73.04635395337692
@@ -33412,24 +32092,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04633390386454
       }
     ],
-    "truckNumber": "MH-46-AR-8873",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7089832",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88456",
-    "grossWeightKg": 19040,
-    "dwellTime": "26h 12m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-458",
+    "id": "slot-483",
     "name": "D-3 7",
     "code": "D-3 7",
     "block": "D",
@@ -33437,7 +32106,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903381278610212,
       "lng": 73.0463779591476
@@ -33460,24 +32129,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04635790963522
       }
     ],
-    "truckNumber": "MH-46-AR-8910",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7090029",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88457",
-    "grossWeightKg": 19380,
-    "dwellTime": "27h 29m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-459",
+    "id": "slot-484",
     "name": "D-3 6",
     "code": "D-3 6",
     "block": "D",
@@ -33485,7 +32143,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90338413335103,
       "lng": 73.04640196491829
@@ -33508,24 +32166,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0463819154059
       }
     ],
-    "truckNumber": "MH-46-AR-8947",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7090226",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88458",
-    "grossWeightKg": 19720,
-    "dwellTime": "28h 46m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-460",
+    "id": "slot-485",
     "name": "D-3 5",
     "code": "D-3 5",
     "block": "D",
@@ -33557,11 +32204,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-461",
+    "id": "slot-486",
     "name": "D-3 4",
     "code": "D-3 4",
     "block": "D",
@@ -33593,11 +32241,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-462",
+    "id": "slot-487",
     "name": "D-3 3",
     "code": "D-3 3",
     "block": "D",
@@ -33629,11 +32278,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-463",
+    "id": "slot-488",
     "name": "D-3 2",
     "code": "D-3 2",
     "block": "D",
@@ -33665,11 +32315,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-464",
+    "id": "slot-489",
     "name": "D-3 1",
     "code": "D-3 1",
     "block": "D",
@@ -33677,7 +32328,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903398407055118,
       "lng": 73.0465219937717
@@ -33700,24 +32351,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04650194425932
       }
     ],
-    "truckNumber": "MH-46-AR-9132",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7091211",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88463",
-    "grossWeightKg": 21420,
-    "dwellTime": "33h 11m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-465",
+    "id": "slot-490",
     "name": "D-2 10",
     "code": "D-2 10",
     "block": "D",
@@ -33725,7 +32365,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903495830074284,
       "lng": 73.04628624237347
@@ -33748,24 +32388,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04626522056031
       }
     ],
-    "truckNumber": "MH-46-AR-9169",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7091408",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88464",
-    "grossWeightKg": 21760,
-    "dwellTime": "34h 28m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-466",
+    "id": "slot-491",
     "name": "D-2 9",
     "code": "D-2 9",
     "block": "D",
@@ -33773,7 +32402,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90349824074251,
       "lng": 73.04631085164118
@@ -33796,24 +32425,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0462900309937
       }
     ],
-    "truckNumber": "MH-46-AR-9206",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7091605",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88465",
-    "grossWeightKg": 22100,
-    "dwellTime": "35h 45m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-467",
+    "id": "slot-492",
     "name": "D-2 8",
     "code": "D-2 8",
     "block": "D",
@@ -33821,7 +32439,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903500651410734,
       "lng": 73.04633546090889
@@ -33844,24 +32462,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04631484142709
       }
     ],
-    "truckNumber": "MH-46-AR-9243",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7091802",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88466",
-    "grossWeightKg": 22440,
-    "dwellTime": "36h 2m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-468",
+    "id": "slot-493",
     "name": "D-2 7",
     "code": "D-2 7",
     "block": "D",
@@ -33869,7 +32476,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90350306207896,
       "lng": 73.0463600701766
@@ -33892,24 +32499,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04633965186048
       }
     ],
-    "truckNumber": "MH-46-AR-9280",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7091999",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88467",
-    "grossWeightKg": 22780,
-    "dwellTime": "37h 19m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-469",
+    "id": "slot-494",
     "name": "D-2 6",
     "code": "D-2 6",
     "block": "D",
@@ -33917,7 +32513,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903505472747185,
       "lng": 73.04638467944432
@@ -33940,25 +32536,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04636446229387
       }
     ],
-    "truckNumber": "MH-46-AR-9317",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7092196",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
-    "cargoType": "Reefer",
-    "temperature": "-18.0°C",
-    "sealNumber": "CFS-88468",
-    "grossWeightKg": 23120,
-    "dwellTime": "38h 36m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-470",
+    "id": "slot-495",
     "name": "D-2 5",
     "code": "D-2 5",
     "block": "D",
@@ -33990,11 +32574,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-471",
+    "id": "slot-496",
     "name": "D-2 4",
     "code": "D-2 4",
     "block": "D",
@@ -34026,11 +32611,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-472",
+    "id": "slot-497",
     "name": "D-2 3",
     "code": "D-2 3",
     "block": "D",
@@ -34062,11 +32648,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-473",
+    "id": "slot-498",
     "name": "D-2 2",
     "code": "D-2 2",
     "block": "D",
@@ -34098,11 +32685,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-474",
+    "id": "slot-499",
     "name": "D-2 1",
     "code": "D-2 1",
     "block": "D",
@@ -34110,7 +32698,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903517526088315,
       "lng": 73.04650772578287
@@ -34133,24 +32721,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0464885144608
       }
     ],
-    "truckNumber": "MH-46-AR-9502",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7093181",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88473",
-    "grossWeightKg": 24820,
-    "dwellTime": "43h 1m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-475",
+    "id": "slot-500",
     "name": "D-1 10",
     "code": "D-1 10",
     "block": "D",
@@ -34158,7 +32735,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "10",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903637932569872,
       "lng": 73.0464877097981
@@ -34181,24 +32758,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04650661937166
       }
     ],
-    "truckNumber": "MH-46-AR-9539",
-    "driverName": "Driver #155",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7093378",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88474",
-    "grossWeightKg": 25160,
-    "dwellTime": "44h 18m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-476",
+    "id": "slot-501",
     "name": "D-1 9",
     "code": "D-1 9",
     "block": "D",
@@ -34206,7 +32772,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "9",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903635268149124,
       "lng": 73.04646330169606
@@ -34229,24 +32795,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04648207715917
       }
     ],
-    "truckNumber": "MH-46-AR-9576",
-    "driverName": "Driver #156",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7093575",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88475",
-    "grossWeightKg": 25500,
-    "dwellTime": "45h 35m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-477",
+    "id": "slot-502",
     "name": "D-1 8",
     "code": "D-1 8",
     "block": "D",
@@ -34254,7 +32809,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "8",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903632603728376,
       "lng": 73.04643889359403
@@ -34277,24 +32832,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04645753494668
       }
     ],
-    "truckNumber": "MH-46-AR-9613",
-    "driverName": "Driver #157",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7093772",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88476",
-    "grossWeightKg": 25840,
-    "dwellTime": "46h 52m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-478",
+    "id": "slot-503",
     "name": "D-1 7",
     "code": "D-1 7",
     "block": "D",
@@ -34302,7 +32846,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "7",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903629939307628,
       "lng": 73.046414485492
@@ -34325,24 +32869,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0464329927342
       }
     ],
-    "truckNumber": "MH-46-AR-9650",
-    "driverName": "Driver #158",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7093969",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88477",
-    "grossWeightKg": 26180,
-    "dwellTime": "47h 9m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-479",
+    "id": "slot-504",
     "name": "D-1 6",
     "code": "D-1 6",
     "block": "D",
@@ -34350,7 +32883,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903627274886887,
       "lng": 73.04639007738996
@@ -34373,24 +32906,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04640845052171
       }
     ],
-    "truckNumber": "MH-46-AR-9687",
-    "driverName": "Driver #159",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7094166",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88478",
-    "grossWeightKg": 26520,
-    "dwellTime": "48h 26m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-480",
+    "id": "slot-505",
     "name": "D-1 5",
     "code": "D-1 5",
     "block": "D",
@@ -34422,11 +32944,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-481",
+    "id": "slot-506",
     "name": "D-1 4",
     "code": "D-1 4",
     "block": "D",
@@ -34458,11 +32981,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-482",
+    "id": "slot-507",
     "name": "D-1 3",
     "code": "D-1 3",
     "block": "D",
@@ -34494,11 +33018,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-483",
+    "id": "slot-508",
     "name": "D-1 2",
     "code": "D-1 2",
     "block": "D",
@@ -34530,11 +33055,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-484",
+    "id": "slot-509",
     "name": "D-1 1",
     "code": "D-1 1",
     "block": "D",
@@ -34542,7 +33068,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block D (General Yard)",
     "cycle": "General Staging Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903613952783154,
       "lng": 73.04626803687978
@@ -34565,24 +33091,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04628573945928
       }
     ],
-    "truckNumber": "MH-46-AR-9872",
-    "driverName": "Driver #164",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7095151",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88483",
-    "grossWeightKg": 28220,
-    "dwellTime": "5h 51m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-485",
+    "id": "slot-510",
     "name": "B-7 6",
     "code": "B-7 6",
     "block": "B",
@@ -34590,7 +33105,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902783584403096,
       "lng": 73.04707959542417
@@ -34613,24 +33128,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04709257386038
       }
     ],
-    "truckNumber": "MH-46-AR-9909",
-    "driverName": "Driver #165",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7095348",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88484",
-    "grossWeightKg": 28560,
-    "dwellTime": "6h 8m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-486",
+    "id": "slot-511",
     "name": "B-7 5",
     "code": "B-7 5",
     "block": "B",
@@ -34638,7 +33142,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902781735798193,
       "lng": 73.04704829104065
@@ -34661,24 +33165,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04706148104927
       }
     ],
-    "truckNumber": "MH-46-AR-9946",
-    "driverName": "Driver #166",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7095545",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88485",
-    "grossWeightKg": 28900,
-    "dwellTime": "7h 25m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-487",
+    "id": "slot-512",
     "name": "B-7 4",
     "code": "B-7 4",
     "block": "B",
@@ -34686,7 +33179,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90277988719329,
       "lng": 73.04701698665713
@@ -34709,24 +33202,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04703038823816
       }
     ],
-    "truckNumber": "MH-46-AR-9983",
-    "driverName": "Driver #167",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7095742",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88486",
-    "grossWeightKg": 29240,
-    "dwellTime": "8h 42m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-488",
+    "id": "slot-513",
     "name": "B-7 3",
     "code": "B-7 3",
     "block": "B",
@@ -34734,7 +33216,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902778038588387,
       "lng": 73.0469856822736
@@ -34757,24 +33239,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04699929542704
       }
     ],
-    "truckNumber": "MH-46-AR-1021",
-    "driverName": "Driver #168",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7095939",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88487",
-    "grossWeightKg": 29580,
-    "dwellTime": "9h 59m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-489",
+    "id": "slot-514",
     "name": "B-7 2",
     "code": "B-7 2",
     "block": "B",
@@ -34782,7 +33253,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90277618998348,
       "lng": 73.04695437789009
@@ -34805,24 +33276,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04696820261593
       }
     ],
-    "truckNumber": "MH-46-AR-1058",
-    "driverName": "Driver #169",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7096136",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88488",
-    "grossWeightKg": 29920,
-    "dwellTime": "10h 16m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-490",
+    "id": "slot-515",
     "name": "B-7 1",
     "code": "B-7 1",
     "block": "B",
@@ -34854,11 +33314,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-491",
+    "id": "slot-516",
     "name": "B-6 6",
     "code": "B-6 6",
     "block": "B",
@@ -34890,11 +33351,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-492",
+    "id": "slot-517",
     "name": "B-6 5",
     "code": "B-6 5",
     "block": "B",
@@ -34926,11 +33388,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-493",
+    "id": "slot-518",
     "name": "B-6 4",
     "code": "B-6 4",
     "block": "B",
@@ -34962,11 +33425,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-494",
+    "id": "slot-519",
     "name": "B-6 3",
     "code": "B-6 3",
     "block": "B",
@@ -34974,7 +33438,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90290972265321,
       "lng": 73.04700902116524
@@ -34997,24 +33461,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04698545765358
       }
     ],
-    "truckNumber": "MH-46-AR-1243",
-    "driverName": "Driver #104",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7097121",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88493",
-    "grossWeightKg": 31620,
-    "dwellTime": "15h 41m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-495",
+    "id": "slot-520",
     "name": "B-6 2",
     "code": "B-6 2",
     "block": "B",
@@ -35022,7 +33475,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902912802932594,
       "lng": 73.04704133731028
@@ -35045,25 +33498,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04701753899711
       }
     ],
-    "truckNumber": "MH-46-AR-1280",
-    "driverName": "Driver #105",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7097318",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
-    "cargoType": "Reefer",
-    "temperature": "-19.0°C",
-    "sealNumber": "CFS-88494",
-    "grossWeightKg": 31960,
-    "dwellTime": "16h 58m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-496",
+    "id": "slot-521",
     "name": "B-6 1",
     "code": "B-6 1",
     "block": "B",
@@ -35071,7 +33512,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block B (Export)",
     "cycle": "Export Buffer Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90291588321198,
       "lng": 73.04707365345531
@@ -35094,24 +33535,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04704962034064
       }
     ],
-    "truckNumber": "MH-46-AR-1317",
-    "driverName": "Driver #106",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7097515",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88495",
-    "grossWeightKg": 18300,
-    "dwellTime": "17h 15m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-497",
+    "id": "slot-522",
     "name": "A-1-1",
     "code": "A-1-1",
     "block": "A",
@@ -35119,7 +33549,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9032074645381,
       "lng": 73.04723511610362
@@ -35142,24 +33572,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04725217476228
       }
     ],
-    "truckNumber": "MH-46-AR-1354",
-    "driverName": "Driver #107",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7097712",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88496",
-    "grossWeightKg": 18640,
-    "dwellTime": "18h 32m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-498",
+    "id": "slot-523",
     "name": "A-1-2",
     "code": "A-1-2",
     "block": "A",
@@ -35167,7 +33586,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903203313657603,
       "lng": 73.04719565052935
@@ -35190,24 +33609,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04721193283623
       }
     ],
-    "truckNumber": "MH-46-AR-1391",
-    "driverName": "Driver #108",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7097909",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88497",
-    "grossWeightKg": 18980,
-    "dwellTime": "19h 49m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-499",
+    "id": "slot-524",
     "name": "A-1-3",
     "code": "A-1-3",
     "block": "A",
@@ -35215,7 +33623,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90319916277711,
       "lng": 73.04715618495506
@@ -35238,24 +33646,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04717169091019
       }
     ],
-    "truckNumber": "MH-46-AR-1428",
-    "driverName": "Driver #109",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7098106",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88498",
-    "grossWeightKg": 19320,
-    "dwellTime": "20h 6m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-500",
+    "id": "slot-525",
     "name": "A-3-1",
     "code": "A-3-1",
     "block": "A",
@@ -35287,11 +33684,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-501",
+    "id": "slot-526",
     "name": "A-4-1",
     "code": "A-4-1",
     "block": "A",
@@ -35323,11 +33721,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-502",
+    "id": "slot-527",
     "name": "A-6 6",
     "code": "A-6 6",
     "block": "A",
@@ -35359,11 +33758,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-503",
+    "id": "slot-528",
     "name": "A-6 5",
     "code": "A-6 5",
     "block": "A",
@@ -35395,11 +33795,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-504",
+    "id": "slot-529",
     "name": "A-6 4",
     "code": "A-6 4",
     "block": "A",
@@ -35407,7 +33808,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90259841157733,
       "lng": 73.04721005668688
@@ -35430,24 +33831,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04722687795847
       }
     ],
-    "truckNumber": "MH-46-AR-1613",
-    "driverName": "Driver #114",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7099091",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88503",
-    "grossWeightKg": 21020,
-    "dwellTime": "25h 31m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-505",
+    "id": "slot-530",
     "name": "A-6 3",
     "code": "A-6 3",
     "block": "A",
@@ -35455,7 +33845,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902596189395663,
       "lng": 73.04718356201099
@@ -35478,24 +33868,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04720016114547
       }
     ],
-    "truckNumber": "MH-46-AR-1650",
-    "driverName": "Driver #115",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7099288",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88504",
-    "grossWeightKg": 21360,
-    "dwellTime": "26h 48m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-506",
+    "id": "slot-531",
     "name": "A-6 2",
     "code": "A-6 2",
     "block": "A",
@@ -35503,7 +33882,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902593967213996,
       "lng": 73.04715706733508
@@ -35526,24 +33905,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04717344433247
       }
     ],
-    "truckNumber": "MH-46-AR-1687",
-    "driverName": "Driver #116",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7099485",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88505",
-    "grossWeightKg": 21700,
-    "dwellTime": "27h 5m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-507",
+    "id": "slot-532",
     "name": "A-6 1",
     "code": "A-6 1",
     "block": "A",
@@ -35551,7 +33919,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902591745032325,
       "lng": 73.04713057265917
@@ -35574,24 +33942,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04714672751946
       }
     ],
-    "truckNumber": "MH-46-AR-1724",
-    "driverName": "Driver #117",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7099682",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88506",
-    "grossWeightKg": 22040,
-    "dwellTime": "28h 22m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-508",
+    "id": "slot-533",
     "name": "A-7 6",
     "code": "A-7 6",
     "block": "A",
@@ -35599,7 +33956,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902481316356294,
       "lng": 73.04726489120043
@@ -35622,25 +33979,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04727897047997
       }
     ],
-    "truckNumber": "MH-46-AR-1761",
-    "driverName": "Driver #118",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7099879",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Reefer",
-    "temperature": "-19.5°C",
-    "sealNumber": "CFS-88507",
-    "grossWeightKg": 22380,
-    "dwellTime": "29h 39m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-509",
+    "id": "slot-534",
     "name": "A-7 5",
     "code": "A-7 5",
     "block": "A",
@@ -35648,7 +33993,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902479620775946,
       "lng": 73.04723806353445
@@ -35671,24 +34016,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0472522571072
       }
     ],
-    "truckNumber": "MH-46-AR-1798",
-    "driverName": "Driver #119",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7100076",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88508",
-    "grossWeightKg": 22720,
-    "dwellTime": "30h 56m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-510",
+    "id": "slot-535",
     "name": "A-7 4",
     "code": "A-7 4",
     "block": "A",
@@ -35720,11 +34054,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-511",
+    "id": "slot-536",
     "name": "A-7 3",
     "code": "A-7 3",
     "block": "A",
@@ -35756,11 +34091,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-512",
+    "id": "slot-537",
     "name": "A-7 2",
     "code": "A-7 2",
     "block": "A",
@@ -35792,11 +34128,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-513",
+    "id": "slot-538",
     "name": "A-7 1",
     "code": "A-7 1",
     "block": "A",
@@ -35828,11 +34165,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-514",
+    "id": "slot-539",
     "name": "A-9 6",
     "code": "A-9 6",
     "block": "A",
@@ -35840,7 +34178,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902242431082207,
       "lng": 73.04713523136549
@@ -35863,24 +34201,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04712341256852
       }
     ],
-    "truckNumber": "MH-46-AR-1983",
-    "driverName": "Driver #124",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7101061",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
-    "cargoType": "Hazardous",
-    "sealNumber": "CFS-88513",
-    "grossWeightKg": 24420,
-    "dwellTime": "35h 21m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-515",
+    "id": "slot-540",
     "name": "A-9 5",
     "code": "A-9 5",
     "block": "A",
@@ -35888,7 +34215,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902243181072393,
       "lng": 73.04715953636634
@@ -35911,24 +34238,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04714755244966
       }
     ],
-    "truckNumber": "MH-46-AR-2020",
-    "driverName": "Driver #125",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7101258",
-    "isoCode": "20FR",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88514",
-    "grossWeightKg": 24760,
-    "dwellTime": "36h 38m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-516",
+    "id": "slot-541",
     "name": "A-9 4",
     "code": "A-9 4",
     "block": "A",
@@ -35936,7 +34252,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902243931062582,
       "lng": 73.0471838413672
@@ -35959,24 +34275,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04717169233079
       }
     ],
-    "truckNumber": "MH-46-AR-2057",
-    "driverName": "Driver #126",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7101455",
-    "isoCode": "40HC",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88515",
-    "grossWeightKg": 25100,
-    "dwellTime": "37h 55m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-517",
+    "id": "slot-542",
     "name": "A-9 3",
     "code": "A-9 3",
     "block": "A",
@@ -35984,7 +34289,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902244681052764,
       "lng": 73.04720814636805
@@ -36007,24 +34312,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04719583221193
       }
     ],
-    "truckNumber": "MH-46-AR-2094",
-    "driverName": "Driver #127",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7101652",
-    "isoCode": "20GP",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88516",
-    "grossWeightKg": 25440,
-    "dwellTime": "38h 12m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-518",
+    "id": "slot-543",
     "name": "A-9 2",
     "code": "A-9 2",
     "block": "A",
@@ -36032,7 +34326,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90224543104295,
       "lng": 73.0472324513689
@@ -36055,24 +34349,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04721997209306
       }
     ],
-    "truckNumber": "MH-46-AR-2131",
-    "driverName": "Driver #128",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7101849",
-    "isoCode": "45R1",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88517",
-    "grossWeightKg": 25780,
-    "dwellTime": "39h 29m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-519",
+    "id": "slot-544",
     "name": "A-9 1",
     "code": "A-9 1",
     "block": "A",
@@ -36080,7 +34363,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90224618103314,
       "lng": 73.04725675636976
@@ -36103,24 +34386,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0472441119742
       }
     ],
-    "truckNumber": "MH-46-AR-2168",
-    "driverName": "Driver #129",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7102046",
-    "isoCode": "40OT",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88518",
-    "grossWeightKg": 26120,
-    "dwellTime": "40h 46m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-520",
+    "id": "slot-545",
     "name": "A-8 6",
     "code": "A-8 6",
     "block": "A",
@@ -36152,11 +34424,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-521",
+    "id": "slot-546",
     "name": "A-8 5",
     "code": "A-8 5",
     "block": "A",
@@ -36188,11 +34461,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-522",
+    "id": "slot-547",
     "name": "A-8 4",
     "code": "A-8 4",
     "block": "A",
@@ -36224,11 +34498,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-523",
+    "id": "slot-548",
     "name": "A-8 3",
     "code": "A-8 3",
     "block": "A",
@@ -36260,11 +34535,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-524",
+    "id": "slot-549",
     "name": "A-8 2",
     "code": "A-8 2",
     "block": "A",
@@ -36272,7 +34548,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902353892230323,
       "lng": 73.04715815015544
@@ -36295,24 +34571,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04716922290153
       }
     ],
-    "truckNumber": "MH-46-AR-2353",
-    "driverName": "Driver #134",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7103031",
-    "isoCode": "40OT",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88523",
-    "grossWeightKg": 27820,
-    "dwellTime": "45h 11m",
-    "entryTime": "2026-10-10 04:30",
-    "assignedTask": "Empty Repositioning",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-525",
+    "id": "slot-550",
     "name": "A-8 1",
     "code": "A-8 1",
     "block": "A",
@@ -36320,7 +34585,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902353512005888,
       "lng": 73.04713264116435
@@ -36343,24 +34608,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04714346238755
       }
     ],
-    "truckNumber": "MH-46-AR-2390",
-    "driverName": "Driver #135",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7103228",
-    "isoCode": "20FR",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88524",
-    "grossWeightKg": 28160,
-    "dwellTime": "46h 28m",
-    "entryTime": "2026-10-10 05:30",
-    "assignedTask": "Pre-Trip Cold Inspection",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-526",
+    "id": "slot-551",
     "name": "A-2 5",
     "code": "A-2 5",
     "block": "A",
@@ -36368,7 +34622,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "5",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90308573109412,
       "lng": 73.04723836775294
@@ -36391,24 +34645,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04725370192183
       }
     ],
-    "truckNumber": "MH-46-AR-2427",
-    "driverName": "Driver #136",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7103425",
-    "isoCode": "40HC",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88525",
-    "grossWeightKg": 28500,
-    "dwellTime": "47h 45m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-527",
+    "id": "slot-552",
     "name": "A-2 4",
     "code": "A-2 4",
     "block": "A",
@@ -36416,7 +34659,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.9030835485673,
       "lng": 73.04720635831066
@@ -36439,24 +34682,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04722093648635
       }
     ],
-    "truckNumber": "MH-46-AR-2464",
-    "driverName": "Driver #137",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7103622",
-    "isoCode": "20GP",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88526",
-    "grossWeightKg": 28840,
-    "dwellTime": "48h 2m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-528",
+    "id": "slot-553",
     "name": "A-2 3",
     "code": "A-2 3",
     "block": "A",
@@ -36464,7 +34696,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90308136604048,
       "lng": 73.04717434886837
@@ -36487,24 +34719,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04718817105086
       }
     ],
-    "truckNumber": "MH-46-AR-2501",
-    "driverName": "Driver #138",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7103819",
-    "isoCode": "45R1",
-    "shippingLine": "Evergreen",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88527",
-    "grossWeightKg": 29180,
-    "dwellTime": "49h 19m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-529",
+    "id": "slot-554",
     "name": "A-2 2",
     "code": "A-2 2",
     "block": "A",
@@ -36512,7 +34733,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.903079183513665,
       "lng": 73.04714233942607
@@ -36535,24 +34756,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04715540561538
       }
     ],
-    "truckNumber": "MH-46-AR-2538",
-    "driverName": "Driver #139",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7104016",
-    "isoCode": "40OT",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88528",
-    "grossWeightKg": 29520,
-    "dwellTime": "2h 36m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-530",
+    "id": "slot-555",
     "name": "A-2 1",
     "code": "A-2 1",
     "block": "A",
@@ -36584,11 +34794,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-531",
+    "id": "slot-556",
     "name": "A-3 4",
     "code": "A-3 4",
     "block": "A",
@@ -36620,11 +34831,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-532",
+    "id": "slot-557",
     "name": "A-3 3",
     "code": "A-3 3",
     "block": "A",
@@ -36656,11 +34868,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-533",
+    "id": "slot-558",
     "name": "A-3 2",
     "code": "A-3 2",
     "block": "A",
@@ -36692,11 +34905,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-534",
+    "id": "slot-559",
     "name": "A-3 1",
     "code": "A-3 1",
     "block": "A",
@@ -36704,7 +34918,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902960076844877,
       "lng": 73.04724329636821
@@ -36727,25 +34941,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0472293856538
       }
     ],
-    "truckNumber": "MH-46-AR-2723",
-    "driverName": "Driver #144",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "EVERU7105001",
-    "isoCode": "40OT",
-    "shippingLine": "Evergreen",
-    "cargoType": "Reefer",
-    "temperature": "-20.5°C",
-    "sealNumber": "CFS-88533",
-    "grossWeightKg": 31220,
-    "dwellTime": "7h 1m",
-    "entryTime": "2026-10-10 06:30",
-    "assignedTask": "Dangerous Goods Buffer",
-    "tierLevel": 2,
+    "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-535",
+    "id": "slot-560",
     "name": "A-4 4",
     "code": "A-4 4",
     "block": "A",
@@ -36753,7 +34955,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "4",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902834523659664,
       "lng": 73.04715358413142
@@ -36776,24 +34978,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04713949561119
       }
     ],
-    "truckNumber": "MH-46-AR-2760",
-    "driverName": "Driver #145",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MAERU7105198",
-    "isoCode": "20FR",
-    "shippingLine": "Maersk",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88534",
-    "grossWeightKg": 31560,
-    "dwellTime": "8h 18m",
-    "entryTime": "2026-10-10 07:30",
-    "assignedTask": "Direct Port Delivery Staging",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-536",
+    "id": "slot-561",
     "name": "A-4 3",
     "code": "A-4 3",
     "block": "A",
@@ -36801,7 +34992,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "3",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902835825395275,
       "lng": 73.04718503530637
@@ -36824,24 +35015,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04717106467399
       }
     ],
-    "truckNumber": "MH-46-AR-2797",
-    "driverName": "Driver #146",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "MSCU7105395",
-    "isoCode": "40HC",
-    "shippingLine": "MSC",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88535",
-    "grossWeightKg": 31900,
-    "dwellTime": "9h 35m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-537",
+    "id": "slot-562",
     "name": "A-4 2",
     "code": "A-4 2",
     "block": "A",
@@ -36849,7 +35029,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "2",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902837127130887,
       "lng": 73.04721648648133
@@ -36872,24 +35052,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04720263373679
       }
     ],
-    "truckNumber": "MH-46-AR-2834",
-    "driverName": "Driver #147",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "CMA U7105592",
-    "isoCode": "20GP",
-    "shippingLine": "CMA CGM",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88536",
-    "grossWeightKg": 18240,
-    "dwellTime": "10h 52m",
-    "entryTime": "2026-10-10 01:30",
-    "assignedTask": "Vessel Discharge Consolidation",
-    "tierLevel": 1,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-538",
+    "id": "slot-563",
     "name": "A-4 1",
     "code": "A-4 1",
     "block": "A",
@@ -36897,7 +35066,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.902838428866502,
       "lng": 73.0472479376563
@@ -36920,24 +35089,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.0472342027996
       }
     ],
-    "truckNumber": "MH-46-AR-2871",
-    "driverName": "Driver #148",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7105789",
-    "isoCode": "45R1",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88537",
-    "grossWeightKg": 18580,
-    "dwellTime": "11h 9m",
-    "entryTime": "2026-10-10 02:30",
-    "assignedTask": "Customs Bond Clearance",
-    "tierLevel": 2,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-539",
+    "id": "slot-564",
     "name": "A-5 6",
     "code": "A-5 6",
     "block": "A",
@@ -36945,7 +35103,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "6",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90271067049857,
       "lng": 73.0471257270491
@@ -36968,24 +35126,13 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.047116170275
       }
     ],
-    "truckNumber": "MH-46-AR-2908",
-    "driverName": "Driver #149",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "ONEU7105986",
-    "isoCode": "40OT",
-    "shippingLine": "ONE",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88538",
-    "grossWeightKg": 18920,
-    "dwellTime": "12h 26m",
-    "entryTime": "2026-10-10 03:30",
-    "assignedTask": "Inland Rail Transshipment",
-    "tierLevel": 3,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-540",
+    "id": "slot-565",
     "name": "A-5 5",
     "code": "A-5 5",
     "block": "A",
@@ -37017,11 +35164,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
-    "priority": true
+    "priority": false
   },
   {
-    "id": "slot-541",
+    "id": "slot-566",
     "name": "A-5 4",
     "code": "A-5 4",
     "block": "A",
@@ -37053,11 +35201,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-542",
+    "id": "slot-567",
     "name": "A-5 3",
     "code": "A-5 3",
     "block": "A",
@@ -37089,11 +35238,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-543",
+    "id": "slot-568",
     "name": "A-5 2",
     "code": "A-5 2",
     "block": "A",
@@ -37125,11 +35275,12 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
       }
     ],
     "cargoType": "Dry",
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   },
   {
-    "id": "slot-544",
+    "id": "slot-569",
     "name": "A-5 1",
     "code": "A-5 1",
     "block": "A",
@@ -37137,7 +35288,7 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
     "bay": "1",
     "zoneType": "Block A (Import)",
     "cycle": "Import Clearance Cycle",
-    "status": "occupied",
+    "status": "available",
     "center": {
       "lat": 18.90272129218016,
       "lng": 73.0472547797249
@@ -37160,19 +35311,8 @@ export const CFS_GPS_SLOTS: CfsGpsSlot[] = [
         "lng": 73.04724419102577
       }
     ],
-    "truckNumber": "MH-46-AR-3093",
-    "driverName": "Driver #154",
-    "transporter": "Sarveshwar Freight Logistics",
-    "containerNumber": "HAPAU7106971",
-    "isoCode": "40OT",
-    "shippingLine": "Hapag-Lloyd",
     "cargoType": "Dry",
-    "sealNumber": "CFS-88543",
-    "grossWeightKg": 20620,
-    "dwellTime": "17h 51m",
-    "entryTime": "2026-10-10 08:30",
-    "assignedTask": "Export Seal Verification",
-    "tierLevel": 4,
+    "tierLevel": 0,
     "maxTiers": 4,
     "priority": false
   }

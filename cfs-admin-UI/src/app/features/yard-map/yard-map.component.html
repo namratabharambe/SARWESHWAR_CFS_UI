@@ -51,7 +51,7 @@
           [ngModel]="filterContainerNo()"
           (ngModelChange)="onContainerChange($event)"
           class="rounded-xl border border-cyan-500/40 bg-slate-900/95 py-2 pl-8 pr-8 text-xs font-extrabold text-cyan-300 shadow-lg shadow-cyan-500/10 transition hover:border-cyan-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 cursor-pointer">
-          <option value="" class="bg-slate-900 text-slate-300">📦 All Containers ({{ containerOptions().length }})</option>
+          <option value="" class="bg-slate-900 text-slate-300">📦 {{ containerOptions().length > 0 ? ('All Containers (' + containerOptions().length + ')') : 'No Containers In Yard (0)' }}</option>
           @for (cont of containerOptions(); track cont) {
             <option [value]="cont" class="bg-slate-900 text-white font-mono">{{ cont }}</option>
           }

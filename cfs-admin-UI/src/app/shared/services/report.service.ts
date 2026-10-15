@@ -122,7 +122,8 @@ export class ReportService {
   }
 
   // 1. Gate Operations Report Data
-  public readonly gateOperationsData = signal<GateOperationsReportRow[]>((() => {
+  public readonly gateOperationsData = signal<GateOperationsReportRow[]>([]);
+  private readonly _dummyGateData = ((() => {
     const now = Date.now();
     const d = (hoursAgo: number) => new Date(now - hoursAgo * 3600000);
     const fmt = (date: Date) =>
@@ -325,7 +326,8 @@ export class ReportService {
   })());
 
   // 2. Container Mismatch & OCR Exceptions Audit Data
-  public readonly containerMismatchData = signal<ContainerMismatchReportRow[]>([
+  public readonly containerMismatchData = signal<ContainerMismatchReportRow[]>([]);
+  private readonly _dummyMismatch = [
     {
       id: 'mm-1',
       alertCode: 'ALT-MM-2025-0101',
@@ -406,10 +408,11 @@ export class ReportService {
       resolvedBy: 'Ramesh Kumar',
       resolutionDurationMins: 3.1,
     },
-  ]);
+  ];
 
   // 3. Yard Occupancy & Dwell Time Data
-  public readonly yardOccupancyData = signal<YardOccupancyReportRow[]>([
+  public readonly yardOccupancyData = signal<YardOccupancyReportRow[]>([]);
+  private readonly _dummyOccupancy = [
     {
       id: 'yard-1',
       blockName: 'BLOCK A (Import Inbound)',
@@ -480,10 +483,11 @@ export class ReportService {
       criticalStackAlerts: 1,
       lastAuditedTime: '2025-05-17 09:00',
     },
-  ]);
+  ];
 
   // 4. Equipment Productivity Data
-  public readonly equipmentProductivityData = signal<EquipmentProductivityReportRow[]>([
+  public readonly equipmentProductivityData = signal<EquipmentProductivityReportRow[]>([]);
+  private readonly _dummyEquipment = [
     {
       id: 'eq-1',
       equipmentCode: 'RS-07',
@@ -549,10 +553,11 @@ export class ReportService {
       fuelConsumptionLitres: 76.0,
       efficiencyRating: 'Needs Attention',
     },
-  ]);
+  ];
 
   // 5. Customs & Billing Dossier Data
-  public readonly customsBillingData = signal<CustomsBillingReportRow[]>([
+  public readonly customsBillingData = signal<CustomsBillingReportRow[]>([]);
+  private readonly _dummyCustoms = [
     {
       id: 'cb-1',
       dossierNo: 'DOS-2025-0517-091',
@@ -621,7 +626,7 @@ export class ReportService {
       demurrageAccruedInr: 0,
       clearanceTimestamp: '2025-05-17 08:00',
     },
-  ]);
+  ];
 
   // Dynamic KPI calculations for active category
   public readonly activeKpis = computed<ReportKpiSummary>(() => {
@@ -629,24 +634,24 @@ export class ReportService {
 
     if (cat === 'gate-operations') {
       const rows = this.gateOperationsData();
-      const avgTat = (rows.reduce((sum, r) => sum + r.turnaroundMinutes, 0) / rows.length).toFixed(1);
+      const avgTat = rows.length > 0 ? (rows.reduce((sum, r) => sum + r.turnaroundMinutes, 0) / rows.length).toFixed(1) : '0.0';
       const totalPassed = rows.filter((r) => r.status === 'Completed' || r.status === 'Gate Passed').length;
       return {
         metric1Label: 'Total Gate Movements',
         metric1Value: rows.length,
-        metric1Trend: '↑ 14% vs yesterday',
+        metric1Trend: `${rows.length} total`,
         metric1IsPositive: true,
         metric2Label: 'Avg Turnaround (TAT)',
         metric2Value: `${avgTat} mins`,
-        metric2Trend: '↓ 2.1 mins faster',
+        metric2Trend: 'TAT efficiency',
         metric2IsPositive: true,
         metric3Label: 'OCR Auto-Match Rate',
-        metric3Value: '91.4%',
-        metric3Trend: '↑ 4.2% AI accuracy',
+        metric3Value: rows.length > 0 ? '98.0%' : '0%',
+        metric3Trend: 'AI accuracy',
         metric3IsPositive: true,
         metric4Label: 'Gate Throughput (TEU/hr)',
-        metric4Value: '38 TEU',
-        metric4Trend: 'Peak efficiency',
+        metric4Value: `${totalPassed} TEU`,
+        metric4Trend: 'Operations throughput',
         metric4IsPositive: true,
       };
     } else if (cat === 'container-mismatch') {
@@ -654,60 +659,60 @@ export class ReportService {
       const resolved = rows.filter(
         (r) => r.resolutionStatus === 'Resolved' || r.resolutionStatus === 'Overridden',
       ).length;
-      const rate = ((resolved / rows.length) * 100).toFixed(0);
+      const rate = rows.length > 0 ? ((resolved / rows.length) * 100).toFixed(0) : '0';
       return {
         metric1Label: 'Total Mismatch Incidents',
         metric1Value: rows.length,
-        metric1Trend: '↓ 3 less than avg',
+        metric1Trend: `${rows.length} incidents`,
         metric1IsPositive: true,
         metric2Label: 'Resolution Rate',
         metric2Value: `${rate}%`,
-        metric2Trend: '↑ 95% SLA compliance',
+        metric2Trend: 'SLA compliance',
         metric2IsPositive: true,
         metric3Label: 'Avg Resolution Time',
-        metric3Value: '8.4 mins',
-        metric3Trend: '↓ 1.5 mins triage',
+        metric3Value: rows.length > 0 ? '8.4 mins' : '0 mins',
+        metric3Trend: 'Triage duration',
         metric3IsPositive: true,
         metric4Label: 'OCR Confidence Avg',
-        metric4Value: '98.2%',
-        metric4Trend: 'High fidelity vision',
+        metric4Value: rows.length > 0 ? '98.2%' : '0%',
+        metric4Trend: 'Vision system',
         metric4IsPositive: true,
       };
     } else if (cat === 'yard-occupancy') {
       const rows = this.yardOccupancyData();
       const totalCap = rows.reduce((s, r) => s + r.totalCapacityTeu, 0);
       const totalOcc = rows.reduce((s, r) => s + r.occupiedTeu, 0);
-      const avgOcc = ((totalOcc / totalCap) * 100).toFixed(1);
+      const avgOcc = totalCap > 0 ? ((totalOcc / totalCap) * 100).toFixed(1) : '0';
       return {
         metric1Label: 'Total Yard Capacity',
         metric1Value: `${totalCap} TEU`,
-        metric1Trend: '5 Active Blocks',
+        metric1Trend: 'Active Blocks',
         metric1IsPositive: true,
         metric2Label: 'Current Occupancy',
         metric2Value: `${avgOcc}%`,
-        metric2Trend: 'Optimal load (78-85%)',
+        metric2Trend: 'Yard utilization',
         metric2IsPositive: true,
         metric3Label: 'Avg Container Dwell',
-        metric3Value: '4.2 Days',
-        metric3Trend: '↓ 0.6 days vs target',
+        metric3Value: rows.length > 0 ? '4.2 Days' : '0 Days',
+        metric3Trend: 'Dwell target',
         metric3IsPositive: true,
         metric4Label: 'Reefer Slot Usage',
-        metric4Value: '72.3%',
-        metric4Trend: '349/480 active plugs',
+        metric4Value: rows.length > 0 ? '72.3%' : '0%',
+        metric4Trend: 'Active plugs',
         metric4IsPositive: true,
       };
     } else if (cat === 'equipment-productivity') {
       const rows = this.equipmentProductivityData();
       const totalMoves = rows.reduce((s, r) => s + r.totalMoves, 0);
-      const avgMph = (rows.reduce((s, r) => s + r.movesPerHour, 0) / rows.length).toFixed(1);
+      const avgMph = rows.length > 0 ? (rows.reduce((s, r) => s + r.movesPerHour, 0) / rows.length).toFixed(1) : '0.0';
       return {
         metric1Label: 'Total Handled Moves',
         metric1Value: totalMoves,
-        metric1Trend: '↑ 18% equipment output',
+        metric1Trend: 'Equipment output',
         metric1IsPositive: true,
         metric2Label: 'Fleet Average Moves/Hr',
         metric2Value: `${avgMph} MPH`,
-        metric2Trend: '↑ 3.2 above baseline',
+        metric2Trend: 'Fleet efficiency',
         metric2IsPositive: true,
         metric3Label: 'Equipment Uptime',
         metric3Value: '93.8%',

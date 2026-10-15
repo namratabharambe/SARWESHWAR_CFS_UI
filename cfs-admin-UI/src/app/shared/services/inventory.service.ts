@@ -41,15 +41,15 @@ export class InventoryService {
     return Math.floor(diffMs / (1000 * 60 * 60 * 24));
   }
 
-  // Pre-configured fallback items generator with 40 records per mode for full 4-page pagination
-  private readonly fallbackGateInContainers: ContainerInventoryItem[] = this.createFallbackContainers('GATE_IN', 40);
-  private readonly fallbackGateOutContainers: ContainerInventoryItem[] = this.createFallbackContainers('GATE_OUT', 40);
+  // Pre-configured fallback items generator with 0 records when live backend has no inventory
+  private readonly fallbackGateInContainers: ContainerInventoryItem[] = [];
+  private readonly fallbackGateOutContainers: ContainerInventoryItem[] = [];
 
   // Gate Total & Today Counts (Live backend synced)
-  public readonly gateInTotalCount = signal<number>(342);
-  public readonly todayGateInCount = signal<number>(212);
-  public readonly gateOutTotalCount = signal<number>(315);
-  public readonly todayGateOutCount = signal<number>(234);
+  public readonly gateInTotalCount = signal<number>(0);
+  public readonly todayGateInCount = signal<number>(0);
+  public readonly gateOutTotalCount = signal<number>(0);
+  public readonly todayGateOutCount = signal<number>(0);
 
   private createFallbackContainers(mode: 'GATE_IN' | 'GATE_OUT', count: number = 40): ContainerInventoryItem[] {
     const lineCodes = ['MSKU', 'CMAU', 'HMMU', 'OOLU', 'MSCU', 'COSU', 'EGLU', 'ZIMU', 'PILU', 'ONEU'];

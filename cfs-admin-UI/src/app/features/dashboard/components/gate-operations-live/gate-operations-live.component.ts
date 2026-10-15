@@ -19,8 +19,8 @@ export class GateOperationsLiveComponent {
   public readonly gateTabChange = output<string>();
 
   // Custom counts for Gate In and Gate Out tabs
-  public readonly gateInCount = input<number>(10);
-  public readonly gateOutCount = input<number>(6);
+  public readonly gateInCount = input<number>(0);
+  public readonly gateOutCount = input<number>(0);
 
   // Active operation mode tab: 'in' | 'out'
   public readonly activeMode = signal<'in' | 'out'>('in');

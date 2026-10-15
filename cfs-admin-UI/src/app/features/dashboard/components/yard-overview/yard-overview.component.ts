@@ -44,8 +44,8 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
     totalBlocks: 6,
     totalRows: 12,
     teuCapacity: 1200,
-    currentTeu: 816,
-    utilizationPercentage: 68,
+    currentTeu: 0,
+    utilizationPercentage: 0,
   });
   public readonly yardRows = input<YardBlockRow[]>([]);
 
@@ -71,7 +71,7 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
   })();
 
   public readonly totalCapacity = computed(() => this.metrics()?.teuCapacity || 1200);
-  public readonly usedCapacity = computed(() => this.metrics()?.currentTeu || 816);
+  public readonly usedCapacity = computed(() => this.metrics()?.currentTeu || 0);
   public readonly availableCapacity = computed(() => {
     const cap = this.totalCapacity();
     const used = this.usedCapacity();

@@ -1,15 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-// Locate Geofences (1).csv or Geofences.csv
+// Locate Geofences.csv or geofence.csv
 const candidates = [
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/Geofences.csv'),
+  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/geofence.csv'),
+  path.resolve(__dirname, '../../../../Geofences.csv'),
+  path.resolve(__dirname, '../../../../geofence.csv'),
   path.resolve(process.env.USERPROFILE || 'C:/Users/Sneha', 'Downloads/Geofences.csv'),
   path.resolve('c:/sarvwshwar ui/Geofences.csv'),
-  path.resolve('c:/sarvwshwar ui/Geofences (1).csv'),
-  path.resolve(__dirname, '../../../../Geofences.csv'),
-  path.resolve(__dirname, '../../../../Geofences (1).csv'),
-  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences.csv'),
-  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/Geofences (1).csv'),
 ];
 
 let csvPath = candidates.find((p) => fs.existsSync(p));
@@ -21,8 +20,6 @@ console.log(`Reading coordinates from: ${csvPath}`);
 
 const targetDirs = [
   path.resolve(__dirname),
-  path.resolve('c:/sarvwshwar ui/src/app/features/yard-map'),
-  path.resolve('c:/sarvwshwar ui/cfs-admin-UI/cfs-UI/src/app/features/yard-map'),
 ];
 
 const content = fs.readFileSync(csvPath, 'utf-8');
@@ -67,19 +64,6 @@ for (let i = 1; i < lines.length; i++) {
 }
 
 console.log(`Parsed ${slots.length} surveyed geofence locations from CSV.`);
-
-const shippingLines = ['Maersk', 'MSC', 'CMA CGM', 'Hapag-Lloyd', 'ONE', 'Evergreen'];
-const isoTypes = ['40HC', '20GP', '45R1', '40OT', '20FR'];
-const tasks = [
-  'Vessel Discharge Consolidation',
-  'Customs Bond Clearance',
-  'Inland Rail Transshipment',
-  'Empty Repositioning',
-  'Pre-Trip Cold Inspection',
-  'Dangerous Goods Buffer',
-  'Direct Port Delivery Staging',
-  'Export Seal Verification',
-];
 
 let minLat = 90, maxLat = -90, minLng = 180, maxLng = -180;
 
@@ -138,26 +122,18 @@ const cfsSlots = slots.map((s, idx) => {
     cycle = 'Trailer Marshalling Cycle';
   }
 
-  // Realistic occupancy distribution (~62% occupied)
-  const isOccupied = (idx * 11 + 17) % 10 < 6;
-  const status = isOccupied ? 'occupied' : 'available';
-  const shippingLine = isOccupied ? shippingLines[idx % shippingLines.length] : undefined;
-  const isoCode = isOccupied ? isoTypes[idx % isoTypes.length] : undefined;
-  const truckNumber = isOccupied ? `MH-46-AR-${1000 + (idx * 37) % 8999}` : undefined;
-  const containerNumber = isOccupied
-    ? `${(shippingLine || 'MSCU').substring(0, 4).toUpperCase()}U${7000000 + idx * 197}`
-    : undefined;
+  // All slots currently available with NO dummy trailers or containers
+  const isOccupied = false;
+  const status = 'available';
 
-  const isReefer = block === 'H' || (isOccupied && idx % 13 === 0);
-  const isHazardous = block === 'HS' || (isOccupied && idx % 19 === 0);
+  const isReefer = block === 'H';
+  const isHazardous = block === 'HS';
   const isEmpty = block === 'C' || block === 'ED';
 
   let cargoType = 'Dry';
   if (isReefer) cargoType = 'Reefer';
   else if (isHazardous) cargoType = 'Hazardous';
   else if (isEmpty) cargoType = 'Empty';
-
-  const temperature = isReefer ? `${(-18.0 - (idx % 6) * 0.5).toFixed(1)}°C` : undefined;
 
   const polygon = [
     { lat: s.coords[0][0], lng: s.coords[0][1] },
@@ -190,22 +166,22 @@ const cfsSlots = slots.map((s, idx) => {
     status,
     center,
     polygon,
-    truckNumber,
-    driverName: isOccupied ? `Driver #${101 + (idx % 70)}` : undefined,
-    transporter: isOccupied ? 'Sarveshwar Freight Logistics' : undefined,
-    containerNumber,
-    isoCode,
-    shippingLine,
+    truckNumber: undefined,
+    driverName: undefined,
+    transporter: undefined,
+    containerNumber: undefined,
+    isoCode: undefined,
+    shippingLine: undefined,
     cargoType,
-    temperature,
-    sealNumber: isOccupied ? `CFS-${88000 + idx}` : undefined,
-    grossWeightKg: isOccupied ? 18000 + ((idx * 340) % 14000) : undefined,
-    dwellTime: isOccupied ? `${(idx % 48) + 2}h ${((idx * 17) % 60)}m` : undefined,
-    entryTime: isOccupied ? `2026-10-10 0${(idx % 8) + 1}:30` : undefined,
-    assignedTask: isOccupied ? tasks[idx % tasks.length] : undefined,
-    tierLevel: isOccupied ? (idx % 4) + 1 : undefined,
+    temperature: undefined,
+    sealNumber: undefined,
+    grossWeightKg: undefined,
+    dwellTime: undefined,
+    entryTime: undefined,
+    assignedTask: undefined,
+    tierLevel: 0,
     maxTiers: 4,
-    priority: idx % 11 === 0,
+    priority: false,
   };
 });
 

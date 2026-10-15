@@ -12,7 +12,8 @@ import {
 @Injectable({ providedIn: 'root' })
 export class TaskService {
   // Initial seed tasks matching design
-  private readonly initialTasks: TaskItem[] = [
+  private readonly initialTasks: TaskItem[] = [];
+  private readonly _dummy = [
     {
       id: 'task-1',
       taskNo: 'TSK-2025-0517-0001',
@@ -338,20 +339,20 @@ export class TaskService {
   ];
 
   // Live Task Collection signal
-  public readonly allTasks = signal<TaskItem[]>(this.initialTasks);
+  public readonly allTasks = signal<TaskItem[]>([]);
 
   // Active Selected Task for Detail Flyout Panel
-  public readonly selectedTask = signal<TaskItem | null>(this.initialTasks[0]);
+  public readonly selectedTask = signal<TaskItem | null>(null);
 
   // Multi-selection set of IDs
-  public readonly selectedTaskIds = signal<Set<string>>(new Set(['task-1']));
+  public readonly selectedTaskIds = signal<Set<string>>(new Set([]));
 
   // View Mode: 'table' or 'queue'
   public readonly viewMode = signal<'table' | 'queue'>('table');
 
   // Modal open states
   public readonly isCreateModalOpen = signal<boolean>(false);
-  public readonly isDetailDrawerOpen = signal<boolean>(true);
+  public readonly isDetailDrawerOpen = signal<boolean>(false);
 
   // Filter Signals
   public readonly kpiFilter = signal<'All' | 'Pickup' | 'Drop' | 'Completed' | 'Exception'>('All');
