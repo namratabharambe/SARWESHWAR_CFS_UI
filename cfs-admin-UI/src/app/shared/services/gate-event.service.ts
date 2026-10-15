@@ -18,7 +18,7 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
   private readonly gateBaseUrl: string;
 
   public static getResolvedGateBaseUrl(): string {
-    let url = String((environment as any).gateApiBaseUrl || 'https://syapi.prosperassettracking.com/api/v1')
+    let url = String((environment as any).gateApiBaseUrl || 'https://api.smartyard.prosperinfotech.com/gate/api/v1')
       .trim()
       .replace(/\/+$/, '');
     if (url.endsWith('/api')) {
