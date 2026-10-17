@@ -208,3 +208,20 @@ export interface VisitsPagedResponse {
   totalPages: number;
 }
 
+export interface GateCountsResponse {
+  clientId?: string;
+  siteId?: string;
+  userId?: string;
+  totalGateIn?: number;
+  totalGateOut?: number;
+  todayGateIn?: number;
+  todayGateOut?: number;
+  inReviewCount?: number;
+  ocrVerifiedCount?: number;
+  totalCount?: number;
+  pendingReview?: number;
+  ocrVerified?: number;
+  todayArrivals?: number;
+  todayDepartures?: number;
+}
+

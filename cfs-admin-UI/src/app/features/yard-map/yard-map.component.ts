@@ -65,6 +65,26 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
   public readonly filterCycle = signal<string>('all');
   public readonly selectedTier = signal<number>(1);
 
+  // Block Cluster Dropdown State (Center-right of screen, GPS coordinates theme)
+  public readonly blockDropdownOpen = signal<boolean>(false);
+  public readonly selectedBlockCluster = signal<BlockCluster | null>(null);
+
+  public toggleBlockDropdown(): void {
+    this.blockDropdownOpen.update((v) => !v);
+  }
+
+  public selectBlockCluster(cluster: BlockCluster): void {
+    this.selectedBlockCluster.set(cluster);
+    this.flyToBlockCluster(cluster);
+    this.blockDropdownOpen.set(false);
+  }
+
+  public resetBlockClusterSelection(): void {
+    this.selectedBlockCluster.set(null);
+    this.resetZoom();
+    this.blockDropdownOpen.set(false);
+  }
+
   // Master slots from service
   public readonly allSlots = this.yardService.slots;
   public readonly selectedSlot = this.yardService.selectedSlot;
@@ -235,7 +255,7 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
       minZoom: 15,
       maxZoom: 22,
       zoomControl: false,
-      scrollWheelZoom: false,
+      scrollWheelZoom: true,
     });
 
     this.setTileLayer('google-satellite');
@@ -274,6 +294,14 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
   @HostListener('window:resize')
   public onWindowResize(): void {
     this.map?.invalidateSize();
+  }
+
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.block-cluster-dropdown-container')) {
+      this.blockDropdownOpen.set(false);
+    }
   }
 
   public setTileLayer(type: 'google-satellite' | 'google-hybrid' | 'esri-satellite' | 'google-street'): void {
@@ -398,6 +426,24 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     this.updateZoomLevelOfDetail();
   }
 
+  // Helper to detect if container slot is vertically oriented (height > width)
+  private isVerticalSlot(slot: ParkingSlot): boolean {
+    if (!slot.polygonPoints || slot.polygonPoints.length < 3) return false;
+    let minLat = 90;
+    let maxLat = -90;
+    let minLng = 180;
+    let maxLng = -180;
+    for (const p of slot.polygonPoints) {
+      if (p.lat < minLat) minLat = p.lat;
+      if (p.lat > maxLat) maxLat = p.lat;
+      if (p.lng < minLng) minLng = p.lng;
+      if (p.lng > maxLng) maxLng = p.lng;
+    }
+    const dLat = (maxLat - minLat) * 111000;
+    const dLng = (maxLng - minLng) * 104900;
+    return dLat > dLng * 1.15;
+  }
+
   // DYNAMIC LEVEL OF DETAIL (LOD) - PREVENTS TEXT COLLISION & CLUTTER AT ALL ZOOM LEVELS
   public updateZoomLevelOfDetail(): void {
     if (!this.map || !this.markerLayerGroup || !this.blockBadgeLayerGroup || !this.highlightCircleGroup) return;
@@ -412,22 +458,25 @@ export class YardMapComponent implements AfterViewInit, OnDestroy {
     const slotsToRender = this.displayedSlots();
 
     // When zoomed in to yard view (zoom >= 18.5), show clean minimal slot IDs inside each bay.
+    // In every vertical container, coordinates show horizontally and are sized to fit properly without border overlap.
     if (zoom >= 18.5) {
       for (const slot of slotsToRender) {
         const isSelected = currentSelected?.id === slot.id || (currentLoc && slot.name === currentLoc);
         const isOccupied = slot.status === 'occupied';
+        const isVertical = this.isVerticalSlot(slot);
+        const orientationClass = isVertical ? 'vertical-slot-badge' : 'horizontal-slot-badge';
 
         const labelHtml = `
-          <div class="dark-slot-centroid-badge ${isSelected ? 'selected-beacon' : isOccupied ? 'occupied' : 'available'}">
-            <span>${slot.code}</span>
+          <div class="dark-slot-centroid-badge ${orientationClass} ${isSelected ? 'selected-beacon' : isOccupied ? 'occupied' : 'available'}">
+            <span class="slot-code-text">${slot.code}</span>
           </div>
         `;
 
         const icon = L.divIcon({
           className: 'dark-slot-div-icon',
           html: labelHtml,
-          iconSize: [32, 13],
-          iconAnchor: [16, 6],
+          iconSize: isVertical ? [14, 30] : [32, 13],
+          iconAnchor: isVertical ? [7, 15] : [16, 6],
         });
 
         const marker = L.marker([slot.lat, slot.lng], { icon });

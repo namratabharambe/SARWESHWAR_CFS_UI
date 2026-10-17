@@ -12,7 +12,7 @@ import {
 } from 'shared/types/inventory/inventory.interface';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import { VisitListItemDto, VisitsPagedResponse } from 'shared/types/gate-event/gate-event.interface';
+import { VisitListItemDto, VisitsPagedResponse, GateCountsResponse } from 'shared/types/gate-event/gate-event.interface';
 import {
   isCreatedToday,
   isVisitArrival,
@@ -50,6 +50,7 @@ export class InventoryService {
   }
 
   // Live database gate counts
+  public readonly gateCounts = signal<GateCountsResponse | null>(null);
   public readonly gateInTotalCount = signal<number>(0);
   public readonly todayGateInCount = signal<number>(0);
   public readonly gateOutTotalCount = signal<number>(0);
@@ -253,6 +254,23 @@ export class InventoryService {
     const from = this.fromDate();
     const to = this.toDate();
 
+    // Fetch database gate counts directly from GET /gate/counts
+    this.gateEventService.getGateCounts(siteId, clientId).subscribe({
+      next: (counts) => {
+        if (counts) {
+          this.gateCounts.set(counts);
+          if (typeof counts.totalGateIn === 'number') this.gateInTotalCount.set(counts.totalGateIn);
+          if (typeof counts.totalGateOut === 'number') this.gateOutTotalCount.set(counts.totalGateOut);
+          const todayIn = counts.todayArrivals ?? counts.todayGateIn;
+          if (typeof todayIn === 'number') this.todayGateInCount.set(todayIn);
+          const todayOut = counts.todayDepartures ?? counts.todayGateOut;
+          if (typeof todayOut === 'number') this.todayGateOutCount.set(todayOut);
+          if (typeof counts.totalCount === 'number') this.totalServerCount.set(counts.totalCount);
+        }
+      },
+      error: () => {},
+    });
+
     this.gateEventService
       .getVisits({
         page: 1,
@@ -314,17 +332,29 @@ export class InventoryService {
             this.containers.set(mapped);
             this.totalServerCount.set(mapped.length);
 
+            const counts = this.gateCounts();
             const listIn = mapped.filter((c) => c.lastAction === 'Gated In' || c.currentLocation === 'In Yard').length;
             const listOut = mapped.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out').length;
-            const todayIn = items.filter((v: any) => isVisitArrivalToday(v)).length;
-            const todayOut = items.filter((v: any) => isVisitDepartureToday(v)).length;
-            const totalIn = items.filter((v: any) => isVisitArrival(v)).length;
-            const totalOut = items.filter((v: any) => isVisitDeparture(v)).length;
+            const todayIn = typeof (counts?.todayArrivals ?? counts?.todayGateIn) === 'number'
+              ? (counts?.todayArrivals ?? counts?.todayGateIn)!
+              : items.filter((v: any) => isVisitArrivalToday(v)).length;
+            const todayOut = typeof (counts?.todayDepartures ?? counts?.todayGateOut) === 'number'
+              ? (counts?.todayDepartures ?? counts?.todayGateOut)!
+              : items.filter((v: any) => isVisitDepartureToday(v)).length;
+            const totalIn = typeof counts?.totalGateIn === 'number'
+              ? counts.totalGateIn
+              : (items.filter((v: any) => isVisitArrival(v)).length || listIn);
+            const totalOut = typeof counts?.totalGateOut === 'number'
+              ? counts.totalGateOut
+              : (items.filter((v: any) => isVisitDeparture(v)).length || listOut);
 
-            this.gateInTotalCount.set(totalIn || listIn);
-            this.gateOutTotalCount.set(totalOut || listOut);
+            this.gateInTotalCount.set(totalIn);
+            this.gateOutTotalCount.set(totalOut);
             this.todayGateInCount.set(todayIn);
             this.todayGateOutCount.set(todayOut);
+            if (typeof counts?.totalCount === 'number') {
+              this.totalServerCount.set(counts.totalCount);
+            }
 
             if (mapped.length > 0) {
               this.selectedContainer.set(mapped[0]);
@@ -602,14 +632,20 @@ export class InventoryService {
     return list;
   });
 
-  // KPI Metrics (Calculated from actual live inventory records)
+  // KPI Metrics (Calculated from actual live inventory records and database gate counts)
   public readonly kpiMetrics = computed<InventoryKpiMetrics>(() => {
     const list = this.containers();
-    const total = this.totalServerCount() || list.length;
+    const mode = this.activeGateMode();
+    const counts = this.gateCounts();
+
     const inFromList = list.filter((c) => c.lastAction === 'Gated In' || c.currentLocation === 'In Yard').length;
     const outFromList = list.filter((c) => c.lastAction === 'Gated Out' || c.currentLocation === 'Gate Out').length;
-    const gateIn = this.gateInTotalCount() > 0 ? this.gateInTotalCount() : inFromList;
-    const gateOut = this.gateOutTotalCount() > 0 ? this.gateOutTotalCount() : outFromList;
+    const gateIn = typeof counts?.totalGateIn === 'number' ? counts.totalGateIn : (this.gateInTotalCount() > 0 ? this.gateInTotalCount() : inFromList);
+    const gateOut = typeof counts?.totalGateOut === 'number' ? counts.totalGateOut : (this.gateOutTotalCount() > 0 ? this.gateOutTotalCount() : outFromList);
+
+    const totalFromApi = typeof counts?.totalCount === 'number' ? counts.totalCount : this.totalServerCount();
+    const total = mode === 'GATE_IN' ? gateIn : (mode === 'GATE_OUT' ? gateOut : (totalFromApi || list.length));
+
     const imports = list.filter((c) => c.cargoType === 'Import').length;
     const exports = list.filter((c) => c.cargoType === 'Export').length;
     const empties = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;

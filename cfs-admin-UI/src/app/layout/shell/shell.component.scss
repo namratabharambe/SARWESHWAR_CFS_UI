@@ -265,7 +265,7 @@
 
 .app-shell>main {
   grid-column: 2;
-  min-height: calc(100vh / 0.75);
+  min-height: calc(100vh / 0.88);
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -276,6 +276,33 @@
   padding: 14px 18px 16px;
   flex: 1;
   min-width: 0;
+}
+
+/* Static, non-scrolling full-height layout for Yard Map */
+:host:has(app-yard-map) {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.app-shell:has(app-yard-map) {
+  height: calc(100vh / 0.88);
+  max-height: calc(100vh / 0.88);
+  overflow: hidden;
+}
+
+.app-shell:has(app-yard-map) > main {
+  height: calc(100vh / 0.88);
+  max-height: calc(100vh / 0.88);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-shell:has(app-yard-map) .page {
+  height: calc(100vh / 0.88 - 64px);
+  max-height: calc(100vh / 0.88 - 64px);
+  overflow: hidden;
+  padding: 0;
 }
 
 .sidebar-collapsed {

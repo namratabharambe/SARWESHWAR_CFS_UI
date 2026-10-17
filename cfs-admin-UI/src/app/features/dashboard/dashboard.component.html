@@ -2,197 +2,6 @@
   <!-- Top Ambient Sheen Laser Line on Dashboard Open -->
   <div class="dashboard-sheen-line" aria-hidden="true"></div>
 
-  <!-- Top Hero Banner: Welcome CFS + Weather Widget + Today's Throughput -->
-  <section
-    class="dashboard-section-hero grid grid-cols-1 gap-3.5 md:grid-cols-12 lg:grid-cols-12 items-stretch min-w-0">
-    <!-- 1. Welcome CFS Operations Control Tower Card -->
-    <div
-      class="welcome-banner-card md:col-span-6 lg:col-span-6 flex items-center justify-between rounded-[12px] border border-[rgba(82,94,167,0.12)] bg-white p-4 shadow-xs relative overflow-hidden dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e] min-w-0">
-      <!-- Background Terminal Scene -->
-      <div class="banner-bg-media absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <img src="assets/images/welcome-banner-bg.png" alt="CFS Operations"
-          class="h-full w-full object-cover object-right opacity-90" />
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-blue-50/95 via-sky-50/85 to-transparent dark:from-[#0d1527]/95 dark:via-[#0d1527]/80 dark:to-transparent">
-        </div>
-      </div>
-
-      <!-- Text Content -->
-      <div class="relative z-10 flex flex-col min-w-0 max-w-[80%]">
-        <span class="text-xs font-bold text-blue-700 dark:text-blue-400 tracking-wide leading-none">Welcome to</span>
-        <div class="flex items-center gap-2 flex-wrap my-1 min-w-0">
-          <h1
-            class="text-base sm:text-lg xl:text-xl font-black tracking-tight text-[#0f2851] dark:text-white leading-tight truncate">
-            CFS Operations Control Tower
-          </h1>
-          <span
-            class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/60 dark:text-emerald-300 shadow-2xs shrink-0">
-            <span class="beacon-dot-live"></span>
-            Terminal Live
-          </span>
-        </div>
-        <!-- Interactive Context Switcher for Admin Roles with Multiple Sites/Clients -->
-        @if (hasMultipleAccess()) {
-        <div class="dashboard-context-switcher-bar mt-2 flex items-center gap-2 flex-wrap">
-          <!-- Client Selector -->
-          @if (canSelectClient()) {
-          <div class="context-select-chip flex items-center gap-1.5 rounded-lg border border-blue-200/80 bg-white/95 px-2.5 py-1 shadow-2xs backdrop-blur-sm dark:border-blue-900/60 dark:bg-[#0c1527]/95 transition-all hover:border-blue-400 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20">
-            <span class="material-icons-outlined text-sm text-blue-600 dark:text-blue-400 shrink-0">business</span>
-            <div class="flex flex-col leading-none">
-              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Client</span>
-              <select
-                class="context-dropdown-select text-xs font-bold text-slate-800 dark:text-slate-100 bg-transparent border-0 p-0 pr-4 outline-none cursor-pointer focus:ring-0 max-w-[155px] truncate"
-                [value]="effectiveSelectedClientId()"
-                (change)="onClientChange($event)"
-                [disabled]="switchingContext()">
-                @for (c of availableClients(); track c.id) {
-                <option [value]="c.id" [selected]="c.id === effectiveSelectedClientId()" class="text-slate-800 dark:bg-[#111a2e] dark:text-slate-100">
-                  {{ c.name }}
-                </option>
-                }
-              </select>
-            </div>
-          </div>
-          }
-
-          <!-- Site Selector -->
-          @if (canSelectSite()) {
-          <div class="context-select-chip flex items-center gap-1.5 rounded-lg border border-emerald-200/80 bg-white/95 px-2.5 py-1 shadow-2xs backdrop-blur-sm dark:border-emerald-900/60 dark:bg-[#0c1527]/95 transition-all hover:border-emerald-400 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20">
-            <span class="material-icons-outlined text-sm text-emerald-600 dark:text-emerald-400 shrink-0">place</span>
-            <div class="flex flex-col leading-none">
-              <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Terminal Site</span>
-              <select
-                class="context-dropdown-select text-xs font-extrabold text-[#0f2851] dark:text-white bg-transparent border-0 p-0 pr-4 outline-none cursor-pointer focus:ring-0 max-w-[165px] truncate"
-                [value]="effectiveSelectedSiteId()"
-                (change)="onSiteChange($event)"
-                [disabled]="switchingContext()">
-                @for (s of sitesForSelectedClient(); track s.id) {
-                <option [value]="s.id" [selected]="s.id === effectiveSelectedSiteId()" class="text-slate-800 dark:bg-[#111a2e] dark:text-slate-100">
-                  {{ s.name }}
-                </option>
-                }
-              </select>
-            </div>
-          </div>
-          }
-
-          <!-- Syncing Indicator / Toast Feedback -->
-          @if (switchingContext() || auth.contextLoading()) {
-          <span class="inline-flex items-center gap-1.5 rounded-md bg-blue-50 px-2 py-1 text-[11px] font-bold text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-200 dark:border-blue-900 animate-pulse">
-            <span class="h-3 w-3 animate-spin rounded-full border-2 border-blue-600 border-t-transparent dark:border-blue-400"></span>
-            Syncing Context...
-          </span>
-          } @else if (contextSuccessMessage()) {
-          <span class="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-[11px] font-bold text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900">
-            <span class="material-icons-outlined text-xs">check_circle</span>
-            {{ contextSuccessMessage() }}
-          </span>
-          }
-        </div>
-        } @else {
-        <!-- Read-only Pills for users with single site & client -->
-        <div class="mt-0.5 flex items-center gap-2 flex-wrap text-xs font-semibold text-slate-600 dark:text-slate-300">
-          <span class="inline-flex items-center gap-1 rounded-md bg-blue-50/90 px-2 py-0.5 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-200/60 dark:border-blue-900/50">
-            <span class="material-icons-outlined text-xs text-blue-600 dark:text-blue-400">business</span>
-            <span class="font-bold">{{ clientName() }}</span>
-          </span>
-          <span class="text-slate-300 dark:text-slate-600">•</span>
-          <span class="inline-flex items-center gap-1 rounded-md bg-slate-100/90 px-2 py-0.5 text-slate-800 dark:bg-slate-800/70 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/50">
-            <span class="material-icons-outlined text-xs text-emerald-600 dark:text-emerald-400">place</span>
-            <span class="font-bold text-[#0f2851] dark:text-white">{{ siteName() }}</span>
-          </span>
-        </div>
-        }
-      </div>
-    </div>
-
-    <!-- 2. Gate Lanes & Hardware Telemetry Card -->
-    <div
-      class="gate-lanes-widget-card md:col-span-3 lg:col-span-3 flex flex-col justify-between rounded-[12px] p-3.5 bg-white dark:bg-[#111a2e] border border-[rgba(82,94,167,0.12)] dark:border-[rgba(148,163,184,0.14)] shadow-xs relative overflow-hidden min-w-0">
-      <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
-        <div class="flex items-center gap-2 min-w-0">
-          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400 shadow-2xs">
-            <span class="material-icons-outlined text-base">videocam</span>
-          </div>
-          <span class="truncate text-xs font-bold text-[#0f2851] dark:text-slate-200">Gate Automation</span>
-        </div>
-        <span
-          class="inline-flex shrink-0 items-center gap-1 rounded-full border border-emerald-300/80 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-800/60 dark:bg-emerald-950/60 dark:text-emerald-300">
-          <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          2 Lanes Live
-        </span>
-      </div>
-
-      <div class="my-1.5 flex items-baseline justify-between gap-2">
-        <div class="flex flex-col min-w-0">
-          <span class="text-xl font-black text-[#0f2851] dark:text-white leading-none">
-            {{ dashboardService.activeLanesCount() }} / {{ dashboardService.totalLanesCount() }}
-          </span>
-          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-            Active Gate Lanes
-          </span>
-        </div>
-        <div class="flex flex-col items-end text-right">
-          <span class="text-sm font-extrabold text-blue-600 dark:text-blue-400 leading-none">
-            {{ dashboardService.avgOcrConfidence() }}%
-          </span>
-          <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5">
-            OCR Accuracy
-          </span>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
-        <span class="truncate">Lane 1 (In) • Lane 2 (Out)</span>
-        <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">100% Uptime</span>
-      </div>
-    </div>
-
-    <!-- 3. Gate Velocity & Turnaround Time (TAT) Card -->
-    <div
-      class="turnaround-widget-card md:col-span-3 lg:col-span-3 flex flex-col justify-between rounded-[12px] p-3.5 bg-white dark:bg-[#111a2e] border border-[rgba(82,94,167,0.12)] dark:border-[rgba(148,163,184,0.14)] shadow-xs relative overflow-hidden min-w-0">
-      <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2 dark:border-slate-800">
-        <div class="flex items-center gap-2 min-w-0">
-          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 shadow-2xs">
-            <span class="material-icons-outlined text-base">timer</span>
-          </div>
-          <span class="truncate text-xs font-bold text-[#0f2851] dark:text-slate-200">Gate Velocity (TAT)</span>
-        </div>
-        <span
-          class="inline-flex shrink-0 items-center rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:border-blue-800/60 dark:bg-blue-950/60 dark:text-blue-300">
-          Target &lt; 25m
-        </span>
-      </div>
-
-      <div class="my-1.5 flex items-baseline justify-between gap-2">
-        <div class="flex flex-col min-w-0">
-          <div class="flex items-baseline gap-1">
-            <span class="text-xl font-black text-[#0f2851] dark:text-white leading-none">
-              {{ dashboardService.avgTurnaroundMinutes() }}
-            </span>
-            <span class="text-xs font-bold text-slate-500 dark:text-slate-400">mins</span>
-          </div>
-          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-            Avg Turnaround Time
-          </span>
-        </div>
-        <div class="flex flex-col items-end text-right">
-          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 leading-none">
-            ↑ 14% Faster
-          </span>
-          <span class="text-[10px] font-medium text-slate-400 dark:text-slate-500 mt-0.5">
-            vs 30-day baseline
-          </span>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between rounded-lg bg-slate-50 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
-        <span class="truncate">Gate In to Yard Stacking</span>
-        <span class="text-emerald-600 dark:text-emerald-400 font-bold shrink-0">98.2% On Time</span>
-      </div>
-    </div>
-  </section>
-
   <!-- Top Row: 5 KPI Metric Cards -->
   <section class="dashboard-section-kpi grid grid-cols-1 gap-3.5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 min-w-0">
     @for (metric of dashboardService.kpiMetrics(); track metric.id) {
@@ -235,3 +44,131 @@
     </div>
   </section>
 </div>
+
+<!-- Gate Activity Details Modal / Popup (Centered on Screen, Matching Reference Image 2) -->
+@if (dashboardService.selectedGateActivity(); as act) {
+  <div
+    class="activity-modal-backdrop fixed inset-0 z-[999999] flex items-center justify-center p-4 transition-all"
+    (click)="dashboardService.closeActivityPreview()">
+    <div
+      class="relative flex w-full max-w-[440px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] dark:border-slate-800 dark:bg-[#111a2e] animate-in fade-in zoom-in-95 duration-150"
+      (click)="$event.stopPropagation()">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-[#111a2e]">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shrink-0">
+            <svg class="h-4.5 w-4.5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h3 class="text-sm font-bold text-[#0f2851] dark:text-white leading-tight truncate">
+              Gate Activity Details
+            </h3>
+            <span class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ act.time }}</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-800 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white font-bold text-sm cursor-pointer shrink-0"
+          (click)="dashboardService.closeActivityPreview()"
+          title="Close">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="flex flex-col gap-3 p-4">
+        <!-- Captured Gate Camera Image -->
+        <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden border border-slate-200/90 dark:border-slate-700/80 bg-slate-950 shadow-inner flex items-center justify-center">
+          <img
+            [src]="act.imageUrl || 'assets/images/throughput-truck.png'"
+            [alt]="act.containerNo"
+            loading="lazy"
+            decoding="async"
+            (error)="$any($event.target).src = 'assets/images/throughput-truck.png'"
+            class="h-full w-full object-cover" />
+          
+          <!-- Direction Badge (Orange for GATE OUT, Emerald for GATE IN) -->
+          <div class="absolute top-2.5 right-2.5">
+            @if (act.type === 'IN') {
+              <span class="inline-flex items-center gap-1 rounded-lg bg-[#059669] px-2.5 py-1 text-[11px] font-black uppercase text-white shadow-md">
+                <span>↓</span>
+                <span>GATE IN</span>
+              </span>
+            } @else {
+              <span class="inline-flex items-center gap-1 rounded-lg bg-[#ea580c] px-2.5 py-1 text-[11px] font-black uppercase text-white shadow-md">
+                <span>↑</span>
+                <span>GATE OUT</span>
+              </span>
+            }
+          </div>
+
+          <!-- Camera Label Overlay -->
+          <span class="absolute bottom-2 left-2.5 text-[10px] font-mono text-white/90 drop-shadow-md">
+            CP IP Cam
+          </span>
+        </div>
+
+        <!-- 4 Key Metrics Grid (2x2) -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <!-- 1. Container No -->
+          <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+              CONTAINER NO
+            </span>
+            <div class="font-mono text-sm sm:text-base font-black text-blue-600 dark:text-cyan-400 tracking-wide mt-0.5 truncate">
+              {{ act.containerNo }}
+            </div>
+          </div>
+
+          <!-- 2. Truck No -->
+          <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+              TRUCK NO
+            </span>
+            <div class="font-mono text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 tracking-wide mt-0.5 truncate">
+              {{ (act.truckNo && act.truckNo !== 'Pending Scan' && act.truckNo !== 'NA') ? act.truckNo : '—' }}
+            </div>
+          </div>
+
+          <!-- 3. Size / Type -->
+          <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+              SIZE / TYPE
+            </span>
+            <div class="text-sm font-bold text-slate-800 dark:text-slate-100 mt-0.5 truncate">
+              {{ act.sizeType || "40' FT" }}
+            </div>
+          </div>
+
+          <!-- 4. Status / OCR Confidence -->
+          <div class="rounded-xl border border-slate-100 bg-slate-50/80 p-2.5 dark:border-slate-800 dark:bg-slate-900/60">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+              STATUS
+            </span>
+            <div class="flex items-center gap-1.5 text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 truncate">
+              <span class="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span>{{ act.status || 'Verified' }} ({{ act.ocrConfidence || 100 }}%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex items-center justify-between border-t border-slate-100 bg-slate-50/60 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/60">
+        <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          Gate: <strong class="text-slate-800 dark:text-slate-200 font-bold">{{ act.gate || 'Main Gate 01' }}</strong>
+        </span>
+        <a
+          routerLink="/gate-events"
+          (click)="dashboardService.closeActivityPreview()"
+          class="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-blue-700 shadow-xs cursor-pointer">
+          <span>View All Events</span>
+          <span>→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+}

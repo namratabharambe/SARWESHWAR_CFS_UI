@@ -24,6 +24,7 @@ import {
   GateEventCaptureRequest,
   VisitListItemDto,
   VisitsPagedResponse,
+  GateCountsResponse,
 } from 'shared/types/gate-event/gate-event.interface';
 import {
   isCreatedToday,
@@ -188,6 +189,7 @@ export class GateEventsComponent implements OnInit {
   public readonly totalCheckoutCount = signal<number>(0);
   public readonly todayCheckinCount = signal<number>(0);
   public readonly todayCheckoutCount = signal<number>(0);
+  public readonly gateCounts = signal<GateCountsResponse | null>(null);
 
   constructor() {
     this.syncGateMode();
@@ -297,6 +299,21 @@ export class GateEventsComponent implements OnInit {
     const from = this.fromDate();
     const to = this.toDate();
 
+    this.gateEventService.getGateCounts(siteId, clientId).subscribe({
+      next: (counts) => {
+        if (counts) {
+          this.gateCounts.set(counts);
+          if (typeof counts.totalGateIn === 'number') this.totalCheckinCount.set(counts.totalGateIn);
+          if (typeof counts.totalGateOut === 'number') this.totalCheckoutCount.set(counts.totalGateOut);
+          if (typeof counts.todayArrivals === 'number') this.todayCheckinCount.set(counts.todayArrivals);
+          else if (typeof counts.todayGateIn === 'number') this.todayCheckinCount.set(counts.todayGateIn);
+          if (typeof counts.todayDepartures === 'number') this.todayCheckoutCount.set(counts.todayDepartures);
+          else if (typeof counts.todayGateOut === 'number') this.todayCheckoutCount.set(counts.todayGateOut);
+          if (typeof counts.totalCount === 'number') this.totalCount.set(counts.totalCount);
+        }
+      },
+    });
+
     this.gateEventService
       .getVisits({
         page: 1,
@@ -306,13 +323,17 @@ export class GateEventsComponent implements OnInit {
         from,
         to,
       })
-      .pipe(
-        switchMap((res: VisitsPagedResponse) => {
+      .subscribe({
+        next: (res: VisitsPagedResponse) => {
           const firstPageItems = res?.items ?? (Array.isArray(res) ? (res as any) : []);
           const totalCount = res?.totalCount ?? firstPageItems.length;
           const returnedCount = firstPageItems.length;
 
-          // If there are more items beyond page 1, fetch remaining pages (pageSize: 200) in parallel
+          // Render Page 1 immediately so user sees UI within seconds!
+          this.isLoading.set(false);
+          this.applyVisitsToTable(firstPageItems, totalCount);
+
+          // If there are more items beyond page 1, fetch remaining pages in background
           if (totalCount > returnedCount && returnedCount > 0) {
             const pageSize = 200;
             const totalPages = Math.ceil(totalCount / pageSize);
@@ -329,60 +350,17 @@ export class GateEventsComponent implements OnInit {
                 }),
               );
             }
-            return forkJoin(remainingRequests$).pipe(
-              map((moreResponses) => {
+            forkJoin(remainingRequests$).subscribe({
+              next: (moreResponses) => {
                 const allItems = [...firstPageItems];
                 for (const r of moreResponses) {
                   if (r?.items?.length) {
                     allItems.push(...r.items);
                   }
                 }
-                return { items: allItems, totalCount: Math.max(totalCount, allItems.length) };
-              }),
-            );
-          }
-
-          return of({ items: firstPageItems, totalCount });
-        }),
-      )
-      .subscribe({
-        next: ({ items, totalCount }) => {
-          this.isLoading.set(false);
-          if (items && items.length > 0) {
-            const mapped: GateEventItem[] = [];
-            items.forEach((visit: VisitListItemDto) => {
-              const generated = this.mapVisitToGateEventItems(visit, this.gateMode());
-              mapped.push(...generated);
+                this.applyVisitsToTable(allItems, Math.max(totalCount, allItems.length));
+              },
             });
-
-            // Sort descending by event date/time (newest visits first on all pages)
-            mapped.sort((a, b) => {
-              const tA = (typeof a.timestamp === 'number' && a.timestamp > 0) ? a.timestamp : (parseAnyDate(a.createdAt || a.eventTime)?.getTime() ?? 0);
-              const tB = (typeof b.timestamp === 'number' && b.timestamp > 0) ? b.timestamp : (parseAnyDate(b.createdAt || b.eventTime)?.getTime() ?? 0);
-              return tB - tA;
-            });
-
-            this.events.set(mapped);
-
-            const listIn = mapped.filter((e) => e.direction === 'IN').length;
-            const listOut = mapped.filter((e) => e.direction === 'OUT').length;
-            const todayItemsIn = items.filter((v: any) => isVisitArrivalToday(v)).length;
-            const todayItemsOut = items.filter((v: any) => isVisitDepartureToday(v)).length;
-            const totalIn = items.filter((v: any) => isVisitArrival(v)).length;
-            const totalOut = items.filter((v: any) => isVisitDeparture(v)).length;
-
-            this.totalCount.set(totalCount || mapped.length);
-            this.totalCheckinCount.set(totalIn || listIn);
-            this.totalCheckoutCount.set(totalOut || listOut);
-            this.todayCheckinCount.set(todayItemsIn);
-            this.todayCheckoutCount.set(todayItemsOut);
-          } else {
-            this.events.set([]);
-            this.totalCount.set(0);
-            this.totalCheckinCount.set(0);
-            this.totalCheckoutCount.set(0);
-            this.todayCheckinCount.set(0);
-            this.todayCheckoutCount.set(0);
           }
         },
         error: () => {
@@ -393,6 +371,44 @@ export class GateEventsComponent implements OnInit {
       });
   }
 
+  private applyVisitsToTable(items: VisitListItemDto[], totalCount: number): void {
+    if (items && items.length > 0) {
+      const mapped: GateEventItem[] = [];
+      items.forEach((visit: VisitListItemDto) => {
+        const generated = this.mapVisitToGateEventItems(visit, this.gateMode());
+        mapped.push(...generated);
+      });
+
+      // Sort descending by event date/time (newest visits first on all pages)
+      mapped.sort((a, b) => {
+        const tA = (typeof a.timestamp === 'number' && a.timestamp > 0) ? a.timestamp : (parseAnyDate(a.createdAt || a.eventTime)?.getTime() ?? 0);
+        const tB = (typeof b.timestamp === 'number' && b.timestamp > 0) ? b.timestamp : (parseAnyDate(b.createdAt || b.eventTime)?.getTime() ?? 0);
+        return tB - tA;
+      });
+
+      this.events.set(mapped);
+
+      const listIn = mapped.filter((e) => e.direction === 'IN').length;
+      const listOut = mapped.filter((e) => e.direction === 'OUT').length;
+      const todayItemsIn = items.filter((v: any) => isVisitArrivalToday(v)).length;
+      const todayItemsOut = items.filter((v: any) => isVisitDepartureToday(v)).length;
+      const totalIn = items.filter((v: any) => isVisitArrival(v)).length;
+      const totalOut = items.filter((v: any) => isVisitDeparture(v)).length;
+
+      this.totalCount.set(totalCount || mapped.length);
+      this.totalCheckinCount.set(totalIn || listIn);
+      this.totalCheckoutCount.set(totalOut || listOut);
+      this.todayCheckinCount.set(todayItemsIn);
+      this.todayCheckoutCount.set(todayItemsOut);
+    } else {
+      this.events.set([]);
+      this.totalCount.set(0);
+      this.totalCheckinCount.set(0);
+      this.totalCheckoutCount.set(0);
+      this.todayCheckinCount.set(0);
+      this.todayCheckoutCount.set(0);
+    }
+  }
 
   private buildContainerPhotos(
     containerNo: string,
@@ -881,16 +897,25 @@ export class GateEventsComponent implements OnInit {
     const todayInCount = this.todayCheckinCount();
     const todayOutCount = this.todayCheckoutCount();
 
+    const counts = this.gateCounts();
+    const verifiedFromApi = counts?.ocrVerified ?? counts?.ocrVerifiedCount;
+    const pendingFromApi = counts?.pendingReview ?? counts?.inReviewCount;
+    const todayArrivalsFromApi = counts?.todayArrivals ?? counts?.todayGateIn;
+    const todayDeparturesFromApi = counts?.todayDepartures ?? counts?.todayGateOut;
+    const totalGateInFromApi = counts?.totalGateIn;
+    const totalGateOutFromApi = counts?.totalGateOut;
+    const totalCountFromApi = counts?.totalCount;
+
     // Calculate today arrivals/departures strictly for TODAY
     const todayItemsIn = list.filter((e) => isCreatedToday(e.createdAt || e.timestamp) && e.direction === 'IN').length;
     const todayItemsOut = list.filter((e) => isCreatedToday(e.createdAt || e.timestamp) && e.direction === 'OUT').length;
 
-    const todayIn = Math.max(todayInCount, todayItemsIn);
-    const todayOut = Math.max(todayOutCount, todayItemsOut);
+    const todayIn = typeof todayArrivalsFromApi === 'number' ? todayArrivalsFromApi : Math.max(todayInCount, todayItemsIn);
+    const todayOut = typeof todayDeparturesFromApi === 'number' ? todayDeparturesFromApi : Math.max(todayOutCount, todayItemsOut);
 
-    const inCount = totalIn > 0 ? totalIn : (this.cycleFilter() === 'IN' ? total : list.filter((e) => e.direction === 'IN').length);
-    const outCount = totalOut > 0 ? totalOut : (this.cycleFilter() === 'OUT' ? total : list.filter((e) => e.direction === 'OUT').length);
-    const totalCurrentMode = mode === 'out' ? outCount : (mode === 'all' ? (inCount + outCount || total) : inCount);
+    const inCount = typeof totalGateInFromApi === 'number' ? totalGateInFromApi : (totalIn > 0 ? totalIn : (this.cycleFilter() === 'IN' ? total : list.filter((e) => e.direction === 'IN').length));
+    const outCount = typeof totalGateOutFromApi === 'number' ? totalGateOutFromApi : (totalOut > 0 ? totalOut : (this.cycleFilter() === 'OUT' ? total : list.filter((e) => e.direction === 'OUT').length));
+    const totalCurrentMode = mode === 'out' ? outCount : (mode === 'all' ? (typeof totalCountFromApi === 'number' ? totalCountFromApi : (inCount + outCount || total)) : inCount);
 
     const targetModeItems = mode === 'out'
       ? list.filter((e) => e.direction === 'OUT')
@@ -898,8 +923,8 @@ export class GateEventsComponent implements OnInit {
         ? list.filter((e) => e.direction === 'IN')
         : list);
 
-    const verifiedItems = targetModeItems.filter((e) => e.status === 'Verified').length;
-    const pendingReview = targetModeItems.filter((e) => e.status === 'Review').length;
+    const verifiedItems = typeof verifiedFromApi === 'number' ? verifiedFromApi : targetModeItems.filter((e) => e.status === 'Verified').length;
+    const pendingReview = typeof pendingFromApi === 'number' ? pendingFromApi : targetModeItems.filter((e) => e.status === 'Review').length;
     const damagedCaptures = targetModeItems.filter((e) => e.damageFlag).length;
 
     return {

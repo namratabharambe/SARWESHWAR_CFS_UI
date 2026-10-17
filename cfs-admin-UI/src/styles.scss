@@ -377,15 +377,15 @@ td,
    ========================================================================== */
 .leaflet-popup-content-wrapper {
   background: #ffffff !important;
-  border: 2px solid #0f2851 !important;
+  border: 1px solid #cbd5e1 !important;
   border-radius: 12px !important;
-  box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.35) !important;
+  box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.16) !important;
   padding: 4px 6px !important;
 }
 
 .leaflet-popup-tip {
   background: #ffffff !important;
-  border: 1px solid #0f2851 !important;
+  border: 1px solid #cbd5e1 !important;
 }
 
 .leaflet-popup-content {
@@ -434,9 +434,9 @@ td,
 .yard-map-tooltip-custom,
 .dark-leaflet-tooltip {
   background: #ffffff !important;
-  border: 2px solid #0f2851 !important;
+  border: 1px solid #cbd5e1 !important;
   border-radius: 10px !important;
-  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.3) !important;
+  box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.15) !important;
   padding: 8px 12px !important;
   color: #0f172a !important; /* DARK font */
   font-family: 'Inter', system-ui, sans-serif !important;
@@ -868,7 +868,50 @@ app-kpi-metric-card>div:hover {
   box-shadow:
     0 14px 32px -6px rgba(0, 102, 255, 0.22),
     0 6px 14px -3px rgba(0, 0, 0, 0.5) !important;
-  border-color: rgba(59, 130, 246, 0.4) !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Universal Inputs & Dropdowns Hover Border System (Light & Dark Mode) */
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='submit']):not([type='button']),
+select,
+textarea,
+.dropdown-trigger,
+.default-trigger,
+.filter-input,
+.filter-select {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease !important;
+
+  &:hover {
+    border-color: rgba(96, 165, 250, 0.85) !important;
+  }
+
+  &:focus,
+  &.is-active {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+    outline: none !important;
+  }
+}
+
+.dark {
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='submit']):not([type='button']),
+  select,
+  textarea,
+  .dropdown-trigger,
+  .default-trigger,
+  .filter-input,
+  .filter-select {
+    &:hover {
+      border-color: #3b82f6 !important;
+    }
+
+    &:focus,
+    &.is-active {
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
+      outline: none !important;
+    }
+  }
 }
 
 .view-all-link {

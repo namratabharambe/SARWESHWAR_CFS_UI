@@ -1,11 +1,25 @@
 :host {
   display: block;
-  width: calc(100% + 36px);
-  height: calc(100vh / 0.88 - 90px);
-  margin: -14px -18px -16px -18px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   position: relative;
   overflow: hidden;
   background-color: #020617;
+}
+
+.yard-coordinates-vertical {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.4) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.4);
+    border-radius: 4px;
+  }
 }
 
 /* ==========================================================================
@@ -72,16 +86,45 @@
   align-items: center;
   justify-content: center;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 8.5px;
   font-weight: 800;
-  padding: 1px 4px;
-  border-radius: 4px;
+  border-radius: 3px;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(2px);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+
+  .slot-code-text {
+    display: inline-block;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95), 0 0 1px rgba(0, 0, 0, 0.9);
+  }
+
+  /* In vertical containers: text rotated -90deg along container length (matching user drawing) */
+  &.vertical-slot-badge {
+    transform: rotate(-90deg);
+    font-size: 7.5px;
+    letter-spacing: -0.2px;
+    padding: 1px 3px;
+    border-radius: 3px;
+    line-height: 1;
+
+    .slot-code-text {
+      display: inline-block;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.95);
+    }
+  }
+
+  /* In horizontal containers */
+  &.horizontal-slot-badge {
+    font-size: 8px;
+    letter-spacing: -0.1px;
+    padding: 0 3px;
+    line-height: 1.1;
+  }
 
   &:hover {
     transform: scale(1.3);
@@ -89,15 +132,15 @@
   }
 
   &.occupied {
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(15, 23, 42, 0.92);
     color: #38bdf8;
     border-color: rgba(56, 189, 248, 0.7);
   }
 
   &.available {
-    background: rgba(15, 23, 42, 0.90);
-    color: #f1f5f9;
-    border-color: rgba(148, 163, 184, 0.6);
+    background: rgba(15, 23, 42, 0.88);
+    color: #ffffff;
+    border-color: rgba(148, 163, 184, 0.55);
   }
 
   &.selected-beacon {

@@ -137,24 +137,142 @@
   <div class="relative h-full w-full">
     <div #leafletMapContainer class="h-full w-full"></div>
 
-    <!-- Map Coordinate Telemetry (Bottom Left) -->
-    <div class="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 rounded-2xl border border-slate-700/60 bg-slate-950/90 px-3.5 py-2 font-mono text-xs text-slate-300 shadow-2xl backdrop-blur-xl">
-      <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
-      <span class="text-cyan-300 font-bold font-mono">{{ liveCoordinates().lat | number: '1.6-6' }}° N, {{ liveCoordinates().lng | number: '1.6-6' }}° E</span>
-      <span class="border-l border-slate-700 pl-2 text-slate-300">{{ hoveredSlot() ? ('📍 ' + hoveredSlot()!.name) : 'Sarveshwar CFS Terminal' }}</span>
+    <!-- Map Coordinate Telemetry (Bottom Left - Vertical Stack with Mouse Wheel Scroll) -->
+    <div
+      (wheel)="$event.stopPropagation()"
+      class="yard-coordinates-vertical absolute bottom-4 left-4 z-[400] flex flex-col gap-1.5 rounded-2xl border border-slate-700/60 bg-slate-950/92 p-3 font-mono text-xs text-slate-200 shadow-2xl backdrop-blur-xl w-60 max-h-[185px] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+        <div class="flex items-center gap-2">
+          <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400">GPS Coordinates</span>
+        </div>
+        <span class="text-[10px] font-semibold text-slate-400">Zoom {{ currentZoomLevel() }}x</span>
+      </div>
+
+      <div class="flex flex-col gap-1.5 pt-0.5">
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1 border border-slate-800/60">
+          <span class="text-[10px] font-bold uppercase text-slate-400">LAT</span>
+          <span class="font-bold text-cyan-300 font-mono text-xs">{{ liveCoordinates().lat | number: '1.6-6' }}° N</span>
+        </div>
+
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1 border border-slate-800/60">
+          <span class="text-[10px] font-bold uppercase text-slate-400">LNG</span>
+          <span class="font-bold text-cyan-300 font-mono text-xs">{{ liveCoordinates().lng | number: '1.6-6' }}° E</span>
+        </div>
+
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1 border border-slate-800/60">
+          <span class="text-[10px] font-bold uppercase text-slate-400">LOC</span>
+          <span class="font-bold text-emerald-400 truncate max-w-[120px] text-right" [title]="hoveredSlot() ? hoveredSlot()!.name : 'Sarveshwar CFS Terminal'">
+            {{ hoveredSlot() ? ('📍 ' + hoveredSlot()!.name) : 'Sarveshwar CFS' }}
+          </span>
+        </div>
+
+        @if (hoveredSlot(); as hs) {
+          <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1 border border-slate-800/60">
+            <span class="text-[10px] font-bold uppercase text-slate-400">SLOT</span>
+            <span class="font-bold text-xs uppercase" [class.text-rose-400]="hs.status === 'occupied'" [class.text-emerald-400]="hs.status === 'available'">
+              {{ hs.status }}
+            </span>
+          </div>
+          @if (hs.containerNumber) {
+            <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1 border border-slate-800/60">
+              <span class="text-[10px] font-bold uppercase text-slate-400">CONTAINER</span>
+              <span class="font-bold text-amber-300 text-xs font-mono">{{ hs.containerNumber }}</span>
+            </div>
+          }
+        }
+      </div>
     </div>
 
-    <!-- Sleek Floating Enterprise Block Quick-Filter Strip (Centered at bottom, non-obtrusive) -->
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-[400] hidden lg:flex items-center gap-1.5 overflow-x-auto max-w-[55vw] rounded-2xl border border-slate-700/60 bg-slate-950/90 p-1.5 shadow-2xl backdrop-blur-xl">
-      @for (c of blockClusters(); track c.block) {
-        <button
-          type="button"
-          (click)="flyToBlockCluster(c)"
-          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1 text-[11px] font-bold transition hover:scale-105 active:scale-95 whitespace-nowrap bg-slate-900 border border-slate-800 text-slate-300 hover:border-cyan-500/60 hover:text-white">
-          <span class="h-2 w-2 rounded-full" [style.backgroundColor]="c.color"></span>
-          <span>Block {{ c.block }}</span>
-          <span class="font-mono text-[9px] text-slate-400 font-bold">({{ c.occupiedSlots }}/{{ c.totalSlots }})</span>
-        </button>
+    <!-- Floating Block Cluster Dropdown Navigator (Center of Screen, Right Corner, GPS Coordinates Theme) -->
+    <div
+      (wheel)="$event.stopPropagation()"
+      class="block-cluster-dropdown-container absolute right-4 top-1/2 -translate-y-1/2 z-[400] flex flex-col font-mono">
+      
+      <!-- Trigger Card Button -->
+      <button
+        type="button"
+        (click)="toggleBlockDropdown()"
+        class="flex flex-col gap-1.5 rounded-2xl border border-slate-700/60 bg-slate-950/92 p-2.5 shadow-2xl backdrop-blur-xl w-56 text-left transition hover:border-cyan-500/60 hover:bg-slate-900/95 active:scale-[0.98] cursor-pointer">
+        
+        <!-- Header: GPS Coordinates style -->
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Yard Blocks</span>
+          </div>
+          <span class="text-[10px] font-semibold text-slate-400">{{ blockClusters().length }} Clusters</span>
+        </div>
+
+        <!-- Selected Block Chip (Image 3 chip style) -->
+        <div class="flex items-center justify-between rounded-lg bg-slate-900/80 px-2.5 py-1.5 border border-slate-800/60">
+          <div class="flex items-center gap-2 truncate">
+            @if (selectedBlockCluster(); as sel) {
+              <span class="h-2.5 w-2.5 rounded-full shrink-0 shadow-sm" [style.backgroundColor]="sel.color"></span>
+              <span class="font-bold text-cyan-300 text-xs truncate">Block {{ sel.block }}</span>
+            } @else {
+              <span class="h-2 w-2 rounded-full bg-slate-500 shrink-0"></span>
+              <span class="font-bold text-slate-300 text-xs">All Yard Blocks</span>
+            }
+          </div>
+          <span
+            class="material-icons text-cyan-400 text-base transition-transform duration-200 shrink-0"
+            [class.rotate-180]="blockDropdownOpen()">
+            expand_more
+          </span>
+        </div>
+      </button>
+
+      <!-- Dropdown Menu List -->
+      @if (blockDropdownOpen()) {
+        <div
+          (wheel)="$event.stopPropagation()"
+          class="yard-coordinates-vertical absolute right-0 top-full mt-2 z-[410] flex flex-col gap-1 rounded-2xl border border-slate-700/60 bg-slate-950/95 p-2 font-mono text-xs shadow-2xl backdrop-blur-2xl w-60 max-h-[290px] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+          
+          <!-- Dropdown Reset Option -->
+          <button
+            type="button"
+            (click)="resetBlockClusterSelection()"
+            class="flex items-center justify-between rounded-lg px-2.5 py-1.5 transition text-left border cursor-pointer"
+            [class.bg-cyan-950/50]="!selectedBlockCluster()"
+            [class.border-cyan-500/60]="!selectedBlockCluster()"
+            [class.bg-slate-900/60]="selectedBlockCluster()"
+            [class.border-slate-800/60]="selectedBlockCluster()"
+            [class.hover:bg-slate-800/80]="selectedBlockCluster()">
+            <div class="flex items-center gap-2">
+              <span class="material-icons text-xs text-cyan-400">filter_center_focus</span>
+              <span class="font-bold text-xs" [class.text-cyan-300]="!selectedBlockCluster()" [class.text-slate-300]="selectedBlockCluster()">
+                All Blocks (Overview)
+              </span>
+            </div>
+            <span class="text-[9.5px] font-bold text-slate-400">RESET</span>
+          </button>
+
+          <!-- List of Blocks -->
+          @for (c of blockClusters(); track c.block) {
+            <button
+              type="button"
+              (click)="selectBlockCluster(c)"
+              class="flex items-center justify-between rounded-lg px-2.5 py-1.5 transition text-left border cursor-pointer"
+              [class.bg-cyan-950/60]="selectedBlockCluster()?.block === c.block"
+              [class.border-cyan-400/80]="selectedBlockCluster()?.block === c.block"
+              [class.bg-slate-900/70]="selectedBlockCluster()?.block !== c.block"
+              [class.border-slate-800/60]="selectedBlockCluster()?.block !== c.block"
+              [class.hover:bg-slate-800/90]="selectedBlockCluster()?.block !== c.block"
+              [class.hover:border-cyan-500/50]="selectedBlockCluster()?.block !== c.block">
+              <div class="flex items-center gap-2 truncate">
+                <span class="h-2.5 w-2.5 rounded-full shrink-0 shadow-sm" [style.backgroundColor]="c.color"></span>
+                <div class="flex flex-col truncate">
+                  <span class="font-bold text-xs text-slate-200">Block {{ c.block }}</span>
+                  <span class="text-[9px] text-slate-400 truncate">{{ c.title }}</span>
+                </div>
+              </div>
+              <span class="font-mono text-[10px] font-bold text-cyan-300 shrink-0">
+                {{ c.occupiedSlots }}/{{ c.totalSlots }}
+              </span>
+            </button>
+          }
+        </div>
       }
     </div>
 

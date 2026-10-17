@@ -11,7 +11,8 @@ import {
 } from 'shared/types/report/report.interface';
 import { GateEventService } from 'shared/services/gate-event.service';
 import { AuthService } from 'core/auth/auth.service';
-import { VisitListItemDto } from 'shared/types/gate-event/gate-event.interface';
+import { VisitListItemDto, GateCountsResponse } from 'shared/types/gate-event/gate-event.interface';
+import { isVisitArrival, isVisitDeparture } from 'shared/utils/date-filter.util';
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {
@@ -29,6 +30,9 @@ export class ReportService {
     siteId: 'all-sites',
     searchQuery: '',
   });
+
+  // Live Database Gate Counts
+  public readonly gateCounts = signal<GateCountsResponse | null>(null);
 
   // Toast feedback
   public readonly toastMessage = signal<string | null>(null);
@@ -48,10 +52,20 @@ export class ReportService {
     const activeSiteId = siteId || this.authService?.getActiveSiteId() || undefined;
     const activeClientId = clientId || this.authService?.getActiveClientId() || undefined;
 
+    // Fetch database gate counts directly from GET /gate/counts
+    this.gateEventService.getGateCounts(activeSiteId, activeClientId).subscribe({
+      next: (counts) => {
+        if (counts) {
+          this.gateCounts.set(counts);
+        }
+      },
+      error: () => {},
+    });
+
     this.gateEventService
       .getVisits({
         page: 1,
-        pageSize: 150,
+        pageSize: 200,
         siteId: activeSiteId,
         clientId: activeClientId,
         from,
@@ -61,54 +75,99 @@ export class ReportService {
         next: (res) => {
           const rawItems: any[] = res?.items ?? (Array.isArray(res) ? (res as any) : []);
           if (rawItems && rawItems.length > 0) {
-            const mapped: GateOperationsReportRow[] = rawItems.map((v, idx) => {
-              const primaryEvent = v.events?.[0];
-              const rawType = (primaryEvent?.eventType ?? 'GATE_IN').toUpperCase();
-              const isOut = rawType.includes('OUT') || rawType.includes('EXIT');
-              const containerNo =
-                v.containerNumber || primaryEvent?.detectedContainerNumber || (v.containers?.[0]?.containerNumber) || 'MSCU7000101';
-              const truckNo =
-                v.truckNumber && v.truckNumber !== 'NA'
-                  ? v.truckNumber
-                  : primaryEvent?.detectedTruckNumber || `MH-46-AR-${1000 + idx}`;
-              const driverName = v.driverName || primaryEvent?.detectedDriverName || `Driver #${101 + idx}`;
-              const shippingLine = v.shippingLine || containerNo.substring(0, 3) || 'MSC';
-              const dObj = new Date(primaryEvent?.capturedAt ?? v.createdAt ?? Date.now());
-              const dateStr = isNaN(dObj.getTime())
-                ? 'Today'
-                : dObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
-                  ' ' +
-                  dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const mapped: GateOperationsReportRow[] = [];
+            rawItems.forEach((v: any, idx: number) => {
+              const eventsList: any[] = Array.isArray(v.events) ? v.events : (Array.isArray(v.Events) ? v.Events : []);
+              const inEvent = eventsList.find((e: any) => {
+                const t = String(e.eventType ?? e.EventType ?? '').toUpperCase();
+                return t.includes('IN') || t.includes('ENTER');
+              });
+              const outEvent = eventsList.find((e: any) => {
+                const t = String(e.eventType ?? e.EventType ?? '').toUpperCase();
+                return t.includes('OUT') || t.includes('EXIT');
+              });
 
-              const rawVisit = v.visitNumber || v.VisitNumber || v.visitNo || v.VisitNo;
-              const visitNo = rawVisit
-                ? String(rawVisit)
-                : (v.visitId && String(v.visitId).length > 8
-                    ? `VST-${dObj.getFullYear() || 2026}-${String(v.visitId).slice(-6).toUpperCase()}`
-                    : `VST-${dObj.getFullYear() || 2026}-${String(idx + 1).padStart(4, '0')}`);
+              const hasIn = Boolean(inEvent || isVisitArrival(v));
+              const hasOut = Boolean(outEvent || isVisitDeparture(v));
 
-              return {
-                id: v.visitId || `gate-row-${idx}`,
-                visitNo,
-                timestamp: dateStr,
-                rawDate: isNaN(dObj.getTime()) ? new Date() : dObj,
-                gateLane: isOut ? 'GATE-02 (Outbound)' : 'GATE-01 (Inbound)',
-                direction: isOut ? 'OUT' : 'IN',
-                truckNo,
-                driverName,
-                containerNo,
-                isoType: v.containerSize ? `${v.containerSize}' Standard` : "40' HC",
-                shippingLine,
-                ocrStatus: (v.containerConfidence ?? 0.95) < 0.85 || v.status === 'HELD' || idx === 2
-                  ? 'Exception'
-                  : ((v.containerConfidence ?? 0.95) >= 0.9 ? 'Auto-Matched' : 'Manual Verified'),
-                turnaroundMinutes: Math.round(5 + (idx % 15)),
-                weighbridgeKg: 22000 + (idx % 10) * 1200,
-                status: v.status === 'DEPARTED' ? 'Gate Passed' : (v.status === 'HELD' || idx === 2 ? 'Held' : 'Completed'),
-                dwellTime: `${(1.5 + (idx % 5) * 0.9).toFixed(1)} Days`,
-                isNonErp: Boolean(v.isNonErp || v.category === 'Non-ERP' || primaryEvent?.isNonErp || (idx % 4 === 1)),
+              // Real database damage, held, review, or exception flags
+              const isDatabaseException = Boolean(
+                v.hasDamage ||
+                v.isDamaged ||
+                v.damageFlag ||
+                v.damageDetected ||
+                (v.damageCount && v.damageCount > 0) ||
+                inEvent?.damageDetected || inEvent?.damageFlag ||
+                outEvent?.damageDetected || outEvent?.damageFlag ||
+                eventsList.some((e: any) => e.damageDetected || e.damageFlag || e.hasDamage) ||
+                String(v.status || '').toUpperCase().includes('HOLD') ||
+                String(v.status || '').toUpperCase().includes('HELD') ||
+                String(v.status || '').toUpperCase().includes('REVIEW') ||
+                String(v.ocrStatus || '').toUpperCase().includes('EXCEPTION')
+              );
+
+              const rawConf = v.containerConfidence ?? inEvent?.detectedContainerConfidence ?? outEvent?.detectedContainerConfidence ?? 0.95;
+              const conf = rawConf > 1 ? rawConf / 100 : rawConf;
+              const isException = isDatabaseException || conf < 0.85;
+
+              const buildRow = (direction: 'IN' | 'OUT', ev: any, suffix: string): GateOperationsReportRow => {
+                const containerNo =
+                  v.containerNumber || ev?.detectedContainerNumber || (v.containers?.[0]?.containerNumber) || 'MSCU7000101';
+                const truckNo =
+                  v.truckNumber && v.truckNumber !== 'NA'
+                    ? v.truckNumber
+                    : ev?.detectedTruckNumber || `MH-46-AR-${1000 + idx}`;
+                const driverName = v.driverName || ev?.detectedDriverName || 'Driver (Unassigned)';
+                const shippingLine = v.shippingLine || containerNo.substring(0, 3) || 'MSC';
+                const capturedAt =
+                  ev?.capturedAt ?? (direction === 'OUT' ? (v.departedAt ?? v.createdAt) : (v.arrivedAt ?? v.createdAt)) ?? new Date();
+                const dObj = new Date(capturedAt);
+                const dateStr = isNaN(dObj.getTime())
+                  ? 'Today'
+                  : dObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+                    ' ' +
+                    dObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                const rawVisit = v.visitNumber || v.VisitNumber || v.visitNo || v.VisitNo;
+                const visitNo = rawVisit
+                  ? String(rawVisit)
+                  : (v.visitId && String(v.visitId).length > 8
+                      ? `VST-${dObj.getFullYear() || 2026}-${String(v.visitId).slice(-6).toUpperCase()}`
+                      : `VST-${dObj.getFullYear() || 2026}-${String(idx + 1).padStart(4, '0')}`);
+
+                return {
+                  id: `${v.visitId || `gate-row-${idx}`}${suffix}`,
+                  visitNo,
+                  timestamp: dateStr,
+                  rawDate: isNaN(dObj.getTime()) ? new Date() : dObj,
+                  gateLane: direction === 'OUT' ? 'GATE-02 (Outbound)' : 'GATE-01 (Inbound)',
+                  direction,
+                  truckNo,
+                  driverName,
+                  containerNo,
+                  isoType: v.containerSize ? `${v.containerSize}' Standard` : "40' HC",
+                  shippingLine,
+                  ocrStatus: isException
+                    ? 'Exception'
+                    : (conf >= 0.9 ? 'Auto-Matched' : 'Manual Verified'),
+                  turnaroundMinutes: Math.round(5 + (idx % 15)),
+                  weighbridgeKg: 22000 + (idx % 10) * 1200,
+                  status: isDatabaseException ? 'Held' : (direction === 'OUT' ? 'Gate Passed' : 'Completed'),
+                  dwellTime: `${(1.5 + (idx % 5) * 0.9).toFixed(1)} Days`,
+                  isNonErp: false, // In ERP there is no data, so show 0
+                };
               };
+
+              if (inEvent && outEvent) {
+                mapped.push(buildRow('OUT', outEvent, '-out'));
+                mapped.push(buildRow('IN', inEvent, '-in'));
+              } else if (hasOut) {
+                mapped.push(buildRow('OUT', outEvent || eventsList[0], ''));
+              } else {
+                mapped.push(buildRow('IN', inEvent || eventsList[0], ''));
+              }
             });
+
             mapped.sort((a, b) => {
               const tB = b.rawDate ? new Date(b.rawDate).getTime() : 0;
               const tA = a.rawDate ? new Date(a.rawDate).getTime() : 0;
@@ -752,42 +811,7 @@ export class ReportService {
   // Filtered Rows for current category
   public readonly filteredGateRows = computed(() => {
     const q = this.filter().searchQuery.toLowerCase().trim();
-    const preset = this.filter().preset;
     let list = this.gateOperationsData();
-
-    if (preset) {
-      const now = new Date();
-      list = list.filter((r) => {
-        const itemDate = r.rawDate ? new Date(r.rawDate) : new Date(r.timestamp);
-        if (isNaN(itemDate.getTime())) return true;
-
-        if (preset === 'today') {
-          return (
-            itemDate.getFullYear() === now.getFullYear() &&
-            itemDate.getMonth() === now.getMonth() &&
-            itemDate.getDate() === now.getDate()
-          );
-        } else if (preset === 'yesterday') {
-          const yesterday = new Date(now);
-          yesterday.setDate(now.getDate() - 1);
-          return (
-            itemDate.getFullYear() === yesterday.getFullYear() &&
-            itemDate.getMonth() === yesterday.getMonth() &&
-            itemDate.getDate() === yesterday.getDate()
-          );
-        } else if (preset === 'last7days') {
-          const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-          return itemDate >= cutoff && itemDate <= now;
-        } else if (preset === 'last30days') {
-          const cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-          return itemDate >= cutoff && itemDate <= now;
-        } else if (preset === 'monthToDate') {
-          const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-          return itemDate >= firstOfMonth && itemDate <= now;
-        }
-        return true;
-      });
-    }
 
     if (!q) return list;
     return list.filter(
@@ -796,7 +820,10 @@ export class ReportService {
         r.containerNo.toLowerCase().includes(q) ||
         r.truckNo.toLowerCase().includes(q) ||
         r.driverName.toLowerCase().includes(q) ||
-        r.shippingLine.toLowerCase().includes(q),
+        r.shippingLine.toLowerCase().includes(q) ||
+        r.gateLane.toLowerCase().includes(q) ||
+        r.ocrStatus.toLowerCase().includes(q) ||
+        r.status.toLowerCase().includes(q),
     );
   });
 

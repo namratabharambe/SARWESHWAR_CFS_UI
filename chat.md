@@ -264,3 +264,35 @@ dont change backend logic work for udesign only
    - `environment.ts` & `environment.production.ts`: Correctly map both dev and production Azure APIM endpoints (`https://apim-cfs-dev.azure-api.net`).
 4. **Build Verification**:
    - Verified that all services compile and build cleanly via `npx ng build --no-progress`.
+
+---
+
+## 10. User Request (Latest)
+> *"in cfs.gate i wnat take pull before from development branh and then crete one api for shows count from databse for that clientid siteis user total count of gatein gateout toaday gatein ,todays gateout,in review count ocr verified count that siteid clientid and user gets from token of context api"*
+
+### Actions & Implementation:
+1. **Branch Synchronization & Pull**:
+   - Verified git remotes and pulled latest `development` branch in `CFS.Gate` / `cfs-backend-api` repository (`Already up to date`).
+2. **Context Resolution**:
+   - Extracted `clientId`, `siteId`, and `userId` directly via `IRequestContextAccessor.GetRequiredContext(GatePermissions.VisitsRead)`.
+   - Supports optional query parameters `userId`, `date`, and `filterByUser`.
+3. **Database Metrics & Calculations (`IVisitRepository` / `VisitRepository`)**:
+   - High-performance, single-roundtrip aggregation directly on `gate_events` via EF Core:
+     - `totalGateIn`: Total Gate In count (`event_type = 'GATE_IN'`).
+     - `totalGateOut`: Total Gate Out count (`event_type = 'GATE_OUT'`).
+     - `todayGateIn`: Today's Gate In count (`event_type = 'GATE_IN'` captured today).
+     - `todayGateOut`: Today's Gate Out count (`event_type = 'GATE_OUT'` captured today).
+     - `inReviewCount`: Containers requiring review (`detected_container_confidence < 0.90` or `null`).
+     - `ocrVerifiedCount`: Containers successfully verified by OCR (`detected_container_confidence >= 0.90`).
+     - `totalCount`: Aggregate operational count.
+     - Includes site-wide aggregate metrics (`siteTotalGateIn`, `siteTodayGateIn`, etc.) and friendly aliases (`pendingReview`, `ocrVerified`, `todayArrivals`, `todayDepartures`, `totalCheckin`, `totalCheckout`).
+4. **FastEndpoints & CQRS Integration**:
+   - Exposed routes: `GET /gate/counts`, `GET /gate/metrics`, `GET /gate/summary`, `GET /gate/events/counts`.
+   - Query: `GetGateCountsQuery`
+   - Handler: `GetGateCountsHandler`
+   - DTOs: `GateCountsDto`, `GetGateCountsRequest`, `GetGateCountsResponse`.
+5. **Testing & Quality Assurance**:
+   - Added unit test suite `GetGateCountsTests.cs`.
+   - Verified all 103 test cases pass (`dotnet test`).
+   - Validated against live database with real data.
+

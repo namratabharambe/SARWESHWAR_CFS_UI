@@ -27,7 +27,7 @@ export interface YardBlockBadge {
 @Component({
   selector: 'app-yard-overview',
   standalone: true,
-  imports: [],
+  imports: [DecimalPipe],
   templateUrl: './yard-overview.component.html',
   styleUrls: ['./yard-overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +39,8 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
   private map: any = null;
   private polygonLayerGroup: any = null;
   private badgeLayerGroup: any = null;
+
+  public readonly liveCoordinates = signal<{ lat: number; lng: number }>({ lat: 18.9031, lng: 73.0466 });
 
   public readonly metrics = input<YardMetrics>({
     totalBlocks: 6,
@@ -114,12 +116,26 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
       // Center at Sarveshwar CFS GPS coordinates: [18.9028, 73.0465]
       this.map = L.map(this.mapContainer.nativeElement, {
         center: [18.9028, 73.0465],
-        zoom: 17.5,
+        zoom: 18.5,
         minZoom: 16,
         maxZoom: 21,
         zoomControl: false,
         attributionControl: false,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
+        smoothWheelZoom: true,
+        touchZoom: true,
+        doubleClickZoom: true,
+        boxZoom: true,
+      });
+
+      if (this.map.scrollWheelZoom) {
+        this.map.scrollWheelZoom.enable();
+      }
+
+      this.map.on('mousemove', (e: any) => {
+        if (e?.latlng) {
+          this.liveCoordinates.set({ lat: e.latlng.lat, lng: e.latlng.lng });
+        }
       });
 
       // Base tile layer (Default to Pure High-Resolution Satellite without commercial POI clutter)
@@ -134,6 +150,7 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
 
       this.polygonLayerGroup = L.layerGroup().addTo(this.map);
+      this.badgeLayerGroup = L.layerGroup().addTo(this.map);
 
       // Vibrant high-visibility Terminal Operating System (TOS) palette:
       // - Top clusters (F, E, 14): Industrial Orange / Amber
@@ -210,17 +227,79 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
         this.polygonLayerGroup.addLayer(polygon);
       });
 
+      // Render coordinates labels on each slot matching user reference image
+      this.updateSlotLabels();
+
+      this.map.on('zoomend', () => {
+        this.updateSlotLabels();
+      });
+
       // Keep zoomed in by default on Sarveshwar CFS yard core container stacks
       this.map.setView([18.9031, 73.0466], 18.8);
 
       setTimeout(() => {
         if (this.map) {
           this.map.invalidateSize();
+          this.updateSlotLabels();
         }
       }, 200);
 
     } catch (e) {
       console.warn('Leaflet map initialization skipped:', e);
+    }
+  }
+
+  // Detect if container slot polygon is vertical (length along latitude)
+  private isVerticalSlot(slot: (typeof CFS_GPS_SLOTS)[0]): boolean {
+    if (!slot.polygon || slot.polygon.length < 3) return false;
+    let minLat = 90;
+    let maxLat = -90;
+    let minLng = 180;
+    let maxLng = -180;
+    for (const p of slot.polygon) {
+      if (p.lat < minLat) minLat = p.lat;
+      if (p.lat > maxLat) maxLat = p.lat;
+      if (p.lng < minLng) minLng = p.lng;
+      if (p.lng > maxLng) maxLng = p.lng;
+    }
+    const dLat = (maxLat - minLat) * 111000;
+    const dLng = (maxLng - minLng) * 104900;
+    return dLat > dLng * 1.15;
+  }
+
+  // Render slot coordinate labels directly on each geofence (Identical styling to main yard map)
+  public updateSlotLabels(): void {
+    if (!this.map || !this.badgeLayerGroup) return;
+    this.badgeLayerGroup.clearLayers();
+
+    const zoom = this.map.getZoom();
+    // Show coordinates on slots when zoom level is detailed enough (zoom >= 18.0)
+    if (zoom >= 18.0) {
+      CFS_GPS_SLOTS.forEach((slot) => {
+        const isOccupied = slot.status === 'occupied';
+        const isVertical = this.isVerticalSlot(slot);
+        const orientationClass = isVertical ? 'vertical-slot-badge' : 'horizontal-slot-badge';
+
+        const labelHtml = `
+          <div class="dark-slot-centroid-badge ${orientationClass} ${isOccupied ? 'occupied' : 'available'}">
+            <span class="slot-code-text">${slot.code}</span>
+          </div>
+        `;
+
+        const icon = L.divIcon({
+          className: 'dark-slot-div-icon',
+          html: labelHtml,
+          iconSize: isVertical ? [14, 30] : [32, 13],
+          iconAnchor: isVertical ? [7, 15] : [16, 6],
+        });
+
+        const marker = L.marker([slot.center.lat, slot.center.lng], {
+          icon,
+          interactive: false,
+        });
+
+        this.badgeLayerGroup.addLayer(marker);
+      });
     }
   }
 
@@ -241,6 +320,14 @@ export class YardOverviewComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.badgeLayerGroup) {
+      this.badgeLayerGroup.clearLayers();
+      this.badgeLayerGroup = null;
+    }
+    if (this.polygonLayerGroup) {
+      this.polygonLayerGroup.clearLayers();
+      this.polygonLayerGroup = null;
+    }
     if (this.map) {
       this.map.remove();
       this.map = null;

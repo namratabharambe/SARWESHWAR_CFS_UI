@@ -11,6 +11,7 @@ import {
   GateEventCaptureResponse,
   VisitsPagedResponse,
   VisitListItemDto,
+  GateCountsResponse,
 } from 'shared/types/gate-event/gate-event.interface';
 
 const DEFAULT_FALLBACK_SITE_ID = '01a07fd0-d69a-7998-bd0c-48b96d3b8a88';
@@ -199,5 +200,33 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
 
   public captureGateEvent(request: GateEventCaptureRequest): Observable<GateEventCaptureResponse> {
     return this.http.post<GateEventCaptureResponse>(this.endpointUrl, request);
+  }
+
+  /**
+   * Fetches gate activity counts from GET /gate/counts
+   * Headers: X-Site-Id, X-Client-Id
+   */
+  public getGateCounts(siteId?: string, clientId?: string): Observable<GateCountsResponse> {
+    const effectiveSiteId =
+      siteId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_site_id') : '') ||
+      DEFAULT_FALLBACK_SITE_ID;
+
+    const effectiveClientId =
+      clientId ||
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_selected_client_id') : '') ||
+      DEFAULT_FALLBACK_CLIENT_ID;
+
+    const headers = new HttpHeaders()
+      .set('X-Site-Id', effectiveSiteId)
+      .set('X-Client-Id', effectiveClientId);
+
+    const url = `${this.gateBaseUrl}/gate/counts`;
+    return this.http.get<GateCountsResponse>(url, { headers }).pipe(
+      catchError((error) => {
+        console.error('Failed to fetch gate counts from API:', url, error);
+        return of({} as GateCountsResponse);
+      }),
+    );
   }
 }

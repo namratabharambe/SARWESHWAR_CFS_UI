@@ -8,8 +8,8 @@
     </div>
   }
 
-  <!-- 1. Page Header (Left: Title/Subtitle, Right: Compact Date Range & Export Actions) -->
-  <header class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <!-- 1. Page Header (Title and Subtitle) -->
+  <header class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
     <div class="min-w-0 flex-1">
       <h1 class="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight text-[#0f2851] leading-tight dark:text-white truncate">
         Operational Reports & Analytics
@@ -18,90 +18,14 @@
         Audit logs, throughput analytics, turn-around times, and equipment metrics
       </p>
     </div>
-
-    <!-- Right Controls: Compact Single Date Range Dropdown + Unified Export Dropdown -->
-    <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-      <!-- Compact Date Range Dropdown -->
-      <div class="relative">
-        <button
-          type="button"
-          (click)="isDateDropdownOpen.set(!isDateDropdownOpen()); isExportDropdownOpen.set(false)"
-          class="flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 cursor-pointer">
-          <span class="material-icons-outlined text-sm text-blue-600">calendar_today</span>
-          <span>{{ selectedPresetLabel() }}</span>
-          <span class="material-icons text-sm text-slate-400">expand_more</span>
-        </button>
-
-        <!-- Floating Date Dropdown Popover -->
-        @if (isDateDropdownOpen()) {
-          <div class="fixed inset-0 z-40" (click)="isDateDropdownOpen.set(false)"></div>
-          <div
-            class="absolute right-0 top-full mt-1.5 z-50 min-w-[170px] rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-800">
-            @for (dp of datePresets; track dp.value) {
-              <button
-                type="button"
-                (click)="setDatePreset(dp.value); isDateDropdownOpen.set(false)"
-                class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold transition-colors cursor-pointer"
-                [ngClass]="
-                  reportService.filter().preset === dp.value
-                    ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-950/80 dark:text-blue-300'
-                    : 'text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-slate-700'
-                ">
-                <span>{{ dp.label }}</span>
-                @if (reportService.filter().preset === dp.value) {
-                  <span class="material-icons text-xs text-blue-600">check</span>
-                }
-              </button>
-            }
-          </div>
-        }
-      </div>
-
-      <!-- Unified Export Dropdown Button -->
-      <div class="relative">
-        <button
-          type="button"
-          (click)="isExportDropdownOpen.set(!isExportDropdownOpen()); isDateDropdownOpen.set(false)"
-          class="flex h-9 items-center gap-1.5 rounded-xl bg-[#525EA7] px-3.5 text-xs font-bold text-white shadow-xs hover:bg-[#434d8a] active:scale-95 cursor-pointer">
-          <span class="material-icons-outlined text-sm">download</span>
-          <span>Export</span>
-          <span class="material-icons text-sm">expand_more</span>
-        </button>
-
-        <!-- Floating Export Options Dropdown Popover -->
-        @if (isExportDropdownOpen()) {
-          <div class="fixed inset-0 z-40" (click)="isExportDropdownOpen.set(false)"></div>
-          <div
-            class="absolute right-0 top-full mt-1.5 z-50 min-w-[180px] rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-800">
-            <!-- Option 1: Export CSV -->
-            <button
-              type="button"
-              (click)="exportCsv(); isExportDropdownOpen.set(false)"
-              class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-slate-700 cursor-pointer">
-              <span class="material-icons-outlined text-base text-emerald-600">table_view</span>
-              <span>Export CSV</span>
-            </button>
-
-            <!-- Option 2: Export to Excel -->
-            <button
-              type="button"
-              (click)="exportXls(); isExportDropdownOpen.set(false)"
-              class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-bold text-blue-700 hover:bg-blue-50 dark:text-blue-300 dark:hover:bg-blue-950/60 cursor-pointer">
-              <span class="material-icons-outlined text-base text-blue-600">download</span>
-              <span>Export to Excel</span>
-            </button>
-          </div>
-        }
-      </div>
-    </div>
   </header>
 
-  <!-- 2. Report Category Selection (Single Gate Operation Button) -->
+  <!-- 2. Report Category Selection (Gate Operation Button styled like standard primary buttons) -->
   <section class="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar w-full max-w-full">
     <button
       type="button"
       (click)="setCategory('gate-operations')"
-      class="flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all duration-150 cursor-pointer border-2 border-[#0f2851] bg-[#0f2851] text-white shadow-md shadow-[#0f2851]/25 dark:border-blue-500 dark:bg-blue-600">
+      class="flex shrink-0 items-center gap-2 rounded-xl bg-[#525EA7] px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer">
       <span class="material-icons-outlined text-base">sensor_occupied</span>
       <span>Gate Operation</span>
       <span class="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -243,56 +167,91 @@
     </div>
   </section>
 
-  <!-- 4. Filter / Search Card -->
-  <section class="reports-filter-card flex flex-wrap items-center justify-between gap-3 rounded-[14px] p-3.5 shadow-xs">
-    <div class="relative min-w-[240px] flex-1 max-w-lg">
-      <span class="material-icons-outlined absolute left-3 top-2.5 text-sm text-slate-400">search</span>
-      <input
-        type="text"
-        [value]="reportService.filter().searchQuery"
-        (input)="onSearchInput($any($event.target).value)"
-        placeholder="Filter records in current report..."
-        class="h-9 w-full rounded-xl border border-slate-200 bg-white/90 pl-9 pr-4 text-xs font-medium text-slate-900 placeholder-slate-400 focus:border-[#525EA7] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder-slate-500" />
-    </div>
-
-    <!-- Active KPI Filter indicator & Quick Secondary Export Pills -->
-    <div class="flex items-center gap-2">
-      @if (selectedKpiFilter() !== 'ALL') {
-        <button
-          type="button"
-          (click)="selectedKpiFilter.set('ALL'); currentPage.set(1)"
-          class="flex h-9 items-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-bold text-blue-700 shadow-xs hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 cursor-pointer">
-          <span>Filter: {{ selectedKpiFilter() }}</span>
-          <span class="text-xs">✕</span>
+  <!-- 4. Gate Operations Table Card (Matching Gate Module layout, table structure, date filter & export button) -->
+  <section class="gate-events-card reports-table-card rounded-[14px] border border-[rgba(82,94,167,0.12)] bg-white shadow-xs overflow-hidden dark:border-[rgba(148,163,184,0.14)] dark:bg-[#111a2e]">
+    <!-- Streamlined Toolbar: Search on Left Corner, Date Filter + Export on Right Corner (Same as Gate Module) -->
+    <div
+      class="filters-bar-container relative flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 bg-white px-4 py-3 dark:border-slate-800 dark:bg-[#111a2e]">
+      <!-- Left Corner: Live Search Box -->
+      <div class="search-field-wrapper relative flex flex-1 min-w-[260px] max-w-lg items-center">
+        <svg class="search-lens-svg pointer-events-none absolute left-3 h-4 w-4 text-slate-400" viewBox="0 0 20 20"
+          fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+            clip-rule="evenodd" />
+        </svg>
+        <input type="text"
+          class="gate-search-input h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-1.5 pl-9 pr-8 text-xs font-medium text-slate-800 outline-none transition-all focus:border-[#525EA7] focus:bg-white focus:ring-2 focus:ring-[#525EA7]/20 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          placeholder="Search records in report..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchInput($event)" />
+        @if (searchQuery()) {
+        <button type="button"
+          class="btn-clear-gate-search absolute right-2.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+          (click)="onSearchInput('')">
+          ✕
         </button>
-      }
+        }
+      </div>
 
-      <button
-        type="button"
-        (click)="exportCsv()"
-        class="flex h-9 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold text-slate-700 shadow-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 cursor-pointer">
-        <span class="material-icons-outlined text-sm text-emerald-600">file_download</span>
-        <span>CSV</span>
-      </button>
-      <button
-        type="button"
-        (click)="exportXls()"
-        class="flex h-9 items-center gap-1 rounded-xl border border-blue-200 bg-blue-50 px-3 text-xs font-bold text-blue-700 hover:bg-blue-100 dark:border-blue-900/60 dark:bg-blue-950/60 dark:text-blue-300 cursor-pointer">
-        <span class="material-icons-outlined text-sm">grid_on</span>
-        <span>XLS</span>
-      </button>
+      <!-- Right Corner: Same Date Filter + Same Export Button as Gate Events -->
+      <div class="filter-controls-right flex flex-wrap items-center gap-2.5 shrink-0">
+        <!-- Date Selector (Calendar Option) -->
+        <div class="filter-item relative z-20 flex items-center">
+          <app-date-picker [value]="dateFilter()" (valueChange)="onDateFilterChange($event)" placeholder="Select Date"
+            [showClear]="true" />
+          @if (dateFilter()) {
+          <button type="button" class="ml-1 text-xs text-slate-400 hover:text-rose-500 cursor-pointer font-bold px-1"
+            (click)="onDateFilterChange('')" title="Clear date filter">
+            ✕
+          </button>
+          }
+        </div>
+
+        <!-- Export Button (Same as Gate Events & Inventory, with selection count) -->
+        <button type="button"
+          class="btn-export-main flex h-9 items-center gap-2 rounded-xl bg-[#525EA7] px-4 text-xs font-bold text-white shadow-xs transition-all hover:bg-[#434d8a] active:scale-95 cursor-pointer"
+          (click)="exportData()"
+          [title]="selectedIds().size > 0 ? ('Export ' + selectedIds().size + ' selected record(s) as CSV') : 'Export report data as CSV'">
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+          <span>{{ selectedIds().size > 0 ? 'Export (' + selectedIds().size + ')' : 'Export' }}</span>
+        </button>
+      </div>
     </div>
-  </section>
 
-  <!-- 5. Main Report Table Container (Gate Operation Table without Gate Lane, Line, TAT, Weighbridge; Dwell Time Added) -->
-  <section class="reports-table-card overflow-hidden rounded-[14px] shadow-xs">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300 border-collapse">
-        <thead class="border-b border-slate-200 bg-slate-50/90 text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300">
+    <!-- Active KPI Filter indicator banner if selected -->
+    @if (selectedKpiFilter() !== 'ALL') {
+      <div class="flex items-center justify-between border-b border-blue-100 bg-blue-50/70 px-4 py-2 dark:border-blue-900/40 dark:bg-blue-950/40">
+        <div class="flex items-center gap-2 text-xs font-semibold text-blue-800 dark:text-blue-300">
+          <span>Filtering by KPI:</span>
+          <span class="rounded-md bg-blue-100 px-2 py-0.5 font-bold text-blue-900 dark:bg-blue-900/60 dark:text-blue-200">
+            {{ selectedKpiFilter() }}
+          </span>
+        </div>
+        <button type="button" (click)="selectedKpiFilter.set('ALL'); currentPage.set(1)" class="text-xs font-bold text-blue-600 hover:text-blue-800 dark:text-blue-400 cursor-pointer">
+          Clear Filter ✕
+        </button>
+      </div>
+    }
+
+    <!-- Data Table matching gate-events-table with row selection checkboxes like inventory -->
+    <div class="table-responsive-wrapper overflow-x-auto">
+      <table class="gate-events-table w-full text-left text-xs text-slate-700 dark:text-slate-300">
+        <thead
+          class="border-b border-slate-200/80 bg-[#f8fafc] text-[11px] font-bold uppercase tracking-wider text-[#0f2851] dark:border-slate-800 dark:bg-[#0f172a] dark:text-slate-300">
           <tr>
+            <th class="col-checkbox px-4 py-3.5 w-10">
+              <input type="checkbox"
+                class="gate-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7]"
+                [checked]="isAllSelected()" (change)="toggleSelectAll()" title="Select all" />
+            </th>
             <th class="px-4 py-3.5 whitespace-nowrap">Visit No</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">Timestamp</th>
-            <th class="px-4 py-3.5 whitespace-nowrap">Direction</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Created Date / Time</th>
+            <th class="px-4 py-3.5 whitespace-nowrap">Cycle</th>
             <th class="px-4 py-3.5 whitespace-nowrap">Truck / Driver</th>
             <th class="px-4 py-3.5 whitespace-nowrap">Container No</th>
             <th class="px-4 py-3.5 whitespace-nowrap">OCR Status</th>
@@ -302,41 +261,67 @@
         </thead>
         <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
           @for (row of paginatedGateOps(); track row.id) {
-            <tr class="hover:bg-blue-50/40 dark:hover:bg-slate-800/60 transition-colors">
+            <tr
+              (click)="toggleSelect(row.id)"
+              class="cursor-pointer transition-colors hover:bg-slate-50/80 dark:hover:bg-slate-800/40"
+              [class.bg-blue-50/40]="isSelected(row.id)"
+              [class.dark:bg-blue-950/20]="isSelected(row.id)">
+              <!-- Checkbox (Like Inventory page) -->
+              <td class="col-checkbox px-4 py-3.5 w-10" (click)="$event.stopPropagation()">
+                <input type="checkbox"
+                  class="gate-checkbox h-4 w-4 rounded border-slate-300 text-[#525EA7] focus:ring-[#525EA7]"
+                  [checked]="isSelected(row.id)" (change)="toggleSelect(row.id)" />
+              </td>
+
               <!-- Visit No -->
-              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold text-blue-600 dark:text-blue-400">
+              <td class="whitespace-nowrap px-4 py-3.5 font-mono font-bold text-blue-600 dark:text-blue-400">
                 {{ row.visitNo }}
               </td>
 
-              <!-- Timestamp -->
-              <td class="whitespace-nowrap px-4 py-3 font-mono text-slate-500 dark:text-slate-400">
+              <!-- Created Date / Time -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-medium text-slate-600 dark:text-slate-300">
                 {{ row.timestamp }}
               </td>
 
-              <!-- Direction -->
-              <td class="whitespace-nowrap px-4 py-3">
+              <!-- Cycle (Gate In / Gate Out badge matching Gate Events) -->
+              <td class="whitespace-nowrap px-4 py-3.5">
                 <span
-                  class="rounded-md px-2 py-0.5 text-[10px] font-bold"
+                  class="cycle-tag inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px] font-semibold"
+                  [class.border-blue-200]="row.direction === 'IN'"
                   [class.bg-blue-50]="row.direction === 'IN'"
                   [class.text-blue-700]="row.direction === 'IN'"
-                  [class.dark:bg-blue-950]="row.direction === 'IN'"
+                  [class.dark:border-blue-800]="row.direction === 'IN'"
+                  [class.dark:bg-blue-950/30]="row.direction === 'IN'"
                   [class.dark:text-blue-300]="row.direction === 'IN'"
-                  [class.bg-teal-50]="row.direction === 'OUT'"
-                  [class.text-teal-700]="row.direction === 'OUT'"
-                  [class.dark:bg-teal-950]="row.direction === 'OUT'"
-                  [class.dark:text-teal-300]="row.direction === 'OUT'">
-                  {{ row.direction === 'IN' ? '↓ INBOUND' : '↑ OUTBOUND' }}
+                  [class.border-emerald-200]="row.direction === 'OUT'"
+                  [class.bg-emerald-50]="row.direction === 'OUT'"
+                  [class.text-emerald-700]="row.direction === 'OUT'"
+                  [class.dark:border-emerald-800]="row.direction === 'OUT'"
+                  [class.dark:bg-emerald-950/30]="row.direction === 'OUT'"
+                  [class.dark:text-emerald-300]="row.direction === 'OUT'">
+                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                    @if (row.direction === 'IN') {
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
+                        clip-rule="evenodd" />
+                    } @else {
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z"
+                        clip-rule="evenodd" />
+                    }
+                  </svg>
+                  {{ row.direction === 'IN' ? 'Gate In' : 'Gate Out' }}
                 </span>
               </td>
 
               <!-- Truck / Driver -->
-              <td class="whitespace-nowrap px-4 py-3">
-                <div class="font-bold text-slate-900 dark:text-white">{{ row.truckNo }}</div>
+              <td class="whitespace-nowrap px-4 py-3.5">
+                <div class="font-mono text-xs font-semibold text-slate-800 dark:text-slate-200">{{ row.truckNo }}</div>
                 <div class="text-[10px] text-slate-400 truncate max-w-[140px]" [title]="row.driverName">{{ row.driverName }}</div>
               </td>
 
               <!-- Container No + Non-ERP Badge -->
-              <td class="whitespace-nowrap px-4 py-3">
+              <td class="whitespace-nowrap px-4 py-3.5">
                 <div class="flex items-center gap-1.5">
                   <span class="font-mono font-bold text-slate-900 dark:text-white">
                     {{ row.containerNo }}
@@ -350,7 +335,7 @@
               </td>
 
               <!-- OCR Status -->
-              <td class="whitespace-nowrap px-4 py-3">
+              <td class="whitespace-nowrap px-4 py-3.5">
                 <span
                   class="rounded-md px-2 py-0.5 text-[10px] font-bold"
                   [class.bg-emerald-50]="row.ocrStatus === 'Auto-Matched'"
@@ -369,15 +354,15 @@
                 </span>
               </td>
 
-              <!-- Dwell Time Column (In place of TAT) -->
-              <td class="whitespace-nowrap px-4 py-3 font-mono font-bold">
+              <!-- Dwell Time Column -->
+              <td class="whitespace-nowrap px-4 py-3.5 font-mono font-bold">
                 <span class="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
                   {{ row.dwellTime || (row.turnaroundMinutes ? (row.turnaroundMinutes > 15 ? '4.5 Days' : '1.8 Days') : '2.0 Days') }}
                 </span>
               </td>
 
               <!-- Status -->
-              <td class="whitespace-nowrap px-4 py-3 text-right">
+              <td class="whitespace-nowrap px-4 py-3.5 text-right">
                 <span
                   class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold"
                   [class.bg-emerald-50]="row.status === 'Completed' || row.status === 'Gate Passed'"
@@ -394,14 +379,14 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="8" class="p-8 text-center">
+              <td colspan="9" class="p-8 text-center">
                 <div class="flex flex-col items-center justify-center gap-2">
                   <span class="text-3xl">🔍</span>
                   <strong class="text-sm font-semibold text-slate-900 dark:text-white">
                     No Gate Operation records match your filter criteria
                   </strong>
                   <p class="text-xs text-slate-500 dark:text-slate-400">
-                    Try clearing the KPI filter or adjusting your search term.
+                    Try clearing the date filter, KPI filter, or adjusting your search term.
                   </p>
                 </div>
               </td>

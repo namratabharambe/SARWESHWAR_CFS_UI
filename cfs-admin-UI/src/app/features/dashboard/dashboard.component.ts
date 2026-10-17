@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { DashboardService } from './services/dashboard.service';
 import { AuthService, ContextClient } from 'core/auth/auth.service';
 import { AdminRepository, matchIds } from 'core/data/admin.repository';
@@ -15,6 +16,7 @@ import { ExceptionAlertsComponent } from './components/exception-alerts/exceptio
   selector: 'app-dashboard',
   standalone: true,
   imports: [
+    RouterLink,
     KpiMetricCardComponent,
     YardOverviewComponent,
     GateOperationsLiveComponent,
@@ -32,7 +34,14 @@ export class DashboardComponent {
   public readonly repository = inject(AdminRepository);
   public readonly inventoryService = inject(InventoryService);
 
-  public readonly switchingContext = signal<boolean>(false);
+  @HostListener('window:keydown.escape')
+  public onEscKey(): void {
+    if (this.dashboardService.selectedGateActivity()) {
+      this.dashboardService.closeActivityPreview();
+    }
+  }
+
+  public switchingContext = signal<boolean>(false);
   public readonly contextSuccessMessage = signal<string>('');
 
   public readonly availableClients = this.repository.availableClients;

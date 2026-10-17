@@ -18,7 +18,7 @@ import { TaskService } from 'shared/services/task.service';
 import { InventoryService } from 'shared/services/inventory.service';
 import { AuthService } from 'core/auth/auth.service';
 import { AlertService } from 'shared/services/alert.service';
-import { VisitListItemDto, VisitsPagedResponse } from 'shared/types/gate-event/gate-event.interface';
+import { VisitListItemDto, VisitsPagedResponse, GateCountsResponse } from 'shared/types/gate-event/gate-event.interface';
 import {
   isCreatedToday,
   isVisitArrivalToday,
@@ -39,6 +39,20 @@ export class DashboardService {
   private readonly taskService = inject(TaskService, { optional: true });
   private readonly inventoryService = inject(InventoryService, { optional: true });
   private readonly alertService = inject(AlertService, { optional: true });
+
+  // Live Database Gate Counts
+  public readonly gateCounts = signal<GateCountsResponse | null>(null);
+
+  // Modal / Popup Preview for Recent Gate Activity
+  public readonly selectedGateActivity = signal<GateActivityItem | null>(null);
+
+  public openActivityPreview(item: GateActivityItem): void {
+    this.selectedGateActivity.set(item);
+  }
+
+  public closeActivityPreview(): void {
+    this.selectedGateActivity.set(null);
+  }
 
   // Filter Signals
   public readonly selectedDateRange = signal<string>('Today');
@@ -359,57 +373,132 @@ export class DashboardService {
     }
   }
 
+  private applyGateCountsToDashboard(counts: GateCountsResponse): void {
+    if (!counts) return;
+
+    const arrivals = counts.todayArrivals ?? counts.todayGateIn;
+    const departures = counts.todayDepartures ?? counts.todayGateOut;
+    const exceptions = counts.pendingReview ?? counts.inReviewCount;
+    const totalIn = counts.totalGateIn;
+    const totalOut = counts.totalGateOut;
+    const totalCount = counts.totalCount;
+    const verified = counts.ocrVerified ?? counts.ocrVerifiedCount;
+
+    if (typeof totalIn === 'number') {
+      this._gateInCount.set(totalIn);
+    }
+    if (typeof totalOut === 'number') {
+      this._gateOutCount.set(totalOut);
+    }
+
+    this._kpiMetrics.update((current) =>
+      current.map((kpi) => {
+        if (kpi.id === 'arrivals-today' && typeof arrivals === 'number') {
+          return {
+            ...kpi,
+            value: String(arrivals),
+            trendPercentage: `${arrivals} today`,
+          };
+        }
+        if (kpi.id === 'departures-today' && typeof departures === 'number') {
+          return {
+            ...kpi,
+            value: String(departures),
+            trendPercentage: `${departures} today`,
+          };
+        }
+        if (kpi.id === 'yard-inventory') {
+          const yardInv =
+            typeof totalIn === 'number' && typeof totalOut === 'number'
+              ? Math.max(0, totalIn - totalOut)
+              : typeof totalCount === 'number'
+                ? totalCount
+                : kpi.value;
+          return {
+            ...kpi,
+            value: String(yardInv),
+            trendPercentage: `${yardInv} TEU`,
+          };
+        }
+        if (kpi.id === 'exceptions' && typeof exceptions === 'number') {
+          return {
+            ...kpi,
+            value: String(exceptions),
+            trendPercentage: `${exceptions} flagged`,
+            trendDirection: exceptions > 0 ? 'negative' : 'positive',
+          };
+        }
+        return kpi;
+      }),
+    );
+
+    if (typeof totalIn === 'number' || typeof verified === 'number') {
+      const arrivedCount = typeof totalIn === 'number' ? totalIn : this._gateInCount();
+      const ocrScanCount = typeof verified === 'number' ? verified : Math.max(0, Math.round(arrivedCount * 0.9));
+      const verificationCount = typeof verified === 'number' ? verified : Math.max(0, Math.round(arrivedCount * 0.8));
+
+      this._gateLiveStages.set([
+        {
+          id: 'arrived',
+          label: 'Arrived',
+          count: arrivedCount,
+          percentage: 85,
+          trendText: '12%',
+          trendDirection: 'positive',
+          colorTheme: 'blue',
+          iconType: 'truck-in',
+        },
+        {
+          id: 'ocr-scan',
+          label: 'OCR Scan',
+          count: ocrScanCount,
+          percentage: 75,
+          trendText: '8%',
+          trendDirection: 'positive',
+          colorTheme: 'amber',
+          iconType: 'ocr-scan',
+        },
+        {
+          id: 'verification',
+          label: 'Verification',
+          count: verificationCount,
+          percentage: 65,
+          trendText: '5%',
+          trendDirection: 'positive',
+          colorTheme: 'blue',
+          iconType: 'verification',
+        },
+      ]);
+    }
+  }
+
   public loadGateActivities(siteId?: string, clientId?: string): void {
     if (!this.gateEventService) return;
     const gateService = this.gateEventService;
     const activeSiteId = siteId || this.auth?.getActiveSiteId() || undefined;
     const activeClientId = clientId || this.auth?.getActiveClientId() || undefined;
 
+    // Fetch database gate counts directly from GET /gate/counts
+    gateService.getGateCounts(activeSiteId, activeClientId).subscribe({
+      next: (counts) => {
+        if (counts) {
+          this.gateCounts.set(counts);
+          this.applyGateCountsToDashboard(counts);
+        }
+      },
+    });
+
     gateService
       .getVisits({
         page: 1,
-        pageSize: 200,
+        pageSize: 60,
         siteId: activeSiteId,
         clientId: activeClientId,
       })
-      .pipe(
-        switchMap((res: VisitsPagedResponse) => {
-          const firstPageItems = res?.items ?? (Array.isArray(res) ? (res as any) : []);
-          const totalCount = res?.totalCount ?? firstPageItems.length;
-          const returnedCount = firstPageItems.length;
-
-          if (totalCount > returnedCount && returnedCount > 0) {
-            const pageSize = 200;
-            const totalPages = Math.ceil(totalCount / pageSize);
-            const remainingRequests$: Observable<VisitsPagedResponse>[] = [];
-            for (let p = 2; p <= totalPages; p++) {
-              remainingRequests$.push(
-                gateService.getVisits({
-                  page: p,
-                  pageSize,
-                  siteId: activeSiteId,
-                  clientId: activeClientId,
-                }),
-              );
-            }
-            return forkJoin(remainingRequests$).pipe(
-              map((moreResponses) => {
-                const allItems = [...firstPageItems];
-                for (const r of moreResponses) {
-                  if (r?.items?.length) {
-                    allItems.push(...r.items);
-                  }
-                }
-                return { items: allItems, totalCount: Math.max(totalCount, allItems.length) };
-              }),
-            );
-          }
-
-          return of({ items: firstPageItems, totalCount });
-        }),
-      )
       .subscribe({
-        next: ({ items, totalCount }) => {
+        next: (res: VisitsPagedResponse) => {
+          const items = res?.items ?? (Array.isArray(res) ? (res as any) : []);
+          const totalCount = res?.totalCount ?? items.length;
           if (items && items.length > 0) {
             const mapped: GateActivityItem[] = [];
             const createItem = (visit: any, type: 'IN' | 'OUT', ev: any, customId?: string): GateActivityItem => {
@@ -422,11 +511,12 @@ export class DashboardService {
                 dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
               const size = visit.containerSize ? `${visit.containerSize}' FT` : "40' FT";
-              const truckPlate = (visit.truckNumber && visit.truckNumber !== 'NA')
+              const rawTruck = (visit.truckNumber && visit.truckNumber !== 'NA' && visit.truckNumber !== 'Pending Scan')
                 ? visit.truckNumber
-                : (ev?.detectedTruckNumber && ev?.detectedTruckNumber !== 'NA')
+                : (ev?.detectedTruckNumber && ev?.detectedTruckNumber !== 'NA' && ev?.detectedTruckNumber !== 'Pending Scan')
                   ? ev.detectedTruckNumber
-                  : 'Pending Scan';
+                  : '';
+              const truckPlate = rawTruck;
 
               const containerCode = visit.containerNumber || ev?.detectedContainerNumber || 'Pending OCR';
 
@@ -473,19 +563,32 @@ export class DashboardService {
             const itemsTodayIn = items.filter((v: any) => isVisitArrivalToday(v)).length;
             const itemsTodayOut = items.filter((v: any) => isVisitDepartureToday(v)).length;
 
-            const arrivals = itemsTodayIn;
-            const departures = itemsTodayOut;
+            const counts = this.gateCounts();
+            const arrivals = typeof (counts?.todayArrivals ?? counts?.todayGateIn) === 'number'
+              ? (counts?.todayArrivals ?? counts?.todayGateIn)!
+              : itemsTodayIn;
+            const departures = typeof (counts?.todayDepartures ?? counts?.todayGateOut) === 'number'
+              ? (counts?.todayDepartures ?? counts?.todayGateOut)!
+              : itemsTodayOut;
 
             const inYard = items.filter((v) => v.status === 'IN_YARD').length;
             const review = mapped.filter((a) => a.status === 'Review').length;
             const verified = mapped.filter((a) => a.status === 'Verified').length;
             const departed = items.filter((v) => v.status === 'DEPARTED').length;
 
-            const totalGateIn = items.filter((v: any) => isVisitArrival(v)).length;
-            const totalGateOut = items.filter((v: any) => isVisitDeparture(v)).length;
+            const totalGateIn = typeof counts?.totalGateIn === 'number'
+              ? counts.totalGateIn
+              : items.filter((v: any) => isVisitArrival(v)).length;
+            const totalGateOut = typeof counts?.totalGateOut === 'number'
+              ? counts.totalGateOut
+              : items.filter((v: any) => isVisitDeparture(v)).length;
 
             this._gateInCount.set(totalGateIn);
             this._gateOutCount.set(totalGateOut);
+
+            const verifiedCount = typeof (counts?.ocrVerified ?? counts?.ocrVerifiedCount) === 'number'
+              ? (counts?.ocrVerified ?? counts?.ocrVerifiedCount)!
+              : Math.max(0, Math.round(totalGateIn * 0.9));
 
             this._gateLiveStages.set([
               {
@@ -501,7 +604,7 @@ export class DashboardService {
               {
                 id: 'ocr-scan',
                 label: 'OCR Scan',
-                count: Math.max(0, Math.round(totalGateIn * 0.9)),
+                count: verifiedCount,
                 percentage: 75,
                 trendText: '8%',
                 trendDirection: 'positive',
@@ -511,7 +614,7 @@ export class DashboardService {
               {
                 id: 'verification',
                 label: 'Verification',
-                count: Math.max(0, Math.round(totalGateIn * 0.8)),
+                count: verifiedCount,
                 percentage: 65,
                 trendText: '5%',
                 trendDirection: 'positive',
@@ -533,12 +636,16 @@ export class DashboardService {
               ? this.taskService.allTasks().filter((t) => t.status !== 'Completed').length
               : review;
 
-            const yardInventoryCount = inYard || (this.inventoryService ? this.inventoryService.containers().length : 0) || arrivals;
+            const yardInventoryCount = (typeof counts?.totalGateIn === 'number' && typeof counts?.totalGateOut === 'number')
+              ? Math.max(0, counts.totalGateIn - counts.totalGateOut)
+              : (typeof counts?.totalCount === 'number' ? counts.totalCount : (inYard || (this.inventoryService ? this.inventoryService.containers().length : 0) || arrivals));
 
             const alertCount = this.alertService
               ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
               : 0;
-            const activeExceptions = alertCount > 0 ? alertCount : review;
+            const activeExceptions = typeof (counts?.pendingReview ?? counts?.inReviewCount) === 'number'
+              ? (counts?.pendingReview ?? counts?.inReviewCount)!
+              : (alertCount > 0 ? alertCount : review);
 
             this._kpiMetrics.set([
               {

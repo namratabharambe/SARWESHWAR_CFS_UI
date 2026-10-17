@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { ReportService } from 'shared/services/report.service';
 import { ReportCategory } from 'shared/types/report/report.interface';
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
+import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { matchesDateFilter, parseAnyDate } from 'shared/utils/date-filter.util';
 
 export type GateOperationKpiFilter = 'ALL' | 'GATE_IN' | 'GATE_OUT' | 'NON_ERP_GATE_IN' | 'NON_ERP_GATE_OUT' | 'EXCEPTION';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, PaginationComponent],
+  imports: [CommonModule, FormsModule, PaginationComponent, DatePickerComponent],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,25 +24,73 @@ export class ReportsComponent implements OnInit {
     this.reportService.loadGateOperationsData();
   }
 
-  public readonly isDateDropdownOpen = signal<boolean>(false);
-  public readonly isExportDropdownOpen = signal<boolean>(false);
-  public readonly isMoreMenuOpen = signal<boolean>(false);
-
   // Active KPI Filter (like Tasks KPI Cards)
   public readonly selectedKpiFilter = signal<GateOperationKpiFilter>('ALL');
+
+  // Search and Date Filters matching Gate Events
+  public readonly searchQuery = signal<string>('');
+  public readonly dateFilter = signal<string>('');
+
+  // Row selection for selective export (matching inventory page)
+  public readonly selectedIds = signal<Set<string>>(new Set());
+  public readonly selectedCount = computed<number>(() => this.selectedIds().size);
 
   // Pagination
   public readonly currentPage = signal<number>(1);
   public readonly pageSize = signal<number>(10);
 
-  // Dynamic Gate Operation KPI counts
+  public readonly isAllSelected = computed<boolean>(() => {
+    const current = this.paginatedGateOps();
+    if (!current.length) return false;
+    const selected = this.selectedIds();
+    return current.every((r) => selected.has(r.id));
+  });
+
+  public toggleSelectAll(): void {
+    const current = this.paginatedGateOps();
+    const selected = new Set(this.selectedIds());
+    if (this.isAllSelected()) {
+      current.forEach((r) => selected.delete(r.id));
+    } else {
+      current.forEach((r) => selected.add(r.id));
+    }
+    this.selectedIds.set(selected);
+  }
+
+  public toggleSelect(id: string): void {
+    const selected = new Set(this.selectedIds());
+    if (selected.has(id)) {
+      selected.delete(id);
+    } else {
+      selected.add(id);
+    }
+    this.selectedIds.set(selected);
+  }
+
+  public isSelected(id: string): boolean {
+    return this.selectedIds().has(id);
+  }
+
+  // Dynamic Gate Operation KPI counts from database (Non-ERP is 0 as there is no data in ERP)
   public readonly gateOpKpis = computed(() => {
     const rows = this.reportService.gateOperationsData();
-    const gateIn = rows.filter((r) => r.direction === 'IN' && !r.isNonErp).length;
-    const gateOut = rows.filter((r) => r.direction === 'OUT' && !r.isNonErp).length;
-    const nonErpGateIn = rows.filter((r) => r.direction === 'IN' && r.isNonErp).length;
-    const nonErpGateOut = rows.filter((r) => r.direction === 'OUT' && r.isNonErp).length;
-    const exception = rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length;
+    const counts = this.reportService.gateCounts();
+
+    const gateIn = typeof counts?.totalGateIn === 'number'
+      ? counts.totalGateIn
+      : rows.filter((r) => r.direction === 'IN' && !r.isNonErp).length;
+
+    const gateOut = typeof counts?.totalGateOut === 'number'
+      ? counts.totalGateOut
+      : rows.filter((r) => r.direction === 'OUT' && !r.isNonErp).length;
+
+    const nonErpGateIn = 0; // In ERP there is no data so show 0
+    const nonErpGateOut = 0; // In ERP there is no data so show 0
+
+    const exceptionFromApi = counts?.pendingReview ?? counts?.inReviewCount;
+    const exception = typeof exceptionFromApi === 'number'
+      ? exceptionFromApi
+      : rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length;
 
     return {
       gateIn,
@@ -51,7 +101,7 @@ export class ReportsComponent implements OnInit {
     };
   });
 
-  // Filtered rows applying both search query and active KPI card filter
+  // Filtered rows applying search query, active KPI card filter, and date filter
   public readonly filteredGateOpsWithKpi = computed(() => {
     let rows = this.reportService.filteredGateRows();
     const kpi = this.selectedKpiFilter();
@@ -66,6 +116,12 @@ export class ReportsComponent implements OnInit {
     } else if (kpi === 'EXCEPTION') {
       rows = rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held');
     }
+
+    const df = this.dateFilter();
+    if (df && df.trim()) {
+      rows = rows.filter((r) => matchesDateFilter(r.rawDate || r.timestamp, df));
+    }
+
     return rows;
   });
 
@@ -128,8 +184,31 @@ export class ReportsComponent implements OnInit {
   }
 
   public onSearchInput(value: string): void {
+    this.searchQuery.set(value);
     this.reportService.setSearchQuery(value);
     this.currentPage.set(1);
+  }
+
+  public onDateFilterChange(val: string): void {
+    this.dateFilter.set(val);
+    this.currentPage.set(1);
+
+    if (!val) {
+      this.reportService.loadGateOperationsData();
+      return;
+    }
+
+    const parsed = parseAnyDate(val);
+    if (parsed) {
+      const year = parsed.getFullYear();
+      const month = parsed.getMonth();
+      const day = parsed.getDate();
+      const start = new Date(year, month, day, 0, 0, 0).toISOString();
+      const end = new Date(year, month, day, 23, 59, 59, 999).toISOString();
+      this.reportService.loadGateOperationsData(undefined, undefined, start, end);
+    } else {
+      this.reportService.loadGateOperationsData();
+    }
   }
 
   public setPage(page: number): void {
@@ -141,8 +220,45 @@ export class ReportsComponent implements OnInit {
     this.currentPage.set(1);
   }
 
+  public exportData(): void {
+    const allFiltered = this.filteredGateOpsWithKpi();
+    const selected = this.selectedIds();
+    const data = selected.size > 0
+      ? allFiltered.filter((r) => selected.has(r.id))
+      : allFiltered;
+
+    if (!data.length) {
+      this.reportService.showToast('No records available to export.');
+      return;
+    }
+
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      ['Visit No,Timestamp,Direction,Truck No,Driver Name,Container No,OCR Status,Dwell Time,Status']
+        .concat(
+          data.map(
+            (r) =>
+              `"${r.visitNo}","${r.timestamp}","${r.direction}","${r.truckNo}","${r.driverName}","${r.containerNo}","${r.ocrStatus}","${r.dwellTime || '-'}","${r.status}"`,
+          ),
+        )
+        .join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `gate-operations-report-${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.reportService.showToast(
+      selected.size > 0
+        ? `Exported ${selected.size} selected record(s) to CSV.`
+        : `Exported ${data.length} gate operation records to CSV.`
+    );
+  }
+
   public exportCsv(): void {
-    this.reportService.exportCurrentReportToCsv();
+    this.exportData();
   }
 
   public exportXls(): void {
