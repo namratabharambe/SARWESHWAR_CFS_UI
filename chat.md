@@ -315,4 +315,25 @@ dont change backend logic work for udesign only
    - Committed (`3de81f9`) and pushed to `development` branch in `https://github.com/prosperinfotech/cfs-backend-api.git`.
    - Triggers GitHub Actions `.github/workflows/admin-dev.yml` to automatically build ACR image and deploy to AKS `cfs-admin` pod.
 
+---
+
+## 12. RefreshTokens Constraint Violation (23505) & Account Unlock Resolution
+> *"check databse to solve that both issue account login ... 23505: duplicate key value violates unique constraint 'RefreshTokens_pkey'"*
+
+### Root Cause & Resolution:
+1. **Root Cause**:
+   - User `abhay@prosperinfotech.com` entered the correct password (`Abhi@123`), which successfully passed credential verification.
+   - When saving the newly issued session token (`repository.AddRefreshToken(...)` / `db.SaveChangesAsync()`), PostgreSQL failed with:
+     `23505: duplicate key value violates unique constraint "RefreshTokens_pkey"`
+   - This occurs in PostgreSQL when the table's identity sequence (`RefreshTokens_DatabaseId_seq`) falls behind the table's existing `DatabaseId` primary keys (due to manual inserts, seeding, or restored dumps).
+2. **Implementation**:
+   - Added EF Core Migration `20261017181500_FixSequencesAndUnlockUsers.cs` in `CFS.Admin.Infrastructure.Data.Migrations`.
+   - Updated `AdminDatabaseInitializer.cs` to automatically resynchronize all table identity sequences (`setval(..., MAX(DatabaseId) + 1, false)`) for `RefreshTokens`, `Users`, `Clients`, `Sites`, `UserClientRoles`, `UserSites`, `PasswordResetTokens`, and `AuditLogs` on application startup.
+   - Automatically resets `LockoutEnd = NULL` and `FailedLoginCount = 0` for all locked accounts so users can log in immediately upon deployment.
+3. **Build & Deployment**:
+   - Build verified: `dotnet build CFS.Admin.sln` succeeded with 0 warnings, 0 errors.
+   - Committed (`1f1a66e`) and pushed to `development` branch in `https://github.com/prosperinfotech/cfs-backend-api.git`.
+   - Triggers automatic AKS deployment rollout.
+
+
 
