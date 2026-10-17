@@ -136,6 +136,10 @@ export class LoginComponent {
         let message = 'Invalid email address or password. Please verify your credentials and try again.';
         if (err?.status === 0 || err?.status === 504) {
           message = 'Unable to connect to the CFS authentication server. Please check your network connection.';
+        } else if (err?.status === 429) {
+          message = 'Too many login attempts. Please wait a moment and try again.';
+        } else if (err?.status === 503) {
+          message = 'The authentication service is temporarily unavailable. Please wait a few seconds and try again.';
         } else if (err?.status === 401 || err?.status === 403) {
           message = 'Invalid email address or password. Please verify your credentials and try again.';
         } else if (typeof err?.error === 'string' && err.error.trim().length > 0 && !err.error.includes('<html') && !err.error.includes('{')) {
