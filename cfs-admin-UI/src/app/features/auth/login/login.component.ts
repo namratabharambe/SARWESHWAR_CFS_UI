@@ -140,6 +140,8 @@ export class LoginComponent {
           message = 'Too many login attempts. Please wait a moment and try again.';
         } else if (err?.status === 503) {
           message = 'The authentication service is temporarily unavailable. Please wait a few seconds and try again.';
+        } else if (err?.status === 423) {
+          message = err?.error?.detail || 'Your account is temporarily locked due to multiple failed login attempts. Please wait 15 minutes or contact your administrator.';
         } else if (err?.status === 401 || err?.status === 403) {
           message = 'Invalid email address or password. Please verify your credentials and try again.';
         } else if (typeof err?.error === 'string' && err.error.trim().length > 0 && !err.error.includes('<html') && !err.error.includes('{')) {
