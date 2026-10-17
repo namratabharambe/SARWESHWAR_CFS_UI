@@ -296,3 +296,23 @@ dont change backend logic work for udesign only
    - Verified all 103 test cases pass (`dotnet test`).
    - Validated against live database with real data.
 
+---
+
+## 11. Backend 503 Service Unavailable Resolution
+> *"chunk-TBYM57TZ.js:2 POST https://api.smartyard.prosperinfotech.com/admin/api/auth/login 503 (Service Unavailable) ... pushed it to development to solve my issue in live url"*
+
+### Root Cause & Resolution:
+1. **Root Cause**:
+   - `CFS.Admin.Api` had a global `FixedWindowLimiter` (`PermitLimit = 10`, `QueueLimit = 0`, `Window = 1 min`) applied to the `"auth"` policy.
+   - In ASP.NET Core (`Microsoft.AspNetCore.RateLimiting`), default rejection status code is `503 Service Unavailable` with empty body.
+   - Because the limiter was global (not partitioned by IP), multiple attempts or concurrent tabs quickly exhausted the 10 permits, causing `503` for all login/refresh requests.
+2. **Implementation (`CFS.Admin/src/CFS.Admin.Api/Program.cs`)**:
+   - Configured client IP partitioning via `X-Forwarded-For` / `RemoteIpAddress` using `RateLimitPartition.GetFixedWindowLimiter`.
+   - Increased limit to 120 requests/min with a 10-request queue.
+   - Set rejection status code to `429 Too Many Requests`.
+3. **Build & CI/CD Deployment**:
+   - Verified build: `dotnet build CFS.Admin.sln` passed cleanly with 0 errors/warnings.
+   - Committed (`3de81f9`) and pushed to `development` branch in `https://github.com/prosperinfotech/cfs-backend-api.git`.
+   - Triggers GitHub Actions `.github/workflows/admin-dev.yml` to automatically build ACR image and deploy to AKS `cfs-admin` pod.
+
+
