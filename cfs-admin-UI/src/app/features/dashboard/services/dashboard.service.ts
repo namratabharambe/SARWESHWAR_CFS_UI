@@ -378,11 +378,11 @@ export class DashboardService {
 
     const arrivals = counts.todayArrivals ?? counts.todayGateIn;
     const departures = counts.todayDepartures ?? counts.todayGateOut;
-    const exceptions = counts.pendingReview ?? counts.inReviewCount;
+    const exceptions = counts.pendingReview ?? counts.inReviewCount ?? ((counts.GateinReviewCount ?? 0) + (counts.GateOutReviewCount ?? 0));
     const totalIn = counts.totalGateIn;
     const totalOut = counts.totalGateOut;
-    const totalCount = counts.totalCount;
-    const verified = counts.ocrVerified ?? counts.ocrVerifiedCount;
+    const totalCount = counts.totalCount ?? ((totalIn ?? 0) + (totalOut ?? 0));
+    const verified = counts.ocrVerified ?? counts.ocrVerifiedCount ?? ((counts.GateinocrVerifiedCount ?? 0) + (counts.GateOutocrVerifiedCount ?? 0));
 
     if (typeof totalIn === 'number') {
       this._gateInCount.set(totalIn);
@@ -588,7 +588,7 @@ export class DashboardService {
 
             const verifiedCount = typeof (counts?.ocrVerified ?? counts?.ocrVerifiedCount) === 'number'
               ? (counts?.ocrVerified ?? counts?.ocrVerifiedCount)!
-              : Math.max(0, Math.round(totalGateIn * 0.9));
+              : ((counts?.GateinocrVerifiedCount ?? 0) + (counts?.GateOutocrVerifiedCount ?? 0)) || Math.max(0, Math.round(totalGateIn * 0.9));
 
             this._gateLiveStages.set([
               {
@@ -643,8 +643,8 @@ export class DashboardService {
             const alertCount = this.alertService
               ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
               : 0;
-            const activeExceptions = typeof (counts?.pendingReview ?? counts?.inReviewCount) === 'number'
-              ? (counts?.pendingReview ?? counts?.inReviewCount)!
+            const activeExceptions = typeof (counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0))) === 'number'
+              ? (counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0)))!
               : (alertCount > 0 ? alertCount : review);
 
             this._kpiMetrics.set([
@@ -832,21 +832,36 @@ export class DashboardService {
               utilizationPercentage: Math.min(100, Math.round(((inYard * 2 || arrivals * 2) / 1200) * 100)),
             });
           } else {
-            // Zero visits state
-            this._gateInCount.set(0);
-            this._gateOutCount.set(0);
+            // Zero visits state - retain counts from GET /gate/counts
+            const counts = this.gateCounts();
+            const totalIn = typeof counts?.totalGateIn === 'number' ? counts.totalGateIn : 0;
+            const totalOut = typeof counts?.totalGateOut === 'number' ? counts.totalGateOut : 0;
+            const arrivals = typeof (counts?.todayArrivals ?? counts?.todayGateIn) === 'number'
+              ? (counts?.todayArrivals ?? counts?.todayGateIn)!
+              : 0;
+            const departures = typeof (counts?.todayDepartures ?? counts?.todayGateOut) === 'number'
+              ? (counts?.todayDepartures ?? counts?.todayGateOut)!
+              : 0;
+            const exceptions = typeof (counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0))) === 'number'
+              ? (counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0)))!
+              : (this.alertService ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length : 0);
+
+            this._gateInCount.set(totalIn);
+            this._gateOutCount.set(totalOut);
             this._allGateActivities.set([]);
             const openTasksCount = this.taskService
               ? this.taskService.allTasks().filter((t) => t.status !== 'Completed').length
               : 0;
-            const yardInventoryCount = this.inventoryService ? this.inventoryService.containers().length : 0;
+            const yardInventoryCount = (totalIn > 0 && totalOut > 0)
+              ? Math.max(0, totalIn - totalOut)
+              : (counts?.totalCount ?? (this.inventoryService ? this.inventoryService.containers().length : 0));
 
             this._kpiMetrics.set([
               {
                 id: 'arrivals-today',
                 label: 'Arrivals Today',
-                value: '0',
-                trendPercentage: '0 today',
+                value: String(arrivals),
+                trendPercentage: `${arrivals} today`,
                 trendLabel: 'arrivals',
                 trendDirection: 'positive',
                 iconType: 'truck-in',
@@ -856,8 +871,8 @@ export class DashboardService {
               {
                 id: 'departures-today',
                 label: 'Departures Today',
-                value: '0',
-                trendPercentage: '0 today',
+                value: String(departures),
+                trendPercentage: `${departures} today`,
                 trendLabel: 'departures',
                 trendDirection: 'positive',
                 iconType: 'truck-out',
@@ -889,22 +904,10 @@ export class DashboardService {
               {
                 id: 'exceptions',
                 label: 'Exceptions',
-                value: String(
-                  this.alertService
-                    ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
-                    : 0,
-                ),
-                trendPercentage: `${this.alertService
-                  ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
-                  : 0
-                  } active`,
-                trendLabel: 'alerts',
-                trendDirection:
-                  (this.alertService
-                    ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
-                    : 0) > 0
-                    ? 'negative'
-                    : 'positive',
+                value: String(exceptions),
+                trendPercentage: `${exceptions} flagged`,
+                trendLabel: 'review',
+                trendDirection: exceptions > 0 ? 'negative' : 'positive',
                 iconType: 'exception',
                 colorTheme: 'red',
                 hasSparkline: true,
@@ -941,14 +944,18 @@ export class DashboardService {
               currentTeu: 0,
               utilizationPercentage: 0,
             });
-            this._gateInCount.set(0);
-            this._gateOutCount.set(0);
           }
         },
         error: () => {
           this._allGateActivities.set([]);
-          this._gateInCount.set(0);
-          this._gateOutCount.set(0);
+          const counts = this.gateCounts();
+          if (counts && typeof counts.totalGateIn === 'number') {
+            this._gateInCount.set(counts.totalGateIn);
+            this._gateOutCount.set(counts.totalGateOut ?? 0);
+          } else {
+            this._gateInCount.set(0);
+            this._gateOutCount.set(0);
+          }
         },
       });
   }

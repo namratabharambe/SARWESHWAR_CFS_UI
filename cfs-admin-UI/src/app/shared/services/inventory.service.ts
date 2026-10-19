@@ -361,22 +361,40 @@ export class InventoryService {
             }
           } else {
             this.containers.set([]);
-            this.totalServerCount.set(0);
-            this.gateInTotalCount.set(0);
-            this.gateOutTotalCount.set(0);
-            this.todayGateInCount.set(0);
-            this.todayGateOutCount.set(0);
+            const counts = this.gateCounts();
+            if (counts && typeof counts.totalGateIn === 'number') {
+              this.gateInTotalCount.set(counts.totalGateIn);
+              this.gateOutTotalCount.set(counts.totalGateOut ?? 0);
+              this.todayGateInCount.set(counts.todayGateIn ?? counts.todayArrivals ?? 0);
+              this.todayGateOutCount.set(counts.todayGateOut ?? counts.todayDepartures ?? 0);
+              this.totalServerCount.set(counts.totalCount ?? ((counts.totalGateIn ?? 0) + (counts.totalGateOut ?? 0)));
+            } else {
+              this.totalServerCount.set(0);
+              this.gateInTotalCount.set(0);
+              this.gateOutTotalCount.set(0);
+              this.todayGateInCount.set(0);
+              this.todayGateOutCount.set(0);
+            }
             this.selectedContainer.set(null);
           }
         },
         error: () => {
           this.isLoading.set(false);
           this.containers.set([]);
-          this.totalServerCount.set(0);
-          this.gateInTotalCount.set(0);
-          this.gateOutTotalCount.set(0);
-          this.todayGateInCount.set(0);
-          this.todayGateOutCount.set(0);
+          const counts = this.gateCounts();
+          if (counts && typeof counts.totalGateIn === 'number') {
+            this.gateInTotalCount.set(counts.totalGateIn);
+            this.gateOutTotalCount.set(counts.totalGateOut ?? 0);
+            this.todayGateInCount.set(counts.todayGateIn ?? counts.todayArrivals ?? 0);
+            this.todayGateOutCount.set(counts.todayGateOut ?? counts.todayDepartures ?? 0);
+            this.totalServerCount.set(counts.totalCount ?? ((counts.totalGateIn ?? 0) + (counts.totalGateOut ?? 0)));
+          } else {
+            this.totalServerCount.set(0);
+            this.gateInTotalCount.set(0);
+            this.gateOutTotalCount.set(0);
+            this.todayGateInCount.set(0);
+            this.todayGateOutCount.set(0);
+          }
           this.selectedContainer.set(null);
         },
       });
@@ -644,20 +662,27 @@ export class InventoryService {
     const gateOut = typeof counts?.totalGateOut === 'number' ? counts.totalGateOut : (this.gateOutTotalCount() > 0 ? this.gateOutTotalCount() : outFromList);
 
     const totalFromApi = typeof counts?.totalCount === 'number' ? counts.totalCount : this.totalServerCount();
-    const total = mode === 'GATE_IN' ? gateIn : (mode === 'GATE_OUT' ? gateOut : (totalFromApi || list.length));
+    const total = mode === 'GATE_IN' ? gateIn : (mode === 'GATE_OUT' ? gateOut : (totalFromApi || (gateIn + gateOut) || list.length));
 
     const imports = list.filter((c) => c.cargoType === 'Import').length;
     const exports = list.filter((c) => c.cargoType === 'Export').length;
     const empties = list.filter((c) => c.cargoType === 'Empty' || c.fullEmpty === 'Empty').length;
     const overstays = list.filter((c) => c.daysInYard > 7).length;
 
+    const todayIn = typeof (counts?.todayGateIn ?? counts?.todayArrivals) === 'number'
+      ? (counts?.todayGateIn ?? counts?.todayArrivals)!
+      : this.todayGateInCount();
+    const todayOut = typeof (counts?.todayGateOut ?? counts?.todayDepartures) === 'number'
+      ? (counts?.todayGateOut ?? counts?.todayDepartures)!
+      : this.todayGateOutCount();
+
     return {
       totalContainers: total,
       totalTrend: `${total} active`,
       gateInCount: gateIn,
-      gateInTrend: `${this.todayGateInCount()} arrivals today`,
+      gateInTrend: `${todayIn} arrivals today`,
       gateOutCount: gateOut,
-      gateOutTrend: `${this.todayGateOutCount()} departures today`,
+      gateOutTrend: `${todayOut} departures today`,
       importCount: imports,
       importTrend: `${imports} import units`,
       exportCount: exports,

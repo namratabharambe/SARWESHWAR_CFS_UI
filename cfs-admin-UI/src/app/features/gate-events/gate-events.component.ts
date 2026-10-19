@@ -898,8 +898,6 @@ export class GateEventsComponent implements OnInit {
     const todayOutCount = this.todayCheckoutCount();
 
     const counts = this.gateCounts();
-    const verifiedFromApi = counts?.ocrVerified ?? counts?.ocrVerifiedCount;
-    const pendingFromApi = counts?.pendingReview ?? counts?.inReviewCount;
     const todayArrivalsFromApi = counts?.todayArrivals ?? counts?.todayGateIn;
     const todayDeparturesFromApi = counts?.todayDepartures ?? counts?.todayGateOut;
     const totalGateInFromApi = counts?.totalGateIn;
@@ -923,9 +921,24 @@ export class GateEventsComponent implements OnInit {
         ? list.filter((e) => e.direction === 'IN')
         : list);
 
-    const verifiedItems = typeof verifiedFromApi === 'number' ? verifiedFromApi : targetModeItems.filter((e) => e.status === 'Verified').length;
-    const pendingReview = typeof pendingFromApi === 'number' ? pendingFromApi : targetModeItems.filter((e) => e.status === 'Review').length;
+    // Mode-aware OCR Verified and In Review counts from GET /gate/counts
+    const modeVerifiedFromApi = mode === 'in'
+      ? (counts?.GateinocrVerifiedCount ?? counts?.gateInocrVerifiedCount)
+      : (mode === 'out'
+        ? (counts?.GateOutocrVerifiedCount ?? counts?.gateOutocrVerifiedCount)
+        : (counts?.ocrVerified ?? counts?.ocrVerifiedCount ?? ((counts?.GateinocrVerifiedCount ?? 0) + (counts?.GateOutocrVerifiedCount ?? 0))));
+
+    const modePendingFromApi = mode === 'in'
+      ? (counts?.GateinReviewCount ?? counts?.gateInReviewCount)
+      : (mode === 'out'
+        ? (counts?.GateOutReviewCount ?? counts?.gateOutReviewCount)
+        : (counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0))));
+
+    const verifiedItems = typeof modeVerifiedFromApi === 'number' ? modeVerifiedFromApi : targetModeItems.filter((e) => e.status === 'Verified').length;
+    const pendingReview = typeof modePendingFromApi === 'number' ? modePendingFromApi : targetModeItems.filter((e) => e.status === 'Review').length;
     const damagedCaptures = targetModeItems.filter((e) => e.damageFlag).length;
+
+    const modeDenominator = mode === 'out' ? outCount : (mode === 'in' ? inCount : totalCurrentMode);
 
     return {
       todayArrivals: todayIn,
@@ -939,7 +952,7 @@ export class GateEventsComponent implements OnInit {
       totalAll: totalCurrentMode,
       totalAllTrend: totalCurrentMode > 0 ? `${totalCurrentMode} total operations` : '0 total operations',
       ocrVerified: verifiedItems,
-      ocrVerifiedPercent: totalCurrentMode > 0 ? `${Math.round((verifiedItems / totalCurrentMode) * 100)}% verified` : '100% verified',
+      ocrVerifiedPercent: modeDenominator > 0 ? `${Math.round((verifiedItems / modeDenominator) * 100)}% verified` : '100% verified',
       pendingReview: pendingReview,
       pendingReviewTrend: pendingReview > 0 ? `${pendingReview} pending review` : '0 pending',
       damagedCaptures: damagedCaptures,
@@ -949,15 +962,16 @@ export class GateEventsComponent implements OnInit {
 
   // Tab counts
   public readonly tabCounts = computed(() => {
+    const counts = this.gateCounts();
     const list = this.events();
-    const totalIn = this.totalCheckinCount();
-    const totalOut = this.totalCheckoutCount();
+    const totalIn = typeof counts?.totalGateIn === 'number' ? counts.totalGateIn : this.totalCheckinCount();
+    const totalOut = typeof counts?.totalGateOut === 'number' ? counts.totalGateOut : this.totalCheckoutCount();
     const inFromList = list.filter((e) => e.direction === 'IN').length;
     const outFromList = list.filter((e) => e.direction === 'OUT').length;
 
     const resolvedIn = totalIn > 0 ? totalIn : inFromList;
     const resolvedOut = totalOut > 0 ? totalOut : outFromList;
-    const resolvedAll = resolvedIn + resolvedOut;
+    const resolvedAll = typeof counts?.totalCount === 'number' ? counts.totalCount : (resolvedIn + resolvedOut);
 
     return {
       all: resolvedAll,

@@ -87,7 +87,7 @@ export class ReportsComponent implements OnInit {
     const nonErpGateIn = 0; // In ERP there is no data so show 0
     const nonErpGateOut = 0; // In ERP there is no data so show 0
 
-    const exceptionFromApi = counts?.pendingReview ?? counts?.inReviewCount;
+    const exceptionFromApi = counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0));
     const exception = typeof exceptionFromApi === 'number'
       ? exceptionFromApi
       : rows.filter((r) => r.ocrStatus === 'Exception' || r.status === 'Held').length;

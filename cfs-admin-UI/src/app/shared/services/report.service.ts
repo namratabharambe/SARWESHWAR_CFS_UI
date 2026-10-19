@@ -693,19 +693,35 @@ export class ReportService {
 
     if (cat === 'gate-operations') {
       const rows = this.gateOperationsData();
+      const counts = this.gateCounts();
+      const totalVisits = typeof counts?.totalCount === 'number'
+        ? counts.totalCount
+        : ((counts?.totalGateIn ?? 0) + (counts?.totalGateOut ?? 0)) || rows.length;
       const avgTat = rows.length > 0 ? (rows.reduce((sum, r) => sum + r.turnaroundMinutes, 0) / rows.length).toFixed(1) : '0.0';
-      const totalPassed = rows.filter((r) => r.status === 'Completed' || r.status === 'Gate Passed').length;
+      const exceptions = counts?.pendingReview ?? counts?.inReviewCount ?? ((counts?.GateinReviewCount ?? 0) + (counts?.GateOutReviewCount ?? 0));
+      const totalPassed = totalVisits > 0
+        ? Math.max(0, totalVisits - exceptions)
+        : rows.filter((r) => r.status === 'Completed' || r.status === 'Gate Passed').length;
+
+      const totalOcr = typeof (counts?.ocrVerified ?? counts?.ocrVerifiedCount) === 'number'
+        ? (counts?.ocrVerified ?? counts?.ocrVerifiedCount)!
+        : ((counts?.GateinocrVerifiedCount ?? 0) + (counts?.GateOutocrVerifiedCount ?? 0));
+
+      const ocrRate = (totalVisits > 0 && totalOcr > 0)
+        ? ((totalOcr / totalVisits) * 100).toFixed(1) + '%'
+        : (rows.length > 0 ? '98.0%' : '0%');
+
       return {
         metric1Label: 'Total Gate Movements',
-        metric1Value: rows.length,
-        metric1Trend: `${rows.length} total`,
+        metric1Value: totalVisits,
+        metric1Trend: `${totalVisits} total`,
         metric1IsPositive: true,
         metric2Label: 'Avg Turnaround (TAT)',
         metric2Value: `${avgTat} mins`,
         metric2Trend: 'TAT efficiency',
         metric2IsPositive: true,
         metric3Label: 'OCR Auto-Match Rate',
-        metric3Value: rows.length > 0 ? '98.0%' : '0%',
+        metric3Value: ocrRate,
         metric3Trend: 'AI accuracy',
         metric3IsPositive: true,
         metric4Label: 'Gate Throughput (TEU/hr)',

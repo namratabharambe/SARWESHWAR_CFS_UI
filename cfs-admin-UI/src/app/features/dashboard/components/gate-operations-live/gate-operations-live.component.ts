@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GateLiveStageItem, GateTabInfo, NextTruckInfo } from 'shared/types/dashboard/dashboard.interface';
+import { GateCountsResponse } from 'shared/types/gate-event/gate-event.interface';
 
 @Component({
   selector: 'app-gate-operations-live',
@@ -21,6 +22,7 @@ export class GateOperationsLiveComponent {
   // Custom counts for Gate In and Gate Out tabs
   public readonly gateInCount = input<number>(0);
   public readonly gateOutCount = input<number>(0);
+  public readonly gateCounts = input<GateCountsResponse | null>(null);
 
   // Active operation mode tab: 'in' | 'out'
   public readonly activeMode = signal<'in' | 'out'>('in');
@@ -29,8 +31,10 @@ export class GateOperationsLiveComponent {
   // In Gate Out: "Arrival" replaced by "Departure", and "Gate Out" removed from poll
   // In Gate In: "Gate In" removed from poll
   public readonly activeStages = computed<GateLiveStageItem[]>(() => {
+    const counts = this.gateCounts();
     if (this.activeMode() === 'out') {
       const outTotal = this.gateOutCount();
+      const ocrOut = counts?.GateOutocrVerifiedCount ?? counts?.gateOutocrVerifiedCount ?? Math.max(0, Math.round(outTotal * 0.83));
       return [
         {
           id: 'departure-out',
@@ -45,7 +49,7 @@ export class GateOperationsLiveComponent {
         {
           id: 'ocr-scan-out',
           label: 'OCR Scan',
-          count: Math.max(0, Math.round(outTotal * 0.83)),
+          count: ocrOut,
           percentage: 75,
           trendText: '7%',
           trendDirection: 'positive',
@@ -55,7 +59,7 @@ export class GateOperationsLiveComponent {
         {
           id: 'verification-out',
           label: 'Verification',
-          count: Math.max(0, Math.round(outTotal * 0.75)),
+          count: ocrOut,
           percentage: 65,
           trendText: '4%',
           trendDirection: 'positive',
@@ -66,6 +70,7 @@ export class GateOperationsLiveComponent {
     }
 
     const inTotal = this.gateInCount();
+    const ocrIn = counts?.GateinocrVerifiedCount ?? counts?.gateInocrVerifiedCount ?? Math.max(0, Math.round(inTotal * 0.9));
     return [
       {
         id: 'arrived',
@@ -80,7 +85,7 @@ export class GateOperationsLiveComponent {
       {
         id: 'ocr-scan',
         label: 'OCR Scan',
-        count: Math.max(0, Math.round(inTotal * 0.9)),
+        count: ocrIn,
         percentage: 75,
         trendText: '8%',
         trendDirection: 'positive',
@@ -90,7 +95,7 @@ export class GateOperationsLiveComponent {
       {
         id: 'verification',
         label: 'Verification',
-        count: Math.max(0, Math.round(inTotal * 0.8)),
+        count: ocrIn,
         percentage: 65,
         trendText: '5%',
         trendDirection: 'positive',

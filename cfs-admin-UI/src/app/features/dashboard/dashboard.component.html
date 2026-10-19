@@ -33,6 +33,7 @@
         [stages]="dashboardService.gateLiveStages()"
         [gateInCount]="dashboardService.gateInCount()"
         [gateOutCount]="dashboardService.gateOutCount()"
+        [gateCounts]="dashboardService.gateCounts()"
         [nextTruck]="dashboardService.nextTruckInfo()"
         [selectedGateId]="dashboardService.selectedGateId()"
         (gateTabChange)="dashboardService.selectGateTab($event)"

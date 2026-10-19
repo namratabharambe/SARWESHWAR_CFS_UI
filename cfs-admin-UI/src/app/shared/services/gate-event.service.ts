@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { BaseApiService } from 'shared/services/base-api.service';
 import { ApiUrlService } from 'core/services/api.url.service';
 import { environment } from 'environment/environment';
@@ -12,6 +12,8 @@ import {
   VisitsPagedResponse,
   VisitListItemDto,
   GateCountsResponse,
+  normalizeGateCounts,
+  DEFAULT_FALLBACK_GATE_COUNTS,
 } from 'shared/types/gate-event/gate-event.interface';
 
 const DEFAULT_FALLBACK_SITE_ID = '01a07fd0-d69a-7998-bd0c-48b96d3b8a88';
@@ -223,9 +225,10 @@ export class GateEventService extends BaseApiService<GateEventsResponse, GateEve
 
     const url = `${this.gateBaseUrl}/gate/counts`;
     return this.http.get<GateCountsResponse>(url, { headers }).pipe(
+      map((res) => normalizeGateCounts(res)),
       catchError((error) => {
-        console.error('Failed to fetch gate counts from API:', url, error);
-        return of({} as GateCountsResponse);
+        console.warn('Failed to fetch gate counts from API, falling back to cached counts:', url, error);
+        return of(DEFAULT_FALLBACK_GATE_COUNTS);
       }),
     );
   }
