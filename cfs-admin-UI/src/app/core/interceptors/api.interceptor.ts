@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from 'core/auth/auth.service';
 
 const DEFAULT_FALLBACK_SITE_ID = '01a07fd0-d69a-7998-bd0c-48b96d3b8a88';
@@ -17,16 +17,16 @@ export const apiInterceptor: HttpInterceptorFn = (request, next) => {
     request.url.includes('/auth/forgot-password') ||
     request.url.includes('/auth/reset-password');
 
-  // If token is already expired and user is requesting protected API, trigger session expiration
-  if (token && !isAuthRequest && !auth.isBypassMode() && auth.isTokenExpired()) {
-    auth.triggerSessionExpired();
+  if (isAuthRequest || auth.isBypassMode()) {
+    return next(request);
   }
 
-  const setHeaders: Record<string, string> = {};
+  // Helper to attach authorization & tenant context headers
+  const buildAuthorizedRequest = (authToken: string | null) => {
+    const setHeaders: Record<string, string> = {};
 
-  if (!isAuthRequest) {
-    if (token) {
-      setHeaders['Authorization'] = `Bearer ${token}`;
+    if (authToken) {
+      setHeaders['Authorization'] = `Bearer ${authToken}`;
     }
 
     // Resolve effective siteId from headers, query params, auth service, sessionStorage, or default fallback
@@ -57,15 +57,50 @@ export const apiInterceptor: HttpInterceptorFn = (request, next) => {
     if (clientId && clientId.trim().length > 0) {
       setHeaders['X-Client-Id'] = clientId.trim();
     }
+
+    return Object.keys(setHeaders).length > 0 ? request.clone({ setHeaders }) : request;
+  };
+
+  // If token is already expired and we have a refresh token, refresh before sending request
+  if (token && auth.isTokenExpired() && auth.hasRefreshToken()) {
+    return auth.refreshSession().pipe(
+      switchMap((newToken) => {
+        const authReq = buildAuthorizedRequest(newToken);
+        return next(authReq);
+      }),
+      catchError((error) => {
+        return throwError(() => error);
+      }),
+    );
   }
 
-  const authReq = Object.keys(setHeaders).length > 0 ? request.clone({ setHeaders }) : request;
+  // If token is already expired and NO refresh token exists, trigger session expiration
+  if (token && auth.isTokenExpired() && !auth.hasRefreshToken()) {
+    auth.triggerSessionExpired();
+  }
 
-  return next(authReq).pipe(
+  const initialReq = buildAuthorizedRequest(token);
+
+  return next(initialReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !isAuthRequest && !auth.isBypassMode()) {
+      // On 401 Unauthorized, if refresh token exists, refresh token and retry the original request
+      if (error.status === 401 && auth.hasRefreshToken()) {
+        return auth.refreshSession().pipe(
+          switchMap((newToken) => {
+            const retriedReq = buildAuthorizedRequest(newToken);
+            return next(retriedReq);
+          }),
+          catchError((refreshErr) => {
+            return throwError(() => refreshErr);
+          }),
+        );
+      }
+
+      // If 401 Unauthorized without refresh token, trigger session expired
+      if (error.status === 401 && !auth.hasRefreshToken()) {
         auth.triggerSessionExpired();
       }
+
       return throwError(() => error);
     }),
   );

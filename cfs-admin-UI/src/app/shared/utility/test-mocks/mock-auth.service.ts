@@ -59,6 +59,14 @@ export class MockAuthService {
     return 'mock-user-1';
   }
 
+  public hasRefreshToken(): boolean {
+    return true;
+  }
+
+  public refreshSession(): Observable<string> {
+    return of('mock-new-token');
+  }
+
   public isTokenExpired(): boolean {
     return false;
   }

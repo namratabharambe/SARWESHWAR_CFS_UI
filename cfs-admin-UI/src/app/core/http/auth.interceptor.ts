@@ -1,23 +1,41 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const auth = inject(AuthService);
-  const token = sessionStorage.getItem('cfs_admin_token');
+  const token = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('cfs_admin_token') : null;
+  const isAuthRequest = request.url.includes('/auth/login') || request.url.includes('/auth/refresh');
 
-  // If token is already expired and user is navigating/requesting API, trigger session expiration
-  if (token && !request.url.includes('/auth/login') && auth.isTokenExpired()) {
-    auth.triggerSessionExpired();
+  if (isAuthRequest || auth.isBypassMode()) {
+    return next(request);
+  }
+
+  if (token && auth.isTokenExpired() && auth.hasRefreshToken()) {
+    return auth.refreshSession().pipe(
+      switchMap((newToken) => {
+        const authReq = request.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } });
+        return next(authReq);
+      }),
+      catchError((err) => throwError(() => err)),
+    );
   }
 
   const authReq = token ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : request;
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Trigger session expired popup on 401 Unauthorized on protected endpoints
-      if (error.status === 401 && !request.url.includes('/auth/login')) {
+      if (error.status === 401 && auth.hasRefreshToken()) {
+        return auth.refreshSession().pipe(
+          switchMap((newToken) => {
+            const retriedReq = request.clone({ setHeaders: { Authorization: `Bearer ${newToken}` } });
+            return next(retriedReq);
+          }),
+          catchError((refreshErr) => throwError(() => refreshErr)),
+        );
+      }
+      if (error.status === 401 && !auth.hasRefreshToken()) {
         auth.triggerSessionExpired();
       }
       return throwError(() => error);

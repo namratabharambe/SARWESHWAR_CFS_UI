@@ -14,20 +14,24 @@ export interface LoginResponse {
   JwtToken?: string;
   refreshToken?: string;
   RefreshToken?: string;
+  expiresAt?: string;
+  ExpiresAt?: string;
   data?: LoginResponse;
   result?: LoginResponse;
 }
 
 export interface ContextRequest {
-  clientId?: string;
+  clientId?: string | null;
   siteId?: string | null;
-  ClientId?: string;
+  ClientId?: string | null;
   SiteId?: string | null;
 }
 
 export interface RefreshRequest {
   refreshToken?: string;
   RefreshToken?: string;
+  accessToken?: string;
+  AccessToken?: string;
 }
 
 export interface ForgotPasswordRequest {

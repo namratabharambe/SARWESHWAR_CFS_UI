@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, finalize, map, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, finalize, map, Observable, of, shareReplay, Subject, switchMap, tap, throwError } from 'rxjs';
 import { ApiUrlService } from 'core/services/api.url.service';
 import {
   ContextClient,
@@ -24,9 +24,14 @@ export class AuthService {
 
   private readonly tokenKey = 'cfs_admin_token';
   private readonly refreshTokenKey = 'cfs_admin_refresh_token';
+  private readonly expiresAtKey = 'cfs_admin_expires_at';
   private readonly clientContextKey = 'cfs_selected_client_id';
   private readonly siteContextKey = 'cfs_selected_site_id';
   private readonly explicitLogoutKey = 'cfs_explicit_logout';
+
+  private refreshTimer: any = null;
+  private refreshInProgress$: Observable<string> | null = null;
+  public readonly contextRefreshed$ = new Subject<{ clientId: string; siteId: string }>();
 
   public readonly authenticated = signal<boolean>(
     typeof sessionStorage !== 'undefined' ? Boolean(sessionStorage.getItem(this.tokenKey)) : false,
@@ -51,8 +56,15 @@ export class AuthService {
   constructor() {
     this.initContextFromToken();
     if (this.authenticated()) {
-      this.loadMySites();
-      this.loadMyModules();
+      if (this.isTokenExpired() && this.hasRefreshToken()) {
+        this.refreshSession().subscribe({
+          error: (err) => console.warn('Initial session refresh warning:', err),
+        });
+      } else {
+        this.scheduleProactiveRefresh();
+        this.loadMySites();
+        this.loadMyModules();
+      }
     }
   }
 
@@ -486,6 +498,7 @@ export class AuthService {
       map((response) => {
         let token = '';
         let refreshToken = '';
+        let expiresAt = '';
 
         if (typeof response === 'string') {
           token = response;
@@ -500,6 +513,7 @@ export class AuthService {
             data.JwtToken ??
             (typeof data === 'string' ? data : '');
           refreshToken = data.refreshToken ?? data.RefreshToken ?? '';
+          expiresAt = data.expiresAt ?? data.ExpiresAt ?? '';
         }
 
         if (!token) {
@@ -511,6 +525,9 @@ export class AuthService {
         if (refreshToken) {
           sessionStorage.setItem(this.refreshTokenKey, refreshToken);
         }
+        if (expiresAt) {
+          sessionStorage.setItem(this.expiresAtKey, expiresAt);
+        }
 
         this.authenticated.set(true);
         const claims = this.decodeToken(token);
@@ -518,9 +535,78 @@ export class AuthService {
         this.initContextFromToken(claims);
         this.loadMySites();
         this.loadMyModules();
+        this.scheduleProactiveRefresh(token, expiresAt);
       }),
       map(() => undefined),
       finalize(() => this.loading.set(false)),
+    );
+  }
+
+  /**
+   * Synchronizes context with POST /api/auth/context and reloads live site/client data.
+   */
+  public syncContext(clientId?: string, siteId?: string, overrideToken?: string): Observable<string> {
+    const effectiveCid = clientId || this.getActiveClientId();
+    const effectiveSid = siteId || this.getActiveSiteId();
+
+    if (this.isBypassMode()) {
+      this.loadMyModules();
+      return of('');
+    }
+
+    const payload: ContextRequest = {
+      ClientId: effectiveCid || null,
+      SiteId: effectiveSid || null,
+      clientId: effectiveCid || null,
+      siteId: effectiveSid || null,
+    };
+
+    const token = overrideToken || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(this.tokenKey) : '');
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    if (effectiveCid) {
+      headers['X-Client-Id'] = effectiveCid;
+    }
+    if (effectiveSid) {
+      headers['X-Site-Id'] = effectiveSid;
+    }
+
+    return this.http.post<LoginResponse | string>(`${this.apiBaseUrl}/auth/context`, payload, { headers }).pipe(
+      map((response) => {
+        let contextToken = '';
+        if (typeof response === 'string') {
+          contextToken = response;
+        } else if (response && typeof response === 'object') {
+          const data = (response as any).data ?? (response as any).result ?? response;
+          contextToken =
+            data.accessToken ??
+            data.token ??
+            data.jwtToken ??
+            data.AccessToken ??
+            data.Token ??
+            data.JwtToken ??
+            (typeof data === 'string' ? data : '');
+        }
+
+        if (contextToken) {
+          sessionStorage.setItem(this.tokenKey, contextToken);
+          this.userClaims.set(this.decodeToken(contextToken));
+        }
+
+        this.loadMySites();
+        this.loadMyModules();
+        this.contextRefreshed$.next({ clientId: effectiveCid, siteId: effectiveSid });
+        return contextToken;
+      }),
+      catchError((err) => {
+        console.warn('Context API sync warning:', err);
+        this.loadMySites();
+        this.loadMyModules();
+        this.contextRefreshed$.next({ clientId: effectiveCid, siteId: effectiveSid });
+        return of('');
+      }),
     );
   }
 
@@ -549,40 +635,7 @@ export class AuthService {
       return of('');
     }
 
-    const payload: ContextRequest = {
-      ClientId: clientId,
-      SiteId: siteId || null,
-    };
-
-    return this.http.post<LoginResponse | string>(`${this.apiBaseUrl}/auth/context`, payload).pipe(
-      map((response) => {
-        let newToken = '';
-        if (typeof response === 'string') {
-          newToken = response;
-        } else if (response && typeof response === 'object') {
-          const data = (response as any).data ?? (response as any).result ?? response;
-          newToken =
-            data.accessToken ??
-            data.token ??
-            data.jwtToken ??
-            data.AccessToken ??
-            data.Token ??
-            data.JwtToken ??
-            (typeof data === 'string' ? data : '');
-        }
-
-        if (newToken) {
-          sessionStorage.setItem(this.tokenKey, newToken);
-          this.userClaims.set(this.decodeToken(newToken));
-        }
-
-        this.loadMyModules();
-        return newToken;
-      }),
-      catchError(() => {
-        this.loadMyModules();
-        return of('');
-      }),
+    return this.syncContext(clientId, siteId).pipe(
       finalize(() => this.contextLoading.set(false)),
     );
   }
@@ -745,32 +798,152 @@ export class AuthService {
     return modules;
   }
 
+  public hasRefreshToken(): boolean {
+    if (typeof sessionStorage === 'undefined') return false;
+    return Boolean(sessionStorage.getItem(this.refreshTokenKey));
+  }
+
   /**
-   * Refreshes active JWT token via POST /api/auth/refresh
+   * Refreshes active JWT token via POST /api/auth/refresh and calls context API simultaneously
+   * to ensure continuous session and live site/client data.
    */
   public refreshSession(): Observable<string> {
-    const refreshToken = sessionStorage.getItem(this.refreshTokenKey);
+    if (this.refreshInProgress$) {
+      return this.refreshInProgress$;
+    }
+
+    const refreshToken = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(this.refreshTokenKey) : null;
     if (!refreshToken) {
+      this.triggerSessionExpired();
       return throwError(() => new Error('No refresh token available.'));
     }
 
-    const payload: RefreshRequest = { RefreshToken: refreshToken };
-    return this.http.post<LoginResponse | string>(`${this.apiBaseUrl}/auth/refresh`, payload).pipe(
-      map((response) => {
-        let token = '';
-        if (typeof response === 'string') {
-          token = response;
-        } else if (response) {
-          const data = (response as any).data ?? (response as any).result ?? response;
-          token = data.accessToken ?? data.token ?? data.AccessToken ?? data.Token ?? '';
-        }
-        if (token) {
+    const currentToken = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(this.tokenKey) : null;
+    const payload: RefreshRequest = {
+      RefreshToken: refreshToken,
+      refreshToken: refreshToken,
+      AccessToken: currentToken || undefined,
+      accessToken: currentToken || undefined,
+    };
+
+    this.refreshInProgress$ = this.http
+      .post<LoginResponse | any>(`${this.apiBaseUrl}/auth/refresh`, payload)
+      .pipe(
+        map((response) => {
+          let token = '';
+          let newRefreshToken = '';
+          let expiresAt = '';
+
+          if (typeof response === 'string') {
+            token = response;
+          } else if (response && typeof response === 'object') {
+            const data = (response as any).data ?? (response as any).result ?? response;
+            token =
+              data.accessToken ??
+              data.token ??
+              data.jwtToken ??
+              data.AccessToken ??
+              data.Token ??
+              data.JwtToken ??
+              (typeof data === 'string' ? data : '');
+            newRefreshToken = data.refreshToken ?? data.RefreshToken ?? '';
+            expiresAt = data.expiresAt ?? data.ExpiresAt ?? '';
+          }
+
+          if (!token) {
+            throw new Error('Refresh response did not contain an access token.');
+          }
+
           sessionStorage.setItem(this.tokenKey, token);
-          this.userClaims.set(this.decodeToken(token));
-        }
-        return token;
-      }),
-    );
+          sessionStorage.removeItem(this.explicitLogoutKey);
+          if (newRefreshToken) {
+            sessionStorage.setItem(this.refreshTokenKey, newRefreshToken);
+          }
+          if (expiresAt) {
+            sessionStorage.setItem(this.expiresAtKey, expiresAt);
+          }
+
+          const claims = this.decodeToken(token);
+          this.userClaims.set(claims);
+          this.authenticated.set(true);
+
+          return { token, expiresAt };
+        }),
+        // Call Context API simultaneously after refresh to keep live site and client data active
+        switchMap(({ token, expiresAt }) => {
+          const clientId = this.getActiveClientId();
+          const siteId = this.getActiveSiteId();
+
+          return this.syncContext(clientId, siteId, token).pipe(
+            map((contextToken) => ({ token: contextToken || token, expiresAt })),
+            catchError((err) => {
+              console.warn('Context API sync after refresh warning:', err);
+              return of({ token, expiresAt });
+            }),
+          );
+        }),
+        tap(({ token, expiresAt }) => {
+          this.scheduleProactiveRefresh(token, expiresAt);
+        }),
+        map(({ token }) => token),
+        catchError((err) => {
+          console.error('Session refresh failed:', err);
+          this.triggerSessionExpired();
+          return throwError(() => err);
+        }),
+        finalize(() => {
+          this.refreshInProgress$ = null;
+        }),
+        shareReplay(1),
+      );
+
+    return this.refreshInProgress$;
+  }
+
+  public scheduleProactiveRefresh(token?: string, expiresAt?: string): void {
+    if (this.isBypassMode() || typeof window === 'undefined') return;
+
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = null;
+    }
+
+    const expStr = expiresAt || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(this.expiresAtKey) : null);
+    let expiryMs = 0;
+
+    if (expStr) {
+      const parsed = new Date(expStr).getTime();
+      if (!isNaN(parsed) && parsed > 0) {
+        expiryMs = parsed;
+      }
+    }
+
+    if (!expiryMs) {
+      const claims = this.userClaims() ?? (token ? this.decodeToken(token) : this.getDecodedToken());
+      if (claims && claims.exp) {
+        expiryMs = Number(claims.exp) * 1000;
+      }
+    }
+
+    if (!expiryMs) return;
+
+    const now = Date.now();
+    const timeUntilExpiry = expiryMs - now;
+
+    // Schedule proactive refresh 60s before expiry (or earlier if short-lived)
+    let delayMs = 1000;
+    if (timeUntilExpiry > 30000) {
+      const bufferMs = timeUntilExpiry > 120000 ? 60000 : Math.floor(timeUntilExpiry / 2);
+      delayMs = timeUntilExpiry - bufferMs;
+    }
+
+    this.refreshTimer = setTimeout(() => {
+      if (this.authenticated() && !this.isBypassMode() && this.hasRefreshToken()) {
+        this.refreshSession().subscribe({
+          error: (err) => console.warn('Proactive token refresh attempt error:', err),
+        });
+      }
+    }, delayMs);
   }
 
   /**
@@ -801,15 +974,29 @@ export class AuthService {
     this.logout();
   }
 
-  public isTokenExpired(): boolean {
+  public isTokenExpired(bufferSeconds: number = 30): boolean {
+    if (this.isBypassMode()) return false;
+    if (typeof sessionStorage !== 'undefined') {
+      const expStr = sessionStorage.getItem(this.expiresAtKey);
+      if (expStr) {
+        const expMs = new Date(expStr).getTime();
+        if (!isNaN(expMs) && expMs > 0) {
+          return Date.now() + bufferSeconds * 1000 >= expMs;
+        }
+      }
+    }
     const claims = this.userClaims() ?? this.getDecodedToken();
     if (!claims || !claims.exp) return false;
     const now = Math.floor(Date.now() / 1000);
-    return claims.exp < now;
+    return claims.exp - bufferSeconds <= now;
   }
 
   public logout(): void {
     this.sessionExpired.set(false);
+    if (this.refreshTimer) {
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = null;
+    }
     // Best effort API notification
     this.http
       .post(`${this.apiBaseUrl}/auth/logout`, {})
@@ -818,6 +1005,7 @@ export class AuthService {
 
     sessionStorage.removeItem(this.tokenKey);
     sessionStorage.removeItem(this.refreshTokenKey);
+    sessionStorage.removeItem(this.expiresAtKey);
     sessionStorage.removeItem(this.clientContextKey);
     sessionStorage.removeItem(this.siteContextKey);
     sessionStorage.setItem(this.explicitLogoutKey, 'true');
