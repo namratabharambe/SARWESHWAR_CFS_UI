@@ -106,7 +106,12 @@
 
       <!-- Trend / Status Indicator -->
       <div class="flex items-center gap-1 text-xs truncate min-w-0">
-        @if (metric().trendPercentage) {
+        @if ((metric().id === 'exceptions' || metric().id === 'alerts') && isZeroException()) {
+        <span class="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 text-xs truncate">
+          <span>✓</span>
+          <span>All clear • 0 active</span>
+        </span>
+        } @else if (metric().trendPercentage) {
         <span class="flex items-center gap-0.5 font-bold shrink-0"
           [class.text-emerald-600]="isPositive() && metric().id !== 'open-tasks'"
           [class.text-rose-600]="isNegative() && metric().id !== 'open-tasks'"
@@ -123,17 +128,10 @@
           {{ metric().trendLabel || 'vs. yesterday' }}
         </span>
         } @else {
-        @if ((metric().id === 'exceptions' || metric().id === 'alerts') && isZeroException()) {
-        <span class="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 text-xs truncate">
-          <span>✓</span>
-          <span>All clear • 0 active</span>
-        </span>
-        } @else {
         <span class="flex items-center gap-1 font-semibold text-slate-500 dark:text-slate-400 text-xs truncate">
           <span>{{ isPositive() ? '↑' : '↓' }}</span>
           <span>{{ metric().trendText }}</span>
         </span>
-        }
         }
       </div>
     </div>
