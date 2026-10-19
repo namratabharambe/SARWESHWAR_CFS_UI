@@ -18,7 +18,7 @@ export class KpiMetricCardComponent {
   public readonly isNegative = computed(() => this.metric().trendDirection === 'negative');
 
   public readonly isZeroException = computed(() => {
-    return this.metric().id === 'exceptions' && (this.metric().value === '0' || Number(this.metric().value) === 0);
+    return (this.metric().id === 'exceptions' || this.metric().id === 'alerts') && (this.metric().value === '0' || Number(this.metric().value) === 0);
   });
 
   public readonly cardRoute = computed<string>(() => {
@@ -32,6 +32,7 @@ export class KpiMetricCardComponent {
       case 'yard-inventory':
         return '/inventory';
       case 'exceptions':
+      case 'alerts':
         return '/alerts';
       default:
         return '/dashboard';
@@ -51,6 +52,7 @@ export class KpiMetricCardComponent {
       case 'yard-inventory':
         return '#06b6d4';
       case 'exceptions':
+      case 'alerts':
         return '#f59e0b';
       default:
         return '#3b82f6';
@@ -61,7 +63,7 @@ export class KpiMetricCardComponent {
     if (this.metric().id === 'open-tasks') {
       return 'M0,32 C15,32 25,30 35,30 C45,30 50,18 60,18 C68,18 74,26 80,22 C86,18 90,12 96,6';
     }
-    if (this.metric().id === 'exceptions') {
+    if (this.metric().id === 'exceptions' || this.metric().id === 'alerts') {
       return 'M0,10 C20,10 32,26 46,20 C60,16 72,28 96,32';
     }
     return 'M0,30 C20,30 32,20 46,24 C60,28 72,12 96,6';
@@ -71,7 +73,7 @@ export class KpiMetricCardComponent {
     if (this.metric().id === 'open-tasks') {
       return 'M0,32 C15,32 25,30 35,30 C45,30 50,18 60,18 C68,18 74,26 80,22 C86,18 90,12 96,6 L96,40 L0,40 Z';
     }
-    if (this.metric().id === 'exceptions') {
+    if (this.metric().id === 'exceptions' || this.metric().id === 'alerts') {
       return 'M0,10 C20,10 32,26 46,20 C60,16 72,28 96,32 L96,40 L0,40 Z';
     }
     return 'M0,30 C20,30 32,20 46,24 C60,28 72,12 96,6 L96,40 L0,40 Z';

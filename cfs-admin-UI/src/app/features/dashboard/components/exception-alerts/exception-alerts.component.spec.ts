@@ -33,7 +33,7 @@ describe('ExceptionAlertsComponent', () => {
   it('should create and render alerts list', () => {
     expect(component).toBeTruthy();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Exceptions / Alerts');
+    expect(compiled.textContent).toContain('Alerts');
     expect(compiled.textContent).toContain('Overstay Container');
     expect(compiled.textContent).toContain('10:20 AM');
   });

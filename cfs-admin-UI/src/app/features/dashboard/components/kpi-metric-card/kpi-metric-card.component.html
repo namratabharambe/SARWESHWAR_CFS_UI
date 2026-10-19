@@ -17,10 +17,9 @@
       [class.dark:bg-purple-950/60]="metric().id === 'open-tasks'"
       [class.dark:text-purple-400]="metric().id === 'open-tasks'" [class.bg-cyan-50]="metric().id === 'yard-inventory'"
       [class.text-cyan-600]="metric().id === 'yard-inventory'"
-      [class.dark:bg-cyan-950/60]="metric().id === 'yard-inventory'"
-      [class.dark:text-cyan-400]="metric().id === 'yard-inventory'" [class.bg-rose-50]="metric().id === 'exceptions'"
-      [class.text-rose-600]="metric().id === 'exceptions'" [class.dark:bg-rose-950/60]="metric().id === 'exceptions'"
-      [class.dark:text-rose-400]="metric().id === 'exceptions'">
+      [class.dark:text-cyan-400]="metric().id === 'yard-inventory'" [class.bg-rose-50]="metric().id === 'exceptions' || metric().id === 'alerts'"
+      [class.text-rose-600]="metric().id === 'exceptions' || metric().id === 'alerts'" [class.dark:bg-rose-950/60]="metric().id === 'exceptions' || metric().id === 'alerts'"
+      [class.dark:text-rose-400]="metric().id === 'exceptions' || metric().id === 'alerts'">
 
       @switch (metric().id) {
       @case ('arrivals-today') {
@@ -64,6 +63,14 @@
         <path d="M12 22V12" />
       </svg>
       }
+      @case ('alerts') {
+      <!-- Bell Alert Icon -->
+      <svg class="h-5 w-5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+      </svg>
+      }
       @case ('exceptions') {
       <!-- TriangleAlert Icon -->
       <svg class="h-5 w-5 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"
@@ -105,7 +112,7 @@
           [class.text-rose-600]="isNegative() && metric().id !== 'open-tasks'"
           [class.text-blue-600]="metric().id === 'open-tasks'"
           [class.dark:text-blue-400]="metric().id === 'open-tasks'">
-          <span class="text-xs font-bold">{{ (metric().id === 'open-tasks' || metric().id === 'exceptions') ? '↓' : '↑'
+          <span class="text-xs font-bold">{{ (metric().id === 'open-tasks' || metric().id === 'exceptions' || metric().id === 'alerts') ? '↓' : '↑'
             }}</span>
           <span>{{ metric().trendPercentage }}</span>
         </span>
@@ -116,10 +123,10 @@
           {{ metric().trendLabel || 'vs. yesterday' }}
         </span>
         } @else {
-        @if (metric().id === 'exceptions' && isZeroException()) {
+        @if ((metric().id === 'exceptions' || metric().id === 'alerts') && isZeroException()) {
         <span class="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 text-xs truncate">
           <span>✓</span>
-          <span>All clear • 0 flagged</span>
+          <span>All clear • 0 active</span>
         </span>
         } @else {
         <span class="flex items-center gap-1 font-semibold text-slate-500 dark:text-slate-400 text-xs truncate">
@@ -138,7 +145,7 @@
       [class.text-blue-500]="metric().id === 'arrivals-today'"
       [class.text-amber-500]="metric().id === 'departures-today'"
       [class.text-cyan-500]="metric().id === 'yard-inventory'" [class.text-purple-500]="metric().id === 'open-tasks'"
-      [class.text-rose-500]="metric().id === 'exceptions'" stroke-width="2" viewBox="0 0 24 24">
+      [class.text-rose-500]="metric().id === 'exceptions' || metric().id === 'alerts'" stroke-width="2" viewBox="0 0 24 24">
       <path d="m9 18 6-6-6-6" />
     </svg>
   </div>

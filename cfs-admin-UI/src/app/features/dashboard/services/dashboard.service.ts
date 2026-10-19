@@ -107,11 +107,11 @@ export class DashboardService {
       hasSparkline: true,
     },
     {
-      id: 'exceptions',
-      label: 'Exceptions',
+      id: 'alerts',
+      label: 'Alerts',
       value: '0',
-      trendPercentage: '0%',
-      trendLabel: 'vs. yesterday',
+      trendPercentage: '0 active',
+      trendLabel: 'alerts',
       trendDirection: 'positive',
       iconType: 'exception',
       colorTheme: 'red',
@@ -420,12 +420,17 @@ export class DashboardService {
             trendPercentage: `${yardInv} TEU`,
           };
         }
-        if (kpi.id === 'exceptions' && typeof exceptions === 'number') {
+        if (kpi.id === 'alerts' || kpi.id === 'exceptions') {
+          const alertCount = this.alertService
+            ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
+            : 0;
           return {
             ...kpi,
-            value: String(exceptions),
-            trendPercentage: `${exceptions} flagged`,
-            trendDirection: exceptions > 0 ? 'negative' : 'positive',
+            id: 'alerts',
+            label: 'Alerts',
+            value: String(alertCount),
+            trendPercentage: `${alertCount} active`,
+            trendDirection: alertCount > 0 ? 'negative' : 'positive',
           };
         }
         return kpi;
@@ -693,12 +698,12 @@ export class DashboardService {
                 hasSparkline: true,
               },
               {
-                id: 'exceptions',
-                label: 'Exceptions',
-                value: String(activeExceptions),
-                trendPercentage: `${activeExceptions} flagged`,
-                trendLabel: 'review',
-                trendDirection: activeExceptions > 0 ? 'negative' : 'positive',
+                id: 'alerts',
+                label: 'Alerts',
+                value: String(alertCount),
+                trendPercentage: `${alertCount} active`,
+                trendLabel: 'alerts',
+                trendDirection: alertCount > 0 ? 'negative' : 'positive',
                 iconType: 'exception',
                 colorTheme: 'red',
                 hasSparkline: true,
@@ -902,12 +907,25 @@ export class DashboardService {
                 hasSparkline: true,
               },
               {
-                id: 'exceptions',
-                label: 'Exceptions',
-                value: String(exceptions),
-                trendPercentage: `${exceptions} flagged`,
-                trendLabel: 'review',
-                trendDirection: exceptions > 0 ? 'negative' : 'positive',
+                id: 'alerts',
+                label: 'Alerts',
+                value: String(
+                  this.alertService
+                    ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
+                    : 0,
+                ),
+                trendPercentage: `${
+                  this.alertService
+                    ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
+                    : 0
+                } active`,
+                trendLabel: 'alerts',
+                trendDirection:
+                  (this.alertService
+                    ? this.alertService.alerts().filter((a) => a.status !== 'Resolved' && a.status !== 'Dismissed').length
+                    : 0) > 0
+                    ? 'negative'
+                    : 'positive',
                 iconType: 'exception',
                 colorTheme: 'red',
                 hasSparkline: true,
