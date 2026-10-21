@@ -21,6 +21,7 @@ import {
   isVisitDepartureToday,
   matchesDateFilter,
   parseAnyDate,
+  uniqueVisits,
 } from 'shared/utils/date-filter.util';
 
 @Injectable({ providedIn: 'root' })
@@ -178,8 +179,38 @@ export class InventoryService {
     this.currentPage.set(1);
   }
 
+  // Filter panel state (applied to the loaded containers)
+  public readonly containerFilter = signal<string>('');
+  public readonly sizeFilter = signal<string>('');
+  public readonly locationFilter = signal<string>('');
+  public readonly rangeFrom = signal<string>('');
+  public readonly rangeTo = signal<string>('');
+  public readonly sortBy = signal<string>('date-desc');
+
+  /** Location as shown in the table: a container is "Gate Out" once it has left, otherwise "In Yard". */
+  public locationOf(c: ContainerInventoryItem): 'Gate Out' | 'In Yard' {
+    return c.currentLocation === 'Gate Out' || c.lastAction === 'Gated Out' ? 'Gate Out' : 'In Yard';
+  }
+
+  /** Loads a from–to range from the API (either end may be empty). */
+  public setDateRange(from: string, to: string): void {
+    this.rangeFrom.set(from);
+    this.rangeTo.set(to);
+    this.dateFilter.set('');
+    this.currentPage.set(1);
+    const f = parseAnyDate(from);
+    const t = parseAnyDate(to);
+    this.fromDate.set(f ? new Date(f.getFullYear(), f.getMonth(), f.getDate()).toISOString() : undefined);
+    this.toDate.set(t ? new Date(t.getFullYear(), t.getMonth(), t.getDate(), 23, 59, 59, 999).toISOString() : undefined);
+    this.loadLiveGateData();
+  }
+
   public setDateFilter(date: string): void {
     this.dateFilter.set(date);
+    if (date) {
+      this.rangeFrom.set('');
+      this.rangeTo.set('');
+    }
     this.currentPage.set(1);
 
     if (!date) {
@@ -288,7 +319,8 @@ export class InventoryService {
 
           // If there are more items beyond page 1, fetch remaining pages in parallel
           if (totalCount > returnedCount && returnedCount > 0) {
-            const pageSize = 200;
+            // Use the page size the server actually returned, in case it caps large requests.
+            const pageSize = returnedCount;
             const totalPages = Math.ceil(totalCount / pageSize);
             const remainingRequests$: Observable<VisitsPagedResponse>[] = [];
             for (let p = 2; p <= totalPages; p++) {
@@ -322,6 +354,7 @@ export class InventoryService {
       .subscribe({
         next: ({ items }) => {
           this.isLoading.set(false);
+          items = uniqueVisits(items);
           if (items && items.length > 0) {
             const mapped = this.mapVisitsToInventoryItems(items, 'ALL');
             mapped.sort((a, b) => {
@@ -647,8 +680,44 @@ export class InventoryService {
       });
     }
 
-    return list;
+    const containerQ = this.containerFilter().replace(/\s+/g, '').toLowerCase();
+    if (containerQ) list = list.filter((c) => c.containerNo.replace(/\s+/g, '').toLowerCase().includes(containerQ));
+    if (this.sizeFilter()) list = list.filter((c) => c.sizeType === this.sizeFilter());
+    if (this.locationFilter()) list = list.filter((c) => this.locationOf(c) === this.locationFilter());
+
+    const rangeStart = parseAnyDate(this.rangeFrom())?.setHours(0, 0, 0, 0);
+    const rangeEnd = parseAnyDate(this.rangeTo())?.setHours(23, 59, 59, 999);
+    if (rangeStart !== undefined || rangeEnd !== undefined) {
+      list = list.filter((c) => {
+        const t = this.containerTime(c);
+        return (rangeStart === undefined || t >= rangeStart) && (rangeEnd === undefined || t <= rangeEnd);
+      });
+    }
+
+    const sort = this.sortBy();
+    const byDate = (a: ContainerInventoryItem, b: ContainerInventoryItem) => this.containerTime(b) - this.containerTime(a);
+    const text = (x: string, y: string) => x.localeCompare(y, undefined, { numeric: true, sensitivity: 'base' });
+    return [...list].sort((a, b) => {
+      switch (sort) {
+        case 'date-asc':
+          return -byDate(a, b);
+        case 'container-asc':
+          return text(a.containerNo, b.containerNo) || byDate(a, b);
+        case 'container-desc':
+          return text(b.containerNo, a.containerNo) || byDate(a, b);
+        case 'size':
+          return text(a.sizeType, b.sizeType) || byDate(a, b);
+        case 'location':
+          return text(this.locationOf(a), this.locationOf(b)) || byDate(a, b);
+        default:
+          return byDate(a, b);
+      }
+    });
   });
+
+  private containerTime(c: ContainerInventoryItem): number {
+    return parseAnyDate(c.arrivalDate || c.lastUpdated)?.getTime() ?? 0;
+  }
 
   // KPI Metrics (Calculated from actual live inventory records and database gate counts)
   public readonly kpiMetrics = computed<InventoryKpiMetrics>(() => {
@@ -746,11 +815,14 @@ export class InventoryService {
   // Paginated containers
   public readonly paginatedContainers = computed<ContainerInventoryItem[]>(() => {
     const list = this.filteredContainers();
-    const page = this.currentPage();
+    const page = this.displayPage();
     const size = this.pageSize();
     const start = (page - 1) * size;
     return list.slice(start, start + size);
   });
+
+  /** Current page clamped to the last page, so a shrinking list (tab switch, filter) never shows an empty page. */
+  public readonly displayPage = computed<number>(() => Math.min(this.currentPage(), this.totalPages()));
 
   // Total pages
   public readonly totalPages = computed<number>(() => {

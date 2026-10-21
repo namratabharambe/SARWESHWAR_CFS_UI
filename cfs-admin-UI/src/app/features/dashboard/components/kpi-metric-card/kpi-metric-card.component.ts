@@ -17,10 +17,6 @@ export class KpiMetricCardComponent {
   public readonly isPositive = computed(() => this.metric().trendDirection === 'positive');
   public readonly isNegative = computed(() => this.metric().trendDirection === 'negative');
 
-  public readonly isZeroException = computed(() => {
-    return (this.metric().id === 'exceptions' || this.metric().id === 'alerts') && (this.metric().value === '0' || Number(this.metric().value) === 0);
-  });
-
   public readonly cardRoute = computed<string>(() => {
     switch (this.metric().id) {
       case 'arrivals-today':
@@ -39,43 +35,50 @@ export class KpiMetricCardComponent {
     }
   });
 
-  public readonly shouldShowSparkline = computed<boolean>(() => true);
-
-  public readonly sparklineColor = computed<string>(() => {
+  /** Color tone per card, matching the reference: blue, cyan, green, purple, amber. */
+  public readonly tone = computed<string>(() => {
     switch (this.metric().id) {
-      case 'arrivals-today':
-        return '#3b82f6';
       case 'departures-today':
-        return '#f59e0b';
-      case 'open-tasks':
-        return '#a081f7';
+        return 'tone-cyan';
       case 'yard-inventory':
-        return '#06b6d4';
+        return 'tone-green';
+      case 'open-tasks':
+        return 'tone-purple';
       case 'exceptions':
       case 'alerts':
-        return '#f59e0b';
+        return 'tone-amber';
       default:
-        return '#3b82f6';
+        return 'tone-blue';
     }
   });
 
-  public readonly sparklineLinePath = computed<string>(() => {
-    if (this.metric().id === 'open-tasks') {
-      return 'M0,32 C15,32 25,30 35,30 C45,30 50,18 60,18 C68,18 74,26 80,22 C86,18 90,12 96,6';
+  public readonly unit = computed<string>(() => {
+    switch (this.metric().id) {
+      case 'open-tasks':
+        return 'tasks';
+      case 'exceptions':
+      case 'alerts':
+        return 'alerts';
+      default:
+        return 'containers';
     }
-    if (this.metric().id === 'exceptions' || this.metric().id === 'alerts') {
-      return 'M0,10 C20,10 32,26 46,20 C60,16 72,28 96,32';
-    }
-    return 'M0,30 C20,30 32,20 46,24 C60,28 72,12 96,6';
   });
 
-  public readonly sparklineAreaPath = computed<string>(() => {
-    if (this.metric().id === 'open-tasks') {
-      return 'M0,32 C15,32 25,30 35,30 C45,30 50,18 60,18 C68,18 74,26 80,22 C86,18 90,12 96,6 L96,40 L0,40 Z';
+  private readonly today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+
+  public readonly caption = computed<string>(() => {
+    const m = this.metric();
+    if (m.trendText) return m.trendText;
+    switch (m.id) {
+      case 'arrivals-today':
+      case 'departures-today':
+        return `Today, ${this.today}`;
+      case 'yard-inventory':
+        return 'Current yard inventory';
+      case 'open-tasks':
+        return 'Across all operators';
+      default:
+        return Number(m.value) === 0 ? 'All clear' : 'Requires your attention';
     }
-    if (this.metric().id === 'exceptions' || this.metric().id === 'alerts') {
-      return 'M0,10 C20,10 32,26 46,20 C60,16 72,28 96,32 L96,40 L0,40 Z';
-    }
-    return 'M0,30 C20,30 32,20 46,24 C60,28 72,12 96,6 L96,40 L0,40 Z';
   });
 }

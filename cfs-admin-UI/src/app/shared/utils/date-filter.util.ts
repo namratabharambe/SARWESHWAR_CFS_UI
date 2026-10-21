@@ -219,3 +219,15 @@ export function matchesDateFilter(
 
   return false;
 }
+
+/** Drops repeated visits (same visitId) that can appear when several API pages are merged. */
+export function uniqueVisits<T>(visits: T[]): T[] {
+  const seen = new Set<string>();
+  return (visits ?? []).filter((v: any) => {
+    const id = v?.visitId ?? v?.VisitId;
+    if (!id) return true;
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}

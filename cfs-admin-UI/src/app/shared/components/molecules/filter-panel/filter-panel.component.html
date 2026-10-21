@@ -1,0 +1,69 @@
+<div class="fp-actions">
+  <button type="button" class="fp-trigger" [class.is-active]="open() || activeCount() > 0" (click)="toggle()"
+    [attr.aria-expanded]="open()" aria-haspopup="dialog" title="Filter and sort">
+    <!-- Standard funnel filter icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" /></svg>
+    <span>Filter</span>
+    @if (activeCount() > 0) {
+      <span class="fp-badge">{{ activeCount() }}</span>
+    }
+  </button>
+
+  <!-- Shown only once something is applied -->
+  @if (activeCount() > 0) {
+    <button type="button" class="fp-clear" (click)="clearAll()" title="Remove all applied filters">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+      <span>Clear filters</span>
+    </button>
+  }
+</div>
+
+@if (open()) {
+  <div #panel class="fp-panel" role="dialog" aria-label="Filter and sort" [style.top.px]="pos().top" [style.left.px]="pos().left">
+    <div class="fp-head">
+      <span>Filter &amp; Sort</span>
+      <button type="button" class="fp-x" (click)="open.set(false)" aria-label="Close">✕</button>
+    </div>
+
+    <div class="fp-body">
+      @if (sortOptions().length) {
+        <div class="fp-field fp-wide">
+          <label class="fp-label">Sort by</label>
+          <app-dropdown [options]="sortOptions()" [value]="draftSort()" (valueChange)="draftSort.set($event)"
+            [fullWidth]="true" size="sm" />
+        </div>
+      }
+
+      @for (f of fields(); track f.key) {
+        <div class="fp-field" [class.fp-wide]="f.type === 'daterange'">
+          <label class="fp-label">{{ f.label }}</label>
+          @switch (f.type) {
+            @case ('date') {
+              <app-date-picker [value]="draft()[f.key] || ''" (valueChange)="set(f.key, $event)"
+                [placeholder]="f.placeholder || 'Select date'" />
+            }
+            @case ('daterange') {
+              <div class="grid grid-cols-2 gap-3">
+                <app-date-picker [value]="draft()[f.key + 'From'] || ''" (valueChange)="set(f.key + 'From', $event)" placeholder="From" />
+                <app-date-picker [value]="draft()[f.key + 'To'] || ''" (valueChange)="set(f.key + 'To', $event)" placeholder="To" />
+              </div>
+            }
+            @case ('select') {
+              <app-dropdown [options]="f.options || []" [value]="draft()[f.key] || 'All'" (valueChange)="set(f.key, $event)"
+                [fullWidth]="true" size="sm" />
+            }
+            @default {
+              <input type="text" class="fp-input" [placeholder]="f.placeholder || ''" [ngModel]="draft()[f.key] || ''"
+                (ngModelChange)="set(f.key, $event)" (keydown.enter)="onApply()" />
+            }
+          }
+        </div>
+      }
+    </div>
+
+    <div class="fp-foot">
+      <button type="button" class="fp-btn" (click)="onReset()">Reset</button>
+      <button type="button" class="fp-btn fp-primary" (click)="onApply()">Apply</button>
+    </div>
+  </div>
+}

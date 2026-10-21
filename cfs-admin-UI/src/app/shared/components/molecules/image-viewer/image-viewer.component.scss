@@ -1,0 +1,267 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000; // above every header, drawer and modal in the app
+}
+
+.iv-backdrop {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 6, 23, 0.86);
+  backdrop-filter: blur(8px);
+  animation: ivFade 160ms ease both;
+}
+
+@keyframes ivFade {
+  from {
+    opacity: 0;
+  }
+}
+
+.iv-dialog {
+  display: flex;
+  width: 100%;
+  max-width: 64rem;
+  max-height: calc(100vh - 32px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  background: #0f172a;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+  transition: max-width 200ms ease, border-radius 200ms ease;
+
+  // Full Size: fill the screen but keep header, arrows and thumbnails.
+  &.is-full {
+    max-width: none;
+    height: calc(100vh - 32px);
+    border-radius: 12px;
+  }
+}
+
+.iv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.iv-cam {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 12px;
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.18);
+
+  svg {
+    height: 18px;
+    width: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+}
+
+.iv-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.iv-counter {
+  flex-shrink: 0;
+  padding: 1px 10px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.iv-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.iv-btn {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: #1e293b;
+  transition: background 140ms ease, color 140ms ease;
+
+  &:hover {
+    color: #fff;
+    background: #334155;
+  }
+
+  svg {
+    height: 15px;
+    width: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &.iv-icon-only {
+    width: 32px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  &.iv-close:hover {
+    border-color: #e11d48;
+    background: #e11d48;
+  }
+}
+
+.iv-body {
+  position: relative;
+  display: flex;
+  min-height: 320px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px 72px;
+  background: #020617;
+}
+
+.iv-img {
+  max-height: 66vh;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.9);
+}
+
+.is-full .iv-img {
+  // viewport minus backdrop padding, header, thumbnails and body padding
+  max-height: calc(100vh - 200px);
+}
+
+.iv-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  height: 46px;
+  width: 46px;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: 1px solid #334155;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+  transition: background 140ms ease, transform 140ms ease;
+
+  &:hover {
+    background: #2563eb;
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  svg {
+    height: 22px;
+    width: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+  }
+
+  &.iv-prev {
+    left: 14px;
+  }
+
+  &.iv-next {
+    right: 14px;
+  }
+}
+
+.iv-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid #1e293b;
+
+  kbd {
+    padding: 1px 6px;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    color: #cbd5e1;
+    background: #1e293b;
+  }
+}
+
+.iv-thumb {
+  display: flex;
+  height: 40px;
+  width: 56px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  opacity: 0.5;
+  transition: opacity 140ms ease, transform 140ms ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &.is-active {
+    opacity: 1;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  span {
+    font-size: 9px;
+    font-weight: 700;
+    color: #fff;
+  }
+}
+
+@media (max-width: 640px) {
+  .iv-body {
+    padding: 12px 8px;
+  }
+
+  .iv-nav {
+    height: 38px;
+    width: 38px;
+  }
+}

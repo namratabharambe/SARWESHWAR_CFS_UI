@@ -9,6 +9,7 @@ import { ContainerDetailDrawerComponent } from './components/container-detail-dr
 import { MoveContainerModalComponent } from './components/move-container-modal/move-container-modal.component';
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
+import { FilterApplyEvent, FilterField, FilterPanelComponent, FilterValues } from 'shared/components/molecules/filter-panel/filter-panel.component';
 import { TranslatePipe } from 'shared/pipes';
 
 @Component({
@@ -23,6 +24,7 @@ import { TranslatePipe } from 'shared/pipes';
     MoveContainerModalComponent,
     PaginationComponent,
     DatePickerComponent,
+    FilterPanelComponent,
     TranslatePipe,
   ],
   templateUrl: './inventory.component.html',
@@ -84,6 +86,64 @@ export class InventoryComponent {
     this.selectedIds.set(new Set());
   }
 
+  public readonly sortOptions = [
+    { label: 'Date: newest first', value: 'date-desc' },
+    { label: 'Date: oldest first', value: 'date-asc' },
+    { label: 'Container No: A–Z', value: 'container-asc' },
+    { label: 'Container No: Z–A', value: 'container-desc' },
+    { label: 'Size', value: 'size' },
+    { label: 'Location', value: 'location' },
+  ];
+
+  public readonly filterFields = computed<FilterField[]>(() => {
+    const sizes = [...new Set(this.inventoryService.containers().map((c) => c.sizeType).filter(Boolean))].sort();
+    return [
+      { key: 'date', label: 'Date', type: 'date' },
+      { key: 'range', label: 'Date range (from – to)', type: 'daterange' },
+      { key: 'containerNo', label: 'Container No', type: 'text', placeholder: 'e.g. MSCU1234567' },
+      { key: 'size', label: 'Size', type: 'select', options: [{ label: 'All sizes', value: 'All' }, ...sizes.map((x) => ({ label: x, value: x }))] },
+      {
+        key: 'location',
+        label: 'Location',
+        type: 'select',
+        options: [
+          { label: 'All locations', value: 'All' },
+          { label: 'In Yard', value: 'In Yard' },
+          { label: 'Gate Out', value: 'Gate Out' },
+        ],
+      },
+    ];
+  });
+
+  public readonly filterValues = computed<FilterValues>(() => {
+    const s = this.inventoryService;
+    return {
+      date: s.dateFilter(),
+      rangeFrom: s.rangeFrom(),
+      rangeTo: s.rangeTo(),
+      containerNo: s.containerFilter(),
+      size: s.sizeFilter(),
+      location: s.locationFilter(),
+    };
+  });
+
+  public onFilterApply(e: FilterApplyEvent): void {
+    const s = this.inventoryService;
+    const v = e.values;
+    s.containerFilter.set(v['containerNo'] ?? '');
+    s.sizeFilter.set(v['size'] ?? '');
+    s.locationFilter.set(v['location'] ?? '');
+    s.sortBy.set(e.sort || 'date-desc');
+    if (!v['date'] && (v['rangeFrom'] || v['rangeTo'])) {
+      s.setDateRange(v['rangeFrom'] ?? '', v['rangeTo'] ?? '');
+    } else {
+      s.rangeFrom.set('');
+      s.rangeTo.set('');
+      s.setDateFilter(v['date'] ?? '');
+    }
+    this.selectedIds.set(new Set());
+  }
+
   public onDateFilterChange(val: string): void {
     this.inventoryService.setDateFilter(val);
     this.selectedIds.set(new Set());
@@ -93,8 +153,7 @@ export class InventoryComponent {
     this.inventoryService.selectedKpiFilter.set('All');
     this.inventoryService.setGateMode('ALL');
     this.inventoryService.setSearchQuery('');
-    this.inventoryService.setDateFilter('');
-    this.selectedIds.set(new Set());
+    this.onFilterApply({ values: {}, sort: 'date-desc' });
   }
 
   public openAddModal(): void {

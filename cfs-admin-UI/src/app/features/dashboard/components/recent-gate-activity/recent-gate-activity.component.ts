@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, computed, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GateActivityItem } from 'shared/types/dashboard/dashboard.interface';
+import { GateActivityItem, GateItemStatus } from 'shared/types/dashboard/dashboard.interface';
 import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
@@ -15,8 +15,20 @@ export class RecentGateActivityComponent {
   private readonly dashboardService = inject(DashboardService);
 
   public readonly activities = input.required<GateActivityItem[]>();
-  /** Dashboard card shows the latest 6 events filling the card space cleanly. */
-  public readonly latest = computed(() => this.activities().slice(0, 6));
+  /** Latest 20 events; the card shows 5 at a time and scrolls for the rest. */
+  public readonly latest = computed(() => this.activities().slice(0, 20));
+
+  public statusLabel(status: GateItemStatus): string {
+    return status === 'Review' ? 'Needs Review' : status === 'Flagged' ? 'Exception' : status;
+  }
+
+  public statusTone(status: GateItemStatus): string {
+    return status === 'Review' ? 'st-warn' : status === 'Flagged' ? 'st-bad' : status === 'Processing' ? 'st-info' : 'st-good';
+  }
+
+  public date(item: GateActivityItem): string {
+    return item.timestamp ? new Date(item.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+  }
 
   public readonly selectedActivity = this.dashboardService.selectedGateActivity;
 

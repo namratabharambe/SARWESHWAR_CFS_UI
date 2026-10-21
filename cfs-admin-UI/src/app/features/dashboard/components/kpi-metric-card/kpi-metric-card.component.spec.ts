@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { describe, expect, it, beforeEach } from 'vitest';
 import { KpiMetricCardComponent } from './kpi-metric-card.component';
 import { DashboardKpiMetric } from 'shared/types/dashboard/dashboard.interface';
@@ -20,6 +21,7 @@ describe('KpiMetricCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [KpiMetricCardComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(KpiMetricCardComponent);

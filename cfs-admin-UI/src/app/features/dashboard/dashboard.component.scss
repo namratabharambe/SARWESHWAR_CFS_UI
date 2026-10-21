@@ -1,99 +1,7 @@
 /* ==========================================================================
-   Dashboard Entrance Animations (Coordinated, Staggered, Hardware-Accelerated)
-   Fires smoothly when navigating to the dashboard (e.g., right after login).
+   Dashboard design tokens. Child cards read these through var(--db-*),
+   since custom properties inherit across component boundaries.
    ========================================================================== */
-
-/* 1. Main Dashboard Container Entrance: Scale, Lift & Soft Glow Fade */
-@keyframes dashboardOpenEntrance {
-  0% {
-    opacity: 0;
-    transform: translateY(28px) scale(0.978);
-    filter: blur(4px);
-  }
-
-  60% {
-    filter: blur(0);
-  }
-
-  100% {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
-}
-
-/* 2. Top Ambient Sheen Laser Line: Smooth sweep across top edge on open */
-@keyframes dashboardSheenPass {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-
-  25% {
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateX(250%);
-    opacity: 0;
-  }
-}
-
-/* 3. KPI Metric Cards Staggered Pop-In with Spring Effect */
-@keyframes kpiCardPopIn {
-  0% {
-    opacity: 0;
-    transform: translateY(26px) scale(0.92);
-  }
-
-  75% {
-    transform: translateY(-2px) scale(1.015);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* 4. Operations Panel - Activity Log (Smooth slide from left-bottom) */
-@keyframes panelSlideLeft {
-  0% {
-    opacity: 0;
-    transform: translate3d(-20px, 24px, 0) scale(0.985);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-/* 5. Operations Panel - Alerts (Smooth slide from right-bottom) */
-@keyframes panelSlideRight {
-  0% {
-    opacity: 0;
-    transform: translate3d(20px, 24px, 0) scale(0.985);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-/* 6. Analytics Cards (Yard, Donut, Inventory) Staggered Slide-Up */
-@keyframes analyticsCardUp {
-  0% {
-    opacity: 0;
-    transform: translateY(28px) scale(0.97);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 
 :host {
   display: block;
@@ -101,292 +9,283 @@
 }
 
 .dashboard-page {
+  --db-canvas: linear-gradient(160deg, #dfe4ff 0%, #eaeefb 45%, #d6f0f6 100%);
+  --db-surface: #ffffff;
+  --db-surface-soft: #eef1fa;
+  --db-surface-hover: #e6ebfa;
+  --db-line: #d0d7eb;
+  --db-text: #0f1838;
+  --db-text-2: #3b4a70;
+  --db-muted: #67749a;
+  --db-accent: #4b3be0;
+  --db-accent-2: #6d28d9;
+  --db-accent-soft: #e0dbff;
+  --db-shadow: 0 8px 24px -10px rgba(55, 48, 163, 0.28);
+  --db-shadow-hover: 0 16px 36px -12px rgba(55, 48, 163, 0.42);
+
+  /* Status colors */
+  --db-good: #047857;
+  --db-good-soft: #c9f3de;
+  --db-warn: #b45309;
+  --db-warn-soft: #ffe3ad;
+  --db-bad: #be123c;
+  --db-bad-soft: #ffd3dc;
+  --db-info: #1d4ed8;
+  --db-info-soft: #d3e1ff;
+
+  /* Chart series (validated for color-blind separation and contrast) */
+  --db-series-in: #6d5cf6;
+  --db-series-out: #0d9488;
+
   position: relative;
-  animation: dashboardOpenEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transform-origin: top center;
-  background-image: url('../../../assets/images/dashboard-ui-bg.png');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 20px 22px 24px;
   border-radius: 1.25rem;
-  padding: 0.75rem;
+  background: var(--db-canvas);
+  color: var(--db-text);
+  animation: dashboardOpen 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
-  :host-context(.dark) & {
-    background-image: none;
-    background-color: #081b2d;
+:host-context(.dark) .dashboard-page {
+  --db-canvas: radial-gradient(ellipse at 85% 0%, rgba(124, 92, 255, 0.16), transparent 55%), #0d1424;
+  --db-surface: #162038;
+  --db-surface-soft: #1c2844;
+  --db-surface-hover: #22304f;
+  --db-line: #2b3a5c;
+  --db-text: #eef2ff;
+  --db-text-2: #b3c0dc;
+  --db-muted: #8494b6;
+  --db-accent: #8b7bff;
+  --db-accent-2: #b48cff;
+  --db-accent-soft: #2a2a5c;
+  --db-shadow: 0 8px 26px -10px rgba(0, 0, 0, 0.6);
+  --db-shadow-hover: 0 16px 36px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(139, 123, 255, 0.35);
+
+  --db-good: #34d399;
+  --db-good-soft: rgba(16, 185, 129, 0.18);
+  --db-warn: #fbbf24;
+  --db-warn-soft: rgba(245, 158, 11, 0.18);
+  --db-bad: #fb7185;
+  --db-bad-soft: rgba(244, 63, 94, 0.2);
+  --db-info: #7ea6ff;
+  --db-info-soft: rgba(59, 130, 246, 0.2);
+
+  --db-series-in: #8b7bff;
+  --db-series-out: #0fa597;
+}
+
+@keyframes dashboardOpen {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
 
-  /* Top Sheen Line container */
-  .dashboard-sheen-line {
-    position: absolute;
-    top: -8px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 30;
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 45%;
-      height: 100%;
-      background: linear-gradient(90deg,
-          transparent,
-          rgba(59, 130, 246, 0.8),
-          rgba(147, 197, 253, 0.95),
-          rgba(59, 130, 246, 0.8),
-          transparent);
-      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.8));
-      animation: dashboardSheenPass 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
-    }
+@keyframes cardRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
 
-  /* Top Hero Section */
-  .dashboard-section-hero {
-    display: grid;
-    gap: 14px;
-    align-items: stretch;
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
-    .welcome-banner-card {
-      min-height: 104px;
-      position: relative;
-      background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
-      border: 1px solid rgba(186, 230, 253, 0.85);
+/* Staggered entrance for KPI cards and panels */
+.dashboard-kpi-card,
+.dashboard-panel {
+  display: block;
+  min-width: 0;
+  animation: cardRise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
 
-      :host-context(.dark) & {
-        background: linear-gradient(135deg, #0d1527 0%, #1e293b 100%);
-        border-color: rgba(30, 58, 138, 0.5);
-      }
+@for $i from 1 through 5 {
+  .dashboard-kpi-card:nth-child(#{$i}) {
+    animation-delay: #{0.05s + $i * 0.05s};
+  }
+}
 
-      .banner-bg-media img {
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      }
+.dashboard-panel {
+  animation-delay: 0.3s;
+}
 
-      &:hover {
-        .banner-bg-media img {
-          transform: scale(1.03);
-        }
-      }
-    }
+/* Page header */
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--db-text);
+}
 
-    .gate-lanes-widget-card,
-    .turnaround-widget-card,
-    .weather-widget-card,
-    .throughput-widget-card {
-      min-height: 104px;
-      transition:
-        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+.dashboard-subtitle {
+  color: var(--db-text-2);
+}
 
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 14px -3px rgba(82, 94, 167, 0.12);
-      }
-    }
+.dashboard-meta {
+  color: var(--db-muted);
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  width: 28px;
+  border-radius: 8px;
+  color: var(--db-text-2);
+  transition: background 160ms ease, color 160ms ease;
+
+  &:hover {
+    background: var(--db-accent-soft);
+    color: var(--db-accent);
+  }
+}
+
+/* Shared card surface: each panel sets --card-rgb (its color) on its host element.
+   The card derives a soft gradient, a visible border and a same-color hover shadow from it. */
+:host ::ng-deep .dashboard-page .dashboard-card {
+  background:
+    linear-gradient(145deg, rgba(var(--card-rgb, 79, 70, 229), 0.16) 0%, rgba(var(--card-rgb, 79, 70, 229), 0.04) 55%, rgba(var(--card-rgb, 79, 70, 229), 0.1) 100%),
+    var(--db-surface) !important;
+  border: 1.5px solid rgba(var(--card-rgb, 79, 70, 229), 0.35) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 22px -12px rgba(var(--card-rgb, 79, 70, 229), 0.45) !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--card-rgb, 79, 70, 229), 0.75) !important;
+    box-shadow: 0 16px 34px -12px rgba(var(--card-rgb, 79, 70, 229), 0.65) !important;
+  }
+}
+
+:host-context(.dark) ::ng-deep .dashboard-page .dashboard-card {
+  background:
+    linear-gradient(145deg, rgba(var(--card-rgb, 139, 123, 255), 0.28) 0%, rgba(var(--card-rgb, 139, 123, 255), 0.07) 60%, rgba(var(--card-rgb, 139, 123, 255), 0.12) 100%),
+    var(--db-surface) !important;
+  border-color: rgba(var(--card-rgb, 139, 123, 255), 0.45) !important;
+  box-shadow: 0 10px 26px -14px rgba(var(--card-rgb, 139, 123, 255), 0.7) !important;
+
+  &:hover {
+    border-color: rgba(var(--card-rgb, 139, 123, 255), 0.85) !important;
+    box-shadow: 0 18px 40px -14px rgba(var(--card-rgb, 139, 123, 255), 0.85), 0 0 0 1px rgba(var(--card-rgb, 139, 123, 255), 0.35) !important;
+  }
+}
+
+/* Card colors */
+.tone-sky { --card-rgb: 14, 165, 233; }
+.tone-violet { --card-rgb: 99, 102, 241; }
+.tone-amber { --card-rgb: 245, 158, 11; }
+.tone-emerald { --card-rgb: 16, 185, 129; }
+.tone-blue { --card-rgb: 37, 99, 235; }
+
+/* Shared card header pieces used by the dashboard cards */
+:host ::ng-deep .dashboard-page {
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--db-text);
   }
 
-  /* Section 1: KPI Metrics Grid with 5-Card Staggered Pop-In */
-  .dashboard-section-kpi {
-    .dashboard-kpi-card {
-      display: block;
-      height: 100%;
-      will-change: transform, opacity;
-      animation: kpiCardPopIn 0.52s cubic-bezier(0.2, 0.9, 0.3, 1.05) both;
-
-      &:nth-child(1) {
-        animation-delay: 0.08s;
-      }
-
-      &:nth-child(2) {
-        animation-delay: 0.15s;
-      }
-
-      &:nth-child(3) {
-        animation-delay: 0.22s;
-      }
-
-      &:nth-child(4) {
-        animation-delay: 0.29s;
-      }
-
-      &:nth-child(5) {
-        animation-delay: 0.36s;
-      }
-    }
-  }
-
-  /* Operational Grid: Yard Overview (6 cols) + 2x2 Quad Grid (6 cols) */
-  .dashboard-section-ops-grid {
-    width: 100%;
-    min-width: 0;
-  }
-
-  /* 2x2 Operational Quad Grid: Exact Same Card Sizes across all 4 cards */
-  .dashboard-ops-quad-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(295px, 1fr));
-    gap: 14px;
-    align-items: stretch;
-
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-    }
-  }
-
-  .dashboard-quad-card {
+  .card-icon {
     display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
-    min-width: 0;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    border-radius: 10px;
+    color: var(--db-accent);
+    background: var(--db-accent-soft);
 
-    > * {
-      height: 100%;
-      min-height: 0;
+    svg {
+      height: 16px;
+      width: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
   }
 
+  .card-link {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--db-accent);
 
-  /* Section 3: Analytics (Yard Snapshot, Status Donut, Inventory Summary) */
-  .dashboard-section-analytics {
-    .panel-yard-snapshot {
-      will-change: transform, opacity;
-      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-      animation-delay: 0.46s;
+    svg {
+      height: 13px;
+      width: 13px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      transition: transform 160ms ease;
     }
 
-    .panel-status-donut {
-      will-change: transform, opacity;
-      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-      animation-delay: 0.54s;
+    &:hover svg {
+      transform: translate(2px, -2px);
     }
+  }
 
-    .panel-inventory-summary {
-      will-change: transform, opacity;
-      animation: analyticsCardUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-      animation-delay: 0.62s;
+  .count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--db-warn);
+    background: var(--db-warn-soft);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--db-accent);
+    background: var(--db-accent-soft);
+
+    &::before {
+      content: '';
+      height: 6px;
+      width: 6px;
+      border-radius: 50%;
+      background: currentColor;
     }
   }
 }
 
-/* Accessibility: Respect Reduced Motion Preference */
 @media (prefers-reduced-motion: reduce) {
 
   .dashboard-page,
-  .dashboard-sheen-line::after,
   .dashboard-kpi-card,
-  .panel-recent-activity,
-  .panel-exception-alerts,
-  .panel-yard-snapshot,
-  .panel-status-donut,
-  .panel-inventory-summary {
+  .dashboard-panel {
     animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-  }
-}
-
-/* Global Dashboard Cards & Interactive Hover Elevation System */
-:host ::ng-deep .dashboard-page .dashboard-card,
-:host ::ng-deep .dashboard-page .welcome-banner-card,
-:host ::ng-deep .dashboard-page .weather-widget-card,
-:host ::ng-deep .dashboard-page .throughput-widget-card {
-  border: 1px solid rgba(226, 232, 240, 0.9) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease !important;
-
-  &:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 6px 20px -2px rgba(0, 102, 255, 0.1) !important;
-    border-color: rgba(147, 197, 253, 0.85) !important;
-  }
-}
-
-:host-context(.dark) ::ng-deep .dashboard-page .dashboard-card,
-:host-context(.dark) ::ng-deep .dashboard-page .welcome-banner-card,
-:host-context(.dark) ::ng-deep .dashboard-page .weather-widget-card,
-:host-context(.dark) ::ng-deep .dashboard-page .throughput-widget-card {
-  background: #111a2e !important;
-  border-color: rgba(148, 163, 184, 0.14) !important;
-  box-shadow: none !important;
-
-  &:hover {
-    transform: translateY(-1px) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4) !important;
-    border-color: rgba(59, 130, 246, 0.35) !important;
-  }
-}
-
-/* Dark palette typography & background surfaces */
-:host-context(.dark) ::ng-deep .dashboard-page {
-
-  .bg-slate-50\/70,
-  .bg-slate-50,
-  .bg-slate-100 {
-    background-color: #0e2942 !important;
-  }
-
-  .dark\:bg-slate-800,
-  .dark\:bg-slate-900\/40 {
-    background-color: #0e2942 !important;
-  }
-
-  .text-\[\#0f2851\] {
-    color: #eaf4ff !important;
-  }
-
-  .text-slate-500,
-  .text-slate-600 {
-    color: #a5bcd0 !important;
-  }
-
-  .text-slate-400 {
-    color: #718da5 !important;
-  }
-}
-
-/* ==========================================================================
-   Dashboard Hero Context Switcher Dropdowns (System Admin, Client Admin, Site Admin)
-   ========================================================================== */
-.dashboard-context-switcher-bar {
-  animation: fadeInDown 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
-
-  .context-select-chip {
-    transition: all 180ms ease-in-out;
-
-    &:hover {
-      box-shadow: 0 4px 12px -2px rgba(15, 40, 81, 0.08);
-      transform: translateY(-0.5px);
-    }
-  }
-
-  .context-dropdown-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.1rem center;
-    background-size: 0.75rem 0.75rem;
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 1.15rem;
-
-    &:focus {
-      outline: none;
-    }
-  }
-}
-
-:host-context(.dark) .dashboard-context-switcher-bar {
-  .context-dropdown-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
   }
 }
 
@@ -403,4 +302,3 @@
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
 }
-

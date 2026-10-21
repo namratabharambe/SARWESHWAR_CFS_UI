@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, HostListener, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -13,6 +13,8 @@ import {
 import { DatePickerComponent } from 'shared/components/molecules/date-picker/date-picker.component';
 import { DropdownComponent } from 'shared/components/molecules/dropdown/dropdown.component';
 import { PaginationComponent } from 'shared/components/molecules/pagination/pagination.component';
+import { ImageViewerComponent } from 'shared/components/molecules/image-viewer/image-viewer.component';
+import { FilterApplyEvent, FilterField, FilterPanelComponent, FilterValues } from 'shared/components/molecules/filter-panel/filter-panel.component';
 import { GateEventDetailComponent } from './components/gate-event-detail/gate-event-detail.component';
 import { ManualGateEntryComponent } from './components/manual-gate-entry/manual-gate-entry.component';
 import { NonErpContainerComponent } from './components/non-erp-container/non-erp-container.component';
@@ -34,6 +36,7 @@ import {
   isVisitDepartureToday,
   matchesDateFilter,
   parseAnyDate,
+  uniqueVisits,
 } from 'shared/utils/date-filter.util';
 
 export type GateDirection = 'IN' | 'OUT';
@@ -97,6 +100,8 @@ export interface GateEventItem {
     FormsModule,
     TranslatePipe,
     GateEventDetailComponent,
+    ImageViewerComponent,
+    FilterPanelComponent,
     ManualGateEntryComponent,
     NonErpContainerComponent,
     DatePickerComponent,
@@ -126,6 +131,67 @@ export class GateEventsComponent implements OnInit {
   public readonly confidenceFilter = signal<string>('All');
   public readonly dateFilter = signal<string>('');
   public readonly searchQuery = signal<string>('');
+
+  // Filter panel state (date + direction reuse dateFilter / cycleFilter above)
+  public readonly containerFilter = signal<string>('');
+  public readonly sizeFilter = signal<string>('');
+  public readonly statusFilter = signal<string>('');
+  public readonly rangeFrom = signal<string>('');
+  public readonly rangeTo = signal<string>('');
+  public readonly sortBy = signal<string>('date-desc');
+
+  public readonly sortOptions = [
+    { label: 'Date: newest first', value: 'date-desc' },
+    { label: 'Date: oldest first', value: 'date-asc' },
+    { label: 'Container No: A–Z', value: 'container-asc' },
+    { label: 'Container No: Z–A', value: 'container-desc' },
+    { label: 'Direction / Cycle', value: 'direction' },
+    { label: 'Size', value: 'size' },
+    { label: 'Status', value: 'status' },
+  ];
+
+  public readonly filterFields = computed<FilterField[]>(() => {
+    const sizes = [...new Set(this.events().map((e) => e.size).filter(Boolean))].sort();
+    // Direction is a filter only on the "All" tab; Gate In / Gate Out tabs already fix it.
+    const onAllTab = this.gateMode() === 'all';
+    const fields: FilterField[] = [
+      { key: 'date', label: 'Date', type: 'date' },
+      { key: 'range', label: 'Date range (from – to)', type: 'daterange' },
+      { key: 'containerNo', label: 'Container No', type: 'text', placeholder: 'e.g. MSCU1234567' },
+      ...(onAllTab ? [{
+        key: 'direction',
+        label: 'Direction / Cycle',
+        type: 'select',
+        options: [
+          { label: 'All directions', value: 'All' },
+          { label: 'Gate In', value: 'IN' },
+          { label: 'Gate Out', value: 'OUT' },
+        ],
+      } as FilterField] : []),
+      { key: 'size', label: 'Size', type: 'select', options: [{ label: 'All sizes', value: 'All' }, ...sizes.map((x) => ({ label: x, value: x }))] },
+      {
+        key: 'status',
+        label: 'Status',
+        type: 'select',
+        options: [
+          { label: 'All statuses', value: 'All' },
+          { label: 'Verified', value: 'Verified' },
+          { label: 'In Review', value: 'Review' },
+        ],
+      },
+    ];
+    return fields;
+  });
+
+  public readonly filterValues = computed<FilterValues>(() => ({
+    date: this.dateFilter(),
+    rangeFrom: this.rangeFrom(),
+    rangeTo: this.rangeTo(),
+    containerNo: this.containerFilter(),
+    direction: this.gateMode() === 'all' && this.cycleFilter() !== 'All' ? this.cycleFilter() : '',
+    size: this.sizeFilter(),
+    status: this.statusFilter(),
+  }));
 
   public readonly cycleOptions = [
     { value: 'All', label: 'All Cycles' },
@@ -167,19 +233,6 @@ export class GateEventsComponent implements OnInit {
   public readonly exportDropdownOpen = signal<boolean>(false);
   public readonly activeLightboxGallery = signal<ActiveLightboxGallery | null>(null);
 
-  public readonly currentLightboxPhoto = computed<GateCameraPhoto | null>(() => {
-    const g = this.activeLightboxGallery();
-    if (!g || !g.photos || g.photos.length === 0) return null;
-    return g.photos[g.currentIndex] ?? null;
-  });
-
-  public readonly lightboxCounterText = computed<string>(() => {
-    const g = this.activeLightboxGallery();
-    if (!g || !g.photos || g.photos.length === 0) return '';
-    return `${g.currentIndex + 1} / ${g.photos.length}`;
-  });
-
-  // Keep for backward compatibility if referenced elsewhere
   public readonly activeLightboxPhoto = signal<{ title: string; url: string } | null>(null);
 
   public readonly currentPage = signal<number>(1);
@@ -191,14 +244,17 @@ export class GateEventsComponent implements OnInit {
   public readonly todayCheckoutCount = signal<number>(0);
   public readonly gateCounts = signal<GateCountsResponse | null>(null);
 
+  private isInitialized = false;
+  private searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
   constructor() {
-    this.syncGateMode();
+    this.syncGateMode(false);
 
     if (this.router) {
       this.router.events
         .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
         .subscribe(() => {
-          this.syncGateMode();
+          this.syncGateMode(true);
         });
     }
 
@@ -206,13 +262,13 @@ export class GateEventsComponent implements OnInit {
       // Track site or client selection changes and reload visits
       const siteId = this.authService.selectedSiteId();
       const clientId = this.authService.selectedClientId();
-      if (siteId || clientId) {
+      if ((siteId || clientId) && this.isInitialized) {
         this.loadGateEvents();
       }
     });
   }
 
-  private syncGateMode(): void {
+  private syncGateMode(shouldLoad: boolean = true): void {
     const url = this.router?.url ?? '';
     const routeMode = this.route?.snapshot?.data?.['mode'];
     if (url.includes('/gate-events/out') || routeMode === 'out') {
@@ -229,7 +285,9 @@ export class GateEventsComponent implements OnInit {
     this.currentPage.set(1);
     this.isNonErpView.set(false);
     this.selectedEventForDetails.set(null);
-    this.loadGateEvents();
+    if (shouldLoad) {
+      this.loadGateEvents();
+    }
   }
 
   public setMode(mode: 'all' | 'in' | 'out'): void {
@@ -261,11 +319,16 @@ export class GateEventsComponent implements OnInit {
   public readonly toDate = signal<string | undefined>(undefined);
 
   public ngOnInit(): void {
+    this.isInitialized = true;
     this.loadGateEvents();
   }
 
   public onDateFilterChange(val: string): void {
     this.dateFilter.set(val);
+    if (val) {
+      this.rangeFrom.set('');
+      this.rangeTo.set('');
+    }
     this.currentPage.set(1);
 
     if (!val) {
@@ -292,6 +355,31 @@ export class GateEventsComponent implements OnInit {
     this.loadGateEvents();
   }
 
+  /** Applies the filter panel: date / range / container / direction go to the API; size / status / sort apply to the loaded rows. */
+  public onFilterApply(e: FilterApplyEvent): void {
+    const v = e.values;
+    this.containerFilter.set(v['containerNo'] ?? '');
+    this.sizeFilter.set(v['size'] ?? '');
+    this.statusFilter.set(v['status'] ?? '');
+    if (this.gateMode() === 'all') this.cycleFilter.set(v['direction'] ?? 'All');
+    this.sortBy.set(e.sort || 'date-desc');
+    this.rangeFrom.set(v['rangeFrom'] ?? '');
+    this.rangeTo.set(v['rangeTo'] ?? '');
+    this.currentPage.set(1);
+
+    const from = parseAnyDate(v['rangeFrom'] ?? '');
+    const to = parseAnyDate(v['rangeTo'] ?? '');
+    if (!v['date'] && (from || to)) {
+      this.dateFilter.set('');
+      this.fromDate.set(from ? new Date(from.getFullYear(), from.getMonth(), from.getDate()).toISOString() : undefined);
+      this.toDate.set(to ? new Date(to.getFullYear(), to.getMonth(), to.getDate(), 23, 59, 59, 999).toISOString() : undefined);
+      this.loadGateEvents();
+    } else {
+      // Single date (or none) reuses the toolbar date logic, which also reloads.
+      this.onDateFilterChange(v['date'] ?? '');
+    }
+  }
+
   public loadGateEvents(): void {
     this.isLoading.set(true);
     const siteId = this.authService.getActiveSiteId() || undefined;
@@ -299,6 +387,21 @@ export class GateEventsComponent implements OnInit {
     const from = this.fromDate();
     const to = this.toDate();
 
+    // Direction / Cycle filter parameter for API
+    const mode = this.gateMode();
+    const cycle = this.cycleFilter();
+    let eventType: string | undefined = undefined;
+    if (mode === 'in' || cycle === 'IN') {
+      eventType = 'GATE_IN';
+    } else if (mode === 'out' || cycle === 'OUT') {
+      eventType = 'GATE_OUT';
+    }
+
+    // Search query parameter for server-side indexed lookup
+    const query = this.searchQuery().trim();
+    const containerNumber = this.containerFilter().trim() || query || undefined;
+
+    // Fetch summary counts for top KPI cards
     this.gateEventService.getGateCounts(siteId, clientId).subscribe({
       next: (counts) => {
         if (counts) {
@@ -314,54 +417,32 @@ export class GateEventsComponent implements OnInit {
       },
     });
 
+    // Load every visit matching the server-side filters (date / range / container / direction),
+    // then page in the browser. The server pages by visit, but a visit can become two rows
+    // (gate in + gate out), so only client-side paging keeps "rows per page" exact on every tab
+    // and with size / status / sort filters. Same approach as Inventory.
+    // ponytail: loads all matching visits; switch to server paging per event if the API adds it and volumes grow large.
+    const query$ = { siteId, clientId, from, to, eventType, containerNumber };
     this.gateEventService
-      .getVisits({
-        page: 1,
-        pageSize: 200,
-        siteId,
-        clientId,
-        from,
-        to,
-      })
-      .subscribe({
-        next: (res: VisitsPagedResponse) => {
-          const firstPageItems = res?.items ?? (Array.isArray(res) ? (res as any) : []);
-          const totalCount = res?.totalCount ?? firstPageItems.length;
-          const returnedCount = firstPageItems.length;
-
-          // Render Page 1 immediately so user sees UI within seconds!
-          this.isLoading.set(false);
-          this.applyVisitsToTable(firstPageItems, totalCount);
-
-          // If there are more items beyond page 1, fetch remaining pages in background
-          if (totalCount > returnedCount && returnedCount > 0) {
-            const pageSize = 200;
-            const totalPages = Math.ceil(totalCount / pageSize);
-            const remainingRequests$: Observable<VisitsPagedResponse>[] = [];
-            for (let p = 2; p <= totalPages; p++) {
-              remainingRequests$.push(
-                this.gateEventService.getVisits({
-                  page: p,
-                  pageSize,
-                  siteId,
-                  clientId,
-                  from,
-                  to,
-                }),
-              );
-            }
-            forkJoin(remainingRequests$).subscribe({
-              next: (moreResponses) => {
-                const allItems = [...firstPageItems];
-                for (const r of moreResponses) {
-                  if (r?.items?.length) {
-                    allItems.push(...r.items);
-                  }
-                }
-                this.applyVisitsToTable(allItems, Math.max(totalCount, allItems.length));
-              },
-            });
+      .getVisits({ ...query$, page: 1, pageSize: 200 })
+      .pipe(
+        switchMap((res: VisitsPagedResponse) => {
+          const first: VisitListItemDto[] = res?.items ?? (Array.isArray(res) ? (res as any) : []);
+          const total = typeof res?.totalCount === 'number' ? res.totalCount : first.length;
+          if (!first.length || total <= first.length) return of({ items: first, total });
+          // Use the page size the server actually returned, in case it caps large requests.
+          const size = first.length;
+          const rest: Observable<VisitsPagedResponse>[] = [];
+          for (let p = 2; p <= Math.ceil(total / size); p++) {
+            rest.push(this.gateEventService.getVisits({ ...query$, page: p, pageSize: size }));
           }
+          return forkJoin(rest).pipe(map((more) => ({ items: [...first, ...more.flatMap((r) => r?.items ?? [])], total })));
+        }),
+      )
+      .subscribe({
+        next: ({ items, total }) => {
+          this.isLoading.set(false);
+          this.applyVisitsToTable(uniqueVisits(items), total);
         },
         error: () => {
           this.isLoading.set(false);
@@ -991,8 +1072,22 @@ export class GateEventsComponent implements OnInit {
     const conf = this.confidenceFilter();
     const query = this.searchQuery().trim().toLowerCase();
     const dateStr = this.dateFilter().trim();
+    const containerQ = this.containerFilter().replace(/\s+/g, '').toLowerCase();
+    const size = this.sizeFilter();
+    const status = this.statusFilter();
+    const rangeStart = parseAnyDate(this.rangeFrom())?.setHours(0, 0, 0, 0);
+    const rangeEnd = parseAnyDate(this.rangeTo())?.setHours(23, 59, 59, 999);
 
     const filtered = list.filter((item) => {
+      if (containerQ && !item.containerNo.replace(/\s+/g, '').toLowerCase().includes(containerQ)) return false;
+      if (size && item.size !== size) return false;
+      if (status && item.status !== status) return false;
+      if (rangeStart !== undefined || rangeEnd !== undefined) {
+        const t = this.eventTime(item);
+        if (rangeStart !== undefined && t < rangeStart) return false;
+        if (rangeEnd !== undefined && t > rangeEnd) return false;
+      }
+
       // Gate Mode / Direction filter
       const targetDir = mode === 'out' || cycle === 'OUT' ? 'OUT' : (mode === 'in' || cycle === 'IN' ? 'IN' : 'All');
       if (targetDir !== 'All' && item.direction !== targetDir) return false;
@@ -1062,28 +1157,46 @@ export class GateEventsComponent implements OnInit {
       return true;
     });
 
+    const sort = this.sortBy();
+    const byDate = (a: GateEventItem, b: GateEventItem) => this.eventTime(b) - this.eventTime(a);
+    const text = (x: string, y: string) => x.localeCompare(y, undefined, { numeric: true, sensitivity: 'base' });
     return filtered.sort((a, b) => {
-      const tA = (typeof a.timestamp === 'number' && a.timestamp > 0) ? a.timestamp : (parseAnyDate(a.createdAt || a.eventTime)?.getTime() ?? 0);
-      const tB = (typeof b.timestamp === 'number' && b.timestamp > 0) ? b.timestamp : (parseAnyDate(b.createdAt || b.eventTime)?.getTime() ?? 0);
-      return tB - tA;
+      switch (sort) {
+        case 'date-asc':
+          return -byDate(a, b);
+        case 'container-asc':
+          return text(a.containerNo, b.containerNo) || byDate(a, b);
+        case 'container-desc':
+          return text(b.containerNo, a.containerNo) || byDate(a, b);
+        case 'direction':
+          return text(a.direction, b.direction) || byDate(a, b);
+        case 'size':
+          return text(a.size ?? '', b.size ?? '') || byDate(a, b);
+        case 'status':
+          return text(a.status, b.status) || byDate(a, b);
+        default:
+          return byDate(a, b);
+      }
     });
   });
 
+  private eventTime(e: GateEventItem): number {
+    return typeof e.timestamp === 'number' && e.timestamp > 0 ? e.timestamp : (parseAnyDate(e.createdAt || e.eventTime)?.getTime() ?? 0);
+  }
+
   public readonly paginatedEvents = computed<GateEventItem[]>(() => {
-    const list = this.filteredEvents();
-    const page = this.currentPage();
     const size = this.pageSize();
-    const start = (page - 1) * size;
-    return list.slice(start, start + size);
+    const start = (this.displayPage() - 1) * size;
+    return this.filteredEvents().slice(start, start + size);
   });
 
-  public readonly totalPages = computed<number>(() => {
-    const total = this.filteredEvents().length;
-    return Math.max(1, Math.ceil(total / this.pageSize()));
-  });
+  /** Current page clamped to the last page, so a shrinking list (tab switch, filter) never shows an empty page. */
+  public readonly displayPage = computed<number>(() => Math.min(this.currentPage(), this.totalPages()));
+
+  public readonly totalPages = computed<number>(() => Math.max(1, Math.ceil(this.filteredEvents().length / this.pageSize())));
 
   public setPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages()) {
+    if (page >= 1 && page <= this.totalPages() && page !== this.currentPage()) {
       this.currentPage.set(page);
     }
   }
@@ -1168,6 +1281,12 @@ export class GateEventsComponent implements OnInit {
   public onSearchChange(q: string): void {
     this.searchQuery.set(q);
     this.currentPage.set(1);
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    this.searchTimeout = setTimeout(() => {
+      this.loadGateEvents();
+    }, 300);
   }
 
   public onConfidenceChange(c: string): void {
@@ -1187,6 +1306,12 @@ export class GateEventsComponent implements OnInit {
     const selected = this.selectedIds();
     return current.every((e) => selected.has(e.id));
   });
+
+  public readonly selectedCount = computed<number>(() => this.selectedIds().size);
+
+  public clearSelection(): void {
+    this.selectedIds.set(new Set());
+  }
 
   public setActiveTab(tab: 'all' | 'arrivals' | 'departures'): void {
     this.activeTab.set(tab);
@@ -1271,7 +1396,12 @@ export class GateEventsComponent implements OnInit {
   }
 
   public exportData(): void {
-    const data = this.filteredEvents();
+    const selected = this.selectedIds();
+    const hasSelection = selected.size > 0;
+    const data = hasSelection
+      ? this.events().filter((e) => selected.has(e.id))
+      : this.filteredEvents();
+
     const csvContent =
       'data:text/csv;charset=utf-8,' +
       ['Event Time,Cycle,Direction,Truck No,Container No,OCR Result,Confidence,Status,Damage Flag']
@@ -1286,11 +1416,14 @@ export class GateEventsComponent implements OnInit {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `gate-events-${new Date().toISOString().slice(0, 10)}.csv`);
+    const downloadName = hasSelection
+      ? `gate-events-selected-${selected.size}-${new Date().toISOString().slice(0, 10)}.csv`
+      : `gate-events-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('download', downloadName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    this.showToast('Exporting gate activity report to CSV.');
+    this.showToast(hasSelection ? `Exported ${selected.size} selected gate events.` : 'Exporting gate activity report to CSV.');
   }
 
   public approveSingleEvent(event: GateEventItem): void {
@@ -1504,51 +1637,9 @@ export class GateEventsComponent implements OnInit {
     this.activeLightboxPhoto.set({ title, url });
   }
 
-  public prevLightboxPhoto(e?: MouseEvent): void {
-    if (e) e.stopPropagation();
-    this.activeLightboxGallery.update((g) => {
-      if (!g || g.photos.length <= 1) return g;
-      const nextIdx = (g.currentIndex - 1 + g.photos.length) % g.photos.length;
-      return { ...g, currentIndex: nextIdx };
-    });
-  }
-
-  public nextLightboxPhoto(e?: MouseEvent): void {
-    if (e) e.stopPropagation();
-    this.activeLightboxGallery.update((g) => {
-      if (!g || g.photos.length <= 1) return g;
-      const nextIdx = (g.currentIndex + 1) % g.photos.length;
-      return { ...g, currentIndex: nextIdx };
-    });
-  }
-
-  public selectLightboxIndex(index: number, e?: MouseEvent): void {
-    if (e) e.stopPropagation();
-    this.activeLightboxGallery.update((g) => {
-      if (!g || index < 0 || index >= g.photos.length) return g;
-      return { ...g, currentIndex: index };
-    });
-  }
-
   public closeLightbox(): void {
     this.activeLightboxGallery.set(null);
     this.activeLightboxPhoto.set(null);
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  public handleGalleryKeydown(event: KeyboardEvent): void {
-    if (!this.activeLightboxGallery()) return;
-
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.prevLightboxPhoto();
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.nextLightboxPhoto();
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      this.closeLightbox();
-    }
   }
 
   private showToast(msg: string): void {

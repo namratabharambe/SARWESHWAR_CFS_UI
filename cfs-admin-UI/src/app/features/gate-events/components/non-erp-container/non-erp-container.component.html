@@ -780,7 +780,7 @@
             <div class="mt-2 flex gap-3 overflow-x-auto">
               @for (photo of detail.capturedPhotos; track photo.tag) {
                 <div
-                  (click)="openLightbox(photo.url, photo.title)"
+                  (click)="openGallery(detail.capturedPhotos, $index, detail.containerNo)"
                   class="group/cam relative h-20 w-32 shrink-0 cursor-pointer overflow-hidden rounded-lg border border-slate-200 shadow-sm dark:border-slate-700"
                   [title]="photo.title">
                   <img
@@ -820,25 +820,7 @@
   <!-- ========================================================================= -->
   <!-- 6. LIGHTBOX IMAGE PREVIEW                                                 -->
   <!-- ========================================================================= -->
-  @if (activeLightboxImage(); as lb) {
-    <div
-      class="animate-fade-in fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md"
-      (click)="closeLightbox()">
-      <div
-        class="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-2 shadow-2xl"
-        (click)="$event.stopPropagation()">
-        <div class="flex items-center justify-between px-3 py-2 text-white">
-          <span class="text-xs font-bold">{{ lb.title }}</span>
-          <button
-            type="button"
-            (click)="closeLightbox()"
-            class="rounded-lg p-1 text-slate-400 hover:text-white cursor-pointer"
-            [title]="'COMMON.CLOSE' | translate">
-            ✕
-          </button>
-        </div>
-        <img [src]="lb.url" [alt]="lb.title" class="max-h-[75vh] w-auto rounded-lg object-contain" />
-      </div>
-    </div>
+  @if (activeGallery(); as g) {
+    <app-image-viewer [photos]="g.photos" [startIndex]="g.index" [title]="g.title" (closed)="closeLightbox()" />
   }
 </div>

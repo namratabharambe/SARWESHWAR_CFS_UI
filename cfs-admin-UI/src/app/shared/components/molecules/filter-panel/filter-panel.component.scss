@@ -1,0 +1,261 @@
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+.fp-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fp-clear {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #be123c;
+  background: #fff1f2;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease;
+
+  svg {
+    height: 14px;
+    width: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+  }
+
+  &:hover {
+    border-color: #fb7185;
+    background: #ffe4e6;
+  }
+
+  :host-context(.dark) & {
+    border-color: rgba(244, 63, 94, 0.4);
+    color: #fda4af;
+    background: rgba(244, 63, 94, 0.12);
+
+    &:hover {
+      background: rgba(244, 63, 94, 0.22);
+    }
+  }
+}
+
+.fp-trigger {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  background: #fff;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+
+  svg {
+    height: 15px;
+    width: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  &:hover,
+  &.is-active {
+    border-color: #525ea7;
+    color: #525ea7;
+    background: #f1f2fb;
+  }
+
+  :host-context(.dark) & {
+    border-color: #334155;
+    color: #cbd5e1;
+    background: #1e293b;
+
+    &:hover,
+    &.is-active {
+      border-color: #818cf8;
+      color: #c7d2fe;
+      background: #272f55;
+    }
+  }
+}
+
+.fp-badge {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: #525ea7;
+}
+
+// The open panel is moved to <body> (outside the host), so its dark styles use the page-level .dark class via ::ng-deep.
+.fp-panel {
+  position: fixed;
+  z-index: 2147482000; // above headers, sticky toolbars and drawers (image viewer stays on top)
+  width: 460px;
+  max-width: calc(100vw - 32px);
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.35);
+  animation: fpIn 140ms ease both;
+
+  ::ng-deep .dark & {
+    border-color: #334155;
+    background: #111a2e;
+  }
+}
+
+@keyframes fpIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.fp-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f2851;
+
+  ::ng-deep .dark & {
+    border-color: #1e293b;
+    color: #fff;
+  }
+}
+
+.fp-x {
+  font-size: 12px;
+  color: #94a3b8;
+
+  &:hover {
+    color: #475569;
+  }
+}
+
+.fp-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.fp-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+
+  &.fp-wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .fp-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fp-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+
+  ::ng-deep .dark & {
+    color: #94a3b8;
+  }
+}
+
+.fp-input {
+  height: 36px;
+  width: 100%;
+  padding: 0 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+
+  &:focus {
+    border-color: #525ea7;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(82, 94, 167, 0.18);
+  }
+
+  ::ng-deep .dark & {
+    border-color: #334155;
+    color: #e2e8f0;
+    background: #1e293b;
+  }
+}
+
+.fp-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid #f1f5f9;
+
+  ::ng-deep .dark & {
+    border-color: #1e293b;
+  }
+}
+
+.fp-btn {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  background: #fff;
+
+  &:hover {
+    background: #f8fafc;
+  }
+
+  ::ng-deep .dark & {
+    border-color: #334155;
+    color: #cbd5e1;
+    background: #1e293b;
+  }
+
+  &.fp-primary {
+    border-color: #525ea7;
+    color: #fff;
+    background: #525ea7;
+
+    &:hover {
+      background: #434d8a;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+:host {
+  display: block;
+}
+
+.pulse-dot {
+  height: 9px;
+  width: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6);
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 7px rgba(245, 158, 11, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+
+.tone-bad { --row: var(--db-bad); --row-soft: var(--db-bad-soft); }
+.tone-warn { --row: var(--db-warn); --row-soft: var(--db-warn-soft); }
+.tone-accent { --row: var(--db-accent); --row-soft: var(--db-accent-soft); }
+.tone-good { --row: var(--db-good); --row-soft: var(--db-good-soft); }
+
+.attention-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  border-bottom: 1px solid var(--db-line);
+  transition: background 160ms ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--db-surface-hover);
+  }
+}
+
+.row-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+  border-radius: 10px;
+  color: var(--row);
+  background: var(--row-soft);
+
+  svg {
+    height: 17px;
+    width: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+.row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--db-text);
+}
+
+.row-detail {
+  font-size: 12px;
+  color: var(--db-text-2);
+}
+
+.row-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--row);
+  background: var(--row-soft);
+
+  &.is-zero {
+    color: var(--db-muted);
+    background: var(--db-surface-soft);
+  }
+}
+
+.row-chevron {
+  height: 15px;
+  width: 15px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--db-muted);
+  stroke-width: 2;
+  transition: transform 160ms ease;
+}
+
+.attention-row:hover .row-chevron {
+  transform: translateX(2px);
+  stroke: var(--row);
+}

@@ -9,8 +9,8 @@ import { KpiMetricCardComponent } from './components/kpi-metric-card/kpi-metric-
 import { RecentGateActivityComponent } from './components/recent-gate-activity/recent-gate-activity.component';
 import { YardCapacityUtilizationComponent } from './components/yard-capacity-utilization/yard-capacity-utilization.component';
 import { YardOverviewComponent } from './components/yard-overview/yard-overview.component';
-import { GateOperationsLiveComponent } from './components/gate-operations-live/gate-operations-live.component';
-import { ExceptionAlertsComponent } from './components/exception-alerts/exception-alerts.component';
+import { NeedsAttentionComponent } from './components/needs-attention/needs-attention.component';
+import { GatePerformanceComponent } from './components/gate-performance/gate-performance.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,10 +19,10 @@ import { ExceptionAlertsComponent } from './components/exception-alerts/exceptio
     RouterLink,
     KpiMetricCardComponent,
     YardOverviewComponent,
-    GateOperationsLiveComponent,
     RecentGateActivityComponent,
     YardCapacityUtilizationComponent,
-    ExceptionAlertsComponent,
+    NeedsAttentionComponent,
+    GatePerformanceComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -39,6 +39,16 @@ export class DashboardComponent {
     if (this.dashboardService.selectedGateActivity()) {
       this.dashboardService.closeActivityPreview();
     }
+  }
+
+  // Re-stamps whenever a fresh batch of gate activity arrives.
+  public readonly lastUpdated = computed<string>(() => {
+    this.dashboardService.filteredGateActivities();
+    return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+  });
+
+  public refresh(): void {
+    this.dashboardService.loadGateActivities(this.effectiveSelectedSiteId(), this.effectiveSelectedClientId());
   }
 
   public switchingContext = signal<boolean>(false);

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { GateCameraPhoto } from 'shared/components/molecules/gate-photo-strip/gate-photo-strip.component';
+import { ImageViewerComponent } from 'shared/components/molecules/image-viewer/image-viewer.component';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from 'shared/pipes';
 import type { GateEventItem, GateContainerRecord } from '../../gate-events.component';
@@ -107,7 +109,7 @@ export interface GateEventDetailData {
 @Component({
   selector: 'app-gate-event-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ImageViewerComponent],
   templateUrl: './gate-event-detail.component.html',
   styleUrls: ['./gate-event-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -128,7 +130,8 @@ export class GateEventDetailComponent {
   public readonly selectedContainerIndex = signal<number>(0);
   public readonly copyFeedback = signal<boolean>(false);
   public readonly exportDropdownOpen = signal<boolean>(false);
-  public readonly activeLightboxPhoto = signal<{ title: string; url: string } | null>(null);
+  /** Index of the captured photo open in the image viewer, or null when closed. */
+  public readonly viewerIndex = signal<number | null>(null);
 
   /** Computed detail object based on the input event */
   public readonly detail = computed<GateEventDetailData>(() => {
@@ -289,13 +292,24 @@ export class GateEventDetailComponent {
     this.toast.emit(`Exported ${det.eventId} details as CSV`);
   }
 
-  public openLightbox(title: string, url: string, e?: MouseEvent): void {
+  /** Captured photos in the shape the shared image viewer expects. */
+  public readonly viewerPhotos = computed<GateCameraPhoto[]>(() =>
+    this.detail().capturedPhotos.map((p) => ({
+      label: p.title,
+      tag: p.tag || 'CAM',
+      color: '#0f172a',
+      url: p.url,
+      formattedCreatedAt: p.timestamp,
+    })),
+  );
+
+  public openLightbox(index: number, e?: MouseEvent): void {
     if (e) e.stopPropagation();
-    this.activeLightboxPhoto.set({ title, url });
+    this.viewerIndex.set(index);
   }
 
   public closeLightbox(): void {
-    this.activeLightboxPhoto.set(null);
+    this.viewerIndex.set(null);
   }
 
   public buildEventDetail(event: GateEventItem): GateEventDetailData {

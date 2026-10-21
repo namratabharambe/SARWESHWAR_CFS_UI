@@ -5,3 +5,5 @@ export * from './modal/modal.component';
 export * from './form-field/form-field.component';
 export * from './pagination/pagination.component';
 
+export * from './image-viewer/image-viewer.component';
+export * from './filter-panel/filter-panel.component';

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output, signal } from '@angular/core';
+import { GateCameraPhoto } from 'shared/components/molecules/gate-photo-strip/gate-photo-strip.component';
+import { ImageViewerComponent } from 'shared/components/molecules/image-viewer/image-viewer.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from 'shared/pipes';
@@ -30,7 +32,7 @@ export interface NonErpContainerItem {
 @Component({
   selector: 'app-non-erp-container',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, PaginationComponent],
+  imports: [CommonModule, FormsModule, TranslatePipe, PaginationComponent, ImageViewerComponent],
   templateUrl: './non-erp-container.component.html',
   styleUrls: ['./non-erp-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,7 +62,7 @@ export class NonErpContainerComponent {
   // Modal / Detail states
   public readonly isAddModalOpen = signal<boolean>(false);
   public readonly selectedEventForDetails = signal<NonErpContainerItem | null>(null);
-  public readonly activeLightboxImage = signal<{ url: string; title: string } | null>(null);
+  public readonly activeGallery = signal<{ photos: GateCameraPhoto[]; index: number; title: string } | null>(null);
 
   // New Non-ERP container form model
   public newContainerForm = {
@@ -464,14 +466,24 @@ export class NonErpContainerComponent {
     this.toast.emit(`Non-ERP Container ${newItem.containerNo} added successfully.`);
   }
 
+  /** Opens a single row photo in the image viewer. */
   public openLightbox(url?: string, title?: string): void {
     if (url) {
-      this.activeLightboxImage.set({ url, title: title || 'Non-ERP Container Inspection' });
+      this.activeGallery.set({ photos: [{ label: title || 'Non-ERP Container Inspection', tag: 'CAM', color: '#0f172a', url }], index: 0, title: title || '' });
     }
   }
 
+  /** Opens all captured photos so the viewer can step through them. */
+  public openGallery(photos: Array<{ title: string; timestamp: string; tag: string; url: string }>, index: number, title: string): void {
+    this.activeGallery.set({
+      photos: photos.map((p) => ({ label: p.title, tag: p.tag, color: '#0f172a', url: p.url, formattedCreatedAt: p.timestamp })),
+      index,
+      title,
+    });
+  }
+
   public closeLightbox(): void {
-    this.activeLightboxImage.set(null);
+    this.activeGallery.set(null);
   }
 
   public exportCsv(): void {

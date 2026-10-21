@@ -104,16 +104,11 @@ describe('GateEventDetailComponent', () => {
     expect(emittedEvent).toEqual(mockEvent);
   });
 
-  it('should open and close lightbox modal', () => {
-    expect(component.activeLightboxPhoto()).toBeNull();
-
-    component.openLightbox('Front Photo', '/assets/gate/front-gate.jpg');
-    expect(component.activeLightboxPhoto()).toEqual({
-      title: 'Front Photo',
-      url: '/assets/gate/front-gate.jpg',
-    });
-
+  it('should open and close the image viewer', () => {
+    expect(component.viewerIndex()).toBeNull();
+    component.openLightbox(1);
+    expect(component.viewerIndex()).toBe(1);
     component.closeLightbox();
-    expect(component.activeLightboxPhoto()).toBeNull();
+    expect(component.viewerIndex()).toBeNull();
   });
 });

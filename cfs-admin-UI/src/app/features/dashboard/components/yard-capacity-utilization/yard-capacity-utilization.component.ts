@@ -1,77 +1,99 @@
 import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, computed, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { YardBlockRow, YardMetrics } from 'shared/types/dashboard/dashboard.interface';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { YardMetrics } from 'shared/types/dashboard/dashboard.interface';
 
-export interface BlockBarData {
+export interface BlockUsage {
   name: string;
+  type: string;
+  capacity: number;
+  occupied: number;
   percentage: number;
-  colorClass: string;
+  color: string;
 }
+
+export interface DonutSegment {
+  name: string;
+  color: string;
+  track: string; // dasharray for the block's full capacity arc
+  fill: string; // dasharray for its occupied part
+  offset: number;
+}
+
+const R = 40;
+const CIRC = 2 * Math.PI * R;
+const GAP = 1.6; // visual gap between block arcs
+
+// Block layout with each block's share of total yard capacity.
+// ponytail: the API has no per-block data yet, so the live total is split by capacity share; swap in real block counts when the API provides them.
+const BLOCKS = [
+  { name: 'Block A & B', type: 'Import / Export', share: 500 / 1200, color: '#10b981' },
+  { name: 'Block C', type: 'Empty Depot', share: 320 / 1200, color: '#3b82f6' },
+  { name: 'Block D', type: 'General Yard', share: 240 / 1200, color: '#06b6d4' },
+  { name: 'Block E & F', type: 'Reefer / Staging', share: 140 / 1200, color: '#f97316' },
+];
 
 @Component({
   selector: 'app-yard-capacity-utilization',
   standalone: true,
-  imports: [RouterLink, DecimalPipe],
+  imports: [DecimalPipe],
   templateUrl: './yard-capacity-utilization.component.html',
   styleUrls: ['./yard-capacity-utilization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YardCapacityUtilizationComponent {
-  @ViewChild('scrollContainer') private scrollContainer?: ElementRef<HTMLDivElement>;
-
-  public readonly yardRows = input<YardBlockRow[]>([]);
   public readonly metrics = input<YardMetrics>({
-    totalBlocks: 9,
-    totalRows: 9,
+    totalBlocks: 0,
+    totalRows: 0,
     teuCapacity: 1200,
-    currentTeu: 816,
-    utilizationPercentage: 68,
+    currentTeu: 0,
+    utilizationPercentage: 0,
   });
 
-  public readonly blockBars = computed<BlockBarData[]>(() => {
-    return [
-      { name: 'A', percentage: 68, colorClass: 'bar-blue' },
-      { name: 'B', percentage: 72, colorClass: 'bar-teal' },
-      { name: 'C', percentage: 59, colorClass: 'bar-blue' },
-      { name: 'D', percentage: 47, colorClass: 'bar-blue' },
-      { name: 'E', percentage: 64, colorClass: 'bar-teal' },
-      { name: 'F', percentage: 52, colorClass: 'bar-blue' },
-      { name: 'G', percentage: 78, colorClass: 'bar-teal' },
-      { name: 'H', percentage: 41, colorClass: 'bar-blue' },
-      { name: 'I', percentage: 55, colorClass: 'bar-teal' },
-    ];
+  public readonly maxTeu = computed<number>(() => this.metrics().teuCapacity || 1200);
+  public readonly currentTeu = computed<number>(() => Math.min(this.metrics().currentTeu || 0, this.maxTeu()));
+  public readonly availableTeu = computed<number>(() => this.maxTeu() - this.currentTeu());
+  public readonly totalUtilization = computed<number>(() => Math.round((this.currentTeu() / this.maxTeu()) * 100));
+
+  public readonly blocks = computed<BlockUsage[]>(() => {
+    const max = this.maxTeu();
+    const used = this.currentTeu();
+    let capLeft = max;
+    let usedLeft = used;
+    return BLOCKS.map((b, i) => {
+      const last = i === BLOCKS.length - 1;
+      // Last block takes the rounding remainder so the rows always sum to the totals.
+      const capacity = last ? capLeft : Math.round(max * b.share);
+      const occupied = last ? usedLeft : Math.round(used * b.share);
+      capLeft -= capacity;
+      usedLeft -= occupied;
+      return {
+        name: b.name,
+        type: b.type,
+        capacity,
+        occupied,
+        percentage: capacity ? Math.round((occupied / capacity) * 100) : 0,
+        color: b.color,
+      };
+    });
   });
 
-  public readonly totalUtilization = computed<number>(() => {
-    return this.metrics().utilizationPercentage || 68;
+  /** One arc per block sized by capacity; the solid part inside it is the occupied share. */
+  public readonly segments = computed<DonutSegment[]>(() => {
+    const max = this.maxTeu();
+    let start = 0;
+    return this.blocks().map((b) => {
+      const len = (b.capacity / max) * CIRC;
+      const visible = Math.max(len - GAP, 0);
+      const filled = b.capacity ? visible * (b.occupied / b.capacity) : 0;
+      const seg = {
+        name: b.name,
+        color: b.color,
+        track: `${visible.toFixed(2)} ${CIRC.toFixed(2)}`,
+        fill: `${filled.toFixed(2)} ${CIRC.toFixed(2)}`,
+        offset: -start,
+      };
+      start += len;
+      return seg;
+    });
   });
-
-  public readonly currentTeu = computed<number>(() => {
-    return this.metrics().currentTeu || 816;
-  });
-
-  public readonly maxTeu = computed<number>(() => {
-    return this.metrics().teuCapacity || 1200;
-  });
-
-  // Calculate SVG stroke-dasharray for donut gauge (circumference of r=24 is ~150.8)
-  public readonly donutStrokeDash = computed<string>(() => {
-    const circumference = 2 * Math.PI * 24; // ~150.796
-    const pct = Math.max(0, Math.min(100, this.totalUtilization()));
-    const filled = (pct / 100) * circumference;
-    return `${filled.toFixed(1)} ${circumference.toFixed(1)}`;
-  });
-
-  public scrollLeft(): void {
-    if (this.scrollContainer?.nativeElement) {
-      this.scrollContainer.nativeElement.scrollBy({ left: -140, behavior: 'smooth' });
-    }
-  }
-
-  public scrollRight(): void {
-    if (this.scrollContainer?.nativeElement) {
-      this.scrollContainer.nativeElement.scrollBy({ left: 140, behavior: 'smooth' });
-    }
-  }
 }
