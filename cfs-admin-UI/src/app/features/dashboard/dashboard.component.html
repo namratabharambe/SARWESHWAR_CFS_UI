@@ -33,15 +33,15 @@
   <section class="grid grid-cols-1 gap-3.5 min-[1200px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] items-stretch min-w-0">
     <app-yard-overview [yardRows]="dashboardService.yardRows()" [metrics]="dashboardService.yardMetrics()"
       class="dashboard-panel tone-sky flex min-w-0 flex-col" />
-    <app-gate-performance [activities]="dashboardService.filteredGateActivities()" class="dashboard-panel tone-violet min-w-0" />
+    <app-recent-gate-activity [activities]="dashboardService.filteredGateActivities()" class="dashboard-panel tone-blue flex min-w-0 flex-col" />
   </section>
 
-  <!-- Row 3: Needs Attention (35%) + Yard Utilization donut (25%) + Recent Gate Activity (40%) -->
+  <!-- Row 3: Needs Attention (35%) + Yard Utilization donut (25%) + Gate Performance (40%) -->
   <section class="grid grid-cols-1 gap-3.5 md:grid-cols-2 min-[1200px]:grid-cols-[minmax(0,35fr)_minmax(0,25fr)_minmax(0,40fr)] items-stretch min-w-0">
     <app-needs-attention class="dashboard-panel tone-amber min-w-0" />
     <app-yard-capacity-utilization [metrics]="dashboardService.yardMetrics()" class="dashboard-panel tone-emerald min-w-0" />
-    <app-recent-gate-activity [activities]="dashboardService.filteredGateActivities()"
-      class="dashboard-panel tone-blue flex min-w-0 flex-col md:col-span-2 min-[1200px]:col-span-1" />
+    <app-gate-performance [activities]="dashboardService.filteredGateActivities()"
+      class="dashboard-panel tone-violet min-w-0 md:col-span-2 min-[1200px]:col-span-1" />
   </section>
 </div>
 

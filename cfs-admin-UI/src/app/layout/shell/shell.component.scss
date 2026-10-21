@@ -21,15 +21,15 @@
   position: fixed;
   inset: 0 auto 0 0;
   width: 240px;
-  // Light mode: medium sky blue; dark mode keeps the navy below.
-  background: linear-gradient(180deg, #0b84c6 0%, #0a77b6 45%, #0969a2 100%);
-  color: #f1f5f9;
+  // Light mode: white sidebar with navy text; dark mode keeps the navy below.
+  background: #ffffff;
+  color: #4a5b7a;
   padding: 0 10px 14px;
   display: flex;
   flex-direction: column;
   z-index: 45;
-  box-shadow: 4px 0 24px rgba(3, 60, 100, 0.25);
-  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 4px 0 20px rgba(30, 64, 120, 0.06);
+  border-right: 1px solid #e6ecf5;
   overflow-y: auto;
   overflow-x: hidden;
   transition:
@@ -41,7 +41,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
+    background: #d5deec;
     border-radius: 4px;
   }
 
@@ -54,6 +54,17 @@
   background: linear-gradient(180deg, #071c42 0%, #0a2352 35%, #07193d 75%, #040e24 100%);
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
   border-right: 1px solid rgba(59, 130, 246, 0.15);
+  color: #f1f5f9;
+}
+
+:host-context(.dark) {
+  .brand { border-bottom-color: rgba(255, 255, 255, 0.08); }
+  .brand-company-name { color: #ffffff; }
+  .brand-product-desc { color: #ffffff !important; opacity: 0.9; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); }
+  .nav-parent-btn.active { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
+  .sub-nav-item { color: #cbd5e1; &:hover { background: rgba(255, 255, 255, 0.08); color: #ffffff; } }
+  .collapse-button { background: rgba(255, 255, 255, 0.06); color: #93c5fd; &:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; } }
 }
 
 .brand {
@@ -62,7 +73,7 @@
   align-items: center;
   gap: 10px;
   padding: 12px 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #eef2f8;
   margin-bottom: 10px;
   flex-shrink: 0;
 }
@@ -88,7 +99,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 13.5px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f2851;
   line-height: 1.2;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -97,11 +108,10 @@
 .brand-product-desc {
   font-family: 'Inter', sans-serif;
   font-size: 10.5px;
-  color: #ffffff !important;
+  color: #67749a !important;
   line-height: 1.2;
   margin-top: 2px;
   white-space: nowrap;
-  opacity: 0.9;
 }
 
 .sidebar-nav {
@@ -114,7 +124,7 @@
 .nav-item {
   width: 100%;
   height: 40px;
-  color: #eaf6fd;
+  color: #4a5b7a;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -132,15 +142,14 @@
   text-align: left;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.14);
-    color: #ffffff;
+    background: #f1f5fb;
+    color: #0f2851;
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.24);
-    color: #ffffff !important;
+    background: #e3edff;
+    color: #2563eb !important;
     font-weight: 600;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35), 0 4px 14px rgba(3, 50, 90, 0.3);
     border-radius: 10px;
   }
 }
@@ -150,9 +159,11 @@
 
   &:hover {
     background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
   }
 
   &.active {
+    color: #ffffff !important;
     background: linear-gradient(135deg, #1d64ec 0%, #1555cb 100%);
     box-shadow: 0 4px 14px rgba(29, 100, 236, 0.42);
   }
@@ -162,8 +173,8 @@
   justify-content: space-between;
 
   &.active {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
+    background: #f1f5fb;
+    color: #0f2851;
     box-shadow: none;
   }
 }
@@ -190,9 +201,9 @@
   gap: 2px;
   padding: 6px;
   margin: 2px 0 6px 0;
-  background: rgba(3, 45, 80, 0.3);
+  background: #f6f9fd;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #e6ecf5;
 }
 
 :host-context(.dark) .sub-nav-container {
@@ -205,7 +216,7 @@
   display: flex;
   align-items: center;
   padding: 0 12px;
-  color: #cbd5e1;
+  color: #4a5b7a;
   text-decoration: none;
   font-family: 'Inter', sans-serif;
   font-size: 12.5px;
@@ -214,8 +225,8 @@
   transition: all 0.15s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
+    background: #e8eff9;
+    color: #0f2851;
   }
 
   &.sub-active,
@@ -264,8 +275,8 @@
 .collapse-button {
   margin-top: 4px;
   border: 0;
-  background: rgba(255, 255, 255, 0.06);
-  color: #93c5fd;
+  background: #f1f5fb;
+  color: #4a5b7a;
   border-radius: 8px;
   padding: 8px 12px;
   display: flex;
@@ -277,8 +288,8 @@
   transition: background 0.18s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
+    background: #e3edff;
+    color: #2563eb;
   }
 }
 

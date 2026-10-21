@@ -9,33 +9,33 @@
 }
 
 .dashboard-page {
-  --db-canvas: linear-gradient(160deg, #dfe4ff 0%, #eaeefb 45%, #d6f0f6 100%);
+  --db-canvas: #f4f7fb;
   --db-surface: #ffffff;
-  --db-surface-soft: #eef1fa;
-  --db-surface-hover: #e6ebfa;
-  --db-line: #d0d7eb;
-  --db-text: #0f1838;
-  --db-text-2: #3b4a70;
-  --db-muted: #67749a;
-  --db-accent: #4b3be0;
-  --db-accent-2: #6d28d9;
-  --db-accent-soft: #e0dbff;
-  --db-shadow: 0 8px 24px -10px rgba(55, 48, 163, 0.28);
-  --db-shadow-hover: 0 16px 36px -12px rgba(55, 48, 163, 0.42);
+  --db-surface-soft: #f1f5fb;
+  --db-surface-hover: #e8eff9;
+  --db-line: #e3e9f2;
+  --db-text: #0f2851;
+  --db-text-2: #4a5b7a;
+  --db-muted: #7a88a3;
+  --db-accent: #2563eb;
+  --db-accent-2: #0ea5a4;
+  --db-accent-soft: #e3edff;
+  --db-shadow: 0 4px 16px -8px rgba(30, 64, 120, 0.12);
+  --db-shadow-hover: 0 10px 26px -10px rgba(30, 64, 120, 0.2);
 
   /* Status colors */
   --db-good: #047857;
-  --db-good-soft: #c9f3de;
+  --db-good-soft: #dcf6ea;
   --db-warn: #b45309;
-  --db-warn-soft: #ffe3ad;
+  --db-warn-soft: #ffeccc;
   --db-bad: #be123c;
-  --db-bad-soft: #ffd3dc;
+  --db-bad-soft: #ffe0e5;
   --db-info: #1d4ed8;
-  --db-info-soft: #d3e1ff;
+  --db-info-soft: #dce8ff;
 
   /* Chart series (validated for color-blind separation and contrast) */
-  --db-series-in: #6d5cf6;
-  --db-series-out: #0d9488;
+  --db-series-in: #2563eb;
+  --db-series-out: #14b8a6;
 
   position: relative;
   display: flex;
@@ -155,18 +155,16 @@
 /* Shared card surface: each panel sets --card-rgb (its color) on its host element.
    The card derives a soft gradient, a visible border and a same-color hover shadow from it. */
 :host ::ng-deep .dashboard-page .dashboard-card {
-  background:
-    linear-gradient(145deg, rgba(var(--card-rgb, 79, 70, 229), 0.16) 0%, rgba(var(--card-rgb, 79, 70, 229), 0.04) 55%, rgba(var(--card-rgb, 79, 70, 229), 0.1) 100%),
-    var(--db-surface) !important;
-  border: 1.5px solid rgba(var(--card-rgb, 79, 70, 229), 0.35) !important;
+  background: var(--db-surface) !important;
+  border: 1px solid var(--db-line) !important;
   border-radius: 16px !important;
-  box-shadow: 0 8px 22px -12px rgba(var(--card-rgb, 79, 70, 229), 0.45) !important;
+  box-shadow: var(--db-shadow) !important;
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease !important;
 
   &:hover {
     transform: translateY(-2px);
-    border-color: rgba(var(--card-rgb, 79, 70, 229), 0.75) !important;
-    box-shadow: 0 16px 34px -12px rgba(var(--card-rgb, 79, 70, 229), 0.65) !important;
+    border-color: rgba(var(--card-rgb, 37, 99, 235), 0.4) !important;
+    box-shadow: var(--db-shadow-hover) !important;
   }
 }
 

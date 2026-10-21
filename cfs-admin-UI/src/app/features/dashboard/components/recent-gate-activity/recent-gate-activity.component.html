@@ -12,53 +12,39 @@
     </a>
   </div>
 
-  <div class="table-scroll">
-    <table class="activity-table w-full">
-      <thead>
-        <tr>
-          <th>Event time</th>
-          <th>Direction</th>
-          <th>Container</th>
-          <th>Review status</th>
-          <th class="w-10"><span class="sr-only">Details</span></th>
-        </tr>
-      </thead>
-      <tbody>
+  <!-- Auto-scrolling feed (scrollTop driven, so the scrollbar works): pauses on hover/focus. List is rendered twice for a seamless loop. -->
+  <div #feed class="feed" (mouseenter)="paused = true" (mouseleave)="resume()" (focusin)="paused = true" (focusout)="resume()">
+    <div class="feed-track">
+      @for (pass of passes(); track pass) {
         @for (item of latest(); track item.id) {
-          <tr (click)="openPreview(item, $event)">
-            <td>
-              <div class="cell-main">{{ item.time }}</div>
-              <div class="cell-sub">{{ date(item) }}</div>
-            </td>
-            <td>
-              <span class="direction" [class.is-out]="item.type === 'OUT'">
-                @if (item.type === 'IN') {
-                  <svg viewBox="0 0 24 24"><path d="M17 7 7 17" /><path d="M17 17H7V7" /></svg> Gate In
-                } @else {
-                  <svg viewBox="0 0 24 24"><path d="M7 17 17 7" /><path d="M7 7h10v10" /></svg> Gate Out
+          <button type="button" class="feed-item" [attr.aria-hidden]="pass ? true : null" [attr.tabindex]="pass ? -1 : null"
+            (click)="openPreview(item, $event)">
+            <span class="dir-badge" [class.is-out]="item.type === 'OUT'">
+              @if (item.type === 'IN') {
+                <svg viewBox="0 0 24 24"><path d="M17 7 7 17" /><path d="M17 17H7V7" /></svg>
+              } @else {
+                <svg viewBox="0 0 24 24"><path d="M7 17 17 7" /><path d="M7 7h10v10" /></svg>
+              }
+            </span>
+            <span class="feed-body">
+              <span class="cell-main font-mono tracking-wide">{{ item.containerNo }}</span>
+              <span class="cell-sub">
+                {{ item.type === 'IN' ? 'Gate In' : 'Gate Out' }}
+                @if (item.truckNo && item.truckNo !== 'Pending Scan' && item.truckNo !== 'NA') {
+                  · <span class="font-mono">{{ item.truckNo }}</span>
                 }
               </span>
-            </td>
-            <td>
-              <div class="cell-main font-mono font-semibold tracking-wide">{{ item.containerNo }}</div>
-              @if (item.truckNo && item.truckNo !== 'Pending Scan' && item.truckNo !== 'NA') {
-                <div class="cell-sub font-mono">{{ item.truckNo }}</div>
-              }
-            </td>
-            <td><span class="status" [class]="statusTone(item.status)">{{ statusLabel(item.status) }}</span></td>
-            <td>
-              <button type="button" class="open-btn" (click)="openPreview(item, $event)" aria-label="View details">
-                <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
-              </button>
-            </td>
-          </tr>
+            </span>
+            <span class="feed-meta">
+              <span class="status" [class]="statusTone(item.status)">{{ statusLabel(item.status) }}</span>
+              <span class="cell-sub">{{ item.time }} · {{ date(item) }}</span>
+            </span>
+          </button>
         } @empty {
-          <tr class="empty-row">
-            <td colspan="5">No recent gate activity recorded.</td>
-          </tr>
+          <div class="empty-row">No recent gate activity recorded.</div>
         }
-      </tbody>
-    </table>
+      }
+    </div>
   </div>
 
   <div class="table-foot flex items-center justify-between px-4 py-2.5 text-xs">
